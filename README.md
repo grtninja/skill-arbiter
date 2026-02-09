@@ -208,6 +208,7 @@ Recent additions under `skill-candidates/`:
 - `safe-mass-index-core`: bounded metadata-only indexing and query scripts with no-`rg` indexing policy.
 - `repo-b-mass-index-ops`: repo-b wrapper presets for service/connector-oriented queries.
 - `repo-b-local-bridge-orchestrator`: read-only local bridge orchestration with strict validation, fail-closed hints, and drop-in `<PRIVATE_REPO_B>` hook templates.
+- `repo-b-local-comfy-orchestrator`: loopback-only local Comfy MCP resource orchestration with strict validation, fail-closed diagnostics+hints, and drop-in `<PRIVATE_REPO_B>` templates.
 - `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
 - `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
 - `usage-watcher`: usage analysis and budget planning for paid credit control and rate-limit guardrails.

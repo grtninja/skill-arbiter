@@ -2,6 +2,26 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.5] - 2026-02-09
+
+### Added
+
+- New candidate skill `skill-candidates/repo-b-local-comfy-orchestrator/` for reliability-first local Comfy MCP resource orchestration in `<PRIVATE_REPO_B>`.
+- New reference set for the skill:
+  - `references/orchestrator-workflow.md`
+  - `references/validation-contract.md`
+  - `references/phase2-prompt-lifecycle-roadmap.md`
+- New drop-in `<PRIVATE_REPO_B>` hook templates under `assets/repo_b/`:
+  - `tools/local_comfy_orchestrator.py`
+  - `tools/local_comfy_validate.py`
+  - `tools/local_comfy_orchestrator.example.env`
+  - `tests/tools/test_local_comfy_orchestrator.py`
+  - `tests/tools/test_local_comfy_validate.py`
+
+### Changed
+
+- Updated `README.md`, `SKILL.md`, and `references/recommended-skill-portfolio.md` to include admission/discovery guidance for `repo-b-local-comfy-orchestrator`.
+
 ## [0.2.4] - 2026-02-09
 
 ### Added

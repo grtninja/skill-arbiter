@@ -32,6 +32,9 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 9. `repo-b-local-bridge-orchestrator` (repo-b specific)
    - Run read-only local bridge tasks with strict validation and bounded indexing before model-heavy workflows.
    - Trigger examples: "local bridge guidance", "credit-first repo-b orchestration", "fail-closed bridge hints"
+10. `repo-b-local-comfy-orchestrator` (repo-b specific)
+   - Run loopback-only read-only Comfy MCP resource orchestration with strict validation and fail-closed diagnostics+hints.
+   - Trigger examples: "comfy resource health check", "local comfy hints", "fail-closed comfy orchestration"
 
 ## Optional Skills by Repo Type
 
