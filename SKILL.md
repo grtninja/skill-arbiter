@@ -88,6 +88,17 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/usage-watcher-arbiter.json
 ```
 
+## REPO_B Local Bridge Orchestrator Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  repo-b-local-bridge-orchestrator \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/repo-b-local-bridge-orchestrator-arbiter.json
+```
+
 ## Release Workflow
 
 For release-impacting changes (for example `scripts/`, `SKILL.md`, or non-doc files):

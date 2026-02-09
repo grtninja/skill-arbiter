@@ -29,6 +29,9 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 8. `usage-watcher`
    - Analyze burn rate, project usage, and set budget/rate-limit guardrails before high-volume work.
    - Trigger examples: "reduce credits usage", "set usage budget", "avoid rate limits"
+9. `repo-b-local-bridge-orchestrator` (repo-b specific)
+   - Run read-only local bridge tasks with strict validation and bounded indexing before model-heavy workflows.
+   - Trigger examples: "local bridge guidance", "credit-first repo-b orchestration", "fail-closed bridge hints"
 
 ## Optional Skills by Repo Type
 
