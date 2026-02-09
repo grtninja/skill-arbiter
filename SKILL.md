@@ -58,6 +58,25 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 - Use `--dry-run` to preview actions without modifying files.
 - Use `--dest` to test in an isolated skills directory.
 
+## Mass-Index Skill Admission
+
+Use this command to admit the bounded no-`rg` indexing skill family:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/mass-index-arbiter.json
+```
+
+Expected acceptance:
+
+- `action=kept`
+- `persistent_nonzero=false`
+- `max_rg=0` target for each skill
+
 ## Release Workflow
 
 For release-impacting changes (for example `scripts/`, `SKILL.md`, or non-doc files):

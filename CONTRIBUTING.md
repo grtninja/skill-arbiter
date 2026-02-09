@@ -63,6 +63,12 @@ Before opening a PR:
 6. Confirm CI `Privacy policy check` passes on the PR.
 7. Include rationale and risk notes in the PR description.
 
+For new or updated skill candidates, include arbitration evidence summary in the PR:
+
+1. Run `python3 scripts/arbitrate_skills.py <skill> [<skill> ...] --source-dir skill-candidates --window 10 --threshold 3 --max-rg 3 --personal-lockdown --json-out /tmp/skill-arbiter-evidence.json`.
+2. Report per-skill `action`, `persistent_nonzero`, and `max_rg`.
+3. Keep expected safe target: `action=kept`, `persistent_nonzero=false`, `max_rg=0`.
+
 If a skill was added or improved in the work, include this declaration in the response/update text:
 
 ```text

@@ -23,3 +23,23 @@ Outputs:
 - Optional JSON report via `--json-out`.
 - Persistent blacklist updates in `<dest>/.blacklist.local`.
 - Persistent whitelist/immutable updates when promoted.
+
+Export readiness notes for mass-index skill family:
+
+- Core candidate: `safe-mass-index-core`
+- Wrappers: `repo-b-mass-index-ops`, `repo-c-mass-index-ops`, `repo-d-mass-index-ops`
+- Recommended admission command:
+
+```bash
+python3 scripts/arbitrate_skills.py \
+  safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/mass-index-arbiter.json
+```
+
+- Export-ready acceptance target:
+  - `action=kept`
+  - `persistent_nonzero=false`
+  - `max_rg=0` per skill

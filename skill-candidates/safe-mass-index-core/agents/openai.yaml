@@ -1,0 +1,4 @@
+interface:
+  display_name: "Safe Mass Index Core"
+  short_description: "Bounded metadata indexing for large repos"
+  default_prompt: "Use $safe-mass-index-core to build/query a bounded metadata-only index without rg churn in this repository."

@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.2] - 2026-02-09
+
+### Added
+
+- New core candidate skill `skill-candidates/safe-mass-index-core/` with deterministic metadata-only indexing scripts:
+  - `scripts/index_build.py` (bounded incremental/full build with budgets and optional sharded storage)
+  - `scripts/index_query.py` (local artifact query by path/ext/lang/size/freshness/scope)
+- New wrapper candidate skills that delegate to `safe-mass-index-core` presets:
+  - `skill-candidates/repo-b-mass-index-ops/`
+  - `skill-candidates/repo-d-mass-index-ops/`
+  - `skill-candidates/repo-c-mass-index-ops/` (default sharded profile for very large repos)
+- Index schema reference doc: `skill-candidates/safe-mass-index-core/references/index-schema.md`.
+
+### Changed
+
+- README candidate skill catalog now includes the new mass-index skill family.
+- `references/recommended-skill-portfolio.md` now includes a large-repo mass-index recommendation and lockdown admission template for the new skills.
+- `SKILL.md`, `CONTRIBUTING.md`, `.github/pull_request_template.md`, and `references/publish-notes.md` now include export-readiness guidance for skill-arbiter evidence reporting on new/updated skills.
+
 ## [0.2.1] - 2026-02-09
 
 ### Added

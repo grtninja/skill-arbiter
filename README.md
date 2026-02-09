@@ -201,6 +201,15 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 - `references/publish-notes.md`: Publish defaults and notes.
 - `references/recommended-skill-portfolio.md`: Baseline skill catalog and rollout guidance for other repos.
 
+## Candidate Skill Sets
+
+Recent additions under `skill-candidates/`:
+
+- `safe-mass-index-core`: bounded metadata-only indexing and query scripts with no-`rg` indexing policy.
+- `repo-b-mass-index-ops`: repo-b wrapper presets for service/connector-oriented queries.
+- `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
+- `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
+
 ## License
 
 MIT. See `LICENSE.txt`.

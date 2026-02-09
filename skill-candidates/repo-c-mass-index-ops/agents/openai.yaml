@@ -1,0 +1,4 @@
+interface:
+  display_name: "REPO_C Mass Index"
+  short_description: "Sharded safe index presets for repo-c"
+  default_prompt: "Use $repo-c-mass-index-ops to run sharded bounded indexing and scope-first queries for repo-c large-repo workflows."

@@ -34,6 +34,7 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 3. Data/ETL repos: `data-migration-and-backfill-guard`
 4. Infra/Terraform repos: `infra-plan-risk-gate`
 5. SDK/library repos: `semver-and-breaking-change-gate`
+6. Very large monorepos: `safe-mass-index-core` (+ repo wrappers such as `repo-b-mass-index-ops`, `repo-c-mass-index-ops`, `repo-d-mass-index-ops`)
 
 ## Design Rules for Every Skill
 
@@ -67,6 +68,16 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 Use deny-by-default for third-party skills unless explicitly promoted.
 
 For personal repositories, run with `--personal-lockdown` to force local-only admission and immutable pinning.
+
+Mass-index skill admission template:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
 
 ## Success Metrics
 

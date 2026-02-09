@@ -10,6 +10,7 @@ Describe what changed and why.
 - [ ] Release metadata updated for release-impacting changes (`python3 scripts/prepare_release.py --part patch`)
 - [ ] Docs updated if behavior changed
 - [ ] `AGENTS.md`, `README.md`, and `CONTRIBUTING.md` are aligned with policy changes
+- [ ] For new/updated skills: attach `skill-arbiter` evidence (`action`, `persistent_nonzero`, `max_rg`) from `--json-out`
 - [ ] If skills were added/updated, response text includes: `New Skill Unlocked: <SkillName>` + `<SkillName> Leveled up to <LevelNumber>`
 
 ## Risk Notes

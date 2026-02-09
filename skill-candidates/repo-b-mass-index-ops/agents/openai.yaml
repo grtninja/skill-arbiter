@@ -1,0 +1,4 @@
+interface:
+  display_name: "REPO_B Mass Index"
+  short_description: "Safe index presets for repo-b"
+  default_prompt: "Use $repo-b-mass-index-ops to build/query a bounded metadata index for repo-b service and connector workflows."
