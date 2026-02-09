@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Arbiter"
+  short_description: "Admit or quarantine skills"
+  default_prompt: "Use $skill-arbiter to test candidate skills one-by-one and quarantine any that trigger persistent rg.exe churn."
