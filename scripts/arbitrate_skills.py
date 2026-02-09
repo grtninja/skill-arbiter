@@ -23,6 +23,7 @@ CURATED_PATH = Path("skills/.curated")
 DEFAULT_REPO = "https://github.com/openai/skills.git"
 MAX_ALLOWED_RG_LIMIT = 3
 SKILL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+DEFAULT_IMMUTABLE_FILE = ".immutable.local"
 
 
 @dataclass
@@ -128,6 +129,24 @@ def install_curated_skill(repo_root: Path, skills_home: Path, skill: str, dry_ru
     shutil.copytree(src, dst)
 
 
+def install_local_skill(source_dir: Path, skills_home: Path, skill: str, dry_run: bool) -> None:
+    """Install one local skill from a provided source directory."""
+
+    require_valid_skill_name(skill)
+    src = (source_dir / skill).resolve()
+    if not src.is_dir():
+        raise FileNotFoundError(f"Local skill not found: {src}")
+    dst = (skills_home / skill).resolve()
+    if dry_run:
+        return
+    # Keep in place when source and destination are identical.
+    if src == dst:
+        return
+    if dst.exists():
+        shutil.rmtree(dst)
+    shutil.copytree(src, dst)
+
+
 def remove_skill(skills_home: Path, skill: str, dry_run: bool) -> None:
     """Remove one installed skill."""
 
@@ -149,8 +168,18 @@ def write_blacklist(path: Path, names: set[str], dry_run: bool) -> None:
     path.write_text(payload, encoding="utf-8")
 
 
-def load_blacklist(path: Path) -> set[str]:
-    """Load blacklist names from file when present."""
+def write_name_file(path: Path, names: set[str], dry_run: bool) -> None:
+    """Write one-name-per-line file content."""
+
+    if dry_run:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = "".join(f"{name}\n" for name in sorted(names))
+    path.write_text(payload, encoding="utf-8")
+
+
+def load_name_file(path: Path) -> set[str]:
+    """Load one-name-per-line file content when present."""
 
     if not path.is_file():
         return set()
@@ -181,13 +210,24 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--json-out", default="", help="Optional path for machine-readable summary")
     parser.add_argument("--repo", default=DEFAULT_REPO, help="Git repository containing curated skills")
+    parser.add_argument(
+        "--source-dir",
+        default="",
+        help="Optional local skill source directory; when set, skips repo clone and installs <source-dir>/<skill>",
+    )
     parser.add_argument("--dest", default=str(DEFAULT_SKILLS_HOME), help="Destination skills home")
     parser.add_argument("--blacklist", default=".blacklist.local", help="Blacklist filename under dest")
+    parser.add_argument("--whitelist", default=".whitelist.local", help="Whitelist filename under dest")
+    parser.add_argument(
+        "--immutable",
+        default=DEFAULT_IMMUTABLE_FILE,
+        help="Immutable filename under dest; listed skills are never removed or blacklisted",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Report actions without modifying files")
     parser.add_argument(
-        "--retest-blacklisted",
+        "--promote-safe",
         action="store_true",
-        help="Allow re-testing skills already on the local blacklist",
+        help="When a skill passes arbitration, add it to whitelist and immutable files",
     )
     return parser.parse_args()
 
@@ -212,6 +252,12 @@ def main() -> int:
     skills_home = Path(args.dest).expanduser().resolve()
     try:
         require_valid_blacklist_name(args.blacklist)
+        require_valid_blacklist_name(args.whitelist)
+        require_valid_blacklist_name(args.immutable)
+        if args.blacklist == args.whitelist:
+            raise ValueError("--blacklist and --whitelist must be different files")
+        if args.immutable in {args.blacklist, args.whitelist}:
+            raise ValueError("--immutable must be different from --blacklist/--whitelist")
         if args.max_rg < 1 or args.max_rg > MAX_ALLOWED_RG_LIMIT:
             raise ValueError(f"--max-rg must be between 1 and {MAX_ALLOWED_RG_LIMIT}")
         if args.threshold < 1:
@@ -223,14 +269,72 @@ def main() -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     blacklist_path = skills_home / args.blacklist
-    blacklist = load_blacklist(blacklist_path)
+    whitelist_path = skills_home / args.whitelist
+    immutable_path = skills_home / args.immutable
+    blacklist = load_name_file(blacklist_path)
+    whitelist = load_name_file(whitelist_path)
+    immutable: set[str] = set()
+    for name in load_name_file(immutable_path):
+        try:
+            require_valid_skill_name(name)
+        except ValueError:
+            print(f"warning: ignored invalid immutable entry: {name!r}", file=sys.stderr)
+            continue
+        immutable.add(name)
+    overlap = blacklist & whitelist
+    if overlap:
+        # Safety rail: conflicting entries should stay restricted by default.
+        whitelist -= overlap
+        print(
+            f"warning: ignored {len(overlap)} whitelist entries that are blacklisted",
+            file=sys.stderr,
+        )
+    immutable_blacklisted = immutable & blacklist
+    if immutable_blacklisted:
+        blacklist -= immutable_blacklisted
+        print(
+            f"warning: ignored {len(immutable_blacklisted)} blacklist entries that are immutable",
+            file=sys.stderr,
+        )
     results: list[ArbitrationResult] = []
-
-    repo_root = clone_repo(args.repo)
+    source_dir = Path(args.source_dir).expanduser().resolve() if args.source_dir else None
+    if source_dir and not source_dir.is_dir():
+        print(f"error: --source-dir does not exist: {source_dir}", file=sys.stderr)
+        return 2
+    repo_root = clone_repo(args.repo) if not source_dir else None
     try:
         for skill in normalized_skills:
-            if skill in blacklist and not args.retest_blacklisted:
+            if skill in immutable:
+                results.append(
+                    ArbitrationResult(
+                        skill=skill,
+                        installed=(skills_home / skill).is_dir(),
+                        samples=[],
+                        max_rg=0,
+                        persistent_nonzero=False,
+                        action="kept",
+                        note="immutable locally; never removed/blacklisted",
+                    )
+                )
+                continue
+            # Local whitelist always wins: keep approved skills installed and skip arbitration.
+            if skill in whitelist:
+                results.append(
+                    ArbitrationResult(
+                        skill=skill,
+                        installed=(skills_home / skill).is_dir(),
+                        samples=[],
+                        max_rg=0,
+                        persistent_nonzero=False,
+                        action="kept",
+                        note="whitelisted locally; skipped arbitration",
+                    )
+                )
+                continue
+            if skill in blacklist:
                 remove_skill(skills_home, skill, args.dry_run)
+                if not args.dry_run:
+                    kill_rg_windows()
                 results.append(
                     ArbitrationResult(
                         skill=skill,
@@ -238,13 +342,18 @@ def main() -> int:
                         samples=[],
                         max_rg=0,
                         persistent_nonzero=False,
-                        action="restricted",
-                        note="already blacklisted; off by default",
+                        action="deleted",
+                        note="already blacklisted; permanently deleted",
                     )
                 )
                 continue
             try:
-                install_curated_skill(repo_root, skills_home, skill, args.dry_run)
+                if source_dir:
+                    install_local_skill(source_dir, skills_home, skill, args.dry_run)
+                else:
+                    if repo_root is None:
+                        raise RuntimeError("Internal error: missing cloned repository")
+                    install_curated_skill(repo_root, skills_home, skill, args.dry_run)
             except (FileNotFoundError, ValueError) as exc:
                 print(f"error: {exc}", file=sys.stderr)
                 return 2
@@ -253,15 +362,29 @@ def main() -> int:
             persistent = has_persistent_nonzero(samples, max(args.threshold, 1))
             should_remove = persistent or (max_rg >= args.max_rg)
             if should_remove:
-                remove_skill(skills_home, skill, args.dry_run)
-                if not args.dry_run:
-                    kill_rg_windows()
-                blacklist.add(skill)
-                action = "removed"
-                note = "blacklisted due to rg churn"
+                if skill in immutable:
+                    action = "kept"
+                    note = "immutable locally; removal skipped"
+                else:
+                    remove_skill(skills_home, skill, args.dry_run)
+                    if not args.dry_run:
+                        kill_rg_windows()
+                    blacklist.add(skill)
+                    whitelist.discard(skill)
+                    action = "deleted"
+                    note = "blacklisted due to rg churn; permanently deleted"
             else:
                 action = "kept"
                 note = ""
+                if args.promote_safe:
+                    whitelist.add(skill)
+                    immutable.add(skill)
+                    note = "promoted to whitelist+immutable"
+                elif source_dir is None:
+                    # Third-party candidates are deny-by-default unless explicitly promoted.
+                    remove_skill(skills_home, skill, args.dry_run)
+                    action = "deleted"
+                    note = "passed arbitration but not promoted; third-party default deny"
             results.append(
                 ArbitrationResult(
                     skill=skill,
@@ -274,9 +397,12 @@ def main() -> int:
                 )
             )
     finally:
-        shutil.rmtree(repo_root.parent, ignore_errors=True)
+        if repo_root is not None:
+            shutil.rmtree(repo_root.parent, ignore_errors=True)
 
-    write_blacklist(blacklist_path, blacklist, args.dry_run)
+    write_name_file(blacklist_path, blacklist, args.dry_run)
+    write_name_file(whitelist_path, whitelist, args.dry_run)
+    write_name_file(immutable_path, immutable, args.dry_run)
 
     payload = {
         "author": "Edward Silvia",
@@ -285,6 +411,8 @@ def main() -> int:
         "dry_run": bool(args.dry_run),
         "results": [asdict(row) for row in results],
         "blacklist": sorted(blacklist),
+        "whitelist": sorted(whitelist),
+        "immutable": sorted(immutable),
     }
     if args.json_out:
         Path(args.json_out).expanduser().write_text(

@@ -20,13 +20,27 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --window 10 --threshold 3 --max-rg 3
 ```
 
+For personally-created skills:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  my-new-skill \
+  --source-dir "$CODEX_HOME/skills" \
+  --window 10 --threshold 3 --max-rg 3 \
+  --promote-safe
+```
+
 ## Behavior
 
 1. Install each candidate skill one-by-one from curated source.
 2. Sample `rg.exe` process count once per second.
 3. Remove and blacklist offenders automatically.
-4. Keep blacklisted skills restricted/off by default unless `--retest-blacklisted` is used.
-5. Emit optional JSON evidence via `--json-out`.
+4. Treat blacklisted skills as permanently denied and delete them if present.
+5. Respect local whitelist entries in `<dest>/.whitelist.local` and skip arbitration for approved skills.
+6. Respect local immutable entries in `<dest>/.immutable.local`; immutable skills are never removed/blacklisted.
+7. Third-party (repo-based) skills are deny-by-default and deleted unless `--promote-safe` is used.
+8. `--promote-safe` auto-adds passing skills to whitelist + immutable files.
+9. Emit optional JSON evidence via `--json-out`.
 
 ## Safe Modes
 

@@ -18,6 +18,7 @@ Some skills can accidentally trigger runaway repository scans on Windows hosts. 
 - Slow or unstable editor/agent behavior
 
 `skill-arbiter` provides an admission gate so only safe skills stay installed.
+Third-party candidates are deny-by-default: they must pass checks and be explicitly promoted.
 
 ## What it does
 
@@ -26,6 +27,8 @@ Some skills can accidentally trigger runaway repository scans on Windows hosts. 
 3. Samples `rg.exe` process count once per second.
 4. Removes + blacklists skills that exceed guardrails.
 5. Emits CSV summary output and optional JSON evidence.
+
+For personal/local skills, it can also auto-promote safe skills into local whitelist + immutable files.
 
 ## Quick start
 
@@ -39,6 +42,16 @@ Dry-run mode (no filesystem changes):
 
 ```bash
 python3 scripts/arbitrate_skills.py doc screenshot --dry-run
+```
+
+Personal skill promotion (test local skills, then whitelist + immute if safe):
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  my-new-skill another-skill \
+  --source-dir "$CODEX_HOME/skills" \
+  --window 10 --threshold 3 --max-rg 3 \
+  --promote-safe
 ```
 
 ## Requirements
@@ -58,8 +71,10 @@ Dependency declarations:
 ```text
 usage: arbitrate_skills.py [-h] [--window WINDOW] [--threshold THRESHOLD]
                            [--max-rg MAX_RG] [--json-out JSON_OUT]
-                           [--repo REPO] [--dest DEST] [--blacklist BLACKLIST]
-                           [--dry-run] [--retest-blacklisted]
+                           [--repo REPO] [--source-dir SOURCE_DIR]
+                           [--dest DEST] [--blacklist BLACKLIST]
+                           [--whitelist WHITELIST] [--immutable IMMUTABLE]
+                           [--dry-run] [--promote-safe]
                            skills [skills ...]
 ```
 
@@ -70,10 +85,33 @@ Key options:
 - `--threshold`: Consecutive non-zero threshold (default `3`).
 - `--max-rg`: Remove skill if any sample >= value (default `3`, allowed range `1-3`).
 - `--json-out`: Optional machine-readable report path.
+- `--source-dir`: Optional local source dir; installs from `<source-dir>/<skill>` and skips repo clone.
 - `--dest`: Destination skills home (default `~/.codex/skills`).
 - `--blacklist`: Blacklist filename under `--dest` (default `.blacklist.local`).
+- `--whitelist`: Whitelist filename under `--dest` (default `.whitelist.local`).
+- `--immutable`: Immutable filename under `--dest` (default `.immutable.local`).
 - `--dry-run`: Report actions without modifying files.
-- `--retest-blacklisted`: Re-test skills already blacklisted. By default blacklisted skills remain restricted/off.
+- `--promote-safe`: Add passing skills to both whitelist and immutable files.
+
+Whitelist behavior:
+
+- Add one skill name per line in `<dest>/.whitelist.local`.
+- Whitelisted skills are kept and skip arbitration when they are not blacklisted.
+
+Immutable behavior:
+
+- Add one skill name per line in `<dest>/.immutable.local`.
+- Immutable skills are never removed or blacklisted by this script.
+
+Blacklist behavior:
+
+- Blacklisted skills are permanently denied by this script.
+- If a blacklisted skill is present under `<dest>`, it is deleted (not archived).
+
+Third-party behavior:
+
+- Third-party candidates (repo-based runs, without `--source-dir`) are deleted unless `--promote-safe` is set.
+- To admit a third-party skill after it proves safe, run with `--promote-safe` so it is added to whitelist + immutable.
 
 ## Output contract
 
@@ -82,7 +120,7 @@ Key options:
 - JSON report (`--json-out`) includes:
   - run metadata
   - per-skill arbitration results
-  - final blacklist list
+  - final blacklist/whitelist/immutable lists
 
 ## Security notes
 
