@@ -1,0 +1,52 @@
+---
+name: mx3-shim-agent-bridge-safety
+description: Operate and secure the Continue Agent Bridge in memryx-mx3-python-shim. Use when configuring bridge modes, validating /api/agent endpoints, enforcing controlled-write safety gates, or diagnosing bridge availability and permission failures.
+---
+
+# MX3 Shim Agent Bridge Safety
+
+Use this skill for Agent Bridge setup and safety enforcement.
+
+## Workflow
+
+1. Configure bridge environment variables for session mode.
+2. Validate capabilities endpoint and a read-only task.
+3. Keep `read_only` as default; enable `controlled_write` only when required.
+4. Enforce `allow_write` and apply gating rules.
+
+## Required Environment (PowerShell)
+
+```powershell
+$env:MX3_CONTINUE_BRIDGE_ENABLED = "1"
+$env:MX3_CONTINUE_BRIDGE_URL = "http://127.0.0.1:11420"
+$env:MX3_CONTINUE_MODE = "read_only"
+$env:MX3_CONTINUE_ALLOWED_ROOTS = "C:\Users\Eddie\Documents\GitHub\memryx-mx3-python-shim"
+```
+
+Optional controlled-write limits:
+
+```powershell
+$env:MX3_CONTINUE_WRITE_ALLOWED_ROOTS = "C:\Users\Eddie\Documents\GitHub\memryx-mx3-python-shim\memryx_mx3_python_shim,C:\Users\Eddie\Documents\GitHub\memryx-mx3-python-shim\tests"
+$env:MX3_CONTINUE_APPLY_ENABLED = "0"
+```
+
+## API Checks
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:9000/api/agent/capabilities | ConvertTo-Json -Depth 8
+```
+
+```powershell
+$body = @{
+  task_type   = "analyze_files"
+  prompt      = "Summarize required docs changes."
+  paths       = @("README.md", "docs/PROJECT_SCOPE.md", "docs/SCOPE_TRACKER.md")
+  allow_write = $false
+  dry_run     = $true
+} | ConvertTo-Json -Depth 8
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:9000/api/agent/tasks" -ContentType "application/json" -Body $body
+```
+
+## Reference
+
+- `references/bridge-safety-checklist.md`

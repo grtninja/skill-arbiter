@@ -1,0 +1,4 @@
+interface:
+  display_name: "Arbiter Churn Forensics"
+  short_description: "Investigate rg churn evidence and actions"
+  default_prompt: "Use $skill-arbiter-churn-forensics to investigate rg.exe churn incidents, collect JSON evidence, and determine quarantine actions."

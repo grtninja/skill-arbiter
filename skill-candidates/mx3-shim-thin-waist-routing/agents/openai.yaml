@@ -1,0 +1,4 @@
+interface:
+  display_name: "MX3 Thin Waist Routing"
+  short_description: "Validate REST routing and job surfaces"
+  default_prompt: "Use $mx3-shim-thin-waist-routing to verify thin-waist REST routes, job APIs, and connector routing behavior in memryx shim."

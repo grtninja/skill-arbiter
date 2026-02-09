@@ -1,0 +1,4 @@
+interface:
+  display_name: "MX3 WSL Hybrid Ops"
+  short_description: "Run hybrid Windows+WSL service workflow"
+  default_prompt: "Use $mx3-shim-wsl-hybrid-ops to operate and diagnose the Windows host + WSL auxiliary service split for memryx shim."

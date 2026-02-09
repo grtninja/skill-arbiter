@@ -1,0 +1,4 @@
+interface:
+  display_name: "STARFRAME Trace Validate"
+  short_description: "Validate NDJSON trace packet integrity"
+  default_prompt: "Use $starframe-trace-ndjson-validate to validate STARFRAME/GuardianTrace NDJSON packet streams and enforce trace contract integrity."

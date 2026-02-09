@@ -1,0 +1,4 @@
+interface:
+  display_name: "MeshGPT Telemetry and KV Guard"
+  short_description: "Protect telemetry, privacy, and KV contracts"
+  default_prompt: "Use $meshgpt-ddc-telemetry-kv-guard to keep GuardianTrace telemetry, STARFRAME privacy rules, and KV encryption contracts intact in MeshGPT DDC."

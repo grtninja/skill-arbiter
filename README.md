@@ -54,6 +54,16 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --promote-safe
 ```
 
+Personal lockdown mode (local-only + immutable pinning):
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  my-new-skill another-skill \
+  --source-dir "$CODEX_HOME/skills" \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
+
 ## Requirements
 
 - Python 3.10+
@@ -75,6 +85,7 @@ usage: arbitrate_skills.py [-h] [--window WINDOW] [--threshold THRESHOLD]
                            [--dest DEST] [--blacklist BLACKLIST]
                            [--whitelist WHITELIST] [--immutable IMMUTABLE]
                            [--dry-run] [--promote-safe]
+                           [--personal-lockdown]
                            skills [skills ...]
 ```
 
@@ -92,6 +103,7 @@ Key options:
 - `--immutable`: Immutable filename under `--dest` (default `.immutable.local`).
 - `--dry-run`: Report actions without modifying files.
 - `--promote-safe`: Add passing skills to both whitelist and immutable files.
+- `--personal-lockdown`: Personal mode; requires `--source-dir`, forces local promotion to whitelist+immutable, and rejects symlinked control files.
 
 Whitelist behavior:
 
@@ -112,6 +124,12 @@ Third-party behavior:
 
 - Third-party candidates (repo-based runs, without `--source-dir`) are deleted unless `--promote-safe` is set.
 - To admit a third-party skill after it proves safe, run with `--promote-safe` so it is added to whitelist + immutable.
+
+Personal-lockdown behavior:
+
+- Requires `--source-dir` (local-only admission; no curated clone flow for that run).
+- Forces promotion of passing skills to both whitelist and immutable files.
+- Rejects symlinked blacklist/whitelist/immutable control files.
 
 ## Output contract
 
@@ -138,6 +156,7 @@ python3 scripts/prepare_release.py --part patch
 - The script does not require API keys.
 - It executes subprocesses using argument arrays (no shell string interpolation).
 - Blacklisting is local to the configured skills destination.
+- Symlinked control files are rejected to prevent redirected writes.
 
 See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` for pre-publication scan notes.
 
@@ -150,6 +169,7 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 - `scripts/check_release_hygiene.py`: PR release gate.
 - `agents/openai.yaml`: Agent metadata.
 - `references/publish-notes.md`: Publish defaults and notes.
+- `references/recommended-skill-portfolio.md`: Baseline skill catalog and rollout guidance for other repos.
 
 ## License
 

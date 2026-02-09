@@ -10,6 +10,10 @@ All notable changes to this project are documented in this file.
   - `--whitelist` (`.whitelist.local` by default)
   - `--immutable` (`.immutable.local` by default)
 - Support for promoting passing skills with `--promote-safe`.
+- Personal lock-down mode via `--personal-lockdown`:
+  - requires local `--source-dir`
+  - auto-promotes passing skills to whitelist + immutable
+  - rejects symlinked control files and symlinked local skill paths
 - Validation for skill names and list filename arguments.
 - Optional local source install flow via `--source-dir` in the CLI contract docs.
 - Release automation helpers:

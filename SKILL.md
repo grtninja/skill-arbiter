@@ -30,6 +30,16 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --promote-safe
 ```
 
+For personal lockdown mode:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  my-new-skill \
+  --source-dir "$CODEX_HOME/skills" \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
+
 ## Behavior
 
 1. Install each candidate skill one-by-one from curated source.
@@ -41,6 +51,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 7. Third-party (repo-based) skills are deny-by-default and deleted unless `--promote-safe` is used.
 8. `--promote-safe` auto-adds passing skills to whitelist + immutable files.
 9. Emit optional JSON evidence via `--json-out`.
+10. `--personal-lockdown` requires local `--source-dir`, forces whitelist+immutable promotion, and rejects symlinked control files.
 
 ## Safe Modes
 

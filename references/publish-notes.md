@@ -14,6 +14,7 @@ Recommended defaults:
 - local whitelist supports pre-approved skills (`<dest>/.whitelist.local`)
 - local immutable list prevents removal/blacklisting (`<dest>/.immutable.local`)
 - third-party candidates are deny-by-default unless `--promote-safe` is used
+- personal lockdown mode (`--personal-lockdown`) requires `--source-dir`, auto-promotes safe skills, and rejects symlinked control files
 - reject empty skill task names
 
 Outputs:

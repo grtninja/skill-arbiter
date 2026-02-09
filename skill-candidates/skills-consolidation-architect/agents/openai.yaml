@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skills Consolidation"
+  short_description: "Consolidate repo skill sets modularly"
+  default_prompt: "Use $skills-consolidation-architect to audit overlap, split monolithic skills, and maintain modular per-repo skill sets with lockdown admission testing."

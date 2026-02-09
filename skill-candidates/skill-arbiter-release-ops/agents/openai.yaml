@@ -1,0 +1,4 @@
+interface:
+  display_name: "Arbiter Release Ops"
+  short_description: "Run release bump and PR hygiene gates"
+  default_prompt: "Use $skill-arbiter-release-ops to prepare releases, update changelog metadata, and enforce release hygiene in skill-arbiter PRs."

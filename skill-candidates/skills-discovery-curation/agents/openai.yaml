@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skills Discovery"
+  short_description: "Discover and prioritize useful skills"
+  default_prompt: "Use $skills-discovery-curation to discover available skills, map them to repo needs, and propose a vetted install/admission plan."

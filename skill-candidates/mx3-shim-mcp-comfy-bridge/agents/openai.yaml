@@ -1,0 +1,4 @@
+interface:
+  display_name: "MX3 MCP Comfy Bridge"
+  short_description: "Manage MCP adapter and ComfyUI bridge"
+  default_prompt: "Use $mx3-shim-mcp-comfy-bridge for MCP adapter configuration, status checks, and ComfyUI bridge operations in memryx shim."

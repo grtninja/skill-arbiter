@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRM Setup Diagnostics"
+  short_description: "Debug setup and runtime state wiring"
+  default_prompt: "Use $vrm-sandbox-setup-diagnostics to diagnose setup wizard, provider config, and renderer diagnostics in VRM-Sandbox."

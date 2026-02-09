@@ -1,0 +1,4 @@
+interface:
+  display_name: "STARFRAME Shim Contract"
+  short_description: "Enforce MX3 shim contract and tests"
+  default_prompt: "Use $starframe-shim-contract-checks to enforce MX3 shim endpoint contract, mock-based test coverage, and fail-closed behavior in STARFRAME."

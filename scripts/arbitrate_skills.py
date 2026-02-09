@@ -114,6 +114,13 @@ def require_valid_blacklist_name(name: str) -> None:
         raise ValueError("Blacklist must be a filename under --dest")
 
 
+def require_non_symlink_path(path: Path, label: str) -> None:
+    """Reject symlinked control files to prevent unintended writes."""
+
+    if path.is_symlink():
+        raise ValueError(f"{label} cannot be a symlink: {path}")
+
+
 def install_curated_skill(repo_root: Path, skills_home: Path, skill: str, dry_run: bool) -> None:
     """Install one curated skill into the destination skills directory."""
 
@@ -133,7 +140,10 @@ def install_local_skill(source_dir: Path, skills_home: Path, skill: str, dry_run
     """Install one local skill from a provided source directory."""
 
     require_valid_skill_name(skill)
-    src = (source_dir / skill).resolve()
+    source_path = source_dir / skill
+    if source_path.is_symlink():
+        raise ValueError(f"Local skill path cannot be a symlink: {source_path}")
+    src = source_path.resolve()
     if not src.is_dir():
         raise FileNotFoundError(f"Local skill not found: {src}")
     dst = (skills_home / skill).resolve()
@@ -229,6 +239,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="When a skill passes arbitration, add it to whitelist and immutable files",
     )
+    parser.add_argument(
+        "--personal-lockdown",
+        action="store_true",
+        help="Personal mode: require --source-dir, force promote-safe, and harden local control paths",
+    )
     return parser.parse_args()
 
 
@@ -254,6 +269,8 @@ def main() -> int:
         require_valid_blacklist_name(args.blacklist)
         require_valid_blacklist_name(args.whitelist)
         require_valid_blacklist_name(args.immutable)
+        if args.personal_lockdown and not args.source_dir:
+            raise ValueError("--personal-lockdown requires --source-dir")
         if args.blacklist == args.whitelist:
             raise ValueError("--blacklist and --whitelist must be different files")
         if args.immutable in {args.blacklist, args.whitelist}:
@@ -271,6 +288,18 @@ def main() -> int:
     blacklist_path = skills_home / args.blacklist
     whitelist_path = skills_home / args.whitelist
     immutable_path = skills_home / args.immutable
+    try:
+        require_non_symlink_path(blacklist_path, "Blacklist file")
+        require_non_symlink_path(whitelist_path, "Whitelist file")
+        require_non_symlink_path(immutable_path, "Immutable file")
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    # In personal mode, always pin passing local skills.
+    if args.personal_lockdown:
+        args.promote_safe = True
+
     blacklist = load_name_file(blacklist_path)
     whitelist = load_name_file(whitelist_path)
     immutable: set[str] = set()
@@ -319,6 +348,10 @@ def main() -> int:
                 continue
             # Local whitelist always wins: keep approved skills installed and skip arbitration.
             if skill in whitelist:
+                note = "whitelisted locally; skipped arbitration"
+                if args.personal_lockdown:
+                    immutable.add(skill)
+                    note = "whitelisted locally; pinned immutable via personal-lockdown"
                 results.append(
                     ArbitrationResult(
                         skill=skill,
@@ -327,7 +360,7 @@ def main() -> int:
                         max_rg=0,
                         persistent_nonzero=False,
                         action="kept",
-                        note="whitelisted locally; skipped arbitration",
+                        note=note,
                     )
                 )
                 continue
@@ -380,6 +413,8 @@ def main() -> int:
                     whitelist.add(skill)
                     immutable.add(skill)
                     note = "promoted to whitelist+immutable"
+                    if args.personal_lockdown:
+                        note = "promoted to whitelist+immutable (personal-lockdown)"
                 elif source_dir is None:
                     # Third-party candidates are deny-by-default unless explicitly promoted.
                     remove_skill(skills_home, skill, args.dry_run)

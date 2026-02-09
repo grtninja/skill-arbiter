@@ -1,0 +1,4 @@
+interface:
+  display_name: "STARFRAME Boundary Governance"
+  short_description: "Keep changes inside boundary contracts"
+  default_prompt: "Use $starframe-boundary-governance to enforce BOUNDARIES.md and AGENTS.md governance for STARFRAME changes."

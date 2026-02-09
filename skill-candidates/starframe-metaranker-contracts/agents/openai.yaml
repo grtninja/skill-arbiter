@@ -1,0 +1,4 @@
+interface:
+  display_name: "STARFRAME MetaRanker"
+  short_description: "Maintain MetaRanker scoring contracts"
+  default_prompt: "Use $starframe-metaranker-contracts to update and validate MetaRanker scoring logic, report schema alignment, and credit multiplier behavior in STARFRAME."

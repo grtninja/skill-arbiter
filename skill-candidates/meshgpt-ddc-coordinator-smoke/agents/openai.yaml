@@ -1,0 +1,4 @@
+interface:
+  display_name: "MeshGPT Coordinator Smoke"
+  short_description: "Exercise node+coordinator smoke flow"
+  default_prompt: "Use $meshgpt-ddc-coordinator-smoke to run local coordinator and node smoke workflows for MeshGPT DDC runtime changes."

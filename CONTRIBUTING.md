@@ -30,6 +30,12 @@ Then update the generated `CHANGELOG.md` notes so they accurately describe the P
 
 Docs-only and metadata-only PRs (for example `README.md`, `references/`, `.github/`) can skip the release bump.
 
+For personal/local skill admission runs, prefer:
+
+```bash
+python3 scripts/arbitrate_skills.py <skill> --source-dir "$CODEX_HOME/skills" --personal-lockdown
+```
+
 ## Pull Requests
 
 Before opening a PR:
