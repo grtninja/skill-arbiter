@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Cold-Start Warm-Path Optimizer"
+  short_description: "Optimize cold-start latency"
+  default_prompt: "Use $skill-cold-start-warm-path-optimizer to measure cold vs warm skill latency, identify prewarm candidates, and build deterministic warm-path plans."

@@ -35,6 +35,21 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 10. `repo-b-local-comfy-orchestrator` (repo-b specific)
    - Run loopback-only read-only Comfy MCP resource orchestration with strict validation and fail-closed diagnostics+hints.
    - Trigger examples: "comfy resource health check", "local comfy hints", "fail-closed comfy orchestration"
+11. `skill-cost-credit-governor`
+   - Track per-skill spend/runtime and emit warn/throttle/disable actions when anomalies or budget pressure appear.
+   - Trigger examples: "govern skill spend", "detect chatter loops", "budget enforcement policy"
+12. `skill-dependency-fan-out-inspector`
+   - Build dependency graphs and flag fan-out/cycle/N+1 risks across skill stacks.
+   - Trigger examples: "map skill dependencies", "detect invocation fan-out", "find circular skill chains"
+13. `skill-cold-start-warm-path-optimizer`
+   - Measure cold-vs-warm latency and generate prewarm plus never-auto-invoke plans.
+   - Trigger examples: "optimize cold starts", "build warm-path plan", "latency prewarm candidates"
+14. `skill-blast-radius-simulator`
+   - Simulate pre-admission blast radius and require acknowledgement for high-risk deltas.
+   - Trigger examples: "simulate skill install risk", "preflight new skill risk", "blast radius gate"
+15. `skill-trust-ledger`
+   - Maintain local reliability memory and trust tiers from observed outcomes and arbiter evidence.
+   - Trigger examples: "skill reliability ledger", "trust-tier report", "should we re-enable this skill?"
 
 ## Optional Skills by Repo Type
 
@@ -83,6 +98,17 @@ Mass-index skill admission template:
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
+
+Meta-governance admission template:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skill-cost-credit-governor skill-dependency-fan-out-inspector \
+  skill-cold-start-warm-path-optimizer skill-blast-radius-simulator skill-trust-ledger \
   --source-dir skill-candidates \
   --window 10 --threshold 3 --max-rg 3 \
   --personal-lockdown

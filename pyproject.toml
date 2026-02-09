@@ -1,6 +1,6 @@
 [project]
 name = "skill-arbiter"
-version = "0.2.5"
+version = "0.2.6"
 description = "Admit or quarantine Codex skills by detecting persistent rg.exe churn on Windows hosts."
 readme = "README.md"
 requires-python = ">=3.10"

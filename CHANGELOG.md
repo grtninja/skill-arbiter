@@ -2,6 +2,35 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.6] - 2026-02-09
+
+### Added
+
+- New candidate skill `skill-candidates/skill-cost-credit-governor/`:
+  - `scripts/skill_cost_governor.py` for spend/risk analysis and `warn|throttle|disable` policy output.
+  - `references/governor-workflow.md`
+  - `references/policy-contract.md`
+- New candidate skill `skill-candidates/skill-dependency-fan-out-inspector/`:
+  - `scripts/dependency_inspector.py` for dependency graph, cycle detection, fan-out hotspots, and N+1 risk reporting.
+  - `references/inspection-workflow.md`
+  - `references/graph-contract.md`
+- New candidate skill `skill-candidates/skill-cold-start-warm-path-optimizer/`:
+  - `scripts/warm_path_optimizer.py` for cold-vs-warm analysis and prewarm planning.
+  - `references/optimizer-workflow.md`
+  - `references/latency-contract.md`
+- New candidate skill `skill-candidates/skill-blast-radius-simulator/`:
+  - `scripts/blast_radius_sim.py` for pre-admission risk scoring and acknowledgement gating.
+  - `references/simulation-workflow.md`
+  - `references/risk-heuristics.md`
+- New candidate skill `skill-candidates/skill-trust-ledger/`:
+  - `scripts/trust_ledger.py` for event recording, arbiter ingest, and trust-tier reports.
+  - `references/ledger-workflow.md`
+  - `references/scoring-contract.md`
+
+### Changed
+
+- Updated `README.md`, `SKILL.md`, and `references/recommended-skill-portfolio.md` to include discovery and admission guidance for the five new meta-governance skills.
+
 ## [0.2.5] - 2026-02-09
 
 ### Added

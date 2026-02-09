@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Trust Ledger"
+  short_description: "Track skill reliability over time"
+  default_prompt: "Use $skill-trust-ledger to record and score skill outcomes, ingest arbiter evidence, and generate trust tiers for admit/restrict/block decisions."

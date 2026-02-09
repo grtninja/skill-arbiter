@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Cost Credit Governor"
+  short_description: "Control per-skill spend"
+  default_prompt: "Use $skill-cost-credit-governor to analyze per-skill token/credit usage, detect loops or chatter, and emit warn/throttle/disable actions with evidence."

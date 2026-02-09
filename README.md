@@ -212,6 +212,11 @@ Recent additions under `skill-candidates/`:
 - `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
 - `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
 - `usage-watcher`: usage analysis and budget planning for paid credit control and rate-limit guardrails.
+- `skill-cost-credit-governor`: per-skill spend governance with anomaly detection and warn/throttle/disable policy outputs.
+- `skill-dependency-fan-out-inspector`: dependency graph inspection with cycle, fan-out, and N+1 risk reporting.
+- `skill-cold-start-warm-path-optimizer`: cold-vs-warm latency analysis and deterministic prewarm planning.
+- `skill-blast-radius-simulator`: pre-admission blast-radius scoring with baseline delta and acknowledgement gating.
+- `skill-trust-ledger`: local reliability ledger and trust-tier reporting from manual and arbiter evidence.
 
 ## License
 

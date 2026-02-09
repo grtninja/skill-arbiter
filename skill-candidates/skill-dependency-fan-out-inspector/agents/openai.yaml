@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Dependency Fan-Out Inspector"
+  short_description: "Detect hidden fan-out and cycles"
+  default_prompt: "Use $skill-dependency-fan-out-inspector to map skill dependencies, detect cycles and N+1 fan-out risks, and emit graph evidence artifacts."

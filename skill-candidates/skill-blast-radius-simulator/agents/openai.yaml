@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Blast-Radius Simulator"
+  short_description: "Predict install/enable risk"
+  default_prompt: "Use $skill-blast-radius-simulator to estimate blast radius for candidate skills, compare risk deltas, and gate high-risk changes with explicit acknowledgement."
