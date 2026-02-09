@@ -1,4 +1,4 @@
 interface:
-  display_name: "STARFRAME Trace Validate"
+  display_name: "Repo C Trace Validate"
   short_description: "Validate NDJSON trace packet integrity"
-  default_prompt: "Use $starframe-trace-ndjson-validate to validate STARFRAME/GuardianTrace NDJSON packet streams and enforce trace contract integrity."
+  default_prompt: "Use $repo-c-trace-ndjson-validate to validate Repo C/repo_c_trace NDJSON packet streams and enforce trace contract integrity."

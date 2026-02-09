@@ -1,9 +1,9 @@
 ---
-name: meshgpt-ddc-coordinator-smoke
-description: Run and debug MeshGPT DDC node/coordinator smoke workflows. Use when changing coordinator endpoints, job fetch/submit flow, runtime registration, or backend dispatch paths that must be verified with local coordinator execution.
+name: repo-a-coordinator-smoke
+description: Run and debug Repo A DDC node/coordinator smoke workflows. Use when changing coordinator endpoints, job fetch/submit flow, runtime registration, or backend dispatch paths that must be verified with local coordinator execution.
 ---
 
-# MeshGPT DDC Coordinator Smoke
+# Repo A DDC Coordinator Smoke
 
 Use this skill for local coordinator+node runtime validation.
 
@@ -16,7 +16,7 @@ Use this skill for local coordinator+node runtime validation.
 
 ## Canonical Smoke Commands
 
-Run from `<MESHGPT_REPO>` root:
+Run from `<PRIVATE_REPO_A>` root:
 
 ```bash
 uvicorn packages.coordinator.app.main:app --port 8787 --reload
@@ -25,7 +25,7 @@ uvicorn packages.coordinator.app.main:app --port 8787 --reload
 In a second shell:
 
 ```bash
-python -m meshgpt_node --policy config/device_policy.json --verbose
+python -m repo_a_node --policy config/device_policy.json --verbose
 ```
 
 ## Smoke Expectations

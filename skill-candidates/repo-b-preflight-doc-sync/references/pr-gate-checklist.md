@@ -1,4 +1,4 @@
-# MX3 PR Gate Checklist
+# REPO_B PR Gate Checklist
 
 1. Root cause and changed files documented.
 2. Required preflight profiles run or explicitly blocked with target-PC steps.

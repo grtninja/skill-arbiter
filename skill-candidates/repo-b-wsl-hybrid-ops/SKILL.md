@@ -1,9 +1,9 @@
 ---
-name: mx3-shim-wsl-hybrid-ops
-description: Operate and diagnose the Windows-host plus WSL-auxiliary split for <MX3_SHIM_REPO>. Use when validating hybrid service reachability, enforcing hardware-on-Windows boundaries, or debugging cross-host connectivity for ComfyUI and LM Studio helpers.
+name: repo-b-wsl-hybrid-ops
+description: Operate and diagnose the Windows-host plus WSL-auxiliary split for <PRIVATE_REPO_B>. Use when validating hybrid service reachability, enforcing hardware-on-Windows boundaries, or debugging cross-host connectivity for ComfyUI and LM Studio helpers.
 ---
 
-# MX3 Shim WSL Hybrid Ops
+# REPO_B Shim WSL Hybrid Ops
 
 Use this skill for hybrid Windows+WSL operations.
 
@@ -34,8 +34,8 @@ python tools/hybrid_doctor.py --pretty
 Hardware strict (Windows-only):
 
 ```powershell
-$env:MEMRYX_ONLY = "1"
-$env:MEMRYX_FORCE_REAL = "1"
+$env:repo_b_ONLY = "1"
+$env:repo_b_FORCE_REAL = "1"
 ```
 
 ## Reference

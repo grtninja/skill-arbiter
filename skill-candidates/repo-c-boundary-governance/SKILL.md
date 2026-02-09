@@ -1,9 +1,9 @@
 ---
-name: starframe-boundary-governance
-description: Keep <STARFRAME_REPO> changes aligned with BOUNDARIES.md and AGENTS.md governance. Use when modifying trust-layer architecture, cross-repo interfaces, packaging docs, or any change that could blur cognitive vs hardware execution boundaries.
+name: repo-c-boundary-governance
+description: Keep <PRIVATE_REPO_C> changes aligned with BOUNDARIES.md and AGENTS.md governance. Use when modifying trust-layer architecture, cross-repo interfaces, packaging docs, or any change that could blur cognitive vs hardware execution boundaries.
 ---
 
-# STARFRAME Boundary Governance
+# Repo C Boundary Governance
 
 Use this skill to keep architecture and governance constraints intact.
 
@@ -17,7 +17,7 @@ Use this skill to keep architecture and governance constraints intact.
 ## Quick Governance Checks
 
 ```bash
-rg -n "BOUNDARIES.md|MX3_SIDECAR_URL|Windows-SDK|fail-closed|trust-layer" -S README.md AGENTS.md docs src starframe guardiantrace metaranker
+rg -n "BOUNDARIES.md|REPO_B_SIDECAR_URL|Windows-SDK|fail-closed|trust-layer" -S README.md AGENTS.md docs src repo-c repo_c_trace ranking_engine
 ruff check .
 pytest -q
 ```

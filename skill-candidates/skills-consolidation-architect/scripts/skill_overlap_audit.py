@@ -147,13 +147,13 @@ def build_pair_scores(docs: list[SkillDoc]) -> list[PairScore]:
 
 def infer_group(name: str) -> str:
     for prefix in (
-        "mx3-shim",
-        "meshgpt-ddc",
-        "starframe",
-        "vrm-sandbox",
+        "repo-b",
+        "repo-a",
+        "repo-c",
+        "repo-d",
         "skill-arbiter",
         "skills",
-        "mx3-dfp",
+        "repo_b-dfp",
     ):
         if name.startswith(prefix):
             return prefix

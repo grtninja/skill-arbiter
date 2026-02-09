@@ -1,4 +1,4 @@
 interface:
-  display_name: "STARFRAME Persona Registry"
+  display_name: "Repo C Persona Registry"
   short_description: "Manage persona packs and manifests"
-  default_prompt: "Use $starframe-persona-registry-maintenance to maintain persona manifests, ordered file stacks, and registry loading behavior in STARFRAME."
+  default_prompt: "Use $repo-c-persona-registry-maintenance to maintain persona manifests, ordered file stacks, and registry loading behavior in Repo C."

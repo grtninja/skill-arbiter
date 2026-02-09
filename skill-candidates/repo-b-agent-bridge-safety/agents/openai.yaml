@@ -1,4 +1,4 @@
 interface:
-  display_name: "MX3 Agent Bridge Safety"
+  display_name: "REPO_B Agent Bridge Safety"
   short_description: "Operate Continue bridge with safety gates"
-  default_prompt: "Use $mx3-shim-agent-bridge-safety for memryx Agent Bridge setup, mode gating, and controlled-write safety validation."
+  default_prompt: "Use $repo-b-agent-bridge-safety for repo_b Agent Bridge setup, mode gating, and controlled-write safety validation."

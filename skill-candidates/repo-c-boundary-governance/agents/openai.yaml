@@ -1,4 +1,4 @@
 interface:
-  display_name: "STARFRAME Boundary Governance"
+  display_name: "Repo C Boundary Governance"
   short_description: "Keep changes inside boundary contracts"
-  default_prompt: "Use $starframe-boundary-governance to enforce BOUNDARIES.md and AGENTS.md governance for STARFRAME changes."
+  default_prompt: "Use $repo-c-boundary-governance to enforce BOUNDARIES.md and AGENTS.md governance for Repo C changes."

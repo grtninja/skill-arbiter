@@ -1,7 +1,7 @@
-# VRM Diagnostic Markers
+# Repo D Diagnostic Markers
 
 - `hydrate.ok`: setup and asset hydration completed.
-- `vrm.load_*`: VRM load outcome details.
+- `repo_d.load_*`: Repo D load outcome details.
 - `background.*`: background import/selection transitions.
 - `overlay.*`: transparent/click-through mode transitions.
 

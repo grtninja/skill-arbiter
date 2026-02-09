@@ -1,11 +1,11 @@
 ---
-name: vrm-sandbox-ui-guardrails
-description: Enforce <VRM_SANDBOX_REPO> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, no-download policy, local-only behavior, and no-CI constraints.
+name: repo-d-ui-guardrails
+description: Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, no-download policy, local-only behavior, and no-CI constraints.
 ---
 
-# VRM Sandbox UI Guardrails
+# Repo D Sandbox UI Guardrails
 
-Use this skill to keep <VRM_SANDBOX_REPO> changes compliant with repository rules.
+Use this skill to keep <PRIVATE_REPO_D> changes compliant with repository rules.
 
 ## Workflow
 

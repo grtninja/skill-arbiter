@@ -1,9 +1,9 @@
 ---
-name: mx3-shim-mcp-comfy-bridge
-description: Manage MCP adapter runtime and ComfyUI bridge integration in <MX3_SHIM_REPO>. Use when enabling MCP, updating adapter config, validating shim.comfy tools/resources, or troubleshooting MCP/Comfy availability and error contracts.
+name: repo-b-mcp-comfy-bridge
+description: Manage MCP adapter runtime and ComfyUI bridge integration in <PRIVATE_REPO_B>. Use when enabling MCP, updating adapter config, validating shim.comfy tools/resources, or troubleshooting MCP/Comfy availability and error contracts.
 ---
 
-# MX3 Shim MCP Comfy Bridge
+# REPO_B Shim MCP Comfy Bridge
 
 Use this skill for MCP adapter and ComfyUI bridge operations.
 
@@ -33,10 +33,10 @@ curl -X POST http://127.0.0.1:9000/api/mcp/config \
 
 ## Comfy Bridge Controls
 
-- `MX3_COMFYUI_ENABLED`
-- `MX3_COMFYUI_BASE_URL`
-- `MX3_COMFYUI_API_KEY`
-- `MX3_COMFYUI_TIMEOUT_S`
+- `REPO_B_COMFYUI_ENABLED`
+- `REPO_B_COMFYUI_BASE_URL`
+- `REPO_B_COMFYUI_API_KEY`
+- `REPO_B_COMFYUI_TIMEOUT_S`
 
 ## Reference
 

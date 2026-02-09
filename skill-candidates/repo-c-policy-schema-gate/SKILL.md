@@ -1,9 +1,9 @@
 ---
-name: starframe-policy-schema-gate
-description: Validate STARFRAME policy files and schema contracts in <STARFRAME_REPO>. Use when editing policy manifests, schema files, policy validation CLI logic, or tests that rely on schema conformance.
+name: repo-c-policy-schema-gate
+description: Validate Repo C policy files and schema contracts in <PRIVATE_REPO_C>. Use when editing policy manifests, schema files, policy validation CLI logic, or tests that rely on schema conformance.
 ---
 
-# STARFRAME Policy Schema Gate
+# Repo C Policy Schema Gate
 
 Use this skill to enforce policy/schema correctness.
 
@@ -15,10 +15,10 @@ Use this skill to enforce policy/schema correctness.
 
 ## Core Commands
 
-Run from `<STARFRAME_REPO>` root:
+Run from `<PRIVATE_REPO_C>` root:
 
 ```bash
-python -m tools.policy_validate policies/starframe_policy.yaml
+python -m tools.policy_validate policies/repo-c_policy.yaml
 python -m tools.policy_validate policies/device_policy.json
 ruff check .
 pytest -q

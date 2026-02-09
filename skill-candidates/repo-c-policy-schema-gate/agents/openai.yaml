@@ -1,4 +1,4 @@
 interface:
-  display_name: "STARFRAME Policy Gate"
+  display_name: "Repo C Policy Gate"
   short_description: "Validate policy files and schema contracts"
-  default_prompt: "Use $starframe-policy-schema-gate to validate STARFRAME policy files and schema-aligned updates before merges."
+  default_prompt: "Use $repo-c-policy-schema-gate to validate Repo C policy files and schema-aligned updates before merges."

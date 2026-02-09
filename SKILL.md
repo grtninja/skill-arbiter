@@ -89,3 +89,12 @@ CI check:
 ```bash
 python3 scripts/check_private_data_policy.py
 ```
+
+## Skill Level-Up Declaration
+
+When this workflow creates or improves a skill, include this exact two-line declaration in the response:
+
+```text
+New Skill Unlocked
+<Skill Name> leveled up to XX
+```

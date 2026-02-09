@@ -1,9 +1,9 @@
 ---
-name: mx3-shim-preflight-doc-sync
-description: Enforce <MX3_SHIM_REPO> preflight gates and documentation lockstep. Use before PRs to run required validation profiles and keep README.md, docs/PROJECT_SCOPE.md, and docs/SCOPE_TRACKER.md synchronized with shipped behavior.
+name: repo-b-preflight-doc-sync
+description: Enforce <PRIVATE_REPO_B> preflight gates and documentation lockstep. Use before PRs to run required validation profiles and keep README.md, docs/PROJECT_SCOPE.md, and docs/SCOPE_TRACKER.md synchronized with shipped behavior.
 ---
 
-# MX3 Shim Preflight and Doc Sync
+# REPO_B Shim Preflight and Doc Sync
 
 Use this skill for PR-readiness and governance updates.
 
@@ -19,7 +19,7 @@ Use this skill for PR-readiness and governance updates.
 ```powershell
 pwsh -File tools/preflight.ps1 -Fast
 pwsh -File tools/preflight.ps1 -Node
-pwsh -File tools/preflight.ps1 -Hardware -ForceReal -MemryxOnly -VerboseOutput
+pwsh -File tools/preflight.ps1 -Hardware -ForceReal -repo_bOnly -VerboseOutput
 ```
 
 ```bash

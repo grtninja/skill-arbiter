@@ -1,9 +1,9 @@
 ---
-name: mx3-shim-agent-bridge-safety
-description: Operate and secure the Continue Agent Bridge in <MX3_SHIM_REPO>. Use when configuring bridge modes, validating /api/agent endpoints, enforcing controlled-write safety gates, or diagnosing bridge availability and permission failures.
+name: repo-b-agent-bridge-safety
+description: Operate and secure the Continue Agent Bridge in <PRIVATE_REPO_B>. Use when configuring bridge modes, validating /api/agent endpoints, enforcing controlled-write safety gates, or diagnosing bridge availability and permission failures.
 ---
 
-# MX3 Shim Agent Bridge Safety
+# REPO_B Shim Agent Bridge Safety
 
 Use this skill for Agent Bridge setup and safety enforcement.
 
@@ -17,17 +17,17 @@ Use this skill for Agent Bridge setup and safety enforcement.
 ## Required Environment (PowerShell)
 
 ```powershell
-$env:MX3_CONTINUE_BRIDGE_ENABLED = "1"
-$env:MX3_CONTINUE_BRIDGE_URL = "http://127.0.0.1:11420"
-$env:MX3_CONTINUE_MODE = "read_only"
-$env:MX3_CONTINUE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<MX3_SHIM_REPO>"
+$env:REPO_B_CONTINUE_BRIDGE_ENABLED = "1"
+$env:REPO_B_CONTINUE_BRIDGE_URL = "http://127.0.0.1:11420"
+$env:REPO_B_CONTINUE_MODE = "read_only"
+$env:REPO_B_CONTINUE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>"
 ```
 
 Optional controlled-write limits:
 
 ```powershell
-$env:MX3_CONTINUE_WRITE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<MX3_SHIM_REPO>\memryx_mx3_python_shim,$env:USERPROFILE\Documents\GitHub\<MX3_SHIM_REPO>\tests"
-$env:MX3_CONTINUE_APPLY_ENABLED = "0"
+$env:REPO_B_CONTINUE_WRITE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>\repo_b_repo_b_python_shim,$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>\tests"
+$env:REPO_B_CONTINUE_APPLY_ENABLED = "0"
 ```
 
 ## API Checks

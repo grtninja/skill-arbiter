@@ -1,9 +1,9 @@
 ---
-name: mx3-shim-thin-waist-routing
-description: Validate and troubleshoot thin-waist REST routing in <MX3_SHIM_REPO>. Use when changing /v1 models/chat/vision routes, async job queue endpoints, connector routing policy, or bind/exposure behavior.
+name: repo-b-thin-waist-routing
+description: Validate and troubleshoot thin-waist REST routing in <PRIVATE_REPO_B>. Use when changing /v1 models/chat/vision routes, async job queue endpoints, connector routing policy, or bind/exposure behavior.
 ---
 
-# MX3 Shim Thin-Waist Routing
+# REPO_B Shim Thin-Waist Routing
 
 Use this skill for REST route verification and routing policy integrity.
 

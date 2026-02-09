@@ -44,7 +44,7 @@ This repository is public-shape only:
 
 - Do not commit private repository identifiers.
 - Do not commit user-specific absolute paths (for example `/home/<user>/...` or `C:\\Users\\<user>\\...`).
-- Use placeholders in docs and skills (for example `<STARFRAME_REPO>`, `<MX3_SHIM_REPO>`, `<MESHGPT_REPO>`, `<VRM_SANDBOX_REPO>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`).
+- Use placeholders in docs and skills (for example `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`).
 
 Hard gates:
 
@@ -62,6 +62,13 @@ Before opening a PR:
 5. Confirm CI `Release hygiene check` passes on the PR.
 6. Confirm CI `Privacy policy check` passes on the PR.
 7. Include rationale and risk notes in the PR description.
+
+If a skill was added or improved in the work, include this declaration in the response/update text:
+
+```text
+New Skill Unlocked
+<Skill Name> leveled up to XX
+```
 
 ## Security
 

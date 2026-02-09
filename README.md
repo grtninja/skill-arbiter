@@ -213,3 +213,12 @@ If this project is useful in your workflow, you can support development on Patre
 ## Contribution Policy
 
 This repository is primarily owner-maintained. Issues and discussions are welcome, but external pull requests may be declined.
+
+## Skill Level-Up Declaration
+
+When a skill is newly created or improved, include this exact declaration in the response/update text:
+
+```text
+New Skill Unlocked
+<Skill Name> leveled up to XX
+```

@@ -1,9 +1,9 @@
 ---
-name: starframe-trace-ndjson-validate
-description: Validate STARFRAME/GuardianTrace NDJSON packet integrity in <STARFRAME_REPO>. Use when changing trace packet fields, guardian reroute behavior, or validation tooling that checks packet monotonicity and required envelope keys.
+name: repo-c-trace-ndjson-validate
+description: Validate Repo C/repo_c_trace NDJSON packet integrity in <PRIVATE_REPO_C>. Use when changing trace packet fields, guardian reroute behavior, or validation tooling that checks packet monotonicity and required envelope keys.
 ---
 
-# STARFRAME Trace NDJSON Validate
+# Repo C Trace NDJSON Validate
 
 Use this skill to protect packet stream contract integrity.
 
@@ -15,7 +15,7 @@ Use this skill to protect packet stream contract integrity.
 
 ## Command
 
-Run from `<STARFRAME_REPO>` root:
+Run from `<PRIVATE_REPO_C>` root:
 
 ```bash
 python tools/trace_validate.py <path-to-ndjson>

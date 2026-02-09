@@ -1,9 +1,9 @@
 ---
-name: starframe-persona-registry-maintenance
-description: Maintain persona pack discovery and manifest-driven stack loading in <STARFRAME_REPO>. Use when adding/updating persona packs, editing manifest.persona.json files, or changing registry loader behavior in starframe/persona_registry.py.
+name: repo-c-persona-registry-maintenance
+description: Maintain persona pack discovery and manifest-driven stack loading in <PRIVATE_REPO_C>. Use when adding/updating persona packs, editing manifest.persona.json files, or changing registry loader behavior in repo_c/persona_registry.py.
 ---
 
-# STARFRAME Persona Registry Maintenance
+# Repo C Persona Registry Maintenance
 
 Use this skill for persona pack integrity and loader behavior.
 
@@ -16,11 +16,11 @@ Use this skill for persona pack integrity and loader behavior.
 
 ## Quick Validation Snippet
 
-Run from `<STARFRAME_REPO>` root:
+Run from `<PRIVATE_REPO_C>` root:
 
 ```bash
 python - <<'PY'
-from starframe.persona_registry import list_personas, load_persona_stack
+from repo_c.persona_registry import list_personas, load_persona_stack
 personas = list_personas()
 print('count=', len(personas))
 if personas:

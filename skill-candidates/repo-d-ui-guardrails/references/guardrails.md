@@ -1,4 +1,4 @@
-# VRM Sandbox Guardrails
+# Repo D Sandbox Guardrails
 
 - Windows-first development and packaging.
 - No GitHub Actions or CI workflows in this repo.

@@ -1,4 +1,4 @@
 interface:
-  display_name: "MeshGPT Policy Selftest"
-  short_description: "Run MeshGPT policy and selftest gates"
-  default_prompt: "Use $meshgpt-ddc-policy-selftest-gate to enforce MeshGPT policy checks, selftest commands, and acceptance gates before PRs."
+  display_name: "Repo A Policy Selftest"
+  short_description: "Run Repo A policy and selftest gates"
+  default_prompt: "Use $repo-a-policy-selftest-gate to enforce Repo A policy checks, selftest commands, and acceptance gates before PRs."

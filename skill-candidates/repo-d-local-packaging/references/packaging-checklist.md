@@ -1,4 +1,4 @@
-# VRM Packaging Checklist
+# Repo D Packaging Checklist
 
 1. `npm install` completed without workspace errors.
 2. `npm run build` and `npm run lint` passed.

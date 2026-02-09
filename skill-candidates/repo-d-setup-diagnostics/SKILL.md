@@ -1,9 +1,9 @@
 ---
-name: vrm-sandbox-setup-diagnostics
-description: Diagnose <VRM_SANDBOX_REPO> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, or overlay/background behavior.
+name: repo-d-setup-diagnostics
+description: Diagnose <PRIVATE_REPO_D> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, or overlay/background behavior.
 ---
 
-# VRM Sandbox Setup Diagnostics
+# Repo D Sandbox Setup Diagnostics
 
 Use this skill for setup and runtime-state troubleshooting.
 
@@ -12,7 +12,7 @@ Use this skill for setup and runtime-state troubleshooting.
 1. Reproduce the issue and capture exact user action sequence.
 2. Inspect renderer diagnostics markers:
    - `hydrate.ok`
-   - `vrm.load_*`
+   - `repo_d.load_*`
    - `background.*`
    - `overlay.*`
 3. Validate setup surfaces (LM Studio, Kokoro, Lovense, model selection) and persistence.

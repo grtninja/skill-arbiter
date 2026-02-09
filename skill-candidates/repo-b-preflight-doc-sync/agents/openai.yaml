@@ -1,4 +1,4 @@
 interface:
-  display_name: "MX3 Preflight and Docs"
+  display_name: "REPO_B Preflight and Docs"
   short_description: "Run gates and keep docs in lockstep"
-  default_prompt: "Use $mx3-shim-preflight-doc-sync to enforce memryx preflight commands and keep README/PROJECT_SCOPE/SCOPE_TRACKER aligned."
+  default_prompt: "Use $repo-b-preflight-doc-sync to enforce repo_b preflight commands and keep README/PROJECT_SCOPE/SCOPE_TRACKER aligned."

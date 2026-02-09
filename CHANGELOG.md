@@ -17,6 +17,10 @@ All notable changes to this project are documented in this file.
 - PR template validation now includes privacy policy and docs-alignment checks.
 - Documentation set (`README.md`, `CONTRIBUTING.md`, `SKILL.md`) now documents the privacy lock workflow.
 - Candidate skill docs were sanitized to placeholder-based repo/path references instead of private identifiers.
+- Candidate skill folder/name surfaces were redacted to neutral `repo-a`/`repo-b`/`repo-c`/`repo-d` naming.
+- Added a standard skill progress declaration format:
+  - `New Skill Unlocked`
+  - `<Skill Name> leveled up to XX`
 
 ## [0.2.0] - 2026-02-09
 

@@ -10,7 +10,7 @@ Repository rules for `skill-arbiter`. Follow these rules before opening a PR.
 
 Required placeholder style:
 
-- Repo placeholders: `<STARFRAME_REPO>`, `<MX3_SHIM_REPO>`, `<MESHGPT_REPO>`, `<VRM_SANDBOX_REPO>`
+- Repo placeholders: `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`
 - Skills root: `$CODEX_HOME/skills`
 - PowerShell home paths: `$env:USERPROFILE\\...`
 
@@ -96,3 +96,15 @@ When policy or workflow changes, update all relevant docs in the same PR:
 - `.github/pull_request_template.md`
 
 No PR should merge with contradictory instructions across these files.
+
+## 8) Skill level-up declaration
+
+When a skill is newly created or improved using this skillset, include this exact two-line declaration in the response:
+
+```text
+New Skill Unlocked
+<Skill Name> leveled up to XX
+```
+
+Use the real skill name for `<Skill Name>`.  
+Use a two-digit level string for `XX` (for example `01`, `02`, `10`).

@@ -1,11 +1,11 @@
 ---
-name: vrm-sandbox-local-packaging
-description: Run Windows-local packaging and release validation for <VRM_SANDBOX_REPO>. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows.
+name: repo-d-local-packaging
+description: Run Windows-local packaging and release validation for <PRIVATE_REPO_D>. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows.
 ---
 
-# VRM Sandbox Local Packaging
+# Repo D Sandbox Local Packaging
 
-Use this skill for deterministic local packaging in <VRM_SANDBOX_REPO>.
+Use this skill for deterministic local packaging in <PRIVATE_REPO_D>.
 
 ## Workflow
 

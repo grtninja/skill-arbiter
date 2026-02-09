@@ -1,4 +1,4 @@
 interface:
-  display_name: "VRM Setup Diagnostics"
+  display_name: "Repo D Setup Diagnostics"
   short_description: "Debug setup and runtime state wiring"
-  default_prompt: "Use $vrm-sandbox-setup-diagnostics to diagnose setup wizard, provider config, and renderer diagnostics in <VRM_SANDBOX_REPO>."
+  default_prompt: "Use $repo-d-setup-diagnostics to diagnose setup wizard, provider config, and renderer diagnostics in <PRIVATE_REPO_D>."

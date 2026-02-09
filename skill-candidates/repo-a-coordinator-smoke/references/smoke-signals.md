@@ -1,4 +1,4 @@
-# MeshGPT Smoke Signals
+# Repo A Smoke Signals
 
 Expected smoke indicators:
 - Successful coordinator registration handshake.

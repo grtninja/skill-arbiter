@@ -1,9 +1,9 @@
 ---
-name: mx3-shim-control-center-ops
-description: Operate and debug <MX3_SHIM_REPO> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, or desktop startup/restart behavior.
+name: repo-b-control-center-ops
+description: Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, or desktop startup/restart behavior.
 ---
 
-# MX3 Shim Control Center Ops
+# REPO_B Shim Control Center Ops
 
 Use this skill for Control Center runtime and service-surface operations.
 

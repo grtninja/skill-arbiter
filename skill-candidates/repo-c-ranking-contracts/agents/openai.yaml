@@ -1,4 +1,4 @@
 interface:
-  display_name: "STARFRAME MetaRanker"
-  short_description: "Maintain MetaRanker scoring contracts"
-  default_prompt: "Use $starframe-metaranker-contracts to update and validate MetaRanker scoring logic, report schema alignment, and credit multiplier behavior in STARFRAME."
+  display_name: "Repo C Ranking Engine"
+  short_description: "Maintain Ranking Engine scoring contracts"
+  default_prompt: "Use $repo-c-ranking-contracts to update and validate Ranking Engine scoring logic, report schema alignment, and credit multiplier behavior in Repo C."

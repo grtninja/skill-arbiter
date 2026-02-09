@@ -1,4 +1,4 @@
 interface:
-  display_name: "MX3 Control Center Ops"
+  display_name: "REPO_B Control Center Ops"
   short_description: "Operate and debug control center surfaces"
-  default_prompt: "Use $mx3-shim-control-center-ops to work on memryx control-center UI/IPC surfaces, connector flows, and local diagnostics."
+  default_prompt: "Use $repo-b-control-center-ops to work on repo_b control-center UI/IPC surfaces, connector flows, and local diagnostics."

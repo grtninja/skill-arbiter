@@ -1,11 +1,11 @@
 ---
-name: meshgpt-ddc-policy-selftest-gate
-description: Enforce MeshGPT DDC policy and acceptance gates before PRs. Use when changing policy files, node runtime behavior, guardrail-sensitive config, or validation tooling that must satisfy AGENTS.md acceptance commands.
+name: repo-a-policy-selftest-gate
+description: Enforce Repo A DDC policy and acceptance gates before PRs. Use when changing policy files, node runtime behavior, guardrail-sensitive config, or validation tooling that must satisfy AGENTS.md acceptance commands.
 ---
 
-# MeshGPT DDC Policy and Selftest Gate
+# Repo A DDC Policy and Selftest Gate
 
-Use this skill to run required pre-PR validation in `<MESHGPT_REPO>`.
+Use this skill to run required pre-PR validation in `<PRIVATE_REPO_A>`.
 
 ## Workflow
 
@@ -17,12 +17,12 @@ Use this skill to run required pre-PR validation in `<MESHGPT_REPO>`.
 
 ## Required Commands
 
-Run from `<MESHGPT_REPO>` root:
+Run from `<PRIVATE_REPO_A>` root:
 
 ```bash
 ruff check .
-mypy meshgpt_node
-python -m meshgpt_node --policy config/device_policy.json --selftest config/mesh_ready_selftest.yaml
+mypy repo_a_node
+python -m repo_a_node --policy config/device_policy.json --selftest config/mesh_ready_selftest.yaml
 pytest -q
 ```
 

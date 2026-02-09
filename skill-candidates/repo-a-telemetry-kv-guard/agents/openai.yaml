@@ -1,4 +1,4 @@
 interface:
-  display_name: "MeshGPT Telemetry and KV Guard"
+  display_name: "Repo A Telemetry and KV Guard"
   short_description: "Protect telemetry, privacy, and KV contracts"
-  default_prompt: "Use $meshgpt-ddc-telemetry-kv-guard to keep GuardianTrace telemetry, STARFRAME privacy rules, and KV encryption contracts intact in MeshGPT DDC."
+  default_prompt: "Use $repo-a-telemetry-kv-guard to keep repo_c_trace telemetry, Repo C privacy rules, and KV encryption contracts intact in Repo A DDC."
