@@ -14,12 +14,14 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Mapping
 
+validate_comfy_resources: Any = None
+
 try:
-    from local_comfy_validate import validate_comfy_resources
+    from local_comfy_validate import validate_comfy_resources as _validate_comfy_resources
 except ImportError as exc:
-    validate_comfy_resources = None
     VALIDATOR_IMPORT_ERROR = str(exc)
 else:
+    validate_comfy_resources = _validate_comfy_resources
     VALIDATOR_IMPORT_ERROR = ""
 
 EXIT_SUCCESS = 0
@@ -357,9 +359,13 @@ def run(args: argparse.Namespace, environ: dict[str, str] | None = None) -> tupl
         payload["reason_codes"].append("policy_violation")
         return EXIT_POLICY_VIOLATION, _finalize(payload, started_mono)
 
+    if port_value is None:
+        payload["status"] = "mcp_unavailable"
+        payload["reason_codes"].append("mcp_unavailable")
+        return EXIT_MCP_UNAVAILABLE, _finalize(payload, started_mono)
     try:
-        port = int(port_value)
-    except (TypeError, ValueError):
+        port = int(str(port_value).strip())
+    except ValueError:
         payload["status"] = "mcp_unavailable"
         payload["reason_codes"].append("mcp_unavailable")
         return EXIT_MCP_UNAVAILABLE, _finalize(payload, started_mono)
