@@ -94,3 +94,7 @@ MIT. See `LICENSE.txt`.
 
 If this project is useful in your workflow, you can support development on Patreon:  
 <https://www.patreon.com/cw/grtninja>
+
+## Contribution Policy
+
+This repository is primarily owner-maintained. Issues and discussions are welcome, but external pull requests may be declined.
