@@ -17,8 +17,8 @@ Use this skill to build a practical skill portfolio for a repo.
 ## Discovery Commands
 
 ```bash
-find /home/eddie/.codex/skills -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
-find /home/eddie/.codex/skills -mindepth 1 -maxdepth 2 -name SKILL.md -type f | sort
+find $CODEX_HOME/skills -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
+find $CODEX_HOME/skills -mindepth 1 -maxdepth 2 -name SKILL.md -type f | sort
 ```
 
 ## Curation Output Format

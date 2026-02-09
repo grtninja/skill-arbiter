@@ -19,7 +19,7 @@ Use this skill to diagnose and document churn incidents.
 ```bash
 python3 scripts/arbitrate_skills.py <skill> [<skill> ...] \
   --source-dir /path/to/local/skills \
-  --dest /home/eddie/.codex/skills \
+  --dest $CODEX_HOME/skills \
   --window 10 --threshold 3 --max-rg 3 \
   --json-out /tmp/arbiter-forensics.json
 ```

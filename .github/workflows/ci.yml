@@ -29,5 +29,8 @@ jobs:
         if: github.event_name == 'pull_request'
         run: python3 scripts/check_release_hygiene.py
 
+      - name: Privacy policy check
+        run: python3 scripts/check_private_data_policy.py
+
       - name: Syntax check
-        run: python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scripts/check_release_hygiene.py
+        run: python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py

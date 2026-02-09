@@ -1,6 +1,6 @@
 ---
 name: mx3-shim-preflight-doc-sync
-description: Enforce memryx-mx3-python-shim preflight gates and documentation lockstep. Use before PRs to run required validation profiles and keep README.md, docs/PROJECT_SCOPE.md, and docs/SCOPE_TRACKER.md synchronized with shipped behavior.
+description: Enforce <MX3_SHIM_REPO> preflight gates and documentation lockstep. Use before PRs to run required validation profiles and keep README.md, docs/PROJECT_SCOPE.md, and docs/SCOPE_TRACKER.md synchronized with shipped behavior.
 ---
 
 # MX3 Shim Preflight and Doc Sync

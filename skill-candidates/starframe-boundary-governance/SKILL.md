@@ -1,6 +1,6 @@
 ---
 name: starframe-boundary-governance
-description: Keep PennyGPT-STARFRAME-Internal changes aligned with BOUNDARIES.md and AGENTS.md governance. Use when modifying trust-layer architecture, cross-repo interfaces, packaging docs, or any change that could blur cognitive vs hardware execution boundaries.
+description: Keep <STARFRAME_REPO> changes aligned with BOUNDARIES.md and AGENTS.md governance. Use when modifying trust-layer architecture, cross-repo interfaces, packaging docs, or any change that could blur cognitive vs hardware execution boundaries.
 ---
 
 # STARFRAME Boundary Governance

@@ -1,4 +1,4 @@
 interface:
   display_name: "MX3 Hardware First"
   short_description: "Fix shim issues via real hardware path"
-  default_prompt: "Use $mx3-shim-hardware-first for memryx-mx3-python-shim tasks that require hardware-first diagnosis, strict preflight, and no stub shortcuts."
+  default_prompt: "Use $mx3-shim-hardware-first for <MX3_SHIM_REPO> tasks that require hardware-first diagnosis, strict preflight, and no stub shortcuts."

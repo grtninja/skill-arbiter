@@ -70,6 +70,11 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 - Git
 - Windows host with PowerShell (`powershell.exe`)
 - `rg.exe` available on the host (the script monitors `rg` process churn)
+- Local git hook path configured once per clone:
+
+```bash
+./scripts/install_local_hooks.sh
+```
 
 Dependency declarations:
 
@@ -151,6 +156,28 @@ python3 scripts/prepare_release.py --part patch
 - Then refine the generated `CHANGELOG.md` notes so they match the PR.
 - CI enforces this on pull requests via `scripts/check_release_hygiene.py`.
 
+## Privacy lock
+
+This repository is public-shape only. Private repository identifiers and user-specific absolute paths are blocked.
+
+- Local pre-commit gate:
+
+```bash
+python3 scripts/check_private_data_policy.py --staged
+```
+
+- CI gate:
+
+```bash
+python3 scripts/check_private_data_policy.py
+```
+
+Use placeholders in docs and skill candidates:
+
+- `<STARFRAME_REPO>`, `<MX3_SHIM_REPO>`, `<MESHGPT_REPO>`, `<VRM_SANDBOX_REPO>`
+- `$CODEX_HOME/skills`
+- `$env:USERPROFILE\\...` (PowerShell)
+
 ## Security notes
 
 - The script does not require API keys.
@@ -162,11 +189,14 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 
 ## Repository layout
 
+- `AGENTS.md`: Repository operating rules and guardrails.
 - `CHANGELOG.md`: Release history.
 - `SKILL.md`: Skill definition used by Codex.
 - `scripts/arbitrate_skills.py`: Arbitration implementation.
 - `scripts/prepare_release.py`: Release bump helper.
 - `scripts/check_release_hygiene.py`: PR release gate.
+- `scripts/check_private_data_policy.py`: Privacy and private-data policy gate.
+- `scripts/install_local_hooks.sh`: One-time local git hook installer.
 - `agents/openai.yaml`: Agent metadata.
 - `references/publish-notes.md`: Publish defaults and notes.
 - `references/recommended-skill-portfolio.md`: Baseline skill catalog and rollout guidance for other repos.

@@ -1,6 +1,6 @@
 ---
 name: mx3-shim-hardware-first
-description: Enforce hardware-first diagnosis and fixes in memryx-mx3-python-shim. Use for runtime probe, telemetry, inference, and integration failures where strict real-hardware behavior, no new stubs, and deterministic diagnostics are required.
+description: Enforce hardware-first diagnosis and fixes in <MX3_SHIM_REPO>. Use for runtime probe, telemetry, inference, and integration failures where strict real-hardware behavior, no new stubs, and deterministic diagnostics are required.
 ---
 
 # MX3 Shim Hardware First

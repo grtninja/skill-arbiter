@@ -1,6 +1,6 @@
 ---
 name: starframe-policy-schema-gate
-description: Validate STARFRAME policy files and schema contracts in PennyGPT-STARFRAME-Internal. Use when editing policy manifests, schema files, policy validation CLI logic, or tests that rely on schema conformance.
+description: Validate STARFRAME policy files and schema contracts in <STARFRAME_REPO>. Use when editing policy manifests, schema files, policy validation CLI logic, or tests that rely on schema conformance.
 ---
 
 # STARFRAME Policy Schema Gate
@@ -15,7 +15,7 @@ Use this skill to enforce policy/schema correctness.
 
 ## Core Commands
 
-Run from `PennyGPT-STARFRAME-Internal` root:
+Run from `<STARFRAME_REPO>` root:
 
 ```bash
 python -m tools.policy_validate policies/starframe_policy.yaml

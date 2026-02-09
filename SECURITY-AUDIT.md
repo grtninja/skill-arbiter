@@ -23,6 +23,10 @@ Repository: `skill-arbiter`
 - One hardening area was identified and addressed:
   - Added strict skill-name validation to prevent path traversal style inputs.
   - Constrained blacklist file argument to a filename-style value.
+- Added repository privacy policy gates:
+  - `scripts/check_private_data_policy.py` for tracked and staged scans.
+  - `.githooks/pre-commit` local commit enforcement.
+  - CI `Privacy policy check` enforcement on push/PR.
 
 ## Residual Risk
 

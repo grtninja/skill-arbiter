@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from dataclasses import dataclass
 from difflib import SequenceMatcher
@@ -58,10 +59,11 @@ class PairScore:
 
 
 def parse_args() -> argparse.Namespace:
+    default_skills_root = str(Path(os.environ.get("CODEX_HOME", "~/.codex")) / "skills")
     parser = argparse.ArgumentParser(description="Audit SKILL.md overlap")
     parser.add_argument(
         "--skills-root",
-        default="/home/eddie/.codex/skills",
+        default=default_skills_root,
         help="Root directory containing installed skills",
     )
     parser.add_argument(

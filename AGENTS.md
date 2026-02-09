@@ -1,0 +1,98 @@
+# AGENTS.md
+
+Repository rules for `skill-arbiter`. Follow these rules before opening a PR.
+
+## 1) Core policy
+
+- Treat this repository as public-shape only.
+- Never commit private repo details, internal names, host-specific usernames, or absolute personal paths.
+- Keep instructions generic and portable.
+
+Required placeholder style:
+
+- Repo placeholders: `<STARFRAME_REPO>`, `<MX3_SHIM_REPO>`, `<MESHGPT_REPO>`, `<VRM_SANDBOX_REPO>`
+- Skills root: `$CODEX_HOME/skills`
+- PowerShell home paths: `$env:USERPROFILE\\...`
+
+## 2) Hard privacy lock (must pass)
+
+- Local pre-commit hook must be enabled:
+
+```bash
+./scripts/install_local_hooks.sh
+```
+
+- Commit gate (automatic via pre-commit):
+
+```bash
+python3 scripts/check_private_data_policy.py --staged
+```
+
+- CI gate (automatic on push/PR):
+
+```bash
+python3 scripts/check_private_data_policy.py
+```
+
+If either gate fails, do not proceed until violations are removed.
+
+## 3) Release workflow (must pass for release-impacting changes)
+
+For release-impacting changes (for example `scripts/`, `SKILL.md`, Python files, or non-doc behavior changes):
+
+```bash
+python3 scripts/prepare_release.py --part patch
+```
+
+Then update `CHANGELOG.md` notes to accurately match the PR.
+
+PRs are checked by:
+
+```bash
+python3 scripts/check_release_hygiene.py
+```
+
+Docs-only/metadata-only changes (`README.md`, `references/`, `.github/`, etc.) may skip release bump.
+
+## 4) Validation checklist before PR
+
+Run from repo root:
+
+```bash
+python3 scripts/arbitrate_skills.py --help
+python3 scripts/prepare_release.py --help
+python3 scripts/check_release_hygiene.py --help
+python3 scripts/check_private_data_policy.py
+python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py
+```
+
+## 5) Skill authoring rules
+
+- Keep `SKILL.md` concise; move detailed material to `references/`.
+- Prefer reusable scripts for fragile/repeated workflows.
+- Do not hardcode private repo names or personal paths in candidate skills.
+- Keep repo-specific candidate skills under `skill-candidates/` with placeholder naming.
+
+When admitting local skills, prefer lockdown mode:
+
+```bash
+python3 scripts/arbitrate_skills.py <skill> --source-dir "$CODEX_HOME/skills" --personal-lockdown
+```
+
+## 6) Security and mutation safety
+
+- Do not commit secrets, tokens, credentials, or private keys.
+- Preserve symlink safety controls and local-control-file protections in arbitration logic.
+- Keep subprocess calls argument-safe (no shell interpolation).
+
+## 7) Documentation alignment rule
+
+When policy or workflow changes, update all relevant docs in the same PR:
+
+- `AGENTS.md`
+- `README.md`
+- `CONTRIBUTING.md`
+- `SKILL.md`
+- `.github/pull_request_template.md`
+
+No PR should merge with contradictory instructions across these files.

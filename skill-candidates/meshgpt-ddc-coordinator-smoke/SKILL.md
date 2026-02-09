@@ -16,7 +16,7 @@ Use this skill for local coordinator+node runtime validation.
 
 ## Canonical Smoke Commands
 
-Run from `MeshGPT---DDC` root:
+Run from `<MESHGPT_REPO>` root:
 
 ```bash
 uvicorn packages.coordinator.app.main:app --port 8787 --reload

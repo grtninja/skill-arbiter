@@ -1,6 +1,6 @@
 ---
 name: mx3-shim-mcp-comfy-bridge
-description: Manage MCP adapter runtime and ComfyUI bridge integration in memryx-mx3-python-shim. Use when enabling MCP, updating adapter config, validating shim.comfy tools/resources, or troubleshooting MCP/Comfy availability and error contracts.
+description: Manage MCP adapter runtime and ComfyUI bridge integration in <MX3_SHIM_REPO>. Use when enabling MCP, updating adapter config, validating shim.comfy tools/resources, or troubleshooting MCP/Comfy availability and error contracts.
 ---
 
 # MX3 Shim MCP Comfy Bridge

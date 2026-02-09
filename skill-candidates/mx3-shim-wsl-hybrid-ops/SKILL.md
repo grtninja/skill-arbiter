@@ -1,6 +1,6 @@
 ---
 name: mx3-shim-wsl-hybrid-ops
-description: Operate and diagnose the Windows-host plus WSL-auxiliary split for memryx-mx3-python-shim. Use when validating hybrid service reachability, enforcing hardware-on-Windows boundaries, or debugging cross-host connectivity for ComfyUI and LM Studio helpers.
+description: Operate and diagnose the Windows-host plus WSL-auxiliary split for <MX3_SHIM_REPO>. Use when validating hybrid service reachability, enforcing hardware-on-Windows boundaries, or debugging cross-host connectivity for ComfyUI and LM Studio helpers.
 ---
 
 # MX3 Shim WSL Hybrid Ops

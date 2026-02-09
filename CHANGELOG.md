@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.1] - 2026-02-09
+
+### Added
+
+- Repository policy source file `AGENTS.md` with consolidated operational, release, and privacy rules.
+- Hard privacy gate script `scripts/check_private_data_policy.py` to block private repo identifiers and user-specific absolute paths.
+- Local hook bootstrap `scripts/install_local_hooks.sh` plus tracked pre-commit hook at `.githooks/pre-commit`.
+- New candidate skill `skill-candidates/docs-alignment-lock/` for docs-policy alignment and pre-PR privacy/release checks.
+
+### Changed
+
+- CI now enforces `python3 scripts/check_private_data_policy.py` and compiles the new checker script.
+- PR template validation now includes privacy policy and docs-alignment checks.
+- Documentation set (`README.md`, `CONTRIBUTING.md`, `SKILL.md`) now documents the privacy lock workflow.
+- Candidate skill docs were sanitized to placeholder-based repo/path references instead of private identifiers.
+
 ## [0.2.0] - 2026-02-09
 
 ### Added

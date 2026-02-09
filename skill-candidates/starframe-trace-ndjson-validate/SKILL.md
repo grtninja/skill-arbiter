@@ -1,6 +1,6 @@
 ---
 name: starframe-trace-ndjson-validate
-description: Validate STARFRAME/GuardianTrace NDJSON packet integrity in PennyGPT-STARFRAME-Internal. Use when changing trace packet fields, guardian reroute behavior, or validation tooling that checks packet monotonicity and required envelope keys.
+description: Validate STARFRAME/GuardianTrace NDJSON packet integrity in <STARFRAME_REPO>. Use when changing trace packet fields, guardian reroute behavior, or validation tooling that checks packet monotonicity and required envelope keys.
 ---
 
 # STARFRAME Trace NDJSON Validate
@@ -15,7 +15,7 @@ Use this skill to protect packet stream contract integrity.
 
 ## Command
 
-Run from `PennyGPT-STARFRAME-Internal` root:
+Run from `<STARFRAME_REPO>` root:
 
 ```bash
 python tools/trace_validate.py <path-to-ndjson>

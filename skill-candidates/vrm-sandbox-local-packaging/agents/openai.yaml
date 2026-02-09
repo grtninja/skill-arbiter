@@ -1,4 +1,4 @@
 interface:
   display_name: "VRM Local Packaging"
   short_description: "Build and verify VRM desktop packaging"
-  default_prompt: "Use $vrm-sandbox-local-packaging for Windows-local npm workspace build, package, and verification flows in VRM-Sandbox."
+  default_prompt: "Use $vrm-sandbox-local-packaging for Windows-local npm workspace build, package, and verification flows in <VRM_SANDBOX_REPO>."

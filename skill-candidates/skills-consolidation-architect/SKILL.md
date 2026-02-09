@@ -26,20 +26,20 @@ Use this skill to keep your skill ecosystem modular and maintainable.
 Inventory installed skills:
 
 ```bash
-find /home/eddie/.codex/skills -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
+find $CODEX_HOME/skills -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
 ```
 
 Run overlap audit:
 
 ```bash
-python3 scripts/skill_overlap_audit.py --skills-root /home/eddie/.codex/skills --threshold 0.28
+python3 scripts/skill_overlap_audit.py --skills-root $CODEX_HOME/skills --threshold 0.28
 ```
 
 JSON output for automation:
 
 ```bash
 python3 scripts/skill_overlap_audit.py \
-  --skills-root /home/eddie/.codex/skills \
+  --skills-root $CODEX_HOME/skills \
   --threshold 0.28 \
   --json-out /tmp/skill-overlap.json
 ```

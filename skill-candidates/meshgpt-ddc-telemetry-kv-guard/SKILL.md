@@ -17,7 +17,7 @@ Use this skill to keep telemetry and storage behavior safe and deterministic.
 
 ## Validation Commands
 
-Run from `MeshGPT---DDC` root:
+Run from `<MESHGPT_REPO>` root:
 
 ```bash
 ruff check .

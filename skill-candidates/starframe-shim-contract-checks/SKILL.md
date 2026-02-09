@@ -1,6 +1,6 @@
 ---
 name: starframe-shim-contract-checks
-description: Enforce MX3 shim runtime contract expectations in PennyGPT-STARFRAME-Internal. Use when changing shim-facing adapters, telemetry dependencies, integration tests, or fail-closed behavior tied to MX3_SIDECAR_URL and mock-shim fixtures.
+description: Enforce MX3 shim runtime contract expectations in <STARFRAME_REPO>. Use when changing shim-facing adapters, telemetry dependencies, integration tests, or fail-closed behavior tied to MX3_SIDECAR_URL and mock-shim fixtures.
 ---
 
 # STARFRAME Shim Contract Checks
@@ -16,7 +16,7 @@ Use this skill for shim endpoint contract safety.
 
 ## Validation Commands
 
-Run from `PennyGPT-STARFRAME-Internal` root:
+Run from `<STARFRAME_REPO>` root:
 
 ```bash
 ruff check .

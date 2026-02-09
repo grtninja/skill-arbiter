@@ -5,7 +5,7 @@ description: Enforce MeshGPT DDC policy and acceptance gates before PRs. Use whe
 
 # MeshGPT DDC Policy and Selftest Gate
 
-Use this skill to run required pre-PR validation in `MeshGPT---DDC`.
+Use this skill to run required pre-PR validation in `<MESHGPT_REPO>`.
 
 ## Workflow
 
@@ -17,7 +17,7 @@ Use this skill to run required pre-PR validation in `MeshGPT---DDC`.
 
 ## Required Commands
 
-Run from `MeshGPT---DDC` root:
+Run from `<MESHGPT_REPO>` root:
 
 ```bash
 ruff check .

@@ -1,11 +1,11 @@
 ---
 name: vrm-sandbox-ui-guardrails
-description: Enforce VRM-Sandbox AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, no-download policy, local-only behavior, and no-CI constraints.
+description: Enforce <VRM_SANDBOX_REPO> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, no-download policy, local-only behavior, and no-CI constraints.
 ---
 
 # VRM Sandbox UI Guardrails
 
-Use this skill to keep VRM-Sandbox changes compliant with repository rules.
+Use this skill to keep <VRM_SANDBOX_REPO> changes compliant with repository rules.
 
 ## Workflow
 
@@ -15,7 +15,7 @@ Use this skill to keep VRM-Sandbox changes compliant with repository rules.
    - Do not add `.github/workflows/*` or CI automation.
    - Keep deterministic visuals behind explicit toggles or presets.
    - Do not add runtime asset downloads.
-   - Keep front-end boundaries intact; do not embed PennyGPT/STARFRAME logic.
+   - Keep front-end boundaries intact; do not embed out-of-scope orchestration logic.
 4. Update progress docs on scoped work:
    - `docs/SCOPE_TRACKER.md`
    - `docs/TODO.md`

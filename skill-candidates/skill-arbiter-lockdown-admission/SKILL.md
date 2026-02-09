@@ -19,7 +19,7 @@ Use this skill to admit local skills safely.
 ```bash
 python3 scripts/arbitrate_skills.py <skill> [<skill> ...] \
   --source-dir /path/to/local/skills \
-  --dest /home/eddie/.codex/skills \
+  --dest $CODEX_HOME/skills \
   --window 10 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/arbiter-report.json

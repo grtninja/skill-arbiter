@@ -1,11 +1,11 @@
 ---
 name: vrm-sandbox-local-packaging
-description: Run Windows-local packaging and release validation for VRM-Sandbox. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows.
+description: Run Windows-local packaging and release validation for <VRM_SANDBOX_REPO>. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows.
 ---
 
 # VRM Sandbox Local Packaging
 
-Use this skill for deterministic local packaging in VRM-Sandbox.
+Use this skill for deterministic local packaging in <VRM_SANDBOX_REPO>.
 
 ## Workflow
 

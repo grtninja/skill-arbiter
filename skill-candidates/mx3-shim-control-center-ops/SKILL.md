@@ -1,6 +1,6 @@
 ---
 name: mx3-shim-control-center-ops
-description: Operate and debug memryx-mx3-python-shim Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, or desktop startup/restart behavior.
+description: Operate and debug <MX3_SHIM_REPO> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, or desktop startup/restart behavior.
 ---
 
 # MX3 Shim Control Center Ops

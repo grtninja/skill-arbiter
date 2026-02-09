@@ -1,6 +1,6 @@
 ---
 name: starframe-persona-registry-maintenance
-description: Maintain persona pack discovery and manifest-driven stack loading in PennyGPT-STARFRAME-Internal. Use when adding/updating persona packs, editing manifest.persona.json files, or changing registry loader behavior in starframe/persona_registry.py.
+description: Maintain persona pack discovery and manifest-driven stack loading in <STARFRAME_REPO>. Use when adding/updating persona packs, editing manifest.persona.json files, or changing registry loader behavior in starframe/persona_registry.py.
 ---
 
 # STARFRAME Persona Registry Maintenance
@@ -16,7 +16,7 @@ Use this skill for persona pack integrity and loader behavior.
 
 ## Quick Validation Snippet
 
-Run from `PennyGPT-STARFRAME-Internal` root:
+Run from `<STARFRAME_REPO>` root:
 
 ```bash
 python - <<'PY'

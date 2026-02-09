@@ -1,6 +1,6 @@
 ---
 name: vrm-sandbox-setup-diagnostics
-description: Diagnose VRM-Sandbox setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, or overlay/background behavior.
+description: Diagnose <VRM_SANDBOX_REPO> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, or overlay/background behavior.
 ---
 
 # VRM Sandbox Setup Diagnostics

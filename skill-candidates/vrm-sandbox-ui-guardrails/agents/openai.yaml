@@ -1,4 +1,4 @@
 interface:
   display_name: "VRM UI Guardrails"
   short_description: "Enforce VRM sandbox repo rules"
-  default_prompt: "Use $vrm-sandbox-ui-guardrails to keep VRM-Sandbox changes compliant with AGENTS.md constraints and deterministic UI rules."
+  default_prompt: "Use $vrm-sandbox-ui-guardrails to keep <VRM_SANDBOX_REPO> changes compliant with AGENTS.md constraints and deterministic UI rules."

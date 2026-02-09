@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: "Docs Alignment Lock"
+  short_description: "Align policy docs and enforce privacy-safe text"
+  default_prompt: "Use $docs-alignment-lock to keep AGENTS/README/CONTRIBUTING/SKILL/PR template guidance aligned and enforce privacy-safe public-shape docs before PRs."

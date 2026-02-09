@@ -23,6 +23,9 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 6. `security-quick-audit`
    - Run lightweight checks for secret exposure, subprocess risk, path traversal, and policy drift.
    - Trigger examples: "security review", "pre-release security pass", "scan this change"
+7. `docs-alignment-lock`
+   - Keep AGENTS/README/CONTRIBUTING/SKILL/PR-template policy guidance aligned and privacy-safe.
+   - Trigger examples: "align docs", "policy drift check", "pre-PR docs gate"
 
 ## Optional Skills by Repo Type
 

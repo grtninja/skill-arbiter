@@ -73,3 +73,19 @@ CI enforces this on pull requests with:
 ```bash
 python3 scripts/check_release_hygiene.py
 ```
+
+## Privacy Lock
+
+This repo is public-shape only. Do not commit private repo identifiers or user-specific absolute paths.
+
+Local/staged check:
+
+```bash
+python3 scripts/check_private_data_policy.py --staged
+```
+
+CI check:
+
+```bash
+python3 scripts/check_private_data_policy.py
+```

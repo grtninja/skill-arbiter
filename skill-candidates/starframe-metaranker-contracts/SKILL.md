@@ -1,6 +1,6 @@
 ---
 name: starframe-metaranker-contracts
-description: Maintain MetaRanker engine behavior and schema compatibility in PennyGPT-STARFRAME-Internal. Use when modifying scoring weights, ranking/multiplier logic, report serialization, or metaranker_report schema contracts consumed by downstream systems.
+description: Maintain MetaRanker engine behavior and schema compatibility in <STARFRAME_REPO>. Use when modifying scoring weights, ranking/multiplier logic, report serialization, or metaranker_report schema contracts consumed by downstream systems.
 ---
 
 # STARFRAME MetaRanker Contracts
@@ -15,7 +15,7 @@ Use this skill for MetaRanker logic and contract-safe updates.
 
 ## Commands
 
-Run from `PennyGPT-STARFRAME-Internal` root:
+Run from `<STARFRAME_REPO>` root:
 
 ```bash
 ruff check .
