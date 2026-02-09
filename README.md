@@ -174,7 +174,7 @@ python3 scripts/check_private_data_policy.py
 
 Use placeholders in docs and skill candidates:
 
-- `<STARFRAME_REPO>`, `<MX3_SHIM_REPO>`, `<MESHGPT_REPO>`, `<VRM_SANDBOX_REPO>`
+- `<PRIVATE_REPO_NAME>` (or numbered forms like `<PRIVATE_REPO_1>`, `<PRIVATE_REPO_2>`)
 - `$CODEX_HOME/skills`
 - `$env:USERPROFILE\\...` (PowerShell)
 
