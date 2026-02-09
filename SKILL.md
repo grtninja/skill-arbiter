@@ -46,3 +46,19 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 
 - Use `--dry-run` to preview actions without modifying files.
 - Use `--dest` to test in an isolated skills directory.
+
+## Release Workflow
+
+For release-impacting changes (for example `scripts/`, `SKILL.md`, or non-doc files):
+
+```bash
+python3 scripts/prepare_release.py --part patch
+```
+
+Then refine the new `CHANGELOG.md` entry for the PR.
+
+CI enforces this on pull requests with:
+
+```bash
+python3 scripts/check_release_hygiene.py
+```

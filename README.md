@@ -44,7 +44,7 @@ Dry-run mode (no filesystem changes):
 python3 scripts/arbitrate_skills.py doc screenshot --dry-run
 ```
 
-Personal skill promotion (test local skills, then whitelist + immute if safe):
+Personal skill promotion (test local skills, then whitelist + immutable if safe):
 
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
@@ -122,6 +122,17 @@ Third-party behavior:
   - per-skill arbitration results
   - final blacklist/whitelist/immutable lists
 
+## Release workflow
+
+- For release-impacting PRs (for example changes under `scripts/`, `SKILL.md`, or other non-doc files), run:
+
+```bash
+python3 scripts/prepare_release.py --part patch
+```
+
+- Then refine the generated `CHANGELOG.md` notes so they match the PR.
+- CI enforces this on pull requests via `scripts/check_release_hygiene.py`.
+
 ## Security notes
 
 - The script does not require API keys.
@@ -132,8 +143,11 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 
 ## Repository layout
 
+- `CHANGELOG.md`: Release history.
 - `SKILL.md`: Skill definition used by Codex.
 - `scripts/arbitrate_skills.py`: Arbitration implementation.
+- `scripts/prepare_release.py`: Release bump helper.
+- `scripts/check_release_hygiene.py`: PR release gate.
 - `agents/openai.yaml`: Agent metadata.
 - `references/publish-notes.md`: Publish defaults and notes.
 
