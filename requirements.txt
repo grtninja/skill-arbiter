@@ -1,0 +1,6 @@
+# This project has no external Python package dependencies.
+# Runtime requirements:
+# - Python 3.10+
+# - Git
+# - Windows PowerShell (for rg.exe process sampling)
+# - rg.exe available on the host

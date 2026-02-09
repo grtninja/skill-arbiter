@@ -17,7 +17,7 @@ Use this skill to decide which skills get admitted and which get quarantined.
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   doc screenshot security-best-practices security-threat-model playwright \
-  --window 10 --threshold 3 --max-rg 6
+  --window 10 --threshold 3 --max-rg 3
 ```
 
 ## Behavior
@@ -25,7 +25,8 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 1. Install each candidate skill one-by-one from curated source.
 2. Sample `rg.exe` process count once per second.
 3. Remove and blacklist offenders automatically.
-4. Emit optional JSON evidence via `--json-out`.
+4. Keep blacklisted skills restricted/off by default unless `--retest-blacklisted` is used.
+5. Emit optional JSON evidence via `--json-out`.
 
 ## Safe Modes
 

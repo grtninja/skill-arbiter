@@ -32,7 +32,7 @@ Some skills can accidentally trigger runaway repository scans on Windows hosts. 
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   doc screenshot security-best-practices security-threat-model playwright \
-  --window 10 --threshold 3 --max-rg 6
+  --window 10 --threshold 3 --max-rg 3
 ```
 
 Dry-run mode (no filesystem changes):
@@ -41,26 +41,39 @@ Dry-run mode (no filesystem changes):
 python3 scripts/arbitrate_skills.py doc screenshot --dry-run
 ```
 
+## Requirements
+
+- Python 3.10+
+- Git
+- Windows host with PowerShell (`powershell.exe`)
+- `rg.exe` available on the host (the script monitors `rg` process churn)
+
+Dependency declarations:
+
+- `pyproject.toml`: project metadata + Python version floor
+- `requirements.txt`: explicitly documents zero external Python dependencies
+
 ## CLI reference
 
 ```text
 usage: arbitrate_skills.py [-h] [--window WINDOW] [--threshold THRESHOLD]
                            [--max-rg MAX_RG] [--json-out JSON_OUT]
                            [--repo REPO] [--dest DEST] [--blacklist BLACKLIST]
-                           [--dry-run]
+                           [--dry-run] [--retest-blacklisted]
                            skills [skills ...]
 ```
 
 Key options:
 
-- `skills`: Curated skill names to test.
+- `skills`: Curated skill names to test. Empty names are rejected.
 - `--window`: Sampling window in seconds (default `10`).
 - `--threshold`: Consecutive non-zero threshold (default `3`).
-- `--max-rg`: Remove skill if any sample >= value (default `6`).
+- `--max-rg`: Remove skill if any sample >= value (default `3`, allowed range `1-3`).
 - `--json-out`: Optional machine-readable report path.
 - `--dest`: Destination skills home (default `~/.codex/skills`).
 - `--blacklist`: Blacklist filename under `--dest` (default `.blacklist.local`).
 - `--dry-run`: Report actions without modifying files.
+- `--retest-blacklisted`: Re-test skills already blacklisted. By default blacklisted skills remain restricted/off.
 
 ## Output contract
 

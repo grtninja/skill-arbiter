@@ -21,6 +21,7 @@ from typing import Iterable
 DEFAULT_SKILLS_HOME = Path.home() / ".codex" / "skills"
 CURATED_PATH = Path("skills/.curated")
 DEFAULT_REPO = "https://github.com/openai/skills.git"
+MAX_ALLOWED_RG_LIMIT = 3
 SKILL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 
 
@@ -172,13 +173,36 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("skills", nargs="+", help="Curated skill names to test")
     parser.add_argument("--window", type=int, default=10, help="Sampling window in seconds")
     parser.add_argument("--threshold", type=int, default=3, help="Consecutive non-zero threshold")
-    parser.add_argument("--max-rg", type=int, default=6, help="Remove skill if any sample >= max-rg")
+    parser.add_argument(
+        "--max-rg",
+        type=int,
+        default=MAX_ALLOWED_RG_LIMIT,
+        help=f"Remove skill if any sample >= max-rg (must be 1-{MAX_ALLOWED_RG_LIMIT})",
+    )
     parser.add_argument("--json-out", default="", help="Optional path for machine-readable summary")
     parser.add_argument("--repo", default=DEFAULT_REPO, help="Git repository containing curated skills")
     parser.add_argument("--dest", default=str(DEFAULT_SKILLS_HOME), help="Destination skills home")
     parser.add_argument("--blacklist", default=".blacklist.local", help="Blacklist filename under dest")
     parser.add_argument("--dry-run", action="store_true", help="Report actions without modifying files")
+    parser.add_argument(
+        "--retest-blacklisted",
+        action="store_true",
+        help="Allow re-testing skills already on the local blacklist",
+    )
     return parser.parse_args()
+
+
+def normalize_skills(raw_skills: list[str]) -> list[str]:
+    """Normalize CLI skill list and reject empty entries."""
+
+    skills: list[str] = []
+    for skill in raw_skills:
+        normalized = skill.strip()
+        if not normalized:
+            raise ValueError("Empty skill name is not allowed")
+        require_valid_skill_name(normalized)
+        skills.append(normalized)
+    return skills
 
 
 def main() -> int:
@@ -188,6 +212,13 @@ def main() -> int:
     skills_home = Path(args.dest).expanduser().resolve()
     try:
         require_valid_blacklist_name(args.blacklist)
+        if args.max_rg < 1 or args.max_rg > MAX_ALLOWED_RG_LIMIT:
+            raise ValueError(f"--max-rg must be between 1 and {MAX_ALLOWED_RG_LIMIT}")
+        if args.threshold < 1:
+            raise ValueError("--threshold must be >= 1")
+        if args.window < 1:
+            raise ValueError("--window must be >= 1")
+        normalized_skills = normalize_skills(args.skills)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -197,7 +228,21 @@ def main() -> int:
 
     repo_root = clone_repo(args.repo)
     try:
-        for skill in args.skills:
+        for skill in normalized_skills:
+            if skill in blacklist and not args.retest_blacklisted:
+                remove_skill(skills_home, skill, args.dry_run)
+                results.append(
+                    ArbitrationResult(
+                        skill=skill,
+                        installed=False,
+                        samples=[],
+                        max_rg=0,
+                        persistent_nonzero=False,
+                        action="restricted",
+                        note="already blacklisted; off by default",
+                    )
+                )
+                continue
             try:
                 install_curated_skill(repo_root, skills_home, skill, args.dry_run)
             except (FileNotFoundError, ValueError) as exc:
@@ -206,7 +251,7 @@ def main() -> int:
             samples = sample_counter(args.window)
             max_rg = max(samples) if samples else 0
             persistent = has_persistent_nonzero(samples, max(args.threshold, 1))
-            should_remove = persistent or (max_rg >= max(args.max_rg, 1))
+            should_remove = persistent or (max_rg >= args.max_rg)
             if should_remove:
                 remove_skill(skills_home, skill, args.dry_run)
                 if not args.dry_run:
