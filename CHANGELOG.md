@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.3] - 2026-02-09
+
+### Added
+
+- New candidate skill `skill-candidates/usage-watcher/` for usage burn-rate analysis and budget/rate-limit guardrails:
+  - `scripts/usage_guard.py` for usage history analysis and budget planning
+  - `references/cost-control-playbook.md`
+  - `references/usage-csv-template.csv`
+
+### Changed
+
+- Added `usage-watcher` export/admission references to `README.md`, `SKILL.md`, `references/publish-notes.md`, and `references/recommended-skill-portfolio.md`.
+
 ## [0.2.2] - 2026-02-09
 
 ### Added

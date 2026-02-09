@@ -1,0 +1,4 @@
+interface:
+  display_name: "Usage Watcher"
+  short_description: "Reduce spend and rate-limit risk"
+  default_prompt: "Use $usage-watcher to analyze recent credits usage, calculate burn-rate risk, and define daily/session spend caps before major work."

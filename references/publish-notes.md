@@ -43,3 +43,17 @@ python3 scripts/arbitrate_skills.py \
   - `action=kept`
   - `persistent_nonzero=false`
   - `max_rg=0` per skill
+
+Export readiness notes for usage governance:
+
+- Candidate skill: `usage-watcher`
+- Recommended admission command:
+
+```bash
+python3 scripts/arbitrate_skills.py \
+  usage-watcher \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/usage-watcher-arbiter.json
+```

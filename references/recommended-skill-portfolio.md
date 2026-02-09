@@ -26,6 +26,9 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 7. `docs-alignment-lock`
    - Keep AGENTS/README/CONTRIBUTING/SKILL/PR-template policy guidance aligned and privacy-safe.
    - Trigger examples: "align docs", "policy drift check", "pre-PR docs gate"
+8. `usage-watcher`
+   - Analyze burn rate, project usage, and set budget/rate-limit guardrails before high-volume work.
+   - Trigger examples: "reduce credits usage", "set usage budget", "avoid rate limits"
 
 ## Optional Skills by Repo Type
 

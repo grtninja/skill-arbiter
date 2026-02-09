@@ -209,6 +209,7 @@ Recent additions under `skill-candidates/`:
 - `repo-b-mass-index-ops`: repo-b wrapper presets for service/connector-oriented queries.
 - `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
 - `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
+- `usage-watcher`: usage analysis and budget planning for paid credit control and rate-limit guardrails.
 
 ## License
 

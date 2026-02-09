@@ -77,6 +77,17 @@ Expected acceptance:
 - `persistent_nonzero=false`
 - `max_rg=0` target for each skill
 
+## Usage-Watcher Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  usage-watcher \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/usage-watcher-arbiter.json
+```
+
 ## Release Workflow
 
 For release-impacting changes (for example `scripts/`, `SKILL.md`, or non-doc files):

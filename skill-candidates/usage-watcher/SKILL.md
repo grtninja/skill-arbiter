@@ -1,0 +1,55 @@
+---
+name: usage-watcher
+description: Reduce paid credit spend and rate-limit risk with deterministic usage analysis and budget guardrails. Use when planning high-volume agent work, reviewing recent burn, or setting lean/standard/surge operating caps.
+---
+
+# Usage Watcher
+
+Use this skill to control usage cost and avoid rate-limit surprises.
+
+## Workflow
+
+1. Capture recent usage history to CSV/JSON.
+2. Run `usage_guard.py analyze` to measure burn rate and risk status.
+3. Run `usage_guard.py plan` to set practical daily/session caps.
+4. Apply the recommendations before large agent workflows.
+
+## Analyze Command
+
+```bash
+python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" analyze \
+  --input /path/to/usage.csv \
+  --window-days 30 \
+  --daily-budget 140 \
+  --weekly-budget 900 \
+  --credits-remaining 236 \
+  --five-hour-limit-remaining 100 \
+  --weekly-limit-remaining 0 \
+  --json-out /tmp/usage-analysis.json \
+  --format table
+```
+
+## Budget Plan Command
+
+```bash
+python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
+  --monthly-budget 2800 \
+  --reserve-percent 20 \
+  --work-days-per-week 5 \
+  --sessions-per-day 3 \
+  --burst-multiplier 1.5 \
+  --json-out /tmp/usage-plan.json \
+  --format table
+```
+
+## Guardrail Policy
+
+- Economy mode for discovery and triage.
+- Standard mode for normal implementation tasks.
+- Surge mode only for urgent deadlines.
+- Prefer bounded scripts and cached artifacts over repeated broad discovery.
+
+## References
+
+- `references/cost-control-playbook.md`
+- `references/usage-csv-template.csv`
