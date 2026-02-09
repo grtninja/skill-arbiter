@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import asdict, dataclass
@@ -19,6 +21,7 @@ from typing import Iterable
 DEFAULT_SKILLS_HOME = Path.home() / ".codex" / "skills"
 CURATED_PATH = Path("skills/.curated")
 DEFAULT_REPO = "https://github.com/openai/skills.git"
+SKILL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 
 
 @dataclass
@@ -94,9 +97,25 @@ def has_persistent_nonzero(samples: Iterable[int], threshold_s: int) -> bool:
     return False
 
 
+def require_valid_skill_name(name: str) -> None:
+    """Enforce conservative skill names to block path traversal input."""
+
+    if not SKILL_NAME_RE.fullmatch(name):
+        raise ValueError(f"Invalid skill name: {name!r}")
+
+
+def require_valid_blacklist_name(name: str) -> None:
+    """Require a file-name-like blacklist value under destination root."""
+
+    candidate = Path(name)
+    if candidate.is_absolute() or candidate.parent != Path("."):
+        raise ValueError("Blacklist must be a filename under --dest")
+
+
 def install_curated_skill(repo_root: Path, skills_home: Path, skill: str, dry_run: bool) -> None:
     """Install one curated skill into the destination skills directory."""
 
+    require_valid_skill_name(skill)
     src = repo_root / CURATED_PATH / skill
     if not src.is_dir():
         raise FileNotFoundError(f"Curated skill not found: {src}")
@@ -111,6 +130,7 @@ def install_curated_skill(repo_root: Path, skills_home: Path, skill: str, dry_ru
 def remove_skill(skills_home: Path, skill: str, dry_run: bool) -> None:
     """Remove one installed skill."""
 
+    require_valid_skill_name(skill)
     if dry_run:
         return
     dst = skills_home / skill
@@ -166,6 +186,11 @@ def main() -> int:
 
     args = parse_args()
     skills_home = Path(args.dest).expanduser().resolve()
+    try:
+        require_valid_blacklist_name(args.blacklist)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     blacklist_path = skills_home / args.blacklist
     blacklist = load_blacklist(blacklist_path)
     results: list[ArbitrationResult] = []
@@ -173,7 +198,11 @@ def main() -> int:
     repo_root = clone_repo(args.repo)
     try:
         for skill in args.skills:
-            install_curated_skill(repo_root, skills_home, skill, args.dry_run)
+            try:
+                install_curated_skill(repo_root, skills_home, skill, args.dry_run)
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"error: {exc}", file=sys.stderr)
+                return 2
             samples = sample_counter(args.window)
             max_rg = max(samples) if samples else 0
             persistent = has_persistent_nonzero(samples, max(args.threshold, 1))

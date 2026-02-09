@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.venv/
+venv/
+env/
+
+*.log
+*.tmp
+*.bak
+
+.DS_Store
+Thumbs.db
+
+# Local arbitration outputs
+.blacklist.local
+arbitration-report*.json
