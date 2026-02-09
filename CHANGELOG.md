@@ -19,8 +19,8 @@ All notable changes to this project are documented in this file.
 - Candidate skill docs were sanitized to placeholder-based repo/path references instead of private identifiers.
 - Candidate skill folder/name surfaces were redacted to neutral `repo-a`/`repo-b`/`repo-c`/`repo-d` naming.
 - Added a standard skill progress declaration format:
-  - `New Skill Unlocked`
-  - `<Skill Name> leveled up to XX`
+  - `New Skill Unlocked: <SkillName>`
+  - `<SkillName> Leveled up to <LevelNumber>`
 
 ## [0.2.0] - 2026-02-09
 

@@ -95,6 +95,6 @@ python3 scripts/check_private_data_policy.py
 When this workflow creates or improves a skill, include this exact two-line declaration in the response:
 
 ```text
-New Skill Unlocked
-<Skill Name> leveled up to XX
+New Skill Unlocked: <SkillName>
+<SkillName> Leveled up to <LevelNumber>
 ```

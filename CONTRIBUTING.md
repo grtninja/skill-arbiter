@@ -66,8 +66,8 @@ Before opening a PR:
 If a skill was added or improved in the work, include this declaration in the response/update text:
 
 ```text
-New Skill Unlocked
-<Skill Name> leveled up to XX
+New Skill Unlocked: <SkillName>
+<SkillName> Leveled up to <LevelNumber>
 ```
 
 ## Security

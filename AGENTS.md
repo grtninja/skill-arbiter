@@ -102,9 +102,9 @@ No PR should merge with contradictory instructions across these files.
 When a skill is newly created or improved using this skillset, include this exact two-line declaration in the response:
 
 ```text
-New Skill Unlocked
-<Skill Name> leveled up to XX
+New Skill Unlocked: <SkillName>
+<SkillName> Leveled up to <LevelNumber>
 ```
 
-Use the real skill name for `<Skill Name>`.  
-Use a two-digit level string for `XX` (for example `01`, `02`, `10`).
+Use the real skill name for `<SkillName>`.  
+Use a positive integer for `<LevelNumber>` (for example `1`, `12`, `99`).

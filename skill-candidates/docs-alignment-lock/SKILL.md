@@ -21,8 +21,8 @@ Use this skill to keep documentation policy-consistent and public-safe.
    - no user-specific absolute paths
    - use placeholders (`<PRIVATE_REPO_NAME>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`)
 4. Ensure skill update messaging rule is present and aligned:
-   - `New Skill Unlocked`
-   - `<Skill Name> leveled up to XX`
+   - `New Skill Unlocked: <SkillName>`
+   - `<SkillName> Leveled up to <LevelNumber>`
 5. Run privacy and release checks.
 6. If release-impacting docs/scripts changed, prepare a patch release bump.
 

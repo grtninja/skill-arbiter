@@ -219,6 +219,6 @@ This repository is primarily owner-maintained. Issues and discussions are welcom
 When a skill is newly created or improved, include this exact declaration in the response/update text:
 
 ```text
-New Skill Unlocked
-<Skill Name> leveled up to XX
+New Skill Unlocked: <SkillName>
+<SkillName> Leveled up to <LevelNumber>
 ```
