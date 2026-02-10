@@ -1,4 +1,4 @@
 interface:
   display_name: "Arbiter Lockdown Admission"
-  short_description: "Admit skills with personal lockdown policy"
-  default_prompt: "Use $skill-arbiter-lockdown-admission to install, test, and pin local skills with strict personal-lockdown policy in skill-arbiter."
+  short_description: "Lockdown admission with artifact hygiene"
+  default_prompt: "Use $skill-arbiter-lockdown-admission to run artifact hygiene checks, install skills, and pin passing local skills with strict personal-lockdown policy in skill-arbiter."

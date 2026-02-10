@@ -20,7 +20,7 @@ Use this skill to preserve operational memory and avoid repeating past failure p
 python3 "$CODEX_HOME/skills/skill-trust-ledger/scripts/trust_ledger.py" \
   --ledger ~/.codex/skills/.trust-ledger.local.json \
   record \
-  --skill repo-b-local-comfy-orchestrator \
+  --skill repo-b-mcp-comfy-bridge \
   --event success \
   --source manual \
   --note "Pilot run clean"
@@ -32,7 +32,7 @@ python3 "$CODEX_HOME/skills/skill-trust-ledger/scripts/trust_ledger.py" \
 python3 "$CODEX_HOME/skills/skill-trust-ledger/scripts/trust_ledger.py" \
   --ledger ~/.codex/skills/.trust-ledger.local.json \
   ingest-arbiter \
-  --input /tmp/repo-b-local-comfy-orchestrator-arbiter.json
+  --input /tmp/repo-b-mcp-comfy-bridge-arbiter.json
 ```
 
 ## Report Tiers

@@ -30,11 +30,11 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
    - Analyze burn rate, project usage, and set budget/rate-limit guardrails before high-volume work.
    - Trigger examples: "reduce credits usage", "set usage budget", "avoid rate limits"
 9. `repo-b-local-bridge-orchestrator` (repo-b specific)
-   - Run read-only local bridge tasks with strict validation and bounded indexing before model-heavy workflows.
+   - Run read-only local `/api/agent` bridge tasks with strict validation and bounded indexing before model-heavy workflows.
    - Trigger examples: "local bridge guidance", "credit-first repo-b orchestration", "fail-closed bridge hints"
-10. `repo-b-local-comfy-orchestrator` (repo-b specific)
-   - Run loopback-only read-only Comfy MCP resource orchestration with strict validation and fail-closed diagnostics+hints.
-   - Trigger examples: "comfy resource health check", "local comfy hints", "fail-closed comfy orchestration"
+10. `repo-b-mcp-comfy-bridge` (repo-b specific)
+   - Run loopback-only MCP adapter and `shim.comfy.*` diagnostics with strict validation and fail-closed behavior.
+   - Trigger examples: "comfy resource health check", "mcp comfy diagnostics", "fail-closed comfy orchestration"
 11. `skill-cost-credit-governor`
    - Track per-skill spend/runtime and emit warn/throttle/disable actions when anomalies or budget pressure appear.
    - Trigger examples: "govern skill spend", "detect chatter loops", "budget enforcement policy"
@@ -50,6 +50,15 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 15. `skill-trust-ledger`
    - Maintain local reliability memory and trust tiers from observed outcomes and arbiter evidence.
    - Trigger examples: "skill reliability ledger", "trust-tier report", "should we re-enable this skill?"
+16. `skills-cross-repo-radar`
+   - Run recurring cross-repo MX3/shim drift scans and map signals to skill upgrade/discovery actions.
+   - Trigger examples: "scan my repos for new skill opportunities", "weekly mx3 shim skill review", "cross-repo drift check"
+17. `skill-common-sense-engineering`
+   - Apply lightweight human common-sense checks to catch avoidable mistakes and artifact hygiene issues.
+   - Trigger examples: "quick sanity pass", "common-sense review before finalizing", "catch obvious mistakes"
+
+Legacy compatibility wrapper:
+- `repo-b-local-comfy-orchestrator` is kept for existing prompt routes and should delegate to `repo-b-mcp-comfy-bridge`.
 
 ## Optional Skills by Repo Type
 
@@ -109,6 +118,26 @@ Meta-governance admission template:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skill-cost-credit-governor skill-dependency-fan-out-inspector \
   skill-cold-start-warm-path-optimizer skill-blast-radius-simulator skill-trust-ledger \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
+
+Cross-repo radar admission template:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skills-cross-repo-radar \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
+
+Common-sense baseline admission template:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skill-common-sense-engineering \
   --source-dir skill-candidates \
   --window 10 --threshold 3 --max-rg 3 \
   --personal-lockdown

@@ -99,7 +99,18 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/repo-b-local-bridge-orchestrator-arbiter.json
 ```
 
-## REPO_B Local Comfy Orchestrator Admission
+## REPO_B MCP Comfy Bridge Admission (Canonical)
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  repo-b-mcp-comfy-bridge \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/repo-b-mcp-comfy-bridge-arbiter.json
+```
+
+## REPO_B Local Comfy Orchestrator Admission (Legacy Wrapper)
 
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
@@ -120,6 +131,28 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --window 10 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/skill-meta-governance-arbiter.json
+```
+
+## Cross-Repo Radar Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skills-cross-repo-radar \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/skills-cross-repo-radar-arbiter.json
+```
+
+## Common-Sense Engineering Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skill-common-sense-engineering \
+  --source-dir skill-candidates \
+  --window 10 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/skill-common-sense-engineering-arbiter.json
 ```
 
 ## Release Workflow

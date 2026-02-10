@@ -2,6 +2,28 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.7] - 2026-02-10
+
+### Changed
+
+- Consolidated repo-b Comfy/MCP skill boundaries:
+  - `skill-candidates/repo-b-mcp-comfy-bridge/` is now the canonical lane for MCP adapter + `shim.comfy.*` diagnostics, with explicit fail-closed checks.
+  - `skill-candidates/repo-b-local-comfy-orchestrator/` now acts as a legacy compatibility wrapper that routes new work to `repo-b-mcp-comfy-bridge`.
+- Tightened scope in `skill-candidates/repo-b-local-bridge-orchestrator/` to explicit `/api/agent` orchestration and guidance-hint validation, excluding MCP/Comfy diagnostics.
+- Added new candidate skill `skill-candidates/skills-cross-repo-radar/`:
+  - `scripts/repo_change_radar.py` for recurring multi-repo MX3/shim signal scans.
+  - `references/radar-playbook.md` for cadence and triage thresholds.
+- Added new candidate skill `skill-candidates/skill-common-sense-engineering/`:
+  - practical human common-sense sanity checks for right-sized changes and obvious hygiene misses.
+  - `references/common-sense-checklist.md`.
+- Upgraded `skill-candidates/skill-arbiter-lockdown-admission/` to include:
+  - pre-admission artifact hygiene scanning and cleanup in workflow/checklist text.
+  - new `scripts/artifact_hygiene_scan.py` for deterministic detection/removal of generated artifacts.
+  - explicit maintenance trigger to update the skill when new recurring artifact patterns are observed.
+- Upgraded `skill-candidates/skills-discovery-curation/` to include recurring multi-repo curation flow using `skills-cross-repo-radar`.
+- Updated discovery/admission documentation in `README.md`, `SKILL.md`, and `references/recommended-skill-portfolio.md` to reflect canonical vs legacy repo-b Comfy skill routing plus new cross-repo/common-sense candidates.
+- Updated `skill-candidates/skill-trust-ledger/SKILL.md` examples to use `repo-b-mcp-comfy-bridge` evidence naming.
+
 ## [0.2.6] - 2026-02-09
 
 ### Added

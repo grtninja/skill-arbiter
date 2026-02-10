@@ -1,0 +1,4 @@
+interface:
+  display_name: "Common-Sense Engineering"
+  short_description: "Practical sanity checks for coding work"
+  default_prompt: "Use $skill-common-sense-engineering to apply lightweight common-sense checks, keep scope proportional, and codify recurring hygiene fixes into the relevant skills."

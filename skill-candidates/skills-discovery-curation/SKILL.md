@@ -1,6 +1,6 @@
 ---
 name: skills-discovery-curation
-description: Discover, triage, and prioritize Codex skills for a repository or workspace. Use when auditing existing skills, identifying missing capabilities, mapping skills to repo workflows, and generating a safe install/admission plan.
+description: Discover, triage, and prioritize Codex skills for a repository or workspace. Use for one-time audits and recurring curation runs after cross-repo MX3/shim drift scans.
 ---
 
 # Skills Discovery and Curation
@@ -10,15 +10,27 @@ Use this skill to build a practical skill portfolio for a repo.
 ## Workflow
 
 1. Inventory available skills and currently installed skills.
-2. Map repository workflows to missing capabilities.
-3. Propose a minimal prioritized skill set (core first, optional second).
-4. Provide admission plan using local `skill-arbiter` lockdown flow.
+2. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
+3. Map repository workflows to missing capabilities.
+4. Include practical baseline checks via `$skill-common-sense-engineering`.
+5. Propose a minimal prioritized skill set (core first, optional second).
+6. Provide admission plan using local `skill-arbiter` lockdown flow.
 
 ## Discovery Commands
 
 ```bash
 find $CODEX_HOME/skills -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
 find $CODEX_HOME/skills -mindepth 1 -maxdepth 2 -name SKILL.md -type f | sort
+```
+
+Optional recurring cross-repo scan:
+
+```bash
+python3 "$CODEX_HOME/skills/skills-cross-repo-radar/scripts/repo_change_radar.py" \
+  --repo "<PRIVATE_REPO_A>=/path/to/<PRIVATE_REPO_A>" \
+  --repo "<PRIVATE_REPO_B>=/path/to/<PRIVATE_REPO_B>" \
+  --since-days 14 \
+  --json-out /tmp/skills-cross-repo-radar.json
 ```
 
 ## Curation Output Format

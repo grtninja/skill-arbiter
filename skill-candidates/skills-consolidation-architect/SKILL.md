@@ -10,16 +10,17 @@ Use this skill to keep your skill ecosystem modular and maintainable.
 ## Consolidation Workflow
 
 1. Inventory installed skills and group by repository domain.
-2. Run overlap audit and identify merge/split candidates.
-3. Apply consolidation rubric:
+2. Optionally ingest recent cross-repo radar results from `$skills-cross-repo-radar`.
+3. Run overlap audit and identify merge/split candidates.
+4. Apply consolidation rubric:
    - keep single-responsibility skills,
    - split multi-workflow monoliths,
    - avoid near-duplicate trigger scopes.
-4. Define per-repo sets:
+5. Define per-repo sets:
    - `core`: always-on, high-frequency tasks,
    - `advanced`: specialized workflows,
    - `experimental`: new candidates pending arbiter evidence.
-5. Admit changed/new skills with `skill-arbiter --personal-lockdown`.
+6. Admit changed/new skills with `skill-arbiter --personal-lockdown`.
 
 ## Commands
 

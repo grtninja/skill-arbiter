@@ -207,8 +207,9 @@ Recent additions under `skill-candidates/`:
 
 - `safe-mass-index-core`: bounded metadata-only indexing and query scripts with no-`rg` indexing policy.
 - `repo-b-mass-index-ops`: repo-b wrapper presets for service/connector-oriented queries.
-- `repo-b-local-bridge-orchestrator`: read-only local bridge orchestration with strict validation, fail-closed hints, and drop-in `<PRIVATE_REPO_B>` hook templates.
-- `repo-b-local-comfy-orchestrator`: loopback-only local Comfy MCP resource orchestration with strict validation, fail-closed diagnostics+hints, and drop-in `<PRIVATE_REPO_B>` templates.
+- `repo-b-local-bridge-orchestrator`: read-only local Agent Bridge orchestration with strict validation, fail-closed hints, bounded indexing, and explicit MCP/Comfy lane separation.
+- `repo-b-mcp-comfy-bridge`: canonical MCP adapter and Comfy bridge operations lane for `<PRIVATE_REPO_B>`, including fail-closed resource checks.
+- `repo-b-local-comfy-orchestrator`: legacy compatibility wrapper that routes new MCP/Comfy requests to `repo-b-mcp-comfy-bridge` while retaining legacy drop-in templates.
 - `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
 - `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
 - `usage-watcher`: usage analysis and budget planning for paid credit control and rate-limit guardrails.
@@ -217,6 +218,8 @@ Recent additions under `skill-candidates/`:
 - `skill-cold-start-warm-path-optimizer`: cold-vs-warm latency analysis and deterministic prewarm planning.
 - `skill-blast-radius-simulator`: pre-admission blast-radius scoring with baseline delta and acknowledgement gating.
 - `skill-trust-ledger`: local reliability ledger and trust-tier reporting from manual and arbiter evidence.
+- `skill-common-sense-engineering`: practical human common-sense sanity checks for scoped changes, artifact hygiene, and recurring-fix codification.
+- `skills-cross-repo-radar`: recurring multi-repo MX3/shim change scans that map activity to skill upgrade/discovery actions.
 
 ## License
 

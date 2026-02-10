@@ -1,4 +1,4 @@
 interface:
   display_name: "REPO_B Local Bridge Orchestrator"
-  short_description: "Credit-first local bridge hints"
-  default_prompt: "Use $repo-b-local-bridge-orchestrator to run read-only local bridge orchestration with strict validation, bounded indexing, and fail-closed guidance hints in <PRIVATE_REPO_B>."
+  short_description: "Agent Bridge hints with bounded index"
+  default_prompt: "Use $repo-b-local-bridge-orchestrator for read-only /api/agent local bridge orchestration with strict validation, bounded indexing, and fail-closed guidance hints in <PRIVATE_REPO_B>. Route MCP/Comfy checks to $repo-b-mcp-comfy-bridge."

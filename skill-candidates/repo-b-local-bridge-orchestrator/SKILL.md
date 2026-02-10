@@ -1,11 +1,17 @@
 ---
 name: repo-b-local-bridge-orchestrator
-description: Run credit-first local bridge orchestration in <PRIVATE_REPO_B> with strict read-only validation, bounded indexing, and fail-closed guidance hints.
+description: Run credit-first local Agent Bridge orchestration in <PRIVATE_REPO_B> with strict read-only validation, bounded indexing, and fail-closed guidance hints. Excludes MCP Comfy diagnostics.
 ---
 
 # REPO_B Local Bridge Orchestrator
 
-Use this skill to run a manual local-first bridge workflow in <PRIVATE_REPO_B> and emit validated guidance hints without cloud fallback.
+Use this skill to run a manual local-first Agent Bridge workflow in `<PRIVATE_REPO_B>` and emit validated guidance hints without cloud fallback.
+
+## Scope Boundary
+
+- In scope: `/api/agent/*` readiness/tasks, bounded file indexing, `analyze_files` validation, and guidance hint output.
+- Out of scope: `/api/mcp/*` operations and `shim.comfy.*` diagnostics.
+- For MCP/Comfy operations, use `$repo-b-mcp-comfy-bridge`.
 
 ## Workflow
 

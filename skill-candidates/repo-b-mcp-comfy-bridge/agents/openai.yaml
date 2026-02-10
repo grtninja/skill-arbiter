@@ -1,4 +1,4 @@
 interface:
   display_name: "REPO_B MCP Comfy Bridge"
-  short_description: "Manage MCP adapter and ComfyUI bridge"
-  default_prompt: "Use $repo-b-mcp-comfy-bridge for MCP adapter configuration, status checks, and ComfyUI bridge operations in repo_b shim."
+  short_description: "Canonical MCP + Comfy operations"
+  default_prompt: "Use $repo-b-mcp-comfy-bridge for MCP adapter configuration, shim.comfy resource validation, and fail-closed Comfy diagnostics in <PRIVATE_REPO_B>. Prefer this over $repo-b-local-comfy-orchestrator for new work."

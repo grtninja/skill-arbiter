@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skills Cross-Repo Radar"
+  short_description: "Recurring multi-repo MX3/shim drift scan"
+  default_prompt: "Use $skills-cross-repo-radar to scan recent changes across multiple repos, detect MX3/shim drift signals, and route actions to discovery or consolidation skills."

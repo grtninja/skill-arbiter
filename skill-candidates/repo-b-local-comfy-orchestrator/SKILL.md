@@ -1,24 +1,24 @@
 ---
 name: repo-b-local-comfy-orchestrator
-description: Run reliability-first local Comfy MCP resource orchestration in <PRIVATE_REPO_B> with strict validation, loopback-only policy, and fail-closed diagnostics.
+description: Compatibility wrapper for legacy local Comfy orchestration requests in <PRIVATE_REPO_B>. Route new MCP/Comfy operations to repo-b-mcp-comfy-bridge.
 ---
 
-# REPO_B Local Comfy Orchestrator
+# REPO_B Local Comfy Orchestrator (Legacy Wrapper)
 
-Use this skill to run manual local Comfy resource orchestration in <PRIVATE_REPO_B> through existing MCP contracts and emit validated diagnostics plus guidance hints.
+Use this wrapper to preserve legacy trigger compatibility.
+
+For all new MCP/Comfy work, use `$repo-b-mcp-comfy-bridge`.
 
 ## Workflow
 
-1. Confirm loopback-safe MCP and fail-closed policy environment.
-2. Probe MCP status from REST (`/api/mcp/status`).
-3. Open JSON-RPC session to MCP adapter host/port.
-4. Read required resources (`shim.comfy.status`, `shim.comfy.queue`, `shim.comfy.history`).
-5. Validate all resource payloads with strict schema and freshness gates.
-6. Emit deterministic diagnostics+hints JSON and stop on failures.
+1. Detect legacy request intent (`local comfy orchestrator`, `comfy health check`, `shim.comfy` diagnostics).
+2. Immediately route execution to `$repo-b-mcp-comfy-bridge`.
+3. Keep loopback-only and fail-closed defaults unchanged.
+4. Reuse legacy drop-in scripts only when older automation still calls them directly.
 
-## Drop-In Hook Files
+## Legacy Drop-In Hook Files (Still Supported)
 
-Copy these files into `<PRIVATE_REPO_B>` before first run:
+These files remain available for backward-compatible automation:
 
 - `assets/repo_b/tools/local_comfy_orchestrator.py` -> `tools/local_comfy_orchestrator.py`
 - `assets/repo_b/tools/local_comfy_validate.py` -> `tools/local_comfy_validate.py`
@@ -26,7 +26,7 @@ Copy these files into `<PRIVATE_REPO_B>` before first run:
 - `assets/repo_b/tests/tools/test_local_comfy_orchestrator.py` -> `tests/tools/test_local_comfy_orchestrator.py`
 - `assets/repo_b/tests/tools/test_local_comfy_validate.py` -> `tests/tools/test_local_comfy_validate.py`
 
-## Required Environment (PowerShell)
+## Legacy Environment (PowerShell)
 
 ```powershell
 $env:REPO_B_LOCAL_COMFY_ORCH_ENABLED = "1"
@@ -42,7 +42,7 @@ $env:MX3_COMFYUI_BASE_URL = "http://127.0.0.1:8188"
 $env:MX3_COMFYUI_TIMEOUT_S = "10"
 ```
 
-## Run Command
+## Legacy Run Command
 
 Run from `<PRIVATE_REPO_B>` root:
 
@@ -76,6 +76,7 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
 
 ## References
 
+- Canonical path: `$repo-b-mcp-comfy-bridge`
 - `references/orchestrator-workflow.md`
 - `references/validation-contract.md`
 - `references/phase2-prompt-lifecycle-roadmap.md`
