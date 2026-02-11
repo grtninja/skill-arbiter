@@ -1,0 +1,4 @@
+interface:
+  display_name: "Local Compute Usage"
+  short_description: "Local-only Codex service and hardware routing"
+  default_prompt: "Use $local-compute-usage to enforce local-first VS Code execution with service and hardware checks, including MemryX shim priority."
