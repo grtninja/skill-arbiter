@@ -14,6 +14,16 @@ Use this skill to keep architecture and governance constraints intact.
 3. Reject coupling to hardware-execution internals from shim/DDC repos.
 4. Run lint/tests and document governance impact in PR notes.
 
+## Scope Boundary
+
+Use this skill for architecture/governance boundary checks across docs, contracts, and cross-repo interfaces.
+
+Do not use this skill for:
+
+1. Policy file/schema validation execution (use `repo-c-policy-schema-gate`).
+2. NDJSON trace packet validation mechanics (use `repo-c-trace-ndjson-validate`).
+3. Ranking engine scoring/report contract implementation details (use `repo-c-ranking-contracts`).
+
 ## Quick Governance Checks
 
 ```bash

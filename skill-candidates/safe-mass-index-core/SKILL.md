@@ -79,6 +79,11 @@ python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_query.py" \
 - `.codex-index/files.jsonl` (non-sharded)
 - `.codex-index/shards/*.jsonl` (sharded)
 - `.codex-index/run.json`
+## Scope Boundary
+
+Use this skill only for the `safe-mass-index-core` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

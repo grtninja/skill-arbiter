@@ -39,6 +39,11 @@ python3 "$CODEX_HOME/skills/skill-arbiter-lockdown-admission/scripts/artifact_hy
 2. If a change cannot be explained in one sentence, scope is probably too large.
 3. If a failure can recur, codify it in a skill/workflow instead of relying on memory.
 4. If evidence is missing, do not claim success.
+## Scope Boundary
+
+Use this skill only for the `skill-common-sense-engineering` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

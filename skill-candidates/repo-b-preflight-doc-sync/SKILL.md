@@ -14,6 +14,16 @@ Use this skill for PR-readiness and governance updates.
 3. Keep docs in lockstep for behavior changes.
 4. Add target-PC rerun steps when hardware-only checks cannot run locally.
 
+## Scope Boundary
+
+Use this skill for release-readiness gate execution and docs synchronization before PRs.
+
+Do not use this skill for:
+
+1. Runtime agent bridge behavior debugging (use `repo-b-agent-bridge-safety`).
+2. Hybrid Windows/WSL connectivity diagnosis (use `repo-b-wsl-hybrid-ops`).
+3. Strict hardware probe root-cause workflows (use `repo-b-hardware-first`).
+
 ## Required Preflight Profiles
 
 ```powershell

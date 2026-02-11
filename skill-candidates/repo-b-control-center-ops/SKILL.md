@@ -14,6 +14,16 @@ Use this skill for Control Center runtime and service-surface operations.
 3. Debug connector routing and diagnostics windows.
 4. Keep no-flashing-console UX requirements intact.
 
+## Scope Boundary
+
+Use this skill for Control Center startup/restart behavior and service-surface readiness checks.
+
+Do not use this skill for:
+
+1. Windows-host vs WSL split diagnostics (use `repo-b-wsl-hybrid-ops`).
+2. Strict real-hardware probe/root-cause lanes (use `repo-b-hardware-first`).
+3. PR preflight and docs lockstep gates (use `repo-b-preflight-doc-sync`).
+
 ## Canonical Operations
 
 ```powershell

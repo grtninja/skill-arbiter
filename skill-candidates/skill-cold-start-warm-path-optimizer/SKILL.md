@@ -37,6 +37,11 @@ python3 "$CODEX_HOME/skills/skill-cold-start-warm-path-optimizer/scripts/warm_pa
   --json-out /tmp/cold-warm-plan.json \
   --format table
 ```
+## Scope Boundary
+
+Use this skill only for the `skill-cold-start-warm-path-optimizer` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

@@ -50,6 +50,11 @@ node /path/to/script.js
 2. Do not add image/icon files (`*.png`, `*.svg`, `*.jpg`, `*.jpeg`, `*.gif`, `*.ico`) to this skill.
 3. Keep outputs outside `$CODEX_HOME/skills/playwright-safe`.
 4. If churn is observed, rerun preflight and remove added assets immediately.
+## Scope Boundary
+
+Use this skill only for the `playwright-safe` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

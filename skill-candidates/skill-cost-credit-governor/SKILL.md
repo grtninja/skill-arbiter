@@ -42,6 +42,11 @@ python3 "$CODEX_HOME/skills/skill-cost-credit-governor/scripts/skill_cost_govern
 ```
 
 Use `--force-global-action throttle` or `--force-global-action disable` for emergency containment.
+## Scope Boundary
+
+Use this skill only for the `skill-cost-credit-governor` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

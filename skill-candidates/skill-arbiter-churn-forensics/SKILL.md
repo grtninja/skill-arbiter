@@ -29,6 +29,11 @@ python3 scripts/arbitrate_skills.py <skill> [<skill> ...] \
 - `persistent_nonzero=true` indicates repeated rg activity streak.
 - `max_rg >= max-rg threshold` triggers delete/blacklist action.
 - Local immutable entries always win and prevent deletion.
+## Scope Boundary
+
+Use this skill only for the `skill-arbiter-churn-forensics` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

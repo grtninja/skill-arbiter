@@ -37,6 +37,11 @@ When startup flow or renderer wiring changes, also run:
 ```bash
 npm run verify-startup
 ```
+## Scope Boundary
+
+Use this skill only for the `repo-d-ui-guardrails` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

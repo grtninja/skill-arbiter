@@ -31,6 +31,11 @@ python -m repo_a_node --policy config/device_policy.json --selftest config/mesh_
   - `put(key: bytes, val: bytes, tier: str, ttl_s: int) -> None`
   - `get(key: bytes) -> Optional[bytes]`
 - Telemetry events remain compact and append-only with rotation behavior intact.
+## Scope Boundary
+
+Use this skill only for the `repo-a-telemetry-kv-guard` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

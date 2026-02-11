@@ -39,6 +39,11 @@ For release-impacting changes:
 ```bash
 python3 scripts/prepare_release.py --part patch
 ```
+## Scope Boundary
+
+Use this skill only for the `docs-alignment-lock` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

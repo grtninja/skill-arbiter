@@ -17,6 +17,16 @@ Use this skill as the canonical MCP + Comfy lane in `<PRIVATE_REPO_B>`.
 4. Validate required Comfy resources (`shim.comfy.status`, `shim.comfy.queue`, `shim.comfy.history`).
 5. Fail closed on stale status or schema contract violations.
 
+## Scope Boundary
+
+Use this skill for MCP adapter state/config plus `shim.comfy.*` resource health.
+
+Do not use this skill for:
+
+1. OpenAI-thin-waist chat/vision/jobs route debugging (use `repo-b-thin-waist-routing`).
+2. Agent Bridge task/write-mode safety lanes (use `repo-b-agent-bridge-safety`).
+3. Hybrid Windows-host/WSL network topology checks (use `repo-b-wsl-hybrid-ops`).
+
 ## Required Environment (PowerShell)
 
 ```powershell

@@ -28,6 +28,11 @@ For focused shim contract review:
 ```bash
 rg -n "REPO_B_SIDECAR_URL|importorskip|requires_real_sidecar|/health|/telemetry" -S AGENTS.md tests src repo-c repo_c_trace ranking_engine
 ```
+## Scope Boundary
+
+Use this skill only for the `repo-c-shim-contract-checks` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

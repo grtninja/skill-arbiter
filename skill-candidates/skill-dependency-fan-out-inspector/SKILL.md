@@ -27,6 +27,11 @@ python3 "$CODEX_HOME/skills/skill-dependency-fan-out-inspector/scripts/dependenc
 ```
 
 Use `--include-plain-names` when legacy skills mention dependencies without `$` prefixes.
+## Scope Boundary
+
+Use this skill only for the `skill-dependency-fan-out-inspector` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

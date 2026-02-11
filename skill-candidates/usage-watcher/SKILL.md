@@ -48,6 +48,11 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
 - Standard mode for normal implementation tasks.
 - Surge mode only for urgent deadlines.
 - Prefer bounded scripts and cached artifacts over repeated broad discovery.
+## Scope Boundary
+
+Use this skill only for the `usage-watcher` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

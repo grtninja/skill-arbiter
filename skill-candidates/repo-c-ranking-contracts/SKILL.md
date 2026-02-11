@@ -13,6 +13,16 @@ Use this skill for Ranking Engine logic and contract-safe updates.
 2. Validate report serialization against schema expectations.
 3. Verify tests covering engine behavior and schema conformance.
 
+## Scope Boundary
+
+Use this skill for ranking/scoring behavior and `ranking_report` contract stability.
+
+Do not use this skill for:
+
+1. Policy manifest/schema validation CLI lanes (use `repo-c-policy-schema-gate`).
+2. NDJSON trace packet and guardian stream checks (use `repo-c-trace-ndjson-validate`).
+3. High-level cross-repo boundary governance reviews (use `repo-c-boundary-governance`).
+
 ## Commands
 
 Run from `<PRIVATE_REPO_C>` root:

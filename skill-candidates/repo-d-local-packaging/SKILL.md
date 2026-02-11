@@ -42,6 +42,11 @@ powershell -ExecutionPolicy Bypass -File scripts/package.ps1
 - Commands executed and pass/fail status.
 - Artifact paths under `apps/desktop/release`.
 - Any blocker with explicit reproduction steps.
+## Scope Boundary
+
+Use this skill only for the `repo-d-local-packaging` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

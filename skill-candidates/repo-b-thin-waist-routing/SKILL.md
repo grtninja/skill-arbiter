@@ -14,6 +14,16 @@ Use this skill for REST route verification and routing policy integrity.
 3. Validate native async job endpoints and queue state.
 4. Confirm routing policy remains centralized in `ModelRouter`.
 
+## Scope Boundary
+
+Use this skill for `/v1/*` façade and `/api/jobs` thin-waist routing behavior.
+
+Do not use this skill for:
+
+1. MCP adapter and `shim.comfy.*` contract diagnostics (use `repo-b-mcp-comfy-bridge`).
+2. Agent Bridge capability/task safety checks (use `repo-b-agent-bridge-safety`).
+3. Windows-host vs WSL connectivity troubleshooting (use `repo-b-wsl-hybrid-ops`).
+
 ## Quick Verification
 
 ```bash

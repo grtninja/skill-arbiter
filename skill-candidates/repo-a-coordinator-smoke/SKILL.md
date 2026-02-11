@@ -34,6 +34,11 @@ python -m repo_a_node --policy config/device_policy.json --verbose
 - Runtime registration succeeds.
 - At least one job completes and telemetry includes `job.end`.
 - Credit preview logs are emitted without payout actions.
+## Scope Boundary
+
+Use this skill only for the `repo-a-coordinator-smoke` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

@@ -52,6 +52,11 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" <skill> [
   --window 10 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
+## Scope Boundary
+
+Use this skill only for the `skills-discovery-curation` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

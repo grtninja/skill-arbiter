@@ -13,6 +13,16 @@ Use this skill to enforce policy/schema correctness.
 2. Confirm schema updates remain backward-compatible for consumers.
 3. Run lint/tests for affected policy and schema code.
 
+## Scope Boundary
+
+Use this skill for policy manifests, schema files, and policy validation tooling.
+
+Do not use this skill for:
+
+1. NDJSON trace packet integrity checks (use `repo-c-trace-ndjson-validate`).
+2. Ranking engine scoring/report contract changes (use `repo-c-ranking-contracts`).
+3. Cross-repo boundary governance wording/architecture checks (use `repo-c-boundary-governance`).
+
 ## Core Commands
 
 Run from `<PRIVATE_REPO_C>` root:

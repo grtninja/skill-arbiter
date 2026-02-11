@@ -86,9 +86,21 @@ def parse_args() -> argparse.Namespace:
 
 
 def normalize_text(text: str) -> str:
-    """Strip fenced code blocks to focus on instructional overlap."""
+    """Strip boilerplate sections to focus on lane-specific overlap."""
 
-    return re.sub(r"```[\s\S]*?```", "", text)
+    cleaned = re.sub(r"```[\s\S]*?```", "", text)
+    cleaned = re.sub(r"(?ms)^##\s+Loopback\s*\n.*?(?=^##\s+|\Z)", "", cleaned)
+    cleaned = re.sub(
+        r"(?im)^Do not use this skill for unrelated lanes; route those through `\\$skill-hub`.*$",
+        "",
+        cleaned,
+    )
+    cleaned = re.sub(
+        r"(?im)^Use this skill only for the `[^`]+` lane and workflow defined in this file and its references\\.$",
+        "",
+        cleaned,
+    )
+    return cleaned
 
 
 def token_set(text: str) -> set[str]:

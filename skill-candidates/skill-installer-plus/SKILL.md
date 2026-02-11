@@ -51,6 +51,11 @@ python3 "$CODEX_HOME/skills/skill-installer-plus/scripts/skill_installer_plus.py
   --note "real workflow stable" \
   --json-out /tmp/skill-installer-plus-feedback.json
 ```
+## Scope Boundary
+
+Use this skill only for the `skill-installer-plus` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

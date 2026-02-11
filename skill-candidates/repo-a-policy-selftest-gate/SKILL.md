@@ -15,6 +15,16 @@ Use this skill to run required pre-PR validation in `<PRIVATE_REPO_A>`.
 4. Run focused tests for changed modules.
 5. Ensure policy/config changes remain documented and intentional.
 
+## Scope Boundary
+
+Use this skill for `<PRIVATE_REPO_A>` policy/selftest acceptance gates only.
+
+Do not use this skill for:
+
+1. `<PRIVATE_REPO_C>` policy/schema or trace/ranking contracts.
+2. General boundary-governance checks in other repos.
+3. Runtime bridge or hardware troubleshooting lanes.
+
 ## Required Commands
 
 Run from `<PRIVATE_REPO_A>` root:

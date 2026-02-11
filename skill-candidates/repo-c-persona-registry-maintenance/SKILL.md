@@ -34,6 +34,11 @@ PY
 - `list_personas()` discovers `*/manifest.persona.json`.
 - `get_persona_files()` and `load_persona_stack()` must honor `files_in_order`.
 - Missing persona files should fail loudly with actionable errors.
+## Scope Boundary
+
+Use this skill only for the `repo-c-persona-registry-maintenance` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

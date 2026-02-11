@@ -46,6 +46,11 @@ python3 "$CODEX_HOME/skills/skill-trust-ledger/scripts/trust_ledger.py" \
   --json-out /tmp/skill-trust-report.json \
   --format table
 ```
+## Scope Boundary
+
+Use this skill only for the `skill-trust-ledger` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

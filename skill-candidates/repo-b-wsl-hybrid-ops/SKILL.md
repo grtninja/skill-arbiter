@@ -14,6 +14,16 @@ Use this skill for hybrid Windows+WSL operations.
 3. Verify WSL auxiliary endpoints are reachable from Windows.
 4. Keep strict hardware checks in Windows lane only.
 
+## Scope Boundary
+
+Use this skill only for cross-host topology and connectivity behavior between Windows host services and WSL helpers.
+
+Do not use this skill for:
+
+1. Control Center startup UX and endpoint-surface debugging (use `repo-b-control-center-ops`).
+2. Agent Bridge policy or task-safety gating (use `repo-b-agent-bridge-safety`).
+3. PR gate execution and documentation synchronization (use `repo-b-preflight-doc-sync`).
+
 ## Commands
 
 Start host services:

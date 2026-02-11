@@ -13,6 +13,16 @@ Use this skill to protect packet stream contract integrity.
 2. Validate required packet fields and monotonic packet IDs.
 3. Re-check guardian decision counters when reroute logic changes.
 
+## Scope Boundary
+
+Use this skill for NDJSON packet envelope integrity and trace-stream monotonicity.
+
+Do not use this skill for:
+
+1. Policy manifest/schema conformance gates (use `repo-c-policy-schema-gate`).
+2. Ranking/report scoring semantics and schema compatibility (use `repo-c-ranking-contracts`).
+3. Cross-repo architecture governance boundary reviews (use `repo-c-boundary-governance`).
+
 ## Command
 
 Run from `<PRIVATE_REPO_C>` root:

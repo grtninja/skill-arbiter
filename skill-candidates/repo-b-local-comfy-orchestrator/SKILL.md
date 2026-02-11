@@ -16,6 +16,16 @@ For all new MCP/Comfy work, use `$repo-b-mcp-comfy-bridge`.
 3. Keep loopback-only and fail-closed defaults unchanged.
 4. Reuse legacy drop-in scripts only when older automation still calls them directly.
 
+## Scope Boundary
+
+Use this skill only as a legacy compatibility wrapper for old `local comfy orchestrator` triggers.
+
+Do not use this skill for:
+
+1. New MCP/Comfy diagnostics (use `repo-b-mcp-comfy-bridge`).
+2. Agent bridge guidance/task lanes (use `repo-b-local-bridge-orchestrator`).
+3. Thin-waist chat/vision/jobs routing checks (use `repo-b-thin-waist-routing`).
+
 ## Legacy Drop-In Hook Files (Still Supported)
 
 These files remain available for backward-compatible automation:

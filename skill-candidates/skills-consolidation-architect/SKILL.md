@@ -63,6 +63,11 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" <skill> [
 - `score < 0.35`: generally distinct.
 
 Keep each repo’s `core` set between 3 and 6 skills by default.
+## Scope Boundary
+
+Use this skill only for the `skills-consolidation-architect` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

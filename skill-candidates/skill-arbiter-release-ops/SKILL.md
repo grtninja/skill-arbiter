@@ -28,6 +28,11 @@ python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scr
 - `pyproject.toml` version increases.
 - Top `CHANGELOG.md` heading matches new version.
 - `check_release_hygiene.py` exits cleanly for PR context.
+## Scope Boundary
+
+Use this skill only for the `skill-arbiter-release-ops` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

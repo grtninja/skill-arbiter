@@ -30,6 +30,11 @@ powershell -ExecutionPolicy Bypass -File scripts/integration_smoke.ps1
 - Root cause statement tied to concrete files.
 - Minimal fix plan with affected modules.
 - Validation commands and outcomes.
+## Scope Boundary
+
+Use this skill only for the `repo-d-setup-diagnostics` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

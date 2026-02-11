@@ -34,6 +34,11 @@ python3 "$CODEX_HOME/skills/skill-blast-radius-simulator/scripts/blast_radius_si
   --baseline-json /tmp/previous-blast-radius-report.json \
   --json-out /tmp/blast-radius-report.json
 ```
+## Scope Boundary
+
+Use this skill only for the `skill-blast-radius-simulator` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

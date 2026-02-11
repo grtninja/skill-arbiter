@@ -56,6 +56,11 @@ python3 scripts/arbitrate_skills.py <skill> [<skill> ...] \
 - CSV result row for each skill.
 - JSON report with `max_rg`, `persistent_nonzero`, `action`, and `note`.
 - Updated `.whitelist.local` and `.immutable.local` entries for passing skills.
+## Scope Boundary
+
+Use this skill only for the `skill-arbiter-lockdown-admission` lane and workflow defined in this file and its references.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## Reference
 

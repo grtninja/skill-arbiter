@@ -14,6 +14,16 @@ Use this skill for Agent Bridge setup and safety enforcement.
 3. Keep `read_only` as default; enable `controlled_write` only when required.
 4. Enforce `allow_write` and apply gating rules.
 
+## Scope Boundary
+
+Use this skill for `/api/agent/*` bridge-mode and write-safety controls.
+
+Do not use this skill for:
+
+1. MCP adapter or Comfy resource diagnostics (use `repo-b-mcp-comfy-bridge`).
+2. Windows-host vs WSL reachability checks (use `repo-b-wsl-hybrid-ops`).
+3. General PR preflight/doc lockstep lanes (use `repo-b-preflight-doc-sync`).
+
 ## Required Environment (PowerShell)
 
 ```powershell

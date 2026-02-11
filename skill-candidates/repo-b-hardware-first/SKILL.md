@@ -21,6 +21,16 @@ Use this skill to troubleshoot and fix shim issues with real-hardware assumption
 4. Fix root cause in real execution path.
 5. Re-run checks and capture evidence.
 
+## Scope Boundary
+
+Use this skill only for real-hardware diagnosis and fix verification.
+
+Do not use this skill for:
+
+1. PR governance/doc lockstep only workflows (use `repo-b-preflight-doc-sync`).
+2. Control Center process/restart UX operations (use `repo-b-control-center-ops`).
+3. Agent Bridge safety-mode configuration (use `repo-b-agent-bridge-safety`).
+
 ## Commands
 
 ```bash
