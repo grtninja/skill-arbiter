@@ -1,0 +1,4 @@
+interface:
+  display_name: "Playwright Safe"
+  short_description: "Playwright browser automation without asset churn"
+  default_prompt: "Use $playwright-safe to run Playwright browser automation with no-assets preflight checks and low-churn command patterns."

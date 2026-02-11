@@ -7,6 +7,13 @@ description: Build and query bounded metadata-only repository indexes without rg
 
 Use this skill to index large repositories safely without `rg` subprocess churn.
 
+## Workflow
+
+1. Set bounded policies (time/files/read-bytes, exclusions).
+2. Build incremental or full metadata index.
+3. Query by path/ext/lang/size/freshness/scope.
+4. Use run artifacts to verify deterministic bounded execution.
+
 ## Policy
 
 1. Do not use `rg`/`rg.exe` for mass indexing.
@@ -76,3 +83,11 @@ python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_query.py" \
 ## Reference
 
 - `references/index-schema.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

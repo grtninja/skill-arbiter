@@ -9,18 +9,20 @@ Use this skill to keep your skill ecosystem modular and maintainable.
 
 ## Consolidation Workflow
 
-1. Inventory installed skills and group by repository domain.
-2. Optionally ingest recent cross-repo radar results from `$skills-cross-repo-radar`.
-3. Run overlap audit and identify merge/split candidates.
-4. Apply consolidation rubric:
+1. Run `$skill-auditor` first for recent-change quality signals plus per-skill `unique` vs `upgrade` classification.
+2. Inventory installed skills and group by repository domain.
+3. Optionally ingest recent cross-repo radar results from `$skills-cross-repo-radar`.
+4. Run overlap audit and identify merge/split candidates.
+5. Apply consolidation rubric:
    - keep single-responsibility skills,
    - split multi-workflow monoliths,
    - avoid near-duplicate trigger scopes.
-5. Define per-repo sets:
+6. Define per-repo sets:
    - `core`: always-on, high-frequency tasks,
    - `advanced`: specialized workflows,
    - `experimental`: new candidates pending arbiter evidence.
-6. Admit changed/new skills with `skill-arbiter --personal-lockdown`.
+7. Admit changed/new skills with `skill-arbiter --personal-lockdown`.
+8. Fail closed when arbiter evidence is missing or not `pass`.
 
 ## Commands
 
@@ -66,3 +68,11 @@ Keep each repo’s `core` set between 3 and 6 skills by default.
 
 - `references/consolidation-rubric.md`
 - `scripts/skill_overlap_audit.py`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

@@ -32,3 +32,11 @@ python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scr
 ## Reference
 
 - `references/release-checklist.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

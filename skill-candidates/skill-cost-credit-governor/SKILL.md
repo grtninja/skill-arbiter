@@ -47,3 +47,11 @@ Use `--force-global-action throttle` or `--force-global-action disable` for emer
 
 - `references/governor-workflow.md`
 - `references/policy-contract.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

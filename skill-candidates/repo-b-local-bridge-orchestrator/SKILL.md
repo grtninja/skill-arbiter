@@ -84,3 +84,11 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
 - `references/orchestrator-workflow.md`
 - `references/validation-contract.md`
 - `references/mx3-phase2-roadmap.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

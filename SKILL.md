@@ -17,7 +17,7 @@ Use this skill to decide which skills get admitted and which get quarantined.
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   doc screenshot security-best-practices security-threat-model playwright \
-  --window 10 --threshold 3 --max-rg 3
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3
 ```
 
 For personally-created skills:
@@ -26,7 +26,7 @@ For personally-created skills:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   my-new-skill \
   --source-dir "$CODEX_HOME/skills" \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --promote-safe
 ```
 
@@ -36,14 +36,14 @@ For personal lockdown mode:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   my-new-skill \
   --source-dir "$CODEX_HOME/skills" \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
 
 ## Behavior
 
 1. Install each candidate skill one-by-one from curated source.
-2. Sample `rg.exe` process count once per second.
+2. Sample baseline `rg.exe` activity before each install and evaluate churn using delta-over-baseline samples.
 3. Remove and blacklist offenders automatically.
 4. Treat blacklisted skills as permanently denied and delete them if present.
 5. Respect local whitelist entries in `<dest>/.whitelist.local` and skip arbitration for approved skills.
@@ -66,7 +66,7 @@ Use this command to admit the bounded no-`rg` indexing skill family:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/mass-index-arbiter.json
 ```
@@ -83,7 +83,7 @@ Expected acceptance:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   usage-watcher \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/usage-watcher-arbiter.json
 ```
@@ -94,7 +94,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   repo-b-local-bridge-orchestrator \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/repo-b-local-bridge-orchestrator-arbiter.json
 ```
@@ -105,7 +105,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   repo-b-mcp-comfy-bridge \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/repo-b-mcp-comfy-bridge-arbiter.json
 ```
@@ -116,7 +116,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   repo-b-local-comfy-orchestrator \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/repo-b-local-comfy-orchestrator-arbiter.json
 ```
@@ -128,7 +128,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skill-cost-credit-governor skill-dependency-fan-out-inspector \
   skill-cold-start-warm-path-optimizer skill-blast-radius-simulator skill-trust-ledger \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/skill-meta-governance-arbiter.json
 ```
@@ -139,9 +139,20 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skills-cross-repo-radar \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/skills-cross-repo-radar-arbiter.json
+```
+
+## Skill Governance System Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skill-hub skill-installer-plus skill-auditor skill-enforcer \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/skill-governance-system-arbiter.json
 ```
 
 ## Common-Sense Engineering Admission
@@ -150,10 +161,46 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skill-common-sense-engineering \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown \
   --json-out /tmp/skill-common-sense-engineering-arbiter.json
 ```
+
+## Default System Chain
+
+When starting new work, run this chain:
+
+1. `$skill-hub` to route task -> skill chain.
+2. `$skill-common-sense-engineering` baseline checks.
+3. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
+4. `$multitask-orchestrator` when 2+ independent lanes are present.
+5. `$skill-auditor` on new/changed skill surfaces.
+6. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
+7. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
+8. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
+
+## Skill Game Command
+
+```bash
+python3 scripts/skill_game.py \
+  --task "skill candidate update" \
+  --used-skill skill-hub \
+  --used-skill skill-common-sense-engineering \
+  --used-skill skill-installer-plus \
+  --used-skill skill-auditor \
+  --used-skill skill-enforcer \
+  --used-skill skill-arbiter-lockdown-admission \
+  --arbiter-report /tmp/skill-arbiter-evidence.json \
+  --audit-report /tmp/skill-audit.json \
+  --enforcer-pass
+```
+
+Mandatory skill-change gates:
+
+1. Every new/updated skill must have `skill-arbiter-lockdown-admission` evidence (`action`, `persistent_nonzero`, `max_rg`) and a passing outcome.
+2. Every new/updated skill must be classified by `$skill-auditor` as `unique` or `upgrade`.
+3. `upgrade` classifications should update existing skill lanes unless strict boundary differences are documented.
+4. Every new/updated skill should capture `skill-installer-plus` plan/admit outputs so recommendation quality improves run-over-run.
 
 ## Release Workflow
 

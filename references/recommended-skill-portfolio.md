@@ -56,6 +56,21 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 17. `skill-common-sense-engineering`
    - Apply lightweight human common-sense checks to catch avoidable mistakes and artifact hygiene issues.
    - Trigger examples: "quick sanity pass", "common-sense review before finalizing", "catch obvious mistakes"
+18. `skill-auditor`
+   - Audit newly added or recently changed skills and produce concrete upgrade/consolidation actions.
+   - Trigger examples: "audit new skills", "review skill quality", "find skill consolidation opportunities"
+19. `skill-enforcer`
+   - Enforce required baseline skill references across repos and fail on policy drift.
+   - Trigger examples: "enforce skill policy across repos", "check required skills in AGENTS/README", "compliance scan"
+20. `skill-installer-plus`
+   - Plan local skill installs, run lockdown admission wrappers, and learn from install outcomes.
+   - Trigger examples: "install skills safely", "run admission with history", "improve install recommendations"
+21. `skill-hub`
+   - Route any task to an ordered skill chain with rationale and baseline common-sense checks.
+   - Trigger examples: "route this task to the right skills", "start with skill hub", "build skill chain for request"
+22. `multitask-orchestrator`
+   - Split independent lanes into parallel execution and merge deterministic results.
+   - Trigger examples: "parallelize this request", "run independent checks together", "multi-lane execution"
 
 Legacy compatibility wrapper:
 - `repo-b-local-comfy-orchestrator` is kept for existing prompt routes and should delegate to `repo-b-mcp-comfy-bridge`.
@@ -94,7 +109,7 @@ Admit new skills one-by-one and promote only after clean churn behavior:
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   release-hygiene ci-failure-triage pr-risk-review dependency-update-safety security-quick-audit \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --promote-safe
 ```
 
@@ -108,7 +123,7 @@ Mass-index skill admission template:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
 
@@ -119,7 +134,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skill-cost-credit-governor skill-dependency-fan-out-inspector \
   skill-cold-start-warm-path-optimizer skill-blast-radius-simulator skill-trust-ledger \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
 
@@ -129,7 +144,7 @@ Cross-repo radar admission template:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skills-cross-repo-radar \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
 
@@ -139,9 +154,29 @@ Common-sense baseline admission template:
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   skill-common-sense-engineering \
   --source-dir skill-candidates \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
+
+Governance system admission template:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skill-hub skill-installer-plus skill-auditor skill-enforcer \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown
+```
+
+Natural chaining defaults:
+
+1. Start with `skill-hub`.
+2. Run `skill-installer-plus` for install/admission planning and evidence capture.
+3. If chain has independent lanes, add `multitask-orchestrator`.
+4. For new/updated skills, require `skill-auditor` classification (`unique` or `upgrade`).
+5. For new/updated skills, require arbiter evidence and pass status before admission.
+6. Loop unresolved lanes back through `skill-hub` until convergence/max loops.
+7. Record XP/levels with `python3 scripts/skill_game.py` using arbiter/auditor evidence paths.
 
 ## Success Metrics
 

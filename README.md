@@ -24,7 +24,7 @@ Third-party candidates are deny-by-default: they must pass checks and be explici
 
 1. Clones a curated skills source repo.
 2. Installs each candidate skill into a destination skills directory.
-3. Samples `rg.exe` process count once per second.
+3. Samples baseline `rg.exe` count before install, then scores churn using delta-over-baseline samples.
 4. Removes + blacklists skills that exceed guardrails.
 5. Emits CSV summary output and optional JSON evidence.
 
@@ -35,7 +35,7 @@ For personal/local skills, it can also auto-promote safe skills into local white
 ```bash
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   doc screenshot security-best-practices security-threat-model playwright \
-  --window 10 --threshold 3 --max-rg 3
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3
 ```
 
 Dry-run mode (no filesystem changes):
@@ -50,7 +50,7 @@ Personal skill promotion (test local skills, then whitelist + immutable if safe)
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   my-new-skill another-skill \
   --source-dir "$CODEX_HOME/skills" \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --promote-safe
 ```
 
@@ -60,7 +60,7 @@ Personal lockdown mode (local-only + immutable pinning):
 python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   my-new-skill another-skill \
   --source-dir "$CODEX_HOME/skills" \
-  --window 10 --threshold 3 --max-rg 3 \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
 
@@ -85,6 +85,7 @@ Dependency declarations:
 
 ```text
 usage: arbitrate_skills.py [-h] [--window WINDOW] [--threshold THRESHOLD]
+                           [--baseline-window BASELINE_WINDOW]
                            [--max-rg MAX_RG] [--json-out JSON_OUT]
                            [--repo REPO] [--source-dir SOURCE_DIR]
                            [--dest DEST] [--blacklist BLACKLIST]
@@ -98,8 +99,9 @@ Key options:
 
 - `skills`: Curated skill names to test. Empty names are rejected.
 - `--window`: Sampling window in seconds (default `10`).
+- `--baseline-window`: Baseline window in seconds before each install (default `3`).
 - `--threshold`: Consecutive non-zero threshold (default `3`).
-- `--max-rg`: Remove skill if any sample >= value (default `3`, allowed range `1-3`).
+- `--max-rg`: Remove skill if any delta sample (`raw - baseline_max`) >= value (default `3`, allowed range `1-3`).
 - `--json-out`: Optional machine-readable report path.
 - `--source-dir`: Optional local source dir; installs from `<source-dir>/<skill>` and skips repo clone.
 - `--dest`: Destination skills home (default `~/.codex/skills`).
@@ -142,8 +144,32 @@ Personal-lockdown behavior:
   - `skill,installed,max_rg,persistent_nonzero,action,note`
 - JSON report (`--json-out`) includes:
   - run metadata
-  - per-skill arbitration results
+  - per-skill arbitration results (delta and raw sample fields)
   - final blacklist/whitelist/immutable lists
+
+## Skill Game Loop
+
+Use the local XP ledger to reward full workflow compliance:
+
+```bash
+python3 scripts/skill_game.py \
+  --task "skill candidate update" \
+  --used-skill skill-hub \
+  --used-skill skill-common-sense-engineering \
+  --used-skill skill-installer-plus \
+  --used-skill skill-auditor \
+  --used-skill skill-enforcer \
+  --used-skill skill-arbiter-lockdown-admission \
+  --arbiter-report /tmp/skill-arbiter-evidence.json \
+  --audit-report /tmp/skill-audit.json \
+  --enforcer-pass
+```
+
+Inspect current score/streak:
+
+```bash
+python3 scripts/skill_game.py --show
+```
 
 ## Release workflow
 
@@ -174,7 +200,7 @@ python3 scripts/check_private_data_policy.py
 
 Use placeholders in docs and skill candidates:
 
-- `<PRIVATE_REPO_NAME>` (or numbered forms like `<PRIVATE_REPO_1>`, `<PRIVATE_REPO_2>`)
+- `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`
 - `$CODEX_HOME/skills`
 - `$env:USERPROFILE\\...` (PowerShell)
 
@@ -193,6 +219,7 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 - `CHANGELOG.md`: Release history.
 - `SKILL.md`: Skill definition used by Codex.
 - `scripts/arbitrate_skills.py`: Arbitration implementation.
+- `scripts/skill_game.py`: Local XP/level scorer for workflow compliance.
 - `scripts/prepare_release.py`: Release bump helper.
 - `scripts/check_release_hygiene.py`: PR release gate.
 - `scripts/check_private_data_policy.py`: Privacy and private-data policy gate.
@@ -218,8 +245,31 @@ Recent additions under `skill-candidates/`:
 - `skill-cold-start-warm-path-optimizer`: cold-vs-warm latency analysis and deterministic prewarm planning.
 - `skill-blast-radius-simulator`: pre-admission blast-radius scoring with baseline delta and acknowledgement gating.
 - `skill-trust-ledger`: local reliability ledger and trust-tier reporting from manual and arbiter evidence.
+- `skill-installer-plus`: local-first install planner and admission wrapper with recommendation-learning ledger.
 - `skill-common-sense-engineering`: practical human common-sense sanity checks for scoped changes, artifact hygiene, and recurring-fix codification.
+- `skill-auditor`: deterministic audits for newly added/changed skills with upgrade and consolidation recommendations.
+- `skill-enforcer`: cross-repo policy enforcement for required baseline skill references.
+- `skill-hub`: default task router that emits ordered skill chains with rationale.
 - `skills-cross-repo-radar`: recurring multi-repo MX3/shim change scans that map activity to skill upgrade/discovery actions.
+
+## Default Skill System
+
+For ongoing work, use this baseline system:
+
+1. `skill-hub` routes each task to an ordered chain.
+2. `skill-common-sense-engineering` runs baseline sanity/hygiene checks.
+3. `skill-installer-plus` plans installs/admissions and updates recommendation history.
+4. `skill-auditor` audits new/changed skills.
+5. `skill-enforcer` checks cross-repo policy alignment when operating across repos.
+6. `multitask-orchestrator` runs independent lanes in parallel; unresolved lanes loop back via `skill-hub`.
+7. `scripts/skill_game.py` records XP/level progression from workflow evidence reports.
+
+For any new/updated skill candidate, treat these checks as mandatory:
+
+1. `skill-auditor` classification must be explicit: `unique` or `upgrade`.
+2. `skill-arbiter-lockdown-admission` evidence must show a passable result (`action`, `persistent_nonzero`, `max_rg` captured).
+3. If classification is `upgrade`, update existing skill boundaries before adding a duplicate candidate.
+4. `skill-installer-plus` plan/admit outputs should be captured so recommendation quality improves over time.
 
 ## License
 

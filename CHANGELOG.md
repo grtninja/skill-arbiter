@@ -2,6 +2,77 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.10] - 2026-02-10
+
+### Changed
+
+- Added new candidate skill `skill-candidates/skill-installer-plus/`:
+  - `scripts/skill_installer_plus.py` for local-first install planning, lockdown admission orchestration, and feedback-driven recommendation learning.
+  - `references/learning-loop.md` for scoring inputs and operating cycle.
+  - `agents/openai.yaml` metadata for direct invocation.
+- Updated workflow system docs and templates to include `skill-installer-plus` explicitly:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/recommended-skill-portfolio.md`
+- Updated `scripts/skill_game.py` default required-skill chain to include `skill-installer-plus` so XP scoring reinforces installer-lane usage.
+- Added missing `## Loopback` sections to:
+  - `skill-candidates/repo-b-control-center-ops/SKILL.md`
+  - `skill-candidates/repo-b-local-comfy-orchestrator/SKILL.md`
+  - `skill-candidates/repo-b-mcp-comfy-bridge/SKILL.md`
+  - `skill-candidates/repo-b-thin-waist-routing/SKILL.md`
+- Ran consolidation upgrades for mass-index wrappers and tightened boundaries:
+  - `skill-candidates/repo-b-mass-index-ops/SKILL.md`
+  - `skill-candidates/repo-c-mass-index-ops/SKILL.md`
+  - `skill-candidates/repo-d-mass-index-ops/SKILL.md`
+  - overlap audit result improved from `merge_count=3` to `merge_count=0` for candidate skills at threshold `0.28`.
+
+## [0.2.9] - 2026-02-10
+
+### Changed
+
+- Upgraded `scripts/arbitrate_skills.py` to use baseline-normalized churn scoring:
+  - added `--baseline-window` sampling before each skill install,
+  - evaluates removal on delta samples (`raw - baseline_max`) instead of absolute host process count,
+  - emits both normalized and raw sampling fields in JSON evidence for forensics.
+- Added `scripts/skill_game.py` to make workflow compliance game-like with deterministic scoring:
+  - persistent local XP/level/streak ledger,
+  - scoring for required gate usage (`skill-hub`, `skill-common-sense-engineering`, `skill-auditor`, `skill-enforcer`, `skill-arbiter-lockdown-admission`),
+  - arbiter/auditor/enforcer evidence bonuses and penalties.
+- Synchronized workflow docs and templates for the game loop and new baseline option:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/recommended-skill-portfolio.md`
+
+## [0.2.8] - 2026-02-10
+
+### Changed
+
+- Upgraded `skill-candidates/skill-auditor/scripts/skill_audit.py` to enforce mandatory skill-governance checks:
+  - optional `--arbiter-report` ingestion with `--require-arbiter-evidence` fail-closed behavior.
+  - explicit per-skill classification output (`unique` vs `upgrade`) with nearest-peer overlap score.
+  - deterministic focused mode via `--only-include-skill` for targeted audits.
+- Upgraded `skill-candidates/skill-hub/scripts/skill_hub_route.py` and related docs to require:
+  - arbiter pass evidence for new/updated skills,
+  - `skill-auditor` classification capture (`unique` vs `upgrade`),
+  - loopback reroutes when classification/boundary decisions are unresolved.
+- Updated governance candidate skill docs and references to align with mandatory gates:
+  - `skill-candidates/skill-hub/`
+  - `skill-candidates/skill-auditor/`
+  - `skill-candidates/skill-enforcer/`
+  - `skill-candidates/skills-discovery-curation/`
+  - `skill-candidates/skills-cross-repo-radar/`
+  - `skill-candidates/skills-consolidation-architect/`
+- Synchronized policy docs (`AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `SKILL.md`, `.github/pull_request_template.md`, `references/recommended-skill-portfolio.md`) so skill-change workflow now explicitly requires:
+  - arbiter pass verification,
+  - unique-vs-upgrade classification,
+  - consolidation-first handling for upgrade classifications.
+
 ## [0.2.7] - 2026-02-10
 
 ### Changed
@@ -16,12 +87,26 @@ All notable changes to this project are documented in this file.
 - Added new candidate skill `skill-candidates/skill-common-sense-engineering/`:
   - practical human common-sense sanity checks for right-sized changes and obvious hygiene misses.
   - `references/common-sense-checklist.md`.
+- Added new candidate skill `skill-candidates/skill-auditor/`:
+  - `scripts/skill_audit.py` for deterministic audits of recently changed/new skills.
+  - `references/audit-rubric.md`.
+- Added new candidate skill `skill-candidates/skill-enforcer/`:
+  - `scripts/skill_enforce.py` for cross-repo required-skill reference enforcement.
+  - `references/enforcement-policy.md`.
+- Added new candidate skill `skill-candidates/skill-hub/`:
+  - `scripts/skill_hub_route.py` for baseline-first skill-chain routing.
+  - `references/routing-matrix.md`.
 - Upgraded `skill-candidates/skill-arbiter-lockdown-admission/` to include:
   - pre-admission artifact hygiene scanning and cleanup in workflow/checklist text.
   - new `scripts/artifact_hygiene_scan.py` for deterministic detection/removal of generated artifacts.
   - explicit maintenance trigger to update the skill when new recurring artifact patterns are observed.
-- Upgraded `skill-candidates/skills-discovery-curation/` to include recurring multi-repo curation flow using `skills-cross-repo-radar`.
-- Updated discovery/admission documentation in `README.md`, `SKILL.md`, and `references/recommended-skill-portfolio.md` to reflect canonical vs legacy repo-b Comfy skill routing plus new cross-repo/common-sense candidates.
+- Upgraded `skill-candidates/skills-discovery-curation/` to include recurring multi-repo curation flow using `skills-cross-repo-radar` and baseline system-chain routing via `skill-hub`.
+- Upgraded `skill-candidates/skill-hub/` to support loopback-capable routing and natural multitask decomposition:
+  - baseline chain + parallel workstreams + merge chain output.
+  - explicit loopback triggers/stop conditions via `references/loopback-protocol.md`.
+  - auto-inclusion guidance for `multitask-orchestrator` when independent lanes are present.
+- Ran `skill-auditor` against recent skill additions and resolved flagged workflow-structure gaps in mass-index skill wrappers/core.
+- Updated discovery/admission documentation in `README.md`, `SKILL.md`, and `references/recommended-skill-portfolio.md` to reflect canonical vs legacy repo-b Comfy routing and the new always-on governance system (`skill-hub`, `skill-common-sense-engineering`, `skill-auditor`, `skill-enforcer`).
 - Updated `skill-candidates/skill-trust-ledger/SKILL.md` examples to use `repo-b-mcp-comfy-bridge` evidence naming.
 
 ## [0.2.6] - 2026-02-09

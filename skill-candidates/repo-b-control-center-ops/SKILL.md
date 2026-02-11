@@ -37,3 +37,11 @@ curl http://127.0.0.1:9000/api/agent/capabilities
 ## References
 
 - Endpoint checklist: `references/control-center-endpoints.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

@@ -82,3 +82,11 @@ python tools/local_comfy_orchestrator.py \
 ## References
 
 - `references/mcp-comfy-checklist.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

@@ -14,7 +14,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Iterable
 
@@ -37,6 +37,11 @@ class ArbitrationResult:
     persistent_nonzero: bool
     action: str
     note: str = ""
+    baseline_samples: list[int] = field(default_factory=list)
+    raw_samples: list[int] = field(default_factory=list)
+    baseline_max: int = 0
+    raw_max_rg: int = 0
+    raw_persistent_nonzero: bool = False
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -83,6 +88,13 @@ def sample_counter(window_s: int) -> list[int]:
         values.append(rg_count_windows())
         time.sleep(1)
     return values
+
+
+def normalize_samples(raw_samples: list[int], baseline_max: int) -> list[int]:
+    """Normalize samples against baseline rg activity."""
+
+    floor = max(baseline_max, 0)
+    return [max(value - floor, 0) for value in raw_samples]
 
 
 def has_persistent_nonzero(samples: Iterable[int], threshold_s: int) -> bool:
@@ -211,12 +223,21 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Arbitrate curated skills for runaway rg.exe churn")
     parser.add_argument("skills", nargs="+", help="Curated skill names to test")
     parser.add_argument("--window", type=int, default=10, help="Sampling window in seconds")
+    parser.add_argument(
+        "--baseline-window",
+        type=int,
+        default=3,
+        help="Baseline sampling window before each install (seconds)",
+    )
     parser.add_argument("--threshold", type=int, default=3, help="Consecutive non-zero threshold")
     parser.add_argument(
         "--max-rg",
         type=int,
         default=MAX_ALLOWED_RG_LIMIT,
-        help=f"Remove skill if any sample >= max-rg (must be 1-{MAX_ALLOWED_RG_LIMIT})",
+        help=(
+            "Remove skill if any delta sample (raw - baseline_max) >= max-rg "
+            f"(must be 1-{MAX_ALLOWED_RG_LIMIT})"
+        ),
     )
     parser.add_argument("--json-out", default="", help="Optional path for machine-readable summary")
     parser.add_argument("--repo", default=DEFAULT_REPO, help="Git repository containing curated skills")
@@ -281,6 +302,8 @@ def main() -> int:
             raise ValueError("--threshold must be >= 1")
         if args.window < 1:
             raise ValueError("--window must be >= 1")
+        if args.baseline_window < 1:
+            raise ValueError("--baseline-window must be >= 1")
         normalized_skills = normalize_skills(args.skills)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -381,6 +404,10 @@ def main() -> int:
                 )
                 continue
             try:
+                if not args.dry_run:
+                    kill_rg_windows()
+                baseline_samples = sample_counter(args.baseline_window)
+                baseline_max = max(baseline_samples) if baseline_samples else 0
                 if source_dir:
                     install_local_skill(source_dir, skills_home, skill, args.dry_run)
                 else:
@@ -390,14 +417,18 @@ def main() -> int:
             except (FileNotFoundError, ValueError) as exc:
                 print(f"error: {exc}", file=sys.stderr)
                 return 2
-            samples = sample_counter(args.window)
+            raw_samples = sample_counter(args.window)
+            samples = normalize_samples(raw_samples, baseline_max)
             max_rg = max(samples) if samples else 0
+            raw_max_rg = max(raw_samples) if raw_samples else 0
             persistent = has_persistent_nonzero(samples, max(args.threshold, 1))
+            raw_persistent = has_persistent_nonzero(raw_samples, max(args.threshold, 1))
             should_remove = persistent or (max_rg >= args.max_rg)
+            sample_note = f"baseline_max={baseline_max};raw_max={raw_max_rg};delta_max={max_rg}"
             if should_remove:
                 if skill in immutable:
                     action = "kept"
-                    note = "immutable locally; removal skipped"
+                    note = f"immutable locally; removal skipped ({sample_note})"
                 else:
                     remove_skill(skills_home, skill, args.dry_run)
                     if not args.dry_run:
@@ -405,21 +436,21 @@ def main() -> int:
                     blacklist.add(skill)
                     whitelist.discard(skill)
                     action = "deleted"
-                    note = "blacklisted due to rg churn; permanently deleted"
+                    note = f"blacklisted due to rg churn; permanently deleted ({sample_note})"
             else:
                 action = "kept"
-                note = ""
+                note = f"delta within guardrail ({sample_note})"
                 if args.promote_safe:
                     whitelist.add(skill)
                     immutable.add(skill)
-                    note = "promoted to whitelist+immutable"
+                    note = f"promoted to whitelist+immutable ({sample_note})"
                     if args.personal_lockdown:
-                        note = "promoted to whitelist+immutable (personal-lockdown)"
+                        note = f"promoted to whitelist+immutable (personal-lockdown) ({sample_note})"
                 elif source_dir is None:
                     # Third-party candidates are deny-by-default unless explicitly promoted.
                     remove_skill(skills_home, skill, args.dry_run)
                     action = "deleted"
-                    note = "passed arbitration but not promoted; third-party default deny"
+                    note = f"passed arbitration but not promoted; third-party default deny ({sample_note})"
             results.append(
                 ArbitrationResult(
                     skill=skill,
@@ -429,6 +460,11 @@ def main() -> int:
                     persistent_nonzero=persistent,
                     action=action,
                     note=note,
+                    baseline_samples=baseline_samples,
+                    raw_samples=raw_samples,
+                    baseline_max=baseline_max,
+                    raw_max_rg=raw_max_rg,
+                    raw_persistent_nonzero=raw_persistent,
                 )
             )
     finally:
@@ -443,6 +479,8 @@ def main() -> int:
         "author": "Edward Silvia",
         "license": "MIT",
         "skill": "skill-arbiter",
+        "sampling_mode": "baseline-normalized-delta",
+        "baseline_window": int(args.baseline_window),
         "dry_run": bool(args.dry_run),
         "results": [asdict(row) for row in results],
         "blacklist": sorted(blacklist),

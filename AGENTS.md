@@ -60,10 +60,11 @@ Run from repo root:
 
 ```bash
 python3 scripts/arbitrate_skills.py --help
+python3 scripts/skill_game.py --help
 python3 scripts/prepare_release.py --help
 python3 scripts/check_release_hygiene.py --help
 python3 scripts/check_private_data_policy.py
-python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py
+python3 -m py_compile scripts/arbitrate_skills.py scripts/skill_game.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py
 ```
 
 ## 5) Skill authoring rules
@@ -78,6 +79,24 @@ When admitting local skills, prefer lockdown mode:
 ```bash
 python3 scripts/arbitrate_skills.py <skill> --source-dir "$CODEX_HOME/skills" --personal-lockdown
 ```
+
+Default skill system for new work:
+
+1. Route with `skill-hub`.
+2. Run baseline sanity/hygiene via `skill-common-sense-engineering`.
+3. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
+4. Audit new/changed skills with `skill-auditor`.
+5. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
+6. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
+7. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
+
+Mandatory skill-change gates:
+
+1. Every new/updated skill must pass `skill-arbiter` admission and include evidence (`action`, `persistent_nonzero`, `max_rg`).
+   Use `skill-arbiter-lockdown-admission` for this gate.
+2. Every new/updated skill must be classified by `skill-auditor` as `unique` or `upgrade`.
+3. If classification is `upgrade`, prefer updating existing skills instead of introducing duplicate candidates unless boundaries are explicitly documented.
+4. Every new/updated skill should include `skill-installer-plus` evidence (`plan`/`admit` JSON paths and latest recommendation decision).
 
 ## 6) Security and mutation safety
 

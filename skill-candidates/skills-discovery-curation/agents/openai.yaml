@@ -1,4 +1,4 @@
 interface:
   display_name: "Skills Discovery"
   short_description: "Discover and prioritize skills with recurring curation"
-  default_prompt: "Use $skills-discovery-curation to discover and prioritize skills, optionally after running $skills-cross-repo-radar, and include $skill-common-sense-engineering as a baseline when hygiene mistakes recur."
+  default_prompt: "Use $skills-discovery-curation after $skill-hub routing to discover and prioritize skills, optionally after $skills-cross-repo-radar, and include $skill-common-sense-engineering, $skill-auditor, and $skill-enforcer where applicable."

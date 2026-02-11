@@ -42,3 +42,11 @@ python3 "$CODEX_HOME/skills/skill-cold-start-warm-path-optimizer/scripts/warm_pa
 
 - `references/optimizer-workflow.md`
 - `references/latency-contract.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

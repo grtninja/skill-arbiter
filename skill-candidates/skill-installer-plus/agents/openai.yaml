@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Installer Plus"
+  short_description: "Local lockdown install with learning loop"
+  default_prompt: "Use $skill-installer-plus to plan local skill installs, run personal-lockdown admission with arbiter evidence, and improve future recommendations from ledger outcomes."

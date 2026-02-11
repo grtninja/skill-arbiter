@@ -9,12 +9,16 @@ Use this skill to build a practical skill portfolio for a repo.
 
 ## Workflow
 
-1. Inventory available skills and currently installed skills.
-2. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
-3. Map repository workflows to missing capabilities.
-4. Include practical baseline checks via `$skill-common-sense-engineering`.
-5. Propose a minimal prioritized skill set (core first, optional second).
-6. Provide admission plan using local `skill-arbiter` lockdown flow.
+1. Route the request through `$skill-hub` for baseline chain selection.
+2. Inventory available skills and currently installed skills.
+3. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
+4. Map repository workflows to missing capabilities.
+5. Include practical baseline checks via `$skill-common-sense-engineering`.
+6. Include quality/compliance lanes where needed (`$skill-auditor`, `$skill-enforcer`).
+7. For candidate additions/updates, classify each skill as `unique` vs `upgrade` using `$skill-auditor`.
+8. Require arbiter evidence status `pass` before admitting candidates.
+9. Propose a minimal prioritized skill set (core first, optional second).
+10. Provide admission plan using local `skill-arbiter` lockdown flow.
 
 ## Discovery Commands
 
@@ -52,3 +56,11 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" <skill> [
 ## Reference
 
 - `references/discovery-checklist.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

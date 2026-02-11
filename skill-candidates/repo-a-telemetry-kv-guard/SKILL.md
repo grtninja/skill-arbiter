@@ -35,3 +35,11 @@ python -m repo_a_node --policy config/device_policy.json --selftest config/mesh_
 ## Reference
 
 - `references/privacy-kv-checks.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

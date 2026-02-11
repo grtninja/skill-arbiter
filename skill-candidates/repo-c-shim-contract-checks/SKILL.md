@@ -32,3 +32,11 @@ rg -n "REPO_B_SIDECAR_URL|importorskip|requires_real_sidecar|/health|/telemetry"
 ## Reference
 
 - `references/shim-contract.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.

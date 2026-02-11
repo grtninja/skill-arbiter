@@ -36,3 +36,11 @@ pwsh -File tools/preflight.ps1 -Hardware -ForceReal -repo_bOnly -VerboseOutput
 ## References
 
 - Strict command matrix: `references/strict-commands.md`
+
+## Loopback
+
+If this lane is unresolved, blocked, or ambiguous:
+
+1. Capture current evidence and failure context.
+2. Route back through `$skill-hub` for chain recalculation.
+3. Resume only after the updated chain returns a deterministic next step.
