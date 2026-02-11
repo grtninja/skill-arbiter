@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Gap Sweeping"
+  short_description: "Gap scanner + repo-family pipeline matrix"
+  default_prompt: "Use $code-gap-sweeping to run deterministic cross-repo gap scans and generate repo-family (A/B/C/D) pipeline command matrices with resume/admission evidence paths."

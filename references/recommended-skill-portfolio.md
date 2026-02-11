@@ -35,42 +35,51 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 10. `repo-b-mcp-comfy-bridge` (repo-b specific)
    - Run loopback-only MCP adapter and `shim.comfy.*` diagnostics with strict validation and fail-closed behavior.
    - Trigger examples: "comfy resource health check", "mcp comfy diagnostics", "fail-closed comfy orchestration"
-11. `skill-cost-credit-governor`
+11. `repo-b-comfy-amuse-capcut-pipeline` (repo-b specific)
+   - Run profile-driven Comfy pipeline checks with optional AMUSE stages and CapCut export metadata validation.
+   - Trigger examples: "run comfy pipeline profile", "validate amuse stage", "verify capcut export contract"
+12. `skill-cost-credit-governor`
    - Track per-skill spend/runtime and emit warn/throttle/disable actions when anomalies or budget pressure appear.
    - Trigger examples: "govern skill spend", "detect chatter loops", "budget enforcement policy"
-12. `skill-dependency-fan-out-inspector`
+13. `skill-dependency-fan-out-inspector`
    - Build dependency graphs and flag fan-out/cycle/N+1 risks across skill stacks.
    - Trigger examples: "map skill dependencies", "detect invocation fan-out", "find circular skill chains"
-13. `skill-cold-start-warm-path-optimizer`
+14. `skill-cold-start-warm-path-optimizer`
    - Measure cold-vs-warm latency and generate prewarm plus never-auto-invoke plans.
    - Trigger examples: "optimize cold starts", "build warm-path plan", "latency prewarm candidates"
-14. `skill-blast-radius-simulator`
+15. `skill-blast-radius-simulator`
    - Simulate pre-admission blast radius and require acknowledgement for high-risk deltas.
    - Trigger examples: "simulate skill install risk", "preflight new skill risk", "blast radius gate"
-15. `skill-trust-ledger`
+16. `skill-trust-ledger`
    - Maintain local reliability memory and trust tiers from observed outcomes and arbiter evidence.
    - Trigger examples: "skill reliability ledger", "trust-tier report", "should we re-enable this skill?"
-16. `skills-cross-repo-radar`
+17. `skills-cross-repo-radar`
    - Run recurring cross-repo MX3/shim drift scans and map signals to skill upgrade/discovery actions.
    - Trigger examples: "scan my repos for new skill opportunities", "weekly mx3 shim skill review", "cross-repo drift check"
-17. `skill-common-sense-engineering`
+18. `code-gap-sweeping`
+   - Sweep one or more repos for deterministic implementation gaps (tests, docs lockstep, TODO/FIXME drift, release hygiene) and emit repo-family pipeline command matrices.
+   - Trigger examples: "sweep for code gaps", "cross-repo gap scan", "find missing test/doc lanes", "build all-repo pipeline matrix"
+19. `skill-common-sense-engineering`
    - Apply lightweight human common-sense checks to catch avoidable mistakes and artifact hygiene issues.
    - Trigger examples: "quick sanity pass", "common-sense review before finalizing", "catch obvious mistakes"
-18. `skill-auditor`
+20. `skill-auditor`
    - Audit newly added or recently changed skills and produce concrete upgrade/consolidation actions.
    - Trigger examples: "audit new skills", "review skill quality", "find skill consolidation opportunities"
-19. `skill-enforcer`
+21. `skill-enforcer`
    - Enforce required baseline skill references across repos and fail on policy drift.
    - Trigger examples: "enforce skill policy across repos", "check required skills in AGENTS/README", "compliance scan"
-20. `skill-installer-plus`
+22. `skill-installer-plus`
    - Plan local skill installs, run lockdown admission wrappers, and learn from install outcomes.
    - Trigger examples: "install skills safely", "run admission with history", "improve install recommendations"
-21. `skill-hub`
+23. `skill-hub`
    - Route any task to an ordered skill chain with rationale and baseline common-sense checks.
    - Trigger examples: "route this task to the right skills", "start with skill hub", "build skill chain for request"
-22. `multitask-orchestrator`
+24. `multitask-orchestrator`
    - Split independent lanes into parallel execution and merge deterministic results.
    - Trigger examples: "parallelize this request", "run independent checks together", "multi-lane execution"
+25. `request-loopback-resume`
+   - Persist lane state for interrupted requests and compute deterministic `continue/start/blocked/done` resume actions.
+   - Trigger examples: "continue previous request", "resume paused lane", "checkpoint and return after AFK"
 
 Legacy compatibility wrapper:
 - `repo-b-local-comfy-orchestrator` is kept for existing prompt routes and should delegate to `repo-b-mcp-comfy-bridge`.
@@ -171,12 +180,14 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 Natural chaining defaults:
 
 1. Start with `skill-hub`.
-2. Run `skill-installer-plus` for install/admission planning and evidence capture.
-3. If chain has independent lanes, add `multitask-orchestrator`.
-4. For new/updated skills, require `skill-auditor` classification (`unique` or `upgrade`).
-5. For new/updated skills, require arbiter evidence and pass status before admission.
-6. Loop unresolved lanes back through `skill-hub` until convergence/max loops.
-7. Record XP/levels with `python3 scripts/skill_game.py` using arbiter/auditor evidence paths.
+2. For multi-repo changes, run `code-gap-sweeping` before mutation-heavy lanes.
+3. For interruptions or context switches, run `request-loopback-resume` to checkpoint state and resume deterministically.
+4. Run `skill-installer-plus` for install/admission planning and evidence capture.
+5. If chain has independent lanes, add `multitask-orchestrator`.
+6. For new/updated skills, require `skill-auditor` classification (`unique` or `upgrade`).
+7. For new/updated skills, require arbiter evidence and pass status before admission.
+8. Loop unresolved lanes back through `skill-hub` until convergence/max loops.
+9. Record XP/levels with `python3 scripts/skill_game.py` using arbiter/auditor evidence paths.
 
 ## Success Metrics
 

@@ -236,6 +236,7 @@ Recent additions under `skill-candidates/`:
 - `repo-b-mass-index-ops`: repo-b wrapper presets for service/connector-oriented queries.
 - `repo-b-local-bridge-orchestrator`: read-only local Agent Bridge orchestration with strict validation, fail-closed hints, bounded indexing, and explicit MCP/Comfy lane separation.
 - `repo-b-mcp-comfy-bridge`: canonical MCP adapter and Comfy bridge operations lane for `<PRIVATE_REPO_B>`, including fail-closed resource checks.
+- `repo-b-comfy-amuse-capcut-pipeline`: profile-driven Comfy pipeline operations with optional AMUSE stage checks and CapCut export metadata validation.
 - `repo-b-local-comfy-orchestrator`: legacy compatibility wrapper that routes new MCP/Comfy requests to `repo-b-mcp-comfy-bridge` while retaining legacy drop-in templates.
 - `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
 - `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
@@ -247,6 +248,8 @@ Recent additions under `skill-candidates/`:
 - `skill-trust-ledger`: local reliability ledger and trust-tier reporting from manual and arbiter evidence.
 - `skill-installer-plus`: local-first install planner and admission wrapper with recommendation-learning ledger.
 - `skill-common-sense-engineering`: practical human common-sense sanity checks for scoped changes, artifact hygiene, and recurring-fix codification.
+- `code-gap-sweeping`: cross-repo deterministic gap scans for missing tests, docs lockstep drift, TODO/FIXME additions, release-hygiene misses, and repo-family pipeline matrix generation.
+- `request-loopback-resume`: deterministic state checkpointing and resume-action selection for interrupted requests and multi-lane pauses.
 - `skill-auditor`: deterministic audits for newly added/changed skills with upgrade and consolidation recommendations.
 - `skill-enforcer`: cross-repo policy enforcement for required baseline skill references.
 - `skill-hub`: default task router that emits ordered skill chains with rationale.
@@ -258,11 +261,13 @@ For ongoing work, use this baseline system:
 
 1. `skill-hub` routes each task to an ordered chain.
 2. `skill-common-sense-engineering` runs baseline sanity/hygiene checks.
-3. `skill-installer-plus` plans installs/admissions and updates recommendation history.
-4. `skill-auditor` audits new/changed skills.
-5. `skill-enforcer` checks cross-repo policy alignment when operating across repos.
-6. `multitask-orchestrator` runs independent lanes in parallel; unresolved lanes loop back via `skill-hub`.
-7. `scripts/skill_game.py` records XP/level progression from workflow evidence reports.
+3. `code-gap-sweeping` scans one or more repos for deterministic implementation gaps before mutation-heavy work.
+4. `request-loopback-resume` checkpoints/resumes interrupted work with deterministic next-lane actions.
+5. `skill-installer-plus` plans installs/admissions and updates recommendation history.
+6. `skill-auditor` audits new/changed skills.
+7. `skill-enforcer` checks cross-repo policy alignment when operating across repos.
+8. `multitask-orchestrator` runs independent lanes in parallel; unresolved lanes loop back via `skill-hub`.
+9. `scripts/skill_game.py` records XP/level progression from workflow evidence reports.
 
 For any new/updated skill candidate, treat these checks as mandatory:
 

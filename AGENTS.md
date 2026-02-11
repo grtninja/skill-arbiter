@@ -84,11 +84,13 @@ Default skill system for new work:
 
 1. Route with `skill-hub`.
 2. Run baseline sanity/hygiene via `skill-common-sense-engineering`.
-3. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
-4. Audit new/changed skills with `skill-auditor`.
-5. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
-6. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
-7. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
+3. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps.
+4. For interrupted tasks, use `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
+5. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
+6. Audit new/changed skills with `skill-auditor`.
+7. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
+8. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
+9. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
 
 Mandatory skill-change gates:
 

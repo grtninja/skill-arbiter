@@ -1,0 +1,4 @@
+interface:
+  display_name: "REPO_B Comfy+AMUSE Pipeline"
+  short_description: "Profile-driven media pipeline ops"
+  default_prompt: "Use $repo-b-comfy-amuse-capcut-pipeline to validate and operate profile-driven Comfy pipelines with optional AMUSE stages and CapCut export metadata in <PRIVATE_REPO_B>."

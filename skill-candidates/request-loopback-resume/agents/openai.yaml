@@ -1,0 +1,4 @@
+interface:
+  display_name: "Request Loopback Resume"
+  short_description: "Deterministic request resume state"
+  default_prompt: "Use $request-loopback-resume to checkpoint interrupted work and compute deterministic next actions when returning to previous requests."

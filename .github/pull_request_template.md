@@ -12,6 +12,8 @@ Describe what changed and why.
 - [ ] Docs updated if behavior changed
 - [ ] `AGENTS.md`, `README.md`, and `CONTRIBUTING.md` are aligned with policy changes
 - [ ] For skill-system changes: `skill-hub` routing plus `skill-installer-plus` plan/admit evidence captured where applicable
+- [ ] For multi-repo skill-system changes: `code-gap-sweeping` report captured with JSON evidence path
+- [ ] For interrupted/resumed workstreams: `request-loopback-resume` state + resume JSON evidence path captured
 - [ ] For skill-system changes: `scripts/skill_game.py` score event recorded with arbiter/auditor evidence paths
 - [ ] For multi-lane work: `multitask-orchestrator` usage and `skill-hub` loopback behavior documented
 - [ ] For new/updated skills: attach `skill-arbiter-lockdown-admission` evidence (`action`, `persistent_nonzero`, `max_rg`) from `--json-out`

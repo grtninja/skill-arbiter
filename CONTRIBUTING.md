@@ -43,11 +43,13 @@ For skill-centric workstreams, use the default system chain:
 
 1. Route requests with `skill-hub`.
 2. Apply baseline sanity checks with `skill-common-sense-engineering`.
-3. Run `skill-installer-plus` for install recommendations and admission ledger updates.
-4. Audit new/changed skills with `skill-auditor`.
-5. If multiple repos are involved, run `skill-enforcer` for policy alignment.
-6. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
-7. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
+3. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps first.
+4. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
+5. Run `skill-installer-plus` for install recommendations and admission ledger updates.
+6. Audit new/changed skills with `skill-auditor`.
+7. If multiple repos are involved, run `skill-enforcer` for policy alignment.
+8. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
+9. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
 
 Mandatory checks for skill additions/updates:
 

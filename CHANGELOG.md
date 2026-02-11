@@ -2,6 +2,56 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.11] - 2026-02-11
+
+### Changed
+
+- Added new candidate skill `skill-candidates/code-gap-sweeping/`:
+  - `scripts/code_gap_sweep.py` for deterministic cross-repo gap scans (`tests_missing`, `docs_lockstep_missing`, `todo_fixme_added`, `release_hygiene_missing`).
+  - `scripts/repo_family_pipeline.py` for deterministic full-pipeline command matrices across repo families (`repo_a`/`repo_b`/`repo_c`/`repo_d`) with checkpoint, sweep, and admission command lanes.
+  - `references/gap-rubric.md` for severity mapping and remediation lanes.
+  - `references/repo-family-pipeline.md` for all-repo pipeline matrix usage and family skill-pack mapping.
+  - `agents/openai.yaml` metadata for direct invocation.
+- Updated workflow docs to include `code-gap-sweeping` in the multi-repo baseline chain:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/recommended-skill-portfolio.md`
+- Validated cross-repo sweep execution with machine-readable output (`/tmp/code-gap-sweep-all.json`) and generated admission evidence for `code-gap-sweeping` via:
+  - `scripts/arbitrate_skills.py ... --personal-lockdown --json-out /tmp/code-gap-sweeping-arbiter.json`
+  - `skill-candidates/skill-installer-plus/scripts/skill_installer_plus.py plan/admit ... --json-out ...`
+- Validated full repo-family pipeline matrix generation with machine-readable output and runnable command script:
+  - `/tmp/repo-family-pipeline.json`
+  - `/tmp/repo-family-pipeline.sh`
+- Revalidated upgraded `code-gap-sweeping` admission/evidence after matrix additions:
+  - arbiter pass (`/tmp/code-gap-sweeping-arbiter-v2.json`)
+  - installer evidence (`/tmp/code-gap-sweeping-installer-plan-v2.json`, `/tmp/code-gap-sweeping-installer-admit-v2.json`)
+  - classification surrogate (`/tmp/code-gap-sweeping-classification-v2.json`)
+- Upgraded `skill-candidates/repo-b-mcp-comfy-bridge/` to align with current media pipeline surfaces:
+  - added workflow/pipeline tool contract guidance for `shim.comfy.workflow.submit` and `shim.comfy.pipeline.run`,
+  - added AMUSE and CapCut contract checks (`/api/amuse/*`, profile-level `capcut_export` metadata),
+  - refreshed checklist and agent prompt metadata.
+- Added new candidate skill `skill-candidates/repo-b-comfy-amuse-capcut-pipeline/`:
+  - `scripts/comfy_media_pipeline_check.py` for deterministic preflight checks across MCP, Comfy pipeline profiles, AMUSE status, and CapCut export contract expectations.
+  - `references/pipeline-contract.md` for failure modes and required profile contracts.
+- Added new candidate skill `skill-candidates/request-loopback-resume/`:
+  - `scripts/workstream_resume.py` for deterministic checkpoint/resume state management (`init`, `set`, `validate`, `resume`) across interrupted and multi-lane requests.
+  - `references/state-contract.md` for lane status model, invariants, and resume action contract.
+- Validated `request-loopback-resume` with deterministic evidence:
+  - state validation/resume outputs (`/tmp/request-loopback-resume-validate.json`, `/tmp/request-loopback-resume-resume.json`)
+  - arbiter admission (`/tmp/request-loopback-resume-arbiter.json`)
+  - installer plan/admit evidence (`/tmp/request-loopback-resume-installer-plan.json`, `/tmp/request-loopback-resume-installer-admit.json`)
+  - classification surrogate (`/tmp/request-loopback-resume-classification.json`)
+- Updated workflow docs/templates to include `request-loopback-resume` in the default pipeline for interrupted work:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/recommended-skill-portfolio.md`
+
 ## [0.2.10] - 2026-02-10
 
 ### Changed

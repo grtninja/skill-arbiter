@@ -110,6 +110,17 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/repo-b-mcp-comfy-bridge-arbiter.json
 ```
 
+## REPO_B Comfy AMUSE CapCut Pipeline Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  repo-b-comfy-amuse-capcut-pipeline \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/repo-b-comfy-amuse-capcut-pipeline-arbiter.json
+```
+
 ## REPO_B Local Comfy Orchestrator Admission (Legacy Wrapper)
 
 ```bash
@@ -144,6 +155,28 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/skills-cross-repo-radar-arbiter.json
 ```
 
+## Code Gap Sweeping Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  code-gap-sweeping \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/code-gap-sweeping-arbiter.json
+```
+
+## Request Loopback Resume Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  request-loopback-resume \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/request-loopback-resume-arbiter.json
+```
+
 ## Skill Governance System Admission
 
 ```bash
@@ -172,12 +205,14 @@ When starting new work, run this chain:
 
 1. `$skill-hub` to route task -> skill chain.
 2. `$skill-common-sense-engineering` baseline checks.
-3. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
-4. `$multitask-orchestrator` when 2+ independent lanes are present.
-5. `$skill-auditor` on new/changed skill surfaces.
-6. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
-7. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
-8. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
+3. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
+4. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
+5. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
+6. `$multitask-orchestrator` when 2+ independent lanes are present.
+7. `$skill-auditor` on new/changed skill surfaces.
+8. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
+9. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
+10. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
 
 ## Skill Game Command
 
