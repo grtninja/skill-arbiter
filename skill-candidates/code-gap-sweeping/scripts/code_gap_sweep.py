@@ -14,7 +14,9 @@ import sys
 from typing import Any
 
 REPO_PAIR_RE = re.compile(r"^([^=]+)=(.+)$")
-TODO_FIXME_RE = re.compile(r"\b(TODO|FIXME)\b")
+TODO_FIXME_MARKER_RE = re.compile(
+    r"^\s*(?:#|//|/\*+|\*|;|--|<!--|[-*]\s*\[[ xX]\]|[-*])\s*(TODO|FIXME)\b"
+)
 
 CODE_EXTENSIONS = {
     ".py",
@@ -70,6 +72,15 @@ SUGGESTED_SKILLS = {
     "todo_fixme_added": "skill-common-sense-engineering",
     "release_hygiene_missing": "skill-arbiter-release-ops",
 }
+
+DIFF_MODE_COMMITTED = "committed"
+DIFF_MODE_WORKING_TREE = "working-tree"
+DIFF_MODE_COMBINED = "combined"
+DIFF_MODE_CHOICES = (
+    DIFF_MODE_COMMITTED,
+    DIFF_MODE_WORKING_TREE,
+    DIFF_MODE_COMBINED,
+)
 
 
 @dataclass
@@ -135,6 +146,12 @@ def parse_args() -> argparse.Namespace:
         help="Preferred base ref for merge-base diff",
     )
     parser.add_argument(
+        "--diff-mode",
+        choices=DIFF_MODE_CHOICES,
+        default=DIFF_MODE_COMBINED,
+        help="Diff source mode: committed history, working tree, or both (default: combined)",
+    )
+    parser.add_argument(
         "--json-out",
         default="",
         help="Optional output path for JSON report",
@@ -185,7 +202,15 @@ def resolve_base_ref(repo_path: Path, base_ref: str) -> str:
     return "HEAD~1"
 
 
-def changed_files(repo_path: Path, base_ref: str, since_days: int) -> tuple[str, list[str]]:
+def changed_files(
+    repo_path: Path,
+    base_ref: str,
+    since_days: int,
+    diff_mode: str = DIFF_MODE_COMBINED,
+) -> tuple[str, list[str]]:
+    if diff_mode not in DIFF_MODE_CHOICES:
+        raise ValueError(f"invalid diff mode: {diff_mode}")
+
     resolved_base = resolve_base_ref(repo_path, base_ref)
     merge_base = run_git(repo_path, ["merge-base", "HEAD", resolved_base]).strip()
     if not merge_base:
@@ -193,9 +218,9 @@ def changed_files(repo_path: Path, base_ref: str, since_days: int) -> tuple[str,
 
     args = ["diff", "--name-only", f"{merge_base}...HEAD"]
     raw = run_git(repo_path, args)
-    files = [line.strip() for line in raw.splitlines() if line.strip()]
+    committed_files = [line.strip() for line in raw.splitlines() if line.strip()]
 
-    if not files and since_days > 0:
+    if not committed_files and since_days > 0:
         recent_raw = run_git(
             repo_path,
             [
@@ -205,7 +230,20 @@ def changed_files(repo_path: Path, base_ref: str, since_days: int) -> tuple[str,
                 "--pretty=format:",
             ],
         )
-        files = sorted({line.strip() for line in recent_raw.splitlines() if line.strip()})
+        committed_files = sorted({line.strip() for line in recent_raw.splitlines() if line.strip()})
+
+    working_raw = run_git(repo_path, ["diff", "--name-only", "HEAD"])
+    working_tree_files = [line.strip() for line in working_raw.splitlines() if line.strip()]
+    untracked_raw = run_git(repo_path, ["ls-files", "--others", "--exclude-standard"])
+    untracked_files = [line.strip() for line in untracked_raw.splitlines() if line.strip()]
+    working_tree_files = sorted({*working_tree_files, *untracked_files})
+
+    if diff_mode == DIFF_MODE_COMMITTED:
+        files = committed_files
+    elif diff_mode == DIFF_MODE_WORKING_TREE:
+        files = working_tree_files
+    else:
+        files = sorted({*committed_files, *working_tree_files})
 
     return merge_base, files
 
@@ -233,8 +271,49 @@ def is_release_impacting(path: str) -> bool:
     return True
 
 
-def todo_fixme_additions(repo_path: Path, merge_base: str) -> list[str]:
-    patch = run_git(repo_path, ["diff", "--unified=0", f"{merge_base}...HEAD"])
+def collect_patch_text(
+    repo_path: Path,
+    merge_base: str,
+    diff_mode: str = DIFF_MODE_COMBINED,
+) -> str:
+    if diff_mode == DIFF_MODE_COMMITTED:
+        return run_git(repo_path, ["diff", "--unified=0", f"{merge_base}...HEAD"])
+
+    if diff_mode == DIFF_MODE_WORKING_TREE:
+        return run_git(repo_path, ["diff", "--unified=0", "HEAD"])
+
+    committed_patch = run_git(repo_path, ["diff", "--unified=0", f"{merge_base}...HEAD"])
+    working_patch = run_git(repo_path, ["diff", "--unified=0", "HEAD"])
+    return committed_patch + "\n" + working_patch
+
+
+def untracked_todo_fixme_additions(repo_path: Path) -> list[str]:
+    raw = run_git(repo_path, ["ls-files", "--others", "--exclude-standard"])
+    files = [line.strip() for line in raw.splitlines() if line.strip()]
+    evidence: list[str] = []
+    for rel in files:
+        candidate = repo_path / rel
+        if not candidate.is_file():
+            continue
+        try:
+            lines = candidate.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            if TODO_FIXME_MARKER_RE.search(line):
+                snippet = line.strip()
+                if len(snippet) > 120:
+                    snippet = snippet[:117] + "..."
+                evidence.append(f"{rel}: +{snippet}")
+    return evidence
+
+
+def todo_fixme_additions(
+    repo_path: Path,
+    merge_base: str,
+    diff_mode: str = DIFF_MODE_COMBINED,
+) -> list[str]:
+    patch = collect_patch_text(repo_path, merge_base, diff_mode)
     evidence: list[str] = []
     current_file = ""
     for line in patch.splitlines():
@@ -245,16 +324,28 @@ def todo_fixme_additions(repo_path: Path, merge_base: str) -> list[str]:
         if not line.startswith("+") or line.startswith("+++"):
             continue
         body = line[1:]
-        if TODO_FIXME_RE.search(body):
+        if TODO_FIXME_MARKER_RE.search(body):
             snippet = body.strip()
             if len(snippet) > 120:
                 snippet = snippet[:117] + "..."
             evidence.append(f"{current_file}: +{snippet}")
-    return evidence
+
+    if diff_mode in (DIFF_MODE_WORKING_TREE, DIFF_MODE_COMBINED):
+        evidence.extend(untracked_todo_fixme_additions(repo_path))
+
+    # Keep deterministic ordering and remove duplicates.
+    deduped = sorted(set(evidence))
+    return deduped
 
 
-def analyze_repo(name: str, repo_path: Path, base_ref: str, since_days: int) -> RepoReport:
-    merge_base, files = changed_files(repo_path, base_ref, since_days)
+def analyze_repo(
+    name: str,
+    repo_path: Path,
+    base_ref: str,
+    since_days: int,
+    diff_mode: str = DIFF_MODE_COMBINED,
+) -> RepoReport:
+    merge_base, files = changed_files(repo_path, base_ref, since_days, diff_mode)
     findings: list[Finding] = []
 
     code_changed = sorted(path for path in files if is_code_file(path) and not is_test_file(path))
@@ -284,7 +375,7 @@ def analyze_repo(name: str, repo_path: Path, base_ref: str, since_days: int) -> 
             )
         )
 
-    todo_added = todo_fixme_additions(repo_path, merge_base)
+    todo_added = todo_fixme_additions(repo_path, merge_base, diff_mode)
     if todo_added:
         findings.append(
             Finding(
@@ -397,7 +488,7 @@ def main() -> int:
     errors: list[str] = []
     for name, path in repos:
         try:
-            reports.append(analyze_repo(name, path, args.base_ref, args.since_days))
+            reports.append(analyze_repo(name, path, args.base_ref, args.since_days, args.diff_mode))
         except ValueError as exc:
             errors.append(str(exc))
 
@@ -405,6 +496,7 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "base_ref": args.base_ref,
         "since_days": args.since_days,
+        "diff_mode": args.diff_mode,
         "repos": [to_jsonable_report(report) for report in reports],
         "aggregate": aggregate(reports),
         "errors": errors,

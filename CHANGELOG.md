@@ -2,6 +2,31 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.13] - 2026-02-12
+
+### Changed
+
+- Upgraded `skill-candidates/code-gap-sweeping/scripts/code_gap_sweep.py` with working-tree-aware diff support:
+  - added `--diff-mode` (`committed`, `working-tree`, `combined`; default `combined`) so sweeps can include unstaged and untracked changes.
+  - included untracked file detection in changed-file and TODO/FIXME scans.
+  - added backward-compatible default `diff_mode` parameters for direct function callers.
+- Tightened TODO/FIXME detection to marker-style additions and added deterministic dedupe/sort on emitted evidence.
+- Expanded deterministic tests in `tests/test_code_gap_sweep.py` to cover:
+  - release-hygiene checks with explicit diff mode.
+  - working-tree mode file selection (including untracked files).
+  - combined patch + untracked TODO/FIXME evidence behavior.
+- Updated package version to `0.2.13` for release-hygiene lockstep on this script upgrade.
+
+## [0.2.12] - 2026-02-12
+
+### Changed
+
+- Added deterministic unit coverage for newly introduced candidate-skill scripts that were previously flagged as untested:
+  - `tests/test_code_gap_sweep.py` for `skill-candidates/code-gap-sweeping/scripts/code_gap_sweep.py`
+  - `tests/test_workstream_resume.py` for `skill-candidates/request-loopback-resume/scripts/workstream_resume.py`
+  - `tests/test_comfy_media_pipeline_check.py` for `skill-candidates/repo-b-comfy-amuse-capcut-pipeline/scripts/comfy_media_pipeline_check.py`
+- Updated package version to `0.2.12` for release-hygiene lockstep on Python test additions.
+
 ## [0.2.11] - 2026-02-11
 
 ### Changed
