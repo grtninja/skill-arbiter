@@ -12,17 +12,19 @@ Use this skill to keep your skill ecosystem modular and maintainable.
 1. Run `$skill-auditor` first for recent-change quality signals plus per-skill `unique` vs `upgrade` classification.
 2. Inventory installed skills and group by repository domain.
 3. Optionally ingest recent cross-repo radar results from `$skills-cross-repo-radar`.
-4. Run overlap audit and identify merge/split candidates.
-5. Apply consolidation rubric:
+4. Run `$usage-watcher`, `$skill-cost-credit-governor`, and `$skill-cold-start-warm-path-optimizer`; capture usage guardrail evidence before finalizing chain recommendations.
+5. Run overlap audit and identify merge/split candidates.
+6. Apply consolidation rubric:
    - keep single-responsibility skills,
    - split multi-workflow monoliths,
    - avoid near-duplicate trigger scopes.
-6. Define per-repo sets:
+7. Define per-repo sets:
    - `core`: always-on, high-frequency tasks,
    - `advanced`: specialized workflows,
    - `experimental`: new candidates pending arbiter evidence.
-7. Admit changed/new skills with `skill-arbiter --personal-lockdown`.
-8. Fail closed when arbiter evidence is missing or not `pass`.
+8. Ensure each repo `core` set includes explicit usage guardrail consideration and documented disposition for `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
+9. Admit changed/new skills with `skill-arbiter --personal-lockdown`.
+10. Fail closed when arbiter evidence is missing or not `pass`.
 
 ## Commands
 
@@ -61,6 +63,7 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" <skill> [
 - `score >= 0.55`: likely duplicate; merge or retire one.
 - `0.35 <= score < 0.55`: boundary blur; tighten descriptions/scope.
 - `score < 0.35`: generally distinct.
+- Missing usage-guardrail evidence: do not finalize chain recommendations.
 
 Keep each repo’s `core` set between 3 and 6 skills by default.
 ## Scope Boundary

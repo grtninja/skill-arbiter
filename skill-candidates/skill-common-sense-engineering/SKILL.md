@@ -15,8 +15,9 @@ Use this skill as a lightweight sanity layer for day-to-day coding work.
    - generated artifacts (`__pycache__`, `*.pyc`, tool caches),
    - accidental temp/debug files,
    - obviously stale docs references.
-4. If a repeatable issue appears during work, update the relevant skill/checklist in the same change.
-5. Capture short evidence of what was checked and what was fixed.
+4. For multi-skill chains, verify usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer` before claiming chain readiness.
+5. If a repeatable issue appears during work, update the relevant skill/checklist in the same change.
+6. Capture short evidence of what was checked and what was fixed.
 
 ## Common-Sense Checks
 
@@ -25,6 +26,9 @@ Run from repo root:
 ```bash
 git status --short
 python3 scripts/check_private_data_policy.py
+test -f /tmp/usage-analysis.json && test -f /tmp/usage-plan.json
+test -f /tmp/skill-cost-analysis.json && test -f /tmp/skill-cost-policy.json
+test -f /tmp/cold-warm-analysis.json && test -f /tmp/cold-warm-plan.json
 ```
 
 Artifact hygiene scan:

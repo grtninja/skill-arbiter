@@ -14,6 +14,9 @@ DEFAULT_LEDGER = Path.home() / ".codex" / "skills" / ".skill-game-ledger.json"
 DEFAULT_REQUIRED_SKILLS = [
     "skill-hub",
     "skill-common-sense-engineering",
+    "usage-watcher",
+    "skill-cost-credit-governor",
+    "skill-cold-start-warm-path-optimizer",
     "skill-installer-plus",
     "skill-auditor",
     "skill-enforcer",

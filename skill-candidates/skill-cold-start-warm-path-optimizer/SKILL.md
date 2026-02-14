@@ -12,7 +12,8 @@ Use this skill to convert cold-start latency into deterministic warm-path planni
 1. Collect execution logs with timestamp, skill, duration, and optional cold/cache fields.
 2. Run `warm_path_optimizer.py analyze` for cold vs warm metrics.
 3. Generate a prewarm and auto-invoke policy with `warm_path_optimizer.py plan`.
-4. Apply the plan before high-throughput sessions.
+4. Decide whether prewarm is required for this chain and record the decision.
+5. Apply the plan before high-throughput sessions.
 
 ## Analyze
 
@@ -37,6 +38,16 @@ python3 "$CODEX_HOME/skills/skill-cold-start-warm-path-optimizer/scripts/warm_pa
   --json-out /tmp/cold-warm-plan.json \
   --format table
 ```
+
+## Mandatory Chain Gate
+
+Before finalizing skill chains, provide:
+
+- `cold_warm_analysis_json=/tmp/cold-warm-analysis.json`
+- `cold_warm_plan_json=/tmp/cold-warm-plan.json`
+- `prewarm_required=<true|false>`
+
+If this evidence is missing, chain selection is incomplete and must fail closed.
 ## Scope Boundary
 
 Use this skill only for the `skill-cold-start-warm-path-optimizer` lane and workflow defined in this file and its references.

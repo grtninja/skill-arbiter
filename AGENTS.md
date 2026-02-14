@@ -84,13 +84,16 @@ Default skill system for new work:
 
 1. Route with `skill-hub`.
 2. Run baseline sanity/hygiene via `skill-common-sense-engineering`.
-3. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps.
-4. For interrupted tasks, use `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
-5. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
-6. Audit new/changed skills with `skill-auditor`.
-7. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
-8. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
-9. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
+3. Run `usage-watcher` to set the active usage mode (`economy`, `standard`, or `surge`) and capture `usage-analysis` + `usage-plan` JSON artifacts.
+4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy JSON artifacts.
+5. Run `skill-cold-start-warm-path-optimizer` to evaluate prewarm policy and capture cold/warm analysis/plan JSON artifacts.
+6. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps.
+7. For interrupted tasks, use `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
+8. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
+9. Audit new/changed skills with `skill-auditor`.
+10. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
+11. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
+12. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
 
 Mandatory skill-change gates:
 
@@ -99,6 +102,7 @@ Mandatory skill-change gates:
 2. Every new/updated skill must be classified by `skill-auditor` as `unique` or `upgrade`.
 3. If classification is `upgrade`, prefer updating existing skills instead of introducing duplicate candidates unless boundaries are explicitly documented.
 4. Every new/updated skill should include `skill-installer-plus` evidence (`plan`/`admit` JSON paths and latest recommendation decision).
+5. Every chain plan must include a usage guardrail decision with evidence paths from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`; do not finalize chaining without these evaluations.
 
 ## 6) Security and mutation safety
 

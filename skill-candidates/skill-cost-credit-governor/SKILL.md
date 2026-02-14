@@ -12,8 +12,9 @@ Use this skill to prevent silent spend escalation across multi-skill workflows.
 1. Export invocation usage history (CSV/JSON) with timestamp, skill, token, runtime, and optional caller fields.
 2. Run `skill_cost_governor.py analyze` for a rolling window.
 3. Review anomaly evidence (`cost_spike`, `inefficient_loop`, `agent_chatter`, `runtime_p95_high`).
-4. Apply proposed `warn`/`throttle`/`disable` actions.
-5. Persist analysis and policy artifacts for audits.
+4. Derive explicit chain action (`allow`, `warn`, `throttle`, `disable`) from anomaly evidence.
+5. Apply proposed `warn`/`throttle`/`disable` actions.
+6. Persist analysis and policy artifacts for audits.
 
 ## Analyze Usage
 
@@ -42,6 +43,16 @@ python3 "$CODEX_HOME/skills/skill-cost-credit-governor/scripts/skill_cost_govern
 ```
 
 Use `--force-global-action throttle` or `--force-global-action disable` for emergency containment.
+
+## Mandatory Chain Gate
+
+Before finalizing skill chains, provide:
+
+- `skill_cost_analysis_json=/tmp/skill-cost-analysis.json`
+- `skill_cost_policy_json=/tmp/skill-cost-policy.json`
+- `global_action=<allow|warn|throttle|disable>`
+
+If this evidence is missing, chain selection is incomplete and must fail closed.
 ## Scope Boundary
 
 Use this skill only for the `skill-cost-credit-governor` lane and workflow defined in this file and its references.

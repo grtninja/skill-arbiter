@@ -156,6 +156,9 @@ python3 scripts/skill_game.py \
   --task "skill candidate update" \
   --used-skill skill-hub \
   --used-skill skill-common-sense-engineering \
+  --used-skill usage-watcher \
+  --used-skill skill-cost-credit-governor \
+  --used-skill skill-cold-start-warm-path-optimizer \
   --used-skill skill-installer-plus \
   --used-skill skill-auditor \
   --used-skill skill-enforcer \
@@ -261,13 +264,16 @@ For ongoing work, use this baseline system:
 
 1. `skill-hub` routes each task to an ordered chain.
 2. `skill-common-sense-engineering` runs baseline sanity/hygiene checks.
-3. `code-gap-sweeping` scans one or more repos for deterministic implementation gaps before mutation-heavy work.
-4. `request-loopback-resume` checkpoints/resumes interrupted work with deterministic next-lane actions.
-5. `skill-installer-plus` plans installs/admissions and updates recommendation history.
-6. `skill-auditor` audits new/changed skills.
-7. `skill-enforcer` checks cross-repo policy alignment when operating across repos.
-8. `multitask-orchestrator` runs independent lanes in parallel; unresolved lanes loop back via `skill-hub`.
-9. `scripts/skill_game.py` records XP/level progression from workflow evidence reports.
+3. `usage-watcher` sets an explicit usage mode and emits usage analysis/plan artifacts.
+4. `skill-cost-credit-governor` evaluates per-skill spend/chatter risk and emits analysis/policy artifacts.
+5. `skill-cold-start-warm-path-optimizer` evaluates cold/warm latency and emits analysis/plan artifacts.
+6. `code-gap-sweeping` scans one or more repos for deterministic implementation gaps before mutation-heavy work.
+7. `request-loopback-resume` checkpoints/resumes interrupted work with deterministic next-lane actions.
+8. `skill-installer-plus` plans installs/admissions and updates recommendation history.
+9. `skill-auditor` audits new/changed skills.
+10. `skill-enforcer` checks cross-repo policy alignment when operating across repos.
+11. `multitask-orchestrator` runs independent lanes in parallel; unresolved lanes loop back via `skill-hub`.
+12. `scripts/skill_game.py` records XP/level progression from workflow evidence reports.
 
 For any new/updated skill candidate, treat these checks as mandatory:
 
@@ -275,6 +281,7 @@ For any new/updated skill candidate, treat these checks as mandatory:
 2. `skill-arbiter-lockdown-admission` evidence must show a passable result (`action`, `persistent_nonzero`, `max_rg` captured).
 3. If classification is `upgrade`, update existing skill boundaries before adding a duplicate candidate.
 4. `skill-installer-plus` plan/admit outputs should be captured so recommendation quality improves over time.
+5. Chaining decisions must include usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
 
 ## License
 

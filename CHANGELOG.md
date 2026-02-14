@@ -2,6 +2,31 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.14] - 2026-02-14
+
+### Changed
+
+- Enforced usage-saving evaluation as a mandatory chain gate across policy docs:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+- Updated default chain order to explicitly require:
+  - `usage-watcher` (mode + usage artifacts),
+  - `skill-cost-credit-governor` (spend/chatter policy),
+  - `skill-cold-start-warm-path-optimizer` (prewarm decision),
+  before downstream mutation/consolidation lanes.
+- Upgraded candidate skill workflows to fail closed when usage guardrail evidence is missing:
+  - `skill-candidates/usage-watcher/SKILL.md`
+  - `skill-candidates/skill-cost-credit-governor/SKILL.md`
+  - `skill-candidates/skill-cold-start-warm-path-optimizer/SKILL.md`
+  - `skill-candidates/skill-common-sense-engineering/SKILL.md`
+  - `skill-candidates/skill-installer-plus/SKILL.md`
+  - `skill-candidates/skills-discovery-curation/SKILL.md`
+  - `skill-candidates/skills-consolidation-architect/SKILL.md`
+- Updated `scripts/skill_game.py` default required chain so usage-saving skills are enforced in workflow scoring by default.
+
 ## [0.2.13] - 2026-02-12
 
 ### Changed

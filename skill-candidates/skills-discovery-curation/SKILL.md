@@ -14,11 +14,14 @@ Use this skill to build a practical skill portfolio for a repo.
 3. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
 4. Map repository workflows to missing capabilities.
 5. Include practical baseline checks via `$skill-common-sense-engineering`.
-6. Include quality/compliance lanes where needed (`$skill-auditor`, `$skill-enforcer`).
-7. For candidate additions/updates, classify each skill as `unique` vs `upgrade` using `$skill-auditor`.
-8. Require arbiter evidence status `pass` before admitting candidates.
-9. Propose a minimal prioritized skill set (core first, optional second).
-10. Provide admission plan using local `skill-arbiter` lockdown flow.
+6. Run `$usage-watcher` and capture usage mode plus analysis/plan artifacts.
+7. Run `$skill-cost-credit-governor` and capture analysis/policy artifacts.
+8. Run `$skill-cold-start-warm-path-optimizer` and capture cold/warm analysis/plan artifacts.
+9. Include quality/compliance lanes where needed (`$skill-auditor`, `$skill-enforcer`).
+10. For candidate additions/updates, classify each skill as `unique` vs `upgrade` using `$skill-auditor`.
+11. Require arbiter evidence status `pass` before admitting candidates.
+12. Propose a minimal prioritized skill set (core first, optional second) with usage guardrail status.
+13. Provide admission plan using local `skill-arbiter` lockdown flow.
 
 ## Discovery Commands
 
@@ -41,8 +44,9 @@ python3 "$CODEX_HOME/skills/skills-cross-repo-radar/scripts/repo_change_radar.py
 
 1. Current inventory summary.
 2. Missing capability gaps by repo workflow.
-3. Recommended skill candidates (ranked).
-4. Admission command using `--personal-lockdown`.
+3. Usage guardrail decision (`economy`/`standard`/`surge`) with JSON evidence paths from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
+4. Recommended skill candidates (ranked).
+5. Admission command using `--personal-lockdown`.
 
 ## Admission Command Template
 

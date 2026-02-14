@@ -205,14 +205,17 @@ When starting new work, run this chain:
 
 1. `$skill-hub` to route task -> skill chain.
 2. `$skill-common-sense-engineering` baseline checks.
-3. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
-4. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
-5. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
-6. `$multitask-orchestrator` when 2+ independent lanes are present.
-7. `$skill-auditor` on new/changed skill surfaces.
-8. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
-9. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
-10. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
+3. `$usage-watcher` to decide usage mode (`economy`/`standard`/`surge`) and emit usage analysis + plan JSON.
+4. `$skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and emit analysis + policy JSON.
+5. `$skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and emit analysis + plan JSON.
+6. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
+7. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
+8. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
+9. `$multitask-orchestrator` when 2+ independent lanes are present.
+10. `$skill-auditor` on new/changed skill surfaces.
+11. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
+12. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
+13. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
 
 ## Skill Game Command
 
@@ -221,6 +224,9 @@ python3 scripts/skill_game.py \
   --task "skill candidate update" \
   --used-skill skill-hub \
   --used-skill skill-common-sense-engineering \
+  --used-skill usage-watcher \
+  --used-skill skill-cost-credit-governor \
+  --used-skill skill-cold-start-warm-path-optimizer \
   --used-skill skill-installer-plus \
   --used-skill skill-auditor \
   --used-skill skill-enforcer \
@@ -236,6 +242,7 @@ Mandatory skill-change gates:
 2. Every new/updated skill must be classified by `$skill-auditor` as `unique` or `upgrade`.
 3. `upgrade` classifications should update existing skill lanes unless strict boundary differences are documented.
 4. Every new/updated skill should capture `skill-installer-plus` plan/admit outputs so recommendation quality improves run-over-run.
+5. Every chain proposal must include usage guardrail evidence from `$usage-watcher`, `$skill-cost-credit-governor`, and `$skill-cold-start-warm-path-optimizer`; chaining is incomplete without this evaluation.
 
 ## Release Workflow
 

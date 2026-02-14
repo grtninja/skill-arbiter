@@ -43,13 +43,16 @@ For skill-centric workstreams, use the default system chain:
 
 1. Route requests with `skill-hub`.
 2. Apply baseline sanity checks with `skill-common-sense-engineering`.
-3. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps first.
-4. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
-5. Run `skill-installer-plus` for install recommendations and admission ledger updates.
-6. Audit new/changed skills with `skill-auditor`.
-7. If multiple repos are involved, run `skill-enforcer` for policy alignment.
-8. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
-9. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
+3. Run `usage-watcher` to set usage mode and capture usage analysis/plan artifacts.
+4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy artifacts.
+5. Run `skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and capture analysis/plan artifacts.
+6. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps first.
+7. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
+8. Run `skill-installer-plus` for install recommendations and admission ledger updates.
+9. Audit new/changed skills with `skill-auditor`.
+10. If multiple repos are involved, run `skill-enforcer` for policy alignment.
+11. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
+12. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
 
 Mandatory checks for skill additions/updates:
 
@@ -57,6 +60,7 @@ Mandatory checks for skill additions/updates:
 2. `skill-arbiter-lockdown-admission` evidence must be attached and pass review (`action`, `persistent_nonzero`, `max_rg`).
 3. If classification is `upgrade`, prefer updating existing skills unless boundaries are explicitly distinct.
 4. Include `skill-installer-plus` plan/admit evidence so recommendation history stays current.
+5. Include usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer` for chain decisions.
 
 ## Privacy Lock
 
@@ -91,7 +95,7 @@ For new or updated skill candidates, include arbitration evidence summary in the
 4. Report per-skill classification: `unique` or `upgrade` (with nearest peer).
 5. Keep expected safe target: `action=kept`, `persistent_nonzero=false`, `max_rg=0`.
 6. Record the run in the local game ledger:
-   `python3 scripts/skill_game.py --task "<skill update>" --used-skill skill-hub --used-skill skill-common-sense-engineering --used-skill skill-installer-plus --used-skill skill-auditor --used-skill skill-enforcer --used-skill skill-arbiter-lockdown-admission --arbiter-report /tmp/skill-arbiter-evidence.json --audit-report /tmp/skill-audit.json --enforcer-pass`.
+   `python3 scripts/skill_game.py --task "<skill update>" --used-skill skill-hub --used-skill skill-common-sense-engineering --used-skill usage-watcher --used-skill skill-cost-credit-governor --used-skill skill-cold-start-warm-path-optimizer --used-skill skill-installer-plus --used-skill skill-auditor --used-skill skill-enforcer --used-skill skill-arbiter-lockdown-admission --arbiter-report /tmp/skill-arbiter-evidence.json --audit-report /tmp/skill-audit.json --enforcer-pass`.
 
 If a skill was added or improved in the work, include this declaration in the response/update text:
 

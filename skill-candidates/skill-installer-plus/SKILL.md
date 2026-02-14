@@ -10,9 +10,10 @@ Use this skill to streamline safe skill installs and continuously improve instal
 ## Workflow
 
 1. Generate a recommendation plan from local candidates and prior outcomes.
-2. Admit selected skills through `skill-arbiter` in personal-lockdown mode.
-3. Persist outcomes to the installer ledger and optionally ingest trust-ledger events.
-4. Record manual post-install feedback after real usage.
+2. Evaluate usage guardrails with `$usage-watcher`, `$skill-cost-credit-governor`, and `$skill-cold-start-warm-path-optimizer` before final admit decisions.
+3. Admit selected skills through `skill-arbiter` in personal-lockdown mode.
+4. Persist outcomes to the installer ledger and optionally ingest trust-ledger events.
+5. Record manual post-install feedback after real usage.
 
 ## Plan Recommendations
 
@@ -56,6 +57,8 @@ python3 "$CODEX_HOME/skills/skill-installer-plus/scripts/skill_installer_plus.py
 Use this skill only for the `skill-installer-plus` lane and workflow defined in this file and its references.
 
 Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
+
+Admission decision is incomplete without usage guardrail evidence paths from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
 
 ## References
 

@@ -12,7 +12,8 @@ Use this skill to control usage cost and avoid rate-limit surprises.
 1. Capture recent usage history to CSV/JSON.
 2. Run `usage_guard.py analyze` to measure burn rate and risk status.
 3. Run `usage_guard.py plan` to set practical daily/session caps.
-4. Apply the recommendations before large agent workflows.
+4. Select and record a chain usage mode (`economy`, `standard`, `surge`) from the analysis and plan outputs.
+5. Apply the recommendations before large agent workflows.
 
 ## Analyze Command
 
@@ -41,6 +42,16 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
   --json-out /tmp/usage-plan.json \
   --format table
 ```
+
+## Mandatory Chain Gate
+
+Before finalizing skill chains, provide:
+
+- `usage_analysis_json=/tmp/usage-analysis.json`
+- `usage_plan_json=/tmp/usage-plan.json`
+- `usage_mode=<economy|standard|surge>`
+
+If this evidence is missing, chain selection is incomplete and must fail closed.
 
 ## Guardrail Policy
 
