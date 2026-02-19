@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.15] - 2026-02-19
+
+### Changed
+
+- Added 2 new Repo B candidates for AvatarCore and STARFRAME runtime changes:
+  - `skill-candidates/repo-b-avatarcore-ops/SKILL.md`
+  - `skill-candidates/repo-b-starframe-ops/SKILL.md`
+- Upgraded `skill-candidates/repo-a-coordinator-smoke/` to include coordinator health/readiness probes in smoke expectations.
+- Upgraded `skill-candidates/repo-b-control-center-ops/` to include control-center window manager and Electron launch checks.
+- Expanded `skill-candidates/repo-c-shim-contract-checks/` contract coverage for audio/rag fail-closed behavior and replaced `rg`-based local contract scans.
+- Updated `references/recommended-skill-portfolio.md` with the two new Repo B skill entries.
+
 ## [0.2.14] - 2026-02-14
 
 ### Changed

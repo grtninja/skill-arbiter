@@ -12,7 +12,10 @@ Use this skill for local coordinator+node runtime validation.
 1. Launch local coordinator stub.
 2. Start node runtime with verbose policy path.
 3. Confirm one embeddings flow completes.
-4. Verify telemetry emits expected lifecycle markers.
+4. Include coordinator health telemetry before/after startup:
+   - `GET /health`
+   - `POST /v1/register` readiness probe when credentials are configured
+5. Verify telemetry emits expected lifecycle markers.
 
 ## Canonical Smoke Commands
 
@@ -31,6 +34,7 @@ python -m repo_a_node --policy config/device_policy.json --verbose
 ## Smoke Expectations
 
 - Coordinator endpoints reachable: `/v1/register`, `/v1/fetch_job`, `/v1/submit`.
+- `/health` reachable and returns a sane readiness state.
 - Runtime registration succeeds.
 - At least one job completes and telemetry includes `job.end`.
 - Credit preview logs are emitted without payout actions.

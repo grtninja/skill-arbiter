@@ -13,6 +13,8 @@ Use this skill for shim endpoint contract safety.
 - `REPO_B_SIDECAR_URL` config path remains explicit.
 - CI-facing integration tests use mock shim fixtures, not real hardware.
 - Do not mask core import failures with `pytest.importorskip()`.
+- Audio and RAG routes tied to shim-backed services must keep closed-fallback behavior when sidecar signals are missing.
+- Maintain stable payload contracts for `GET /health`, `/telemetry`, `/audio`, and `/rag` endpoints when fail-closed gates engage.
 
 ## Validation Commands
 
@@ -26,8 +28,41 @@ pytest -q
 For focused shim contract review:
 
 ```bash
-rg -n "REPO_B_SIDECAR_URL|importorskip|requires_real_sidecar|/health|/telemetry" -S AGENTS.md tests src repo-c repo_c_trace ranking_engine
+python - <<'PY'
+from pathlib import Path
+import re
+patterns = [
+    'REPO_B_SIDECAR_URL',
+    'importorskip',
+    'requires_real_sidecar',
+    '/health',
+    '/telemetry',
+    '/audio',
+    '/rag',
+]
+roots = ['AGENTS.md', 'tests', 'src', 'repo-c', 'repo_c_trace', 'ranking_engine']
+for root in roots:
+    p = Path(root)
+    if not p.exists():
+        continue
+    for file in p.rglob('*'):
+        if not file.is_file():
+            continue
+        if file.suffix.lower() not in {'.py', '.md', '.yml', '.yaml', '.json'}:
+            continue
+        text = file.read_text(encoding='utf-8', errors='ignore')
+        for pattern in patterns:
+            if re.search(pattern, text):
+                break
+        else:
+            continue
+        print(file)
+PY
+curl -s http://127.0.0.1:9000/health
+curl -s http://127.0.0.1:9000/telemetry
+curl -s http://127.0.0.1:9000/api/rag/status
 ```
+
 ## Scope Boundary
 
 Use this skill only for the `repo-c-shim-contract-checks` lane and workflow defined in this file and its references.
@@ -42,6 +77,6 @@ Do not use this skill for unrelated lanes; route those through `$skill-hub` and 
 
 If this lane is unresolved, blocked, or ambiguous:
 
-1. Capture current evidence and failure context.
+1. Capture the failing endpoint and test evidence.
 2. Route back through `$skill-hub` for chain recalculation.
 3. Resume only after the updated chain returns a deterministic next step.

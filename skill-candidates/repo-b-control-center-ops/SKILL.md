@@ -12,7 +12,8 @@ Use this skill for Control Center runtime and service-surface operations.
 1. Start or restart using canonical headless path.
 2. Validate API readiness and endpoint contracts.
 3. Debug connector routing and diagnostics windows.
-4. Keep no-flashing-console UX requirements intact.
+4. Validate desktop/window lifecycle for local launcher variants and verify no duplicate bound/restore logic.
+5. Keep no-flashing-console UX requirements intact.
 
 ## Scope Boundary
 
@@ -38,11 +39,30 @@ curl http://127.0.0.1:9000/api/mcp/status
 curl http://127.0.0.1:9000/api/agent/capabilities
 ```
 
-## Guardrails
+## Desktop Window and Layout Checks
 
-- Do not introduce visible console windows for local desktop workflows.
-- Keep routing and endpoint behavior backward-compatible.
-- Keep REST and diagnostics surfaces loopback/local-first unless explicitly changed.
+From `<PRIVATE_REPO_B>` root:
+
+```bash
+python -m pytest apps/mx3-control-center/tests
+```
+
+```bash
+cd apps/mx3-control-center/web/electron
+npm test -- windowBounds.test.js windowManager.test.js
+```
+
+From `<PRIVATE_REPO_B>/apps/mx3-control-center/web`:
+
+```bash
+npm run build
+```
+
+## Contract Guardrails
+
+- Keep documented Control Center and startup diagnostics endpoints stable unless migration is approved.
+- Keep connector routing and endpoint behavior backward-compatible.
+- Preserve existing boundary for desktop window lifecycle: one authoritative window manager module, no duplicate bounds state ownership.
 
 ## References
 

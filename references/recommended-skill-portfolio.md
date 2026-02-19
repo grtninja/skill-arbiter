@@ -38,46 +38,52 @@ Goal: reduce repeated operational work while keeping behavior deterministic and 
 11. `repo-b-comfy-amuse-capcut-pipeline` (repo-b specific)
    - Run profile-driven Comfy pipeline checks with optional AMUSE stages and CapCut export metadata validation.
    - Trigger examples: "run comfy pipeline profile", "validate amuse stage", "verify capcut export contract"
-12. `skill-cost-credit-governor`
+12. `repo-b-avatarcore-ops` (repo-b specific)
+   - Validate AvatarCore proxy contracts, provider override behavior, and Unreal bridge session lifecycle in local smoke mode.
+   - Trigger examples: "validate /v1/avatarcore endpoints", "check bridge session lifecycle", "verify env override order"
+13. `repo-b-starframe-ops` (repo-b specific)
+   - Validate STARFRAME AvatarCore proxy contracts, persona registry behavior, and degraded-mode or telemetry safety paths.
+   - Trigger examples: "validate /health endpoint", "run avatar proxy core regression checks", "verify personality registry and scoring contracts"
+14. `skill-cost-credit-governor`
    - Track per-skill spend/runtime and emit warn/throttle/disable actions when anomalies or budget pressure appear.
    - Trigger examples: "govern skill spend", "detect chatter loops", "budget enforcement policy"
-13. `skill-dependency-fan-out-inspector`
+15. `skill-dependency-fan-out-inspector`
    - Build dependency graphs and flag fan-out/cycle/N+1 risks across skill stacks.
    - Trigger examples: "map skill dependencies", "detect invocation fan-out", "find circular skill chains"
-14. `skill-cold-start-warm-path-optimizer`
+16. `skill-cold-start-warm-path-optimizer`
    - Measure cold-vs-warm latency and generate prewarm plus never-auto-invoke plans.
    - Trigger examples: "optimize cold starts", "build warm-path plan", "latency prewarm candidates"
-15. `skill-blast-radius-simulator`
+17. `skill-blast-radius-simulator`
    - Simulate pre-admission blast radius and require acknowledgement for high-risk deltas.
    - Trigger examples: "simulate skill install risk", "preflight new skill risk", "blast radius gate"
-16. `skill-trust-ledger`
+18. `skill-trust-ledger`
    - Maintain local reliability memory and trust tiers from observed outcomes and arbiter evidence.
    - Trigger examples: "skill reliability ledger", "trust-tier report", "should we re-enable this skill?"
-17. `skills-cross-repo-radar`
+19. `skills-cross-repo-radar`
    - Run recurring cross-repo MX3/shim drift scans and map signals to skill upgrade/discovery actions.
    - Trigger examples: "scan my repos for new skill opportunities", "weekly mx3 shim skill review", "cross-repo drift check"
-18. `code-gap-sweeping`
+20. `code-gap-sweeping`
    - Sweep one or more repos for deterministic implementation gaps (tests, docs lockstep, TODO/FIXME drift, release hygiene) and emit repo-family pipeline command matrices.
    - Trigger examples: "sweep for code gaps", "cross-repo gap scan", "find missing test/doc lanes", "build all-repo pipeline matrix"
-19. `skill-common-sense-engineering`
+21. `skill-common-sense-engineering`
    - Apply lightweight human common-sense checks to catch avoidable mistakes and artifact hygiene issues.
    - Trigger examples: "quick sanity pass", "common-sense review before finalizing", "catch obvious mistakes"
-20. `skill-auditor`
+22. `skill-auditor`
    - Audit newly added or recently changed skills and produce concrete upgrade/consolidation actions.
    - Trigger examples: "audit new skills", "review skill quality", "find skill consolidation opportunities"
-21. `skill-enforcer`
+23. `skill-enforcer`
    - Enforce required baseline skill references across repos and fail on policy drift.
    - Trigger examples: "enforce skill policy across repos", "check required skills in AGENTS/README", "compliance scan"
-22. `skill-installer-plus`
+24. `skill-installer-plus`
    - Plan local skill installs, run lockdown admission wrappers, and learn from install outcomes.
    - Trigger examples: "install skills safely", "run admission with history", "improve install recommendations"
-23. `skill-hub`
+25. `skill-hub`
    - Route any task to an ordered skill chain with rationale and baseline common-sense checks.
    - Trigger examples: "route this task to the right skills", "start with skill hub", "build skill chain for request"
-24. `multitask-orchestrator`
+26. `multitask-orchestrator`
    - Split independent lanes into parallel execution and merge deterministic results.
    - Trigger examples: "parallelize this request", "run independent checks together", "multi-lane execution"
-25. `request-loopback-resume`
+27. `request-loopback-resume`
    - Persist lane state for interrupted requests and compute deterministic `continue/start/blocked/done` resume actions.
    - Trigger examples: "continue previous request", "resume paused lane", "checkpoint and return after AFK"
 
