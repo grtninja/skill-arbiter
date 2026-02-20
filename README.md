@@ -9,6 +9,27 @@ Admit or quarantine Codex skills by detecting persistent `rg.exe` churn and prev
 
 `skill-arbiter` is a small, MIT-licensed utility skill that installs candidate Codex skills one-by-one, watches `rg.exe` process behavior, and automatically removes + blacklists noisy offenders with reproducible evidence.
 
+This repository is public-shape only: docs and skill candidates use placeholders (`<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`) instead of private identifiers and personal absolute paths.
+
+## Table of Contents
+
+- [Why this exists](#why-this-exists)
+- [Key features](#key-features)
+- [How it works](#how-it-works)
+- [Quick start](#quick-start)
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [CLI reference](#cli-reference)
+- [Output contract](#output-contract)
+- [Advanced workflows](#advanced-workflows)
+- [Security notes](#security-notes)
+- [Repository layout](#repository-layout)
+- [Candidate skill catalog](#candidate-skill-catalog)
+- [License](#license)
+- [Support](#support)
+- [Contribution policy](#contribution-policy)
+- [Skill level-up declaration](#skill-level-up-declaration)
+
 ## Why this exists
 
 Some skills can accidentally trigger runaway repository scans on Windows hosts. This can cause:
@@ -17,18 +38,30 @@ Some skills can accidentally trigger runaway repository scans on Windows hosts. 
 - Repeated `rg.exe` process storms
 - Slow or unstable editor/agent behavior
 
-`skill-arbiter` provides an admission gate so only safe skills stay installed.
-Third-party candidates are deny-by-default: they must pass checks and be explicitly promoted.
+`skill-arbiter` provides an admission gate so only safe skills stay installed. Third-party candidates are deny-by-default: they must pass checks and be explicitly promoted.
 
-## What it does
+## Key features
 
-1. Clones a curated skills source repo.
-2. Installs each candidate skill into a destination skills directory.
-3. Samples baseline `rg.exe` count before install, then scores churn using delta-over-baseline samples.
-4. Removes + blacklists skills that exceed guardrails.
-5. Emits CSV summary output and optional JSON evidence.
+- Windows-first churn detection for `rg.exe` process storms
+- Delta-over-baseline scoring to reduce false positives
+- No external Python dependencies (`requirements.txt` is documentation-only)
+- Local/personal admission modes with whitelist + immutable promotion
+- Machine-readable evidence via CSV stdout and optional JSON reports
+- Works with curated skill repos or local skill folders (`--source-dir`)
 
-For personal/local skills, it can also auto-promote safe skills into local whitelist + immutable files.
+## How it works
+
+Arbitration loop:
+
+`clone/source -> baseline sample -> install one skill -> sample delta -> keep or quarantine -> emit evidence`
+
+What the script does per skill:
+
+1. Installs one candidate.
+2. Measures baseline `rg.exe` count and post-install samples.
+3. Scores churn using delta-over-baseline.
+4. Keeps safe candidates or removes + blacklists offenders.
+5. Writes CSV result rows and optional JSON run evidence.
 
 ## Quick start
 
@@ -44,16 +77,6 @@ Dry-run mode (no filesystem changes):
 python3 scripts/arbitrate_skills.py doc screenshot --dry-run
 ```
 
-Personal skill promotion (test local skills, then whitelist + immutable if safe):
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  my-new-skill another-skill \
-  --source-dir "$CODEX_HOME/skills" \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --promote-safe
-```
-
 Personal lockdown mode (local-only + immutable pinning):
 
 ```bash
@@ -63,6 +86,21 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
   --personal-lockdown
 ```
+
+## Installation
+
+`skill-arbiter` is currently intended to run from a local clone.
+
+```bash
+git clone <repo-url>
+cd skill-arbiter
+./scripts/install_local_hooks.sh
+python3 scripts/arbitrate_skills.py --help
+```
+
+If you already use Codex local skills, you can also run from:
+
+- `$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py`
 
 ## Requirements
 
@@ -147,7 +185,13 @@ Personal-lockdown behavior:
   - per-skill arbitration results (delta and raw sample fields)
   - final blacklist/whitelist/immutable lists
 
-## Skill Game Loop
+## Advanced workflows
+
+### Default skill system
+
+The full 12-step baseline chain and mandatory skill-change gates are documented in `references/default-skill-system.md`.
+
+### Skill Game Loop
 
 Use the local XP ledger to reward full workflow compliance:
 
@@ -174,38 +218,31 @@ Inspect current score/streak:
 python3 scripts/skill_game.py --show
 ```
 
-## Release workflow
+### Release workflow
 
-- For release-impacting PRs (for example changes under `scripts/`, `SKILL.md`, or other non-doc files), run:
+For release-impacting PRs (for example changes under `scripts/`, `SKILL.md`, or other non-doc files), run:
 
 ```bash
 python3 scripts/prepare_release.py --part patch
 ```
 
-- Then refine the generated `CHANGELOG.md` notes so they match the PR.
-- CI enforces this on pull requests via `scripts/check_release_hygiene.py`.
+Then refine the generated `CHANGELOG.md` notes so they match the PR. CI enforces release hygiene with `python3 scripts/check_release_hygiene.py`.
 
-## Privacy lock
+### Privacy lock
 
 This repository is public-shape only. Private repository identifiers and user-specific absolute paths are blocked.
 
-- Local pre-commit gate:
+Local pre-commit gate:
 
 ```bash
 python3 scripts/check_private_data_policy.py --staged
 ```
 
-- CI gate:
+CI gate:
 
 ```bash
 python3 scripts/check_private_data_policy.py
 ```
-
-Use placeholders in docs and skill candidates:
-
-- `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`
-- `$CODEX_HOME/skills`
-- `$env:USERPROFILE\\...` (PowerShell)
 
 ## Security notes
 
@@ -218,85 +255,58 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 
 ## Repository layout
 
-- `AGENTS.md`: Repository operating rules and guardrails.
-- `CHANGELOG.md`: Release history.
-- `SKILL.md`: Skill definition used by Codex.
-- `scripts/arbitrate_skills.py`: Arbitration implementation.
-- `scripts/skill_game.py`: Local XP/level scorer for workflow compliance.
-- `scripts/prepare_release.py`: Release bump helper.
-- `scripts/check_release_hygiene.py`: PR release gate.
-- `scripts/check_private_data_policy.py`: Privacy and private-data policy gate.
-- `scripts/install_local_hooks.sh`: One-time local git hook installer.
-- `agents/openai.yaml`: Agent metadata.
-- `references/publish-notes.md`: Publish defaults and notes.
-- `references/recommended-skill-portfolio.md`: Baseline skill catalog and rollout guidance for other repos.
+- `AGENTS.md`: repository operating rules and guardrails
+- `CHANGELOG.md`: release history
+- `SKILL.md`: skill definition used by Codex
+- `scripts/arbitrate_skills.py`: arbitration implementation
+- `scripts/skill_game.py`: local XP/level scorer for workflow compliance
+- `scripts/prepare_release.py`: release bump helper
+- `scripts/check_release_hygiene.py`: PR release gate
+- `scripts/check_private_data_policy.py`: privacy and private-data policy gate
+- `scripts/install_local_hooks.sh`: one-time local git hook installer
+- `agents/openai.yaml`: agent metadata
+- `references/default-skill-system.md`: full default-chain and skill-change gate details
+- `references/publish-notes.md`: publish defaults and notes
+- `references/recommended-skill-portfolio.md`: baseline skill catalog and rollout guidance for other repos
 
-## Candidate Skill Sets
+## Candidate skill catalog
 
-Recent additions under `skill-candidates/`:
+`skill-candidates/` is the full source of truth. The table below highlights representative skill groups.
 
-- `safe-mass-index-core`: bounded metadata-only indexing and query scripts with no-`rg` indexing policy.
-- `repo-b-mass-index-ops`: repo-b wrapper presets for service/connector-oriented queries.
-- `repo-b-local-bridge-orchestrator`: read-only local Agent Bridge orchestration with strict validation, fail-closed hints, bounded indexing, and explicit MCP/Comfy lane separation.
-- `repo-b-mcp-comfy-bridge`: canonical MCP adapter and Comfy bridge operations lane for `<PRIVATE_REPO_B>`, including fail-closed resource checks.
-- `repo-b-comfy-amuse-capcut-pipeline`: profile-driven Comfy pipeline operations with optional AMUSE stage checks and CapCut export metadata validation.
-- `repo-b-local-comfy-orchestrator`: legacy compatibility wrapper that routes new MCP/Comfy requests to `repo-b-mcp-comfy-bridge` while retaining legacy drop-in templates.
-- `repo-d-mass-index-ops`: repo-d wrapper presets for sandbox-style UI/package trees.
-- `repo-c-mass-index-ops`: repo-c wrapper presets with default sharded indexing for very large repos.
-- `usage-watcher`: usage analysis and budget planning for paid credit control and rate-limit guardrails.
-- `skill-cost-credit-governor`: per-skill spend governance with anomaly detection and warn/throttle/disable policy outputs.
-- `skill-dependency-fan-out-inspector`: dependency graph inspection with cycle, fan-out, and N+1 risk reporting.
-- `skill-cold-start-warm-path-optimizer`: cold-vs-warm latency analysis and deterministic prewarm planning.
-- `skill-blast-radius-simulator`: pre-admission blast-radius scoring with baseline delta and acknowledgement gating.
-- `skill-trust-ledger`: local reliability ledger and trust-tier reporting from manual and arbiter evidence.
-- `skill-installer-plus`: local-first install planner and admission wrapper with recommendation-learning ledger.
-- `skill-common-sense-engineering`: practical human common-sense sanity checks for scoped changes, artifact hygiene, and recurring-fix codification.
-- `code-gap-sweeping`: cross-repo deterministic gap scans for missing tests, docs lockstep drift, TODO/FIXME additions, release-hygiene misses, and repo-family pipeline matrix generation.
-- `request-loopback-resume`: deterministic state checkpointing and resume-action selection for interrupted requests and multi-lane pauses.
-- `skill-auditor`: deterministic audits for newly added/changed skills with upgrade and consolidation recommendations.
-- `skill-enforcer`: cross-repo policy enforcement for required baseline skill references.
-- `skill-hub`: default task router that emits ordered skill chains with rationale.
-- `skills-cross-repo-radar`: recurring multi-repo MX3/shim change scans that map activity to skill upgrade/discovery actions.
-
-## Default Skill System
-
-For ongoing work, use this baseline system:
-
-1. `skill-hub` routes each task to an ordered chain.
-2. `skill-common-sense-engineering` runs baseline sanity/hygiene checks.
-3. `usage-watcher` sets an explicit usage mode and emits usage analysis/plan artifacts.
-4. `skill-cost-credit-governor` evaluates per-skill spend/chatter risk and emits analysis/policy artifacts.
-5. `skill-cold-start-warm-path-optimizer` evaluates cold/warm latency and emits analysis/plan artifacts.
-6. `code-gap-sweeping` scans one or more repos for deterministic implementation gaps before mutation-heavy work.
-7. `request-loopback-resume` checkpoints/resumes interrupted work with deterministic next-lane actions.
-8. `skill-installer-plus` plans installs/admissions and updates recommendation history.
-9. `skill-auditor` audits new/changed skills.
-10. `skill-enforcer` checks cross-repo policy alignment when operating across repos.
-11. `multitask-orchestrator` runs independent lanes in parallel; unresolved lanes loop back via `skill-hub`.
-12. `scripts/skill_game.py` records XP/level progression from workflow evidence reports.
-
-For any new/updated skill candidate, treat these checks as mandatory:
-
-1. `skill-auditor` classification must be explicit: `unique` or `upgrade`.
-2. `skill-arbiter-lockdown-admission` evidence must show a passable result (`action`, `persistent_nonzero`, `max_rg` captured).
-3. If classification is `upgrade`, update existing skill boundaries before adding a duplicate candidate.
-4. `skill-installer-plus` plan/admit outputs should be captured so recommendation quality improves over time.
-5. Chaining decisions must include usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
+| Skill name | Purpose | Type |
+| --- | --- | --- |
+| `safe-mass-index-core` | bounded metadata-only indexing with no-`rg` indexing policy | core |
+| `usage-watcher` | usage analysis and budget planning for paid credit control | core |
+| `skill-cost-credit-governor` | per-skill spend governance and warn/throttle/disable policy outputs | core |
+| `skill-cold-start-warm-path-optimizer` | cold-vs-warm latency analysis and prewarm planning | core |
+| `skill-installer-plus` | local-first install planning and admission recommendation loop | core |
+| `code-gap-sweeping` | deterministic cross-repo implementation gap scans | core |
+| `request-loopback-resume` | checkpoint/resume lane state for interrupted work | core |
+| `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
+| `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
+| `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |
+| `repo-c-mass-index-ops` | repo-c sharded indexing wrapper for very large trees | repo-specific |
+| `repo-d-mass-index-ops` | repo-d indexing wrapper for sandbox-style UI/package trees | repo-specific |
+| `skill-auditor` | audit and classify skills (`unique` vs `upgrade`) | meta-governance |
+| `skill-enforcer` | enforce cross-repo policy alignment | meta-governance |
+| `skill-hub` | route tasks to an ordered skill chain | meta-governance |
 
 ## License
 
-MIT. See `LICENSE.txt`.
+MIT licensed. See `LICENSE.txt`.
 
 ## Support
 
 If this project is useful in your workflow, you can support development on Patreon:  
 <https://www.patreon.com/cw/grtninja>
 
-## Contribution Policy
+## Contribution policy
 
-This repository is primarily owner-maintained. Issues and discussions are welcome, but external pull requests may be declined.
+This repository is primarily owner-maintained. Issues, discussions, and practical examples are welcome. External pull requests may be declined.
 
-## Skill Level-Up Declaration
+See `CONTRIBUTING.md` for development setup, validation checks, and release/privacy expectations.
+
+## Skill level-up declaration
 
 When a skill is newly created or improved, include this exact declaration in the response/update text:
 
