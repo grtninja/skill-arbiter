@@ -1,4 +1,4 @@
 interface:
   display_name: "REPO_B MCP Comfy Bridge"
   short_description: "Canonical MCP + Comfy operations"
-  default_prompt: "Use $repo-b-mcp-comfy-bridge for MCP adapter configuration, shim.comfy resource/tool validation, profile-driven Comfy pipeline checks, and fail-closed Comfy diagnostics (including optional AMUSE/CapCut contracts) in <PRIVATE_REPO_B>. Prefer this over $repo-b-local-comfy-orchestrator for new work."
+  default_prompt: "Use $repo-b-mcp-comfy-bridge for MCP adapter configuration, shim.comfy resource/tool validation, profile-driven Comfy pipeline checks, and fail-closed Comfy diagnostics (including optional AMUSE/CapCut contracts) in <PRIVATE_REPO_B>."

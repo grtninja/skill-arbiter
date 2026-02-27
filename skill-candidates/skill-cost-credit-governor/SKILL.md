@@ -53,6 +53,25 @@ Before finalizing skill chains, provide:
 - `global_action=<allow|warn|throttle|disable>`
 
 If this evidence is missing, chain selection is incomplete and must fail closed.
+
+## Action Policy Mapping
+
+Map analysis outcomes to deterministic action:
+
+1. `allow`:
+   - no anomaly above threshold,
+   - budget posture healthy.
+2. `warn`:
+   - isolated `cost_spike` or mild `runtime_p95_high`,
+   - no persistent loop/chatter pattern.
+3. `throttle`:
+   - repeated `cost_spike` and/or `inefficient_loop`,
+   - sustained budget pressure in current window.
+4. `disable`:
+   - severe or recurring `agent_chatter`/loop amplification,
+   - hard-budget breach or high-confidence runaway behavior.
+
+Record both `global_action` and per-skill actions in the policy artifact.
 ## Scope Boundary
 
 Use this skill only for the `skill-cost-credit-governor` lane and workflow defined in this file and its references.

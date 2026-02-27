@@ -19,9 +19,9 @@ Use this skill for policy manifests, schema files, and policy validation tooling
 
 Do not use this skill for:
 
-1. NDJSON trace packet integrity checks (use `repo-c-trace-ndjson-validate`).
-2. Ranking engine scoring/report contract changes (use `repo-c-ranking-contracts`).
-3. Cross-repo boundary governance wording/architecture checks (use `repo-c-boundary-governance`).
+1. NDJSON trace packet integrity checks.
+2. Ranking engine scoring/report contract changes.
+3. Cross-repo boundary governance wording/architecture checks.
 
 ## Core Commands
 

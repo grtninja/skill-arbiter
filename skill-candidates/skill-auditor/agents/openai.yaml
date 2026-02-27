@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Auditor"
+  short_description: "Classify and gate changed skills"
+  default_prompt: "Use $skill-auditor to classify changed skills as unique or upgrade, generate severity findings, and produce audit evidence JSON."

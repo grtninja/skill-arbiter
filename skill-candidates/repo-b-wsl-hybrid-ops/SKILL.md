@@ -20,9 +20,9 @@ Use this skill only for cross-host topology and connectivity behavior between Wi
 
 Do not use this skill for:
 
-1. Control Center startup UX and endpoint-surface debugging (use `repo-b-control-center-ops`).
-2. Agent Bridge policy or task-safety gating (use `repo-b-agent-bridge-safety`).
-3. PR gate execution and documentation synchronization (use `repo-b-preflight-doc-sync`).
+1. Control Center startup UX and endpoint-surface debugging.
+2. Agent Bridge policy or task-safety gating.
+3. PR gate execution and documentation synchronization.
 
 ## Commands
 
@@ -44,8 +44,8 @@ python tools/hybrid_doctor.py --pretty
 Hardware strict (Windows-only):
 
 ```powershell
-$env:repo_b_ONLY = "1"
-$env:repo_b_FORCE_REAL = "1"
+$env:REPO_B_ONLY = "1"
+$env:REPO_B_FORCE_REAL = "1"
 ```
 
 ## Reference

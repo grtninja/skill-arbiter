@@ -35,6 +35,15 @@ python3 "$CODEX_HOME/skills/code-gap-sweeping/scripts/code_gap_sweep.py" \
   --json-out /tmp/code-gap-sweep-all.json
 ```
 
+Working-tree focused sweep during active local edits:
+
+```bash
+python3 "$CODEX_HOME/skills/code-gap-sweeping/scripts/code_gap_sweep.py" \
+  --repo "skill-arbiter=." \
+  --diff-mode working-tree \
+  --json-out /tmp/code-gap-sweep-working-tree.json
+```
+
 Full pipeline matrix for repo families (`repo_a`/`repo_b`/`repo_c`/`repo_d`):
 
 ```bash
@@ -70,6 +79,15 @@ The script detects deterministic gap categories:
 2. `docs_lockstep_missing`: behavior-impacting files changed without docs updates.
 3. `todo_fixme_added`: newly introduced `TODO`/`FIXME` markers in the patch window.
 4. `release_hygiene_missing`: release-impacting changes without `pyproject.toml` + `CHANGELOG.md` updates.
+
+## Triage Mapping
+
+Route findings consistently:
+
+1. `tests_missing` -> repo-specific execution/test lane.
+2. `docs_lockstep_missing` -> `docs-alignment-lock`.
+3. `todo_fixme_added` -> repo-specific cleanup lane, then re-sweep.
+4. `release_hygiene_missing` -> `skill-arbiter-release-ops`.
 
 ## Output
 

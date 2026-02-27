@@ -7,6 +7,9 @@ Repository rules for `skill-arbiter`. Follow these rules before opening a PR.
 - Treat this repository as public-shape only.
 - Never commit private repo details, internal names, host-specific usernames, or absolute personal paths.
 - Keep instructions generic and portable.
+- Treat VS Code/Codex built-in skills as upstream baseline.
+- Use this repository as an additive overlay and moderation layer only.
+- Do not disable/replace built-ins to make overlay skills work.
 
 Required placeholder style:
 
@@ -73,6 +76,7 @@ python3 -m py_compile scripts/arbitrate_skills.py scripts/skill_game.py scripts/
 - Prefer reusable scripts for fragile/repeated workflows.
 - Do not hardcode private repo names or personal paths in candidate skills.
 - Keep repo-specific candidate skills under `skill-candidates/` with placeholder naming.
+- Keep overlay names distinct from VS Code built-ins unless intentionally extending existing upstream behavior.
 
 When admitting local skills, prefer lockdown mode:
 
@@ -119,6 +123,10 @@ When policy or workflow changes, update all relevant docs in the same PR:
 - `CONTRIBUTING.md`
 - `SKILL.md`
 - `.github/pull_request_template.md`
+- `references/skill-catalog.md`
+- `references/usage-chaining-multitasking.md`
+- `references/vscode-skill-handling.md`
+- `references/skill-progression.md`
 
 No PR should merge with contradictory instructions across these files.
 

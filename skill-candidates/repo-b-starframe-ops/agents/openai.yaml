@@ -1,0 +1,4 @@
+interface:
+  display_name: "REPO_B STARFRAME Ops"
+  short_description: "Validate STARFRAME runtime contracts"
+  default_prompt: "Use $repo-b-starframe-ops to validate STARFRAME API/proxy contracts, heartbeat checks, and degraded-mode guardrails in <PRIVATE_REPO_B>."

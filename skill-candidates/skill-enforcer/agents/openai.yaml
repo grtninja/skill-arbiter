@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Enforcer"
+  short_description: "Enforce cross-repo policy alignment"
+  default_prompt: "Use $skill-enforcer to enforce cross-repo policy alignment, required gates, and fail-closed boundary checks before completion."

@@ -62,6 +62,36 @@ Mandatory checks for skill additions/updates:
 4. Include `skill-installer-plus` plan/admit evidence so recommendation history stays current.
 5. Include usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer` for chain decisions.
 
+## VS Code Compatibility and Skill-Wipe Recovery
+
+This repository builds on VS Code/Codex built-ins; it does not replace them.
+
+If built-ins appear but overlay skills are missing after an editor/platform update:
+
+1. Compare overlay source with installed set:
+
+```powershell
+$repoSkills = Get-ChildItem -Directory skill-candidates | Select-Object -ExpandProperty Name
+$installed = Get-ChildItem -Directory "$env:USERPROFILE\.codex\skills" | Select-Object -ExpandProperty Name
+$repoSkills | Where-Object { $_ -notin $installed }
+```
+
+2. Restore overlay skills additively:
+
+```powershell
+$srcRoot = Resolve-Path "skill-candidates"
+$dstRoot = Join-Path $env:USERPROFILE ".codex\skills"
+Get-ChildItem -Directory $srcRoot | ForEach-Object {
+  $dst = Join-Path $dstRoot $_.Name
+  if (!(Test-Path $dst)) { New-Item -ItemType Directory -Path $dst | Out-Null }
+  Copy-Item -Recurse -Force (Join-Path $_.FullName '*') $dst
+}
+```
+
+3. Re-run skill admission safety checks (`skill-arbiter`) before broad use.
+
+See `references/vscode-skill-handling.md` for full incident notes and long-term protections.
+
 ## Privacy Lock
 
 This repository is public-shape only:
@@ -86,6 +116,11 @@ Before opening a PR:
 5. Confirm CI `Release hygiene check` passes on the PR.
 6. Confirm CI `Privacy policy check` passes on the PR.
 7. Include rationale and risk notes in the PR description.
+8. If skills changed, update:
+   - `references/skill-catalog.md`
+   - `references/usage-chaining-multitasking.md`
+   - `references/vscode-skill-handling.md` (when handling/reset behavior changed)
+   - `references/skill-progression.md` (when core skill maturity materially changes)
 
 For new or updated skill candidates, include arbitration evidence summary in the PR:
 

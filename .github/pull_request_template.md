@@ -11,6 +11,11 @@ Describe what changed and why.
 - [ ] Release metadata updated for release-impacting changes (`python3 scripts/prepare_release.py --part patch`)
 - [ ] Docs updated if behavior changed
 - [ ] `AGENTS.md`, `README.md`, and `CONTRIBUTING.md` are aligned with policy changes
+- [ ] `references/skill-catalog.md` updated for any skill-set change
+- [ ] `references/usage-chaining-multitasking.md` updated for chaining or multitasking behavior changes
+- [ ] `references/vscode-skill-handling.md` updated if VS Code/Codex skill handling or recovery workflow changed
+- [ ] `references/skill-progression.md` updated when core skill maturity levels changed
+- [ ] Confirmed no conflict with VS Code built-ins (overlay is additive/moderation-only)
 - [ ] For skill-system changes: `skill-hub` routing plus `skill-installer-plus` plan/admit evidence captured where applicable
 - [ ] For skill-system changes: `usage-watcher` analysis/plan evidence captured and chaining mode (`economy`/`standard`/`surge`) documented
 - [ ] For skill-system changes: `skill-cost-credit-governor` analysis/policy evidence captured and any `warn`/`throttle`/`disable` actions documented

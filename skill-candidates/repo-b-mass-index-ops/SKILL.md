@@ -1,79 +1,76 @@
 ---
 name: repo-b-mass-index-ops
-description: Run safe bounded mass-index operations for <PRIVATE_REPO_B> connector and bridge service lanes using non-sharded safe-mass-index-core presets. Use when triaging shim routing, service endpoints, or bridge-related source trees.
+description: Run fast non-sharded mass-index operations for <PRIVATE_REPO_B> service lanes. Use when triaging bridge wiring, thin-waist routes, control-center connectors, and runtime helper scripts where quick endpoint-path discovery is required.
 ---
 
 # REPO_B Mass Index Ops
 
-Use this wrapper for `<PRIVATE_REPO_B>` service and connector indexing. It delegates indexing logic to `safe-mass-index-core` with repo-b-specific query intent.
+Use this wrapper for incident-speed service discovery in `<PRIVATE_REPO_B>`.
 
-## Workflow
+## Fast Lane
 
-1. Build or refresh a bounded non-sharded index for fast service lookups.
-2. Run connector, bridge, and endpoint-adjacent queries.
-3. Escalate to `safe-mass-index-core` directly for non-service discovery tasks.
+1. Build or refresh a non-sharded index for rapid endpoint lookups.
+2. Pivot on service anchors first: `lighthouse`, `posebridge`, `connector-registry`, `shim-router`, and `control-center`.
+3. Escalate to `safe-mass-index-core` only when lane-specific anchors fail to localize the target.
+
+## Repo-B Anchors
+
+Use these anchor paths to keep searches deterministic and lane-specific:
+
+- `apps/mx3-control-center`
+- `scripts/restart_headless.ps1`
+- `tools/restart_local_apps.py`
+- `tools/hybrid_doctor.py`
+- `api/mcp/status`
+- `api/agent/capabilities`
 
 ## Scope Boundary
 
 Use this skill when the task is primarily about:
 
-1. Connector/service paths.
-2. Bridge/API wiring.
-3. Runtime helper scripts around service surfaces.
+1. Bridge and connector routing logic.
+2. Thin-waist service handlers and model routes.
+3. Control-center service integration files.
 
 Do not use this skill for:
 
-1. Very large shard-first repository sweeps (use `repo-c-mass-index-ops`).
-2. UI/package-heavy desktop trees (use `repo-d-mass-index-ops`).
+1. Governance schema tracing lanes.
+2. Desktop renderer or packaging indexing lanes.
 
-## Build Preset
+## Build Preset (Fast, Non-Sharded)
 
 Run from `<PRIVATE_REPO_B>` root:
 
-```bash
-python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_build.py" \
-  --repo-root . \
-  --index-dir .codex-index \
-  --mode incremental \
-  --max-files-per-run 12000 \
-  --max-seconds 25 \
-  --max-read-bytes 67108864 \
-  --exclude-dir .git \
-  --exclude-dir node_modules \
-  --exclude-dir .venv \
-  --exclude-dir venv \
-  --exclude-dir __pycache__ \
-  --exclude-dir build \
-  --exclude-dir dist \
-  --exclude-dir logs \
-  --exclude-dir artifacts \
-  --exclude-dir target \
-  --exclude-dir .cache \
-  --exclude-dir .codex-index \
-  --json-out .codex-index/run.json
-```
+Use the standard `safe-mass-index-core` build command with a fast incident budget:
+
+1. `--mode incremental`
+2. `--max-files-per-run 9000`
+3. `--max-seconds 18`
+4. `--max-read-bytes 50331648`
 
 ## Query Presets
 
-Connector-focused scan:
-
-```bash
-python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_query.py" \
-  --index-dir .codex-index \
-  --path-contains connector \
-  --ext py \
-  --limit 200 \
-  --format table
-```
-
-Bridge and endpoint wiring scan:
+Bridge and agent route scan:
 
 ```bash
 python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_query.py" \
   --index-dir .codex-index \
   --path-contains bridge \
+  --ext py \
+  --limit 160 \
+  --format table
+```
+
+Control-center endpoint scan:
+
+```bash
+python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_query.py" \
+  --index-dir .codex-index \
+  --path-contains control-center \
+  --path-contains lighthouse \
+  --path-contains route \
   --lang python \
-  --limit 200 \
+  --limit 160 \
   --format table
 ```
 
@@ -83,8 +80,4 @@ python3 "$CODEX_HOME/skills/safe-mass-index-core/scripts/index_query.py" \
 
 ## Loopback
 
-If this lane is unresolved, blocked, or ambiguous:
-
-1. Capture current evidence and failure context.
-2. Route back through `$skill-hub` for chain recalculation.
-3. Resume only after the updated chain returns a deterministic next step.
+If a run is still ambiguous, send query args plus `.codex-index/run.json` evidence through `$skill-hub` for deterministic rerouting.

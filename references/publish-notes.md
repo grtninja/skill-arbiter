@@ -16,6 +16,14 @@ Recommended defaults:
 - third-party candidates are deny-by-default unless `--promote-safe` is used
 - personal lockdown mode (`--personal-lockdown`) requires `--source-dir`, auto-promotes safe skills, and rejects symlinked control files
 - reject empty skill task names
+- additive overlay model on top of VS Code/Codex built-ins (no built-in replacement)
+
+Operational references:
+
+- `references/vscode-skill-handling.md` (built-in compatibility and reset recovery)
+- `references/skill-catalog.md` (complete installed skill inventory)
+- `references/usage-chaining-multitasking.md` (chain and lane execution guidance)
+- `references/skill-progression.md` (core skill maturity levels and level-up rubric)
 
 Outputs:
 

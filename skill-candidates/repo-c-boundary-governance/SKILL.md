@@ -20,9 +20,9 @@ Use this skill for architecture/governance boundary checks across docs, contract
 
 Do not use this skill for:
 
-1. Policy file/schema validation execution (use `repo-c-policy-schema-gate`).
-2. NDJSON trace packet validation mechanics (use `repo-c-trace-ndjson-validate`).
-3. Ranking engine scoring/report contract implementation details (use `repo-c-ranking-contracts`).
+1. Policy file/schema validation execution lanes.
+2. NDJSON trace packet validation mechanics.
+3. Ranking engine scoring/report contract implementation details.
 
 ## Quick Governance Checks
 

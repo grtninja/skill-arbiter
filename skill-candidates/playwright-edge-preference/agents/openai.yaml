@@ -1,0 +1,4 @@
+interface:
+  display_name: "Playwright Edge Preference"
+  short_description: "Run Playwright tasks in Microsoft Edge channel"
+  default_prompt: "Use $playwright-edge-preference for browser automation that must run in Microsoft Edge (channel=msedge) with deterministic outputs and fail-closed behavior when Edge is unavailable."

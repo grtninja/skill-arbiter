@@ -16,10 +16,16 @@ Use this skill to keep <PRIVATE_REPO_D> changes compliant with repository rules.
    - Keep deterministic visuals behind explicit toggles or presets.
    - Do not add runtime asset downloads.
    - Keep front-end boundaries intact; do not embed out-of-scope orchestration logic.
+   - Do not change Electron boot/renderer readiness sequencing without explicit validation notes.
 4. Update progress docs on scoped work:
    - `docs/SCOPE_TRACKER.md`
    - `docs/TODO.md`
-5. Run local checks and report results.
+5. Include a status block in notes/PR summary:
+   - scope lane(s),
+   - changed files,
+   - validation commands with pass/fail,
+   - remaining blockers.
+6. Run local checks and report results.
 
 ## Required Checks
 
@@ -28,6 +34,7 @@ Run from repo root:
 ```bash
 npm install
 npm run build
+npm run dist
 npm run lint
 npm run format
 ```
@@ -36,6 +43,7 @@ When startup flow or renderer wiring changes, also run:
 
 ```bash
 npm run verify-startup
+npm run dev
 ```
 ## Scope Boundary
 

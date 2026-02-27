@@ -52,11 +52,22 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
 8. `--promote-safe` auto-adds passing skills to whitelist + immutable files.
 9. Emit optional JSON evidence via `--json-out`.
 10. `--personal-lockdown` requires local `--source-dir`, forces whitelist+immutable promotion, and rejects symlinked control files.
+11. Operate as an overlay moderation layer on top of VS Code/Codex built-ins; do not disable or replace upstream built-ins.
 
 ## Safe Modes
 
 - Use `--dry-run` to preview actions without modifying files.
 - Use `--dest` to test in an isolated skills directory.
+
+## VS Code Overlay Recovery
+
+If built-ins are visible but repository overlay skills are missing after a VS Code/Codex update, restore from `skill-candidates/` and re-run admission checks.
+
+Recovery protocol and prevention notes:
+
+- `references/vscode-skill-handling.md`
+- `references/skill-catalog.md`
+- `references/usage-chaining-multitasking.md`
 
 ## Mass-Index Skill Admission
 
@@ -199,6 +210,17 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/skill-common-sense-engineering-arbiter.json
 ```
 
+## Playwright Edge Preference Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  playwright-edge-preference \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/playwright-edge-preference-arbiter.json
+```
+
 ## Default System Chain
 
 When starting new work, run this chain:
@@ -284,3 +306,7 @@ When this workflow creates or improves a skill, include this exact two-line decl
 New Skill Unlocked: <SkillName>
 <SkillName> Leveled up to <LevelNumber>
 ```
+
+Core skill maturity tracking rubric:
+
+- `references/skill-progression.md`

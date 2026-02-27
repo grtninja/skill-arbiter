@@ -1,13 +1,13 @@
 ---
 name: repo-b-mcp-comfy-bridge
-description: Canonical MCP adapter and Comfy bridge operations for <PRIVATE_REPO_B>. Use when enabling MCP, validating shim.comfy resources/tools, operating workflow/pipeline submissions, or running fail-closed Comfy diagnostics with optional AMUSE and CapCut contract checks. This is the primary replacement for repo-b-local-comfy-orchestrator.
+description: Canonical MCP adapter and Comfy bridge operations for <PRIVATE_REPO_B>. Use when enabling MCP, validating shim.comfy resources/tools, operating workflow/pipeline submissions, or running fail-closed Comfy diagnostics with optional AMUSE and CapCut contract checks.
 ---
 
 # REPO_B Shim MCP Comfy Bridge
 
 Use this skill as the canonical MCP + Comfy lane in `<PRIVATE_REPO_B>`.
 
-`repo-b-local-comfy-orchestrator` is retained as a compatibility wrapper and should route here for new work.
+A legacy local Comfy wrapper is retained for backward-compatible triggers and should route here for new work.
 
 ## Workflow
 
@@ -25,9 +25,9 @@ Use this skill for MCP adapter state/config plus `shim.comfy.*` resource health.
 
 Do not use this skill for:
 
-1. OpenAI-thin-waist chat/vision/jobs route debugging (use `repo-b-thin-waist-routing`).
-2. Agent Bridge task/write-mode safety lanes (use `repo-b-agent-bridge-safety`).
-3. Hybrid Windows-host/WSL network topology checks (use `repo-b-wsl-hybrid-ops`).
+1. OpenAI-thin-waist chat/vision/jobs route debugging.
+2. Agent Bridge task/write-mode safety lanes.
+3. Hybrid Windows-host/WSL network topology checks.
 
 ## Required Environment (PowerShell)
 
@@ -103,8 +103,8 @@ curl -X POST http://127.0.0.1:9000/api/comfy/pipelines/run \
 
 ## Advanced Diagnostics (Optional Legacy Tooling)
 
-When deterministic artifact output is needed, use the legacy local orchestrator drop-ins from
-`repo-b-local-comfy-orchestrator` (`tools/local_comfy_orchestrator.py`, `tools/local_comfy_validate.py`):
+When deterministic artifact output is needed, use the legacy local orchestrator drop-ins
+(`tools/local_comfy_orchestrator.py`, `tools/local_comfy_validate.py`):
 
 ```bash
 python tools/local_comfy_orchestrator.py \

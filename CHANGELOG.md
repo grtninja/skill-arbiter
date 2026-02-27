@@ -2,6 +2,69 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.16] - 2026-02-27
+
+### Changed
+
+- Added missing meta-governance candidate skills:
+  - `skill-candidates/skill-hub/`
+  - `skill-candidates/skill-enforcer/`
+  - `skill-candidates/skill-auditor/`
+- Added deterministic skill-audit tooling:
+  - `skill-candidates/skill-auditor/scripts/skill_audit.py`
+  - `tests/test_skill_audit.py`
+- Upgraded repo-specific candidate skills to align with current private-repo policy/runtime behavior:
+  - `skill-candidates/repo-b-control-center-ops/SKILL.md`
+  - `skill-candidates/repo-b-hardware-first/SKILL.md`
+  - `skill-candidates/repo-b-hardware-first/references/strict-commands.md`
+  - `skill-candidates/repo-b-mass-index-ops/SKILL.md`
+  - `skill-candidates/repo-b-mass-index-ops/references/presets.md`
+  - `skill-candidates/repo-b-preflight-doc-sync/SKILL.md`
+  - `skill-candidates/repo-b-avatarcore-ops/agents/openai.yaml`
+  - `skill-candidates/repo-b-starframe-ops/SKILL.md`
+  - `skill-candidates/repo-b-starframe-ops/agents/openai.yaml`
+  - `skill-candidates/repo-b-starframe-ops/references/starframe-checklist.md`
+  - `skill-candidates/repo-b-wsl-hybrid-ops/SKILL.md`
+  - `skill-candidates/repo-c-boundary-governance/SKILL.md`
+  - `skill-candidates/repo-c-mass-index-ops/SKILL.md`
+  - `skill-candidates/repo-c-policy-schema-gate/SKILL.md`
+  - `skill-candidates/repo-c-ranking-contracts/SKILL.md`
+  - `skill-candidates/repo-c-trace-ndjson-validate/SKILL.md`
+  - `skill-candidates/repo-d-mass-index-ops/SKILL.md`
+  - `skill-candidates/repo-d-mass-index-ops/references/presets.md`
+  - `skill-candidates/repo-d-ui-guardrails/SKILL.md`
+  - `skill-candidates/repo-d-ui-guardrails/references/guardrails.md`
+  - `skill-candidates/docs-alignment-lock/SKILL.md`
+- Updated `references/recommended-skill-portfolio.md` with consolidated runtime core/advanced sets and governance lanes.
+- Tightened cross-skill boundaries for repo mass-index and governance lanes to reduce deterministic overlap and dependency cycles reported by local audit tooling.
+- Documented VS Code/Codex built-in compatibility and overlay reset recovery workflow:
+  - `references/vscode-skill-handling.md`
+- Added complete installed-skill catalog and usage/chaining guide for the expanded skill set:
+  - `references/skill-catalog.md`
+  - `references/usage-chaining-multitasking.md`
+- Added Microsoft Edge browser preference skill for deterministic Playwright Edge-channel execution:
+  - `skill-candidates/playwright-edge-preference/SKILL.md`
+  - `skill-candidates/playwright-edge-preference/agents/openai.yaml`
+  - `skill-candidates/playwright-edge-preference/references/edge-commands.md`
+- Aligned policy and contribution docs to require catalog/guide synchronization and additive (non-conflicting) VS Code skill handling:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/default-skill-system.md`
+- Tightened repo-b bridge/comfy boundary wording to preserve capability while reducing deterministic dependency-loop noise in skill graph audits.
+- Leveled up core governance skills with stronger deterministic contracts and progression controls:
+  - `skill-candidates/skill-hub/SKILL.md`
+  - `skill-candidates/usage-watcher/SKILL.md`
+  - `skill-candidates/skill-cost-credit-governor/SKILL.md`
+  - `skill-candidates/skill-cold-start-warm-path-optimizer/SKILL.md`
+  - `skill-candidates/skill-installer-plus/SKILL.md`
+  - `skill-candidates/code-gap-sweeping/SKILL.md`
+  - `skill-candidates/request-loopback-resume/SKILL.md`
+- Added explicit skill progression rubric and maturity tracking:
+  - `references/skill-progression.md`
+
 ## [0.2.15] - 2026-02-19
 
 ### Changed
@@ -377,3 +440,4 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
+

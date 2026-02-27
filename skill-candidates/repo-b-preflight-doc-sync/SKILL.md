@@ -20,16 +20,17 @@ Use this skill for release-readiness gate execution and docs synchronization bef
 
 Do not use this skill for:
 
-1. Runtime agent bridge behavior debugging (use `repo-b-agent-bridge-safety`).
-2. Hybrid Windows/WSL connectivity diagnosis (use `repo-b-wsl-hybrid-ops`).
-3. Strict hardware probe root-cause workflows (use `repo-b-hardware-first`).
+1. Runtime agent bridge behavior debugging.
+2. Hybrid Windows/WSL connectivity diagnosis.
+3. Strict hardware probe root-cause workflows.
 
 ## Required Preflight Profiles
 
 ```powershell
+pwsh -File tools/preflight.ps1
 pwsh -File tools/preflight.ps1 -Fast
 pwsh -File tools/preflight.ps1 -Node
-pwsh -File tools/preflight.ps1 -Hardware -ForceReal -repo_bOnly -VerboseOutput
+pwsh -File tools/preflight.ps1 -Hardware -ForceReal -MemryxOnly -VerboseOutput
 ```
 
 ```bash

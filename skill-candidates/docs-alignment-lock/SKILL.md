@@ -19,7 +19,7 @@ Use this skill to keep documentation policy-consistent and public-safe.
 3. Enforce public-shape rules in docs and skill candidates:
    - no private repo identifiers
    - no user-specific absolute paths
-   - use placeholders (`<PRIVATE_REPO_NAME>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`)
+   - use placeholders (`<PRIVATE_REPO_A>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_D>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`)
 4. Ensure skill update messaging rule is present and aligned:
    - `New Skill Unlocked: <SkillName>`
    - `<SkillName> Leveled up to <LevelNumber>`

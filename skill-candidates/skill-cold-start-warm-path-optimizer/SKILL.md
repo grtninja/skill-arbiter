@@ -48,6 +48,21 @@ Before finalizing skill chains, provide:
 - `prewarm_required=<true|false>`
 
 If this evidence is missing, chain selection is incomplete and must fail closed.
+
+## Prewarm Decision Rubric
+
+Set `prewarm_required` using deterministic thresholds:
+
+1. `true` when:
+   - cold penalty exceeds configured threshold, and
+   - invocation frequency is above rare-skill threshold, and
+   - lane is latency-sensitive for current task.
+2. `false` when:
+   - skill is rare in window, or
+   - cold penalty is below threshold, or
+   - lane is non-latency-critical.
+
+Also record `never_auto_invoke` skills from the plan output to prevent hidden churn.
 ## Scope Boundary
 
 Use this skill only for the `skill-cold-start-warm-path-optimizer` lane and workflow defined in this file and its references.

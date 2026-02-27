@@ -23,8 +23,8 @@ Use this skill only as a legacy compatibility wrapper for old `local comfy orche
 Do not use this skill for:
 
 1. New MCP/Comfy diagnostics (use `repo-b-mcp-comfy-bridge`).
-2. Agent bridge guidance/task lanes (use `repo-b-local-bridge-orchestrator`).
-3. Thin-waist chat/vision/jobs routing checks (use `repo-b-thin-waist-routing`).
+2. Agent bridge guidance/task lanes.
+3. Thin-waist chat/vision/jobs routing checks.
 
 ## Legacy Drop-In Hook Files (Still Supported)
 

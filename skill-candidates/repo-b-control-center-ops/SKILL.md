@@ -1,6 +1,6 @@
 ---
 name: repo-b-control-center-ops
-description: Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, or desktop startup/restart behavior.
+description: Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, desktop startup/restart behavior, or window lifecycle ownership.
 ---
 
 # REPO_B Shim Control Center Ops
@@ -12,8 +12,9 @@ Use this skill for Control Center runtime and service-surface operations.
 1. Start or restart using canonical headless path.
 2. Validate API readiness and endpoint contracts.
 3. Debug connector routing and diagnostics windows.
-4. Validate desktop/window lifecycle for local launcher variants and verify no duplicate bound/restore logic.
-5. Keep no-flashing-console UX requirements intact.
+4. Validate desktop/window lifecycle ownership and verify no duplicate bounds/maximize/fullscreen ownership outside the window manager.
+5. Keep no-flashing-console UX requirements intact (no visible cmd/PowerShell popups).
+6. Capture endpoint and window-manager evidence for each restart fix.
 
 ## Scope Boundary
 
@@ -21,14 +22,16 @@ Use this skill for Control Center startup/restart behavior and service-surface r
 
 Do not use this skill for:
 
-1. Windows-host vs WSL split diagnostics (use `repo-b-wsl-hybrid-ops`).
-2. Strict real-hardware probe/root-cause lanes (use `repo-b-hardware-first`).
-3. PR preflight and docs lockstep gates (use `repo-b-preflight-doc-sync`).
+1. Windows-host vs WSL split diagnostics lane.
+2. Strict real-hardware probe/root-cause lane.
+3. PR preflight and docs lockstep gate lane.
 
 ## Canonical Operations
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\restart_headless.ps1
+# For detached auxiliary launches, prefer hidden windows:
+# Start-Process -WindowStyle Hidden pythonw.exe ...
 ```
 
 ```bash
@@ -63,6 +66,7 @@ npm run build
 - Keep documented Control Center and startup diagnostics endpoints stable unless migration is approved.
 - Keep connector routing and endpoint behavior backward-compatible.
 - Preserve existing boundary for desktop window lifecycle: one authoritative window manager module, no duplicate bounds state ownership.
+- Keep launch/restart flows headless and windowless for background services.
 
 ## References
 

@@ -1,6 +1,6 @@
 ---
 name: repo-b-starframe-ops
-description: Validate <PRIVATE_REPO_B> STARFRAME API, AvatarCore proxy, persona registry, and degraded-mode guardrails.
+description: Validate <PRIVATE_REPO_B> STARFRAME API, AvatarCore proxy, persona registry, heartbeat contract, and degraded-mode guardrails.
 ---
 
 # Repo B STARFRAME Ops
@@ -9,14 +9,15 @@ Use this skill for STARFRAME runtime contract and persona/runtime behavior chang
 
 ## Workflow
 
-1. Read `AGENTS.md`, `BOUNDARIES.md`, and `INSTRUCTIONS.md` before edits.
+1. Read `AGENTS.md`, `BOUNDARIES.md`, `HEARTBEAT.md`, and `INSTRUCTIONS.md` before edits.
 2. Confirm test scope from touched files:
    - `starframe/` and `starframe/proxy` flows
    - `tests/proxy` intent routing and fail-closed behavior
    - `tests/starframe` persona/runtime policy and scoring surfaces
 3. Run focused test and contract checks for any changed STARFRAME path.
 4. Validate proxy + service endpoints in smoke mode for stable, contract-safe responses.
-5. Verify scaling/telemetry changes preserve existing contract fields and degraded-mode transitions.
+5. Verify heartbeat contract behavior (`HEARTBEAT_OK` when no actionable issues).
+6. Verify scaling/telemetry changes preserve existing contract fields and degraded-mode transitions.
 
 ## Canonical Commands
 
@@ -26,6 +27,8 @@ Run from `<PRIVATE_REPO_B>` root:
 python -m pytest tests/proxy/test_avatar_proxy_core.py tests/starframe/test_persona_registry.py
 python -m pytest tests/starframe/test_provider_score.py tests/starframe/test_degraded_mode_rules.py
 python -m pytest tests/starframe/test_unified_api.py tests/api/test_starframe_service.py
+# If heartbeat behavior changed, run heartbeat-listed checks only and verify exact success token:
+# HEARTBEAT_OK
 ```
 
 Optional strict lint/test lane:
@@ -49,6 +52,7 @@ curl -s http://127.0.0.1:9010/v1/shim/rag/status
 - Keep `starframe/proxy/avatar.py` dispatch/heartbeat behavior fail-closed when intent payloads are invalid.
 - Preserve `AvatarProxyCore` budget and penalty math unless migration is documented.
 - Preserve stable response keys under `Persona` and `telemetry` payloads when scaling/energy logic changes.
+- Keep heartbeat run responses deterministic: exact `HEARTBEAT_OK` when no actionable trust-layer issue exists.
 
 ## Scope Boundary
 

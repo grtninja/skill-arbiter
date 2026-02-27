@@ -20,9 +20,9 @@ Use this skill for `/v1/*` façade and `/api/jobs` thin-waist routing behavior.
 
 Do not use this skill for:
 
-1. MCP adapter and `shim.comfy.*` contract diagnostics (use `repo-b-mcp-comfy-bridge`).
-2. Agent Bridge capability/task safety checks (use `repo-b-agent-bridge-safety`).
-3. Windows-host vs WSL connectivity troubleshooting (use `repo-b-wsl-hybrid-ops`).
+1. MCP adapter and `shim.comfy.*` contract diagnostics lanes.
+2. Agent Bridge capability/task safety checks.
+3. Windows-host vs WSL connectivity troubleshooting.
 
 ## Quick Verification
 

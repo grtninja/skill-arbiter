@@ -20,9 +20,9 @@ Use this skill for `/api/agent/*` bridge-mode and write-safety controls.
 
 Do not use this skill for:
 
-1. MCP adapter or Comfy resource diagnostics (use `repo-b-mcp-comfy-bridge`).
-2. Windows-host vs WSL reachability checks (use `repo-b-wsl-hybrid-ops`).
-3. General PR preflight/doc lockstep lanes (use `repo-b-preflight-doc-sync`).
+1. MCP adapter or Comfy resource diagnostics lanes.
+2. Windows-host vs WSL reachability checks.
+3. General PR preflight/doc lockstep lanes.
 
 ## Required Environment (PowerShell)
 

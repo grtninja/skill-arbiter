@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Hub"
+  short_description: "Route work into skill chains"
+  default_prompt: "Use $skill-hub to route this request into the minimum ordered skill chain with explicit loopback criteria and evidence requirements."

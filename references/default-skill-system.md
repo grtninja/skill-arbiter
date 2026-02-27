@@ -14,7 +14,7 @@ This document contains the full baseline skill chain and mandatory skill-change 
 8. Run `skill-installer-plus` to plan installs/admissions and keep recommendation history current.
 9. Audit new/changed skills with `skill-auditor`.
 10. For cross-repo work, run `skill-enforcer` to enforce policy alignment.
-11. For independent lanes, run `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
+11. For independent lanes, run `multitask-orchestrator` if available; otherwise split lanes manually and reroute unresolved lanes through `skill-hub` loopback.
 12. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using evidence JSON paths.
 
 ## Mandatory gates for new or updated skills
@@ -31,3 +31,7 @@ This document contains the full baseline skill chain and mandatory skill-change 
 - `CONTRIBUTING.md`
 - `SKILL.md`
 - `.github/pull_request_template.md`
+- `references/skill-catalog.md`
+- `references/usage-chaining-multitasking.md`
+- `references/vscode-skill-handling.md`
+- `references/skill-progression.md`

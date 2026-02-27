@@ -41,6 +41,20 @@ python3 "$CODEX_HOME/skills/skill-installer-plus/scripts/skill_installer_plus.py
   --json-out /tmp/skill-installer-plus-admit.json
 ```
 
+Batch admit from a curated list:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-installer-plus/scripts/skill_installer_plus.py" \
+  --ledger "$CODEX_HOME/skills/.skill-installer-plus-ledger.json" \
+  admit \
+  --skills-file /tmp/candidate-skills.txt \
+  --source-dir skill-candidates \
+  --dest "$CODEX_HOME/skills" \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --arbiter-json /tmp/skill-installer-plus-arbiter-batch.json \
+  --json-out /tmp/skill-installer-plus-admit-batch.json
+```
+
 ## Record Manual Feedback
 
 ```bash
@@ -52,6 +66,17 @@ python3 "$CODEX_HOME/skills/skill-installer-plus/scripts/skill_installer_plus.py
   --note "real workflow stable" \
   --json-out /tmp/skill-installer-plus-feedback.json
 ```
+
+## Show Ledger State
+
+```bash
+python3 "$CODEX_HOME/skills/skill-installer-plus/scripts/skill_installer_plus.py" \
+  --ledger "$CODEX_HOME/skills/.skill-installer-plus-ledger.json" \
+  show \
+  --recent 10 \
+  --json-out /tmp/skill-installer-plus-show.json
+```
+
 ## Scope Boundary
 
 Use this skill only for the `skill-installer-plus` lane and workflow defined in this file and its references.
@@ -59,6 +84,18 @@ Use this skill only for the `skill-installer-plus` lane and workflow defined in 
 Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 Admission decision is incomplete without usage guardrail evidence paths from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
+
+## Evidence Contract
+
+For each admit cycle, keep:
+
+- `plan_json`
+- `admit_json`
+- `arbiter_json`
+- `trust_ingest_status`
+- optional `feedback_json`
+
+If any required artifact is missing, installation governance is incomplete.
 
 ## References
 

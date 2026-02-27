@@ -22,6 +22,7 @@ This repository is public-shape only: docs and skill candidates use placeholders
 - [CLI reference](#cli-reference)
 - [Output contract](#output-contract)
 - [Advanced workflows](#advanced-workflows)
+- [VS Code Skill Handling](#vs-code-skill-handling)
 - [Security notes](#security-notes)
 - [Repository layout](#repository-layout)
 - [Candidate skill catalog](#candidate-skill-catalog)
@@ -244,6 +245,31 @@ CI gate:
 python3 scripts/check_private_data_policy.py
 ```
 
+## VS Code Skill Handling
+
+This repository is **additive** to VS Code/Codex built-ins.
+
+- Built-ins are upstream and should remain enabled.
+- `skill-candidates/` provides the overlay set this repo owns.
+- We do not disable or replace built-ins; we restore and moderate overlay skills on top.
+
+### Reset Incident Record
+
+On **February 27, 2026**, an installed-skill reset event was observed where only built-ins were visible and overlay skills were missing from the active list.
+
+Documented root cause, recovery steps, and prevention policy:
+
+- `references/vscode-skill-handling.md`
+
+### Recovery and Protection
+
+Use the overlay recovery checks whenever VS Code/Codex skill handling changes:
+
+1. Compare `skill-candidates/` with `$env:USERPROFILE\\.codex\\skills`.
+2. Restore missing overlay skills additively from `skill-candidates/`.
+3. Re-run `skill-arbiter` admission checks to confirm no `rg.exe` churn regressions.
+4. Keep catalog and workflow docs aligned in the same PR.
+
 ## Security notes
 
 - The script does not require API keys.
@@ -265,13 +291,28 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 - `scripts/check_private_data_policy.py`: privacy and private-data policy gate
 - `scripts/install_local_hooks.sh`: one-time local git hook installer
 - `agents/openai.yaml`: agent metadata
+- `skill-candidates/skill-hub/`: request-to-chain routing candidate skill
+- `skill-candidates/skill-enforcer/`: cross-repo policy alignment candidate skill
+- `skill-candidates/skill-auditor/scripts/skill_audit.py`: skill classification and findings gate (`unique` vs `upgrade`)
+- `skill-candidates/playwright-edge-preference/`: Microsoft Edge channel browser automation preference lane
 - `references/default-skill-system.md`: full default-chain and skill-change gate details
+- `references/vscode-skill-handling.md`: VS Code built-in compatibility, reset incident notes, and restore protocol
+- `references/usage-chaining-multitasking.md`: end-to-end usage/chaining/multitasking playbook
+- `references/skill-catalog.md`: complete built-in + overlay skill catalog
+- `references/skill-progression.md`: core skill level rubric and current maturity levels
 - `references/publish-notes.md`: publish defaults and notes
 - `references/recommended-skill-portfolio.md`: baseline skill catalog and rollout guidance for other repos
 
 ## Candidate skill catalog
 
-`skill-candidates/` is the full source of truth. The table below highlights representative skill groups.
+`skill-candidates/` is the source of truth for repository-managed overlay skills.
+
+For the complete installed catalog (built-ins + `.system` + overlay), see:
+
+- `references/skill-catalog.md`
+- `references/usage-chaining-multitasking.md`
+
+Representative overlay highlights:
 
 | Skill name | Purpose | Type |
 | --- | --- | --- |
@@ -282,6 +323,7 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 | `skill-installer-plus` | local-first install planning and admission recommendation loop | core |
 | `code-gap-sweeping` | deterministic cross-repo implementation gap scans | core |
 | `request-loopback-resume` | checkpoint/resume lane state for interrupted work | core |
+| `playwright-edge-preference` | Edge-channel browser automation and parity checks | core |
 | `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |

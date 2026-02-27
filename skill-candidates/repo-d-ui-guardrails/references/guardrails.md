@@ -6,3 +6,5 @@
 - Keep assets local; no surprise runtime downloads.
 - Keep npm workspace flow valid: `npm install`, `npm run dist`, `npm run dev`.
 - Keep `docs/SCOPE_TRACKER.md` and `docs/TODO.md` current for scoped changes.
+- Preserve Electron startup sequencing unless explicitly requested and validated (`npm run verify-startup`).
+- Include status block evidence (lane, files, validation pass/fail, blockers) in change notes.

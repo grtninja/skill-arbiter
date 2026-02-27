@@ -19,9 +19,9 @@ Use this skill for NDJSON packet envelope integrity and trace-stream monotonicit
 
 Do not use this skill for:
 
-1. Policy manifest/schema conformance gates (use `repo-c-policy-schema-gate`).
-2. Ranking/report scoring semantics and schema compatibility (use `repo-c-ranking-contracts`).
-3. Cross-repo architecture governance boundary reviews (use `repo-c-boundary-governance`).
+1. Policy manifest/schema conformance gates.
+2. Ranking/report scoring semantics and schema compatibility.
+3. Cross-repo architecture governance boundary reviews.
 
 ## Command
 

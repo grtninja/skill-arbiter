@@ -1,0 +1,4 @@
+interface:
+  display_name: "REPO_B AvatarCore Ops"
+  short_description: "Validate AvatarCore proxy and bridge contracts"
+  default_prompt: "Use $repo-b-avatarcore-ops to validate AvatarCore proxy routes, provider override behavior, and bridge session lifecycle contracts in <PRIVATE_REPO_B>."

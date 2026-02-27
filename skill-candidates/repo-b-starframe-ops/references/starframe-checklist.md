@@ -2,7 +2,7 @@
 
 ## Pre-Run
 
-- Read `AGENTS.md`, `BOUNDARIES.md`, and `INSTRUCTIONS.md`.
+- Read `AGENTS.md`, `BOUNDARIES.md`, `HEARTBEAT.md`, and `INSTRUCTIONS.md`.
 - Confirm whether changes touch one of: `starframe/`, `proxy/`, `tests/proxy`, `tests/starframe`, `configs/`, `metaranker/`.
 - Capture touched endpoint contracts from diffs before editing.
 
@@ -34,3 +34,4 @@
   - health contract shape
   - scoring or degraded-mode policy
 - Confirm docs sync if runtime surfaces are documented in `docs/` or `README.md`.
+- If heartbeat lane is exercised and no issue is found, return exact success token: `HEARTBEAT_OK`.

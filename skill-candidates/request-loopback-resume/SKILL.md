@@ -65,6 +65,26 @@ Rules:
 3. If no lane is `in_progress`, action is `start` for first `pending` lane.
 4. If only `blocked/completed` lanes remain, action is `blocked` or `done`.
 
+## Checkpoint Discipline
+
+Use deterministic checkpoint cadence:
+
+1. Write checkpoint after each lane transition (`pending -> in_progress -> completed/blocked`).
+2. Attach artifact paths for each completed lane.
+3. Keep one clear `lane-next` value for the current lane.
+4. Re-run `resume` after any interruption before executing further commands.
+
+## Resume Evidence Contract
+
+Preserve:
+
+- `state_file`
+- latest `resume_json`
+- current `lane_status` map
+- latest artifact paths
+
+If any element is missing, resume should fail closed and reroute through `skill-hub`.
+
 ## Scope Boundary
 
 Use this skill for resuming prior user requests and preserving deterministic continuity across interruptions.

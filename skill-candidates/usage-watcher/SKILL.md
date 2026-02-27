@@ -53,6 +53,24 @@ Before finalizing skill chains, provide:
 
 If this evidence is missing, chain selection is incomplete and must fail closed.
 
+## Mode Selection Rubric
+
+Use deterministic mode selection from analysis output:
+
+1. `economy`:
+   - daily status is `red`, or
+   - weekly status is `red`, or
+   - projected 30-day burn exceeds remaining budget.
+2. `standard`:
+   - daily/weekly status are `green` or mixed `green/yellow`,
+   - no active governor `throttle`/`disable` recommendation.
+3. `surge`:
+   - explicit deadline pressure is present,
+   - budget remains within guardrails,
+   - governor action is not `throttle`/`disable`.
+
+Always record rationale in one short line with the selected mode.
+
 ## Guardrail Policy
 
 - Economy mode for discovery and triage.
