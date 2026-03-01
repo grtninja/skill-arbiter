@@ -11,6 +11,11 @@ Admit or quarantine Codex skills by detecting persistent `rg.exe` churn and prev
 
 This repository is public-shape only: docs and skill candidates use placeholders (`<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`) instead of private identifiers and personal absolute paths.
 
+## STARFRAME SSOT
+
+Cross-repo governance and lane authority lives in the desktop SSOT document:
+`C:\Users\Eddie\Desktop\STARFRAME_SINGLE_SOURCE_OF_TRUTH.md`.
+
 ## Table of Contents
 
 - [Why this exists](#why-this-exists)
