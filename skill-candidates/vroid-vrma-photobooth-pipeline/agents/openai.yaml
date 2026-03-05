@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRoid VRMA Photo Booth Pipeline"
+  short_description: "Convert VRoid Photo Booth clips into valid .vrma files"
+  default_prompt: "Prepare an AssetRipper-exported VRoid Unity project, run UniVRM batch export to .vrma, and verify VRMC_vrm_animation coverage."

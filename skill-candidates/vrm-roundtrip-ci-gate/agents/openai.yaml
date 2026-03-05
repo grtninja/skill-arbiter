@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRM Roundtrip CI Gate"
+  short_description: "Gate Blender Unity Unreal VRM drift"
+  default_prompt: "Validate VRM round-trip metrics across Blender, UniVRM, and VRM4U with strict pass/fail thresholds."

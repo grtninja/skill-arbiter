@@ -16,11 +16,11 @@
 ## Cross-Repo Boundary
 - This repo may evaluate policy compliance across repos through documented checks.
 - This repo must not own or mutate runtime behavior in:
-  - `PennyGPT-STARFRAME-Internal`
-  - `memryx-mx3-python-shim`
-  - `VRM-Sandbox`
-  - `PennyGPT-AvatarCore`
-  - `MeshGPT---DDC`
+  - `<PRIVATE_REPO_A>`
+  - `<PRIVATE_REPO_B>`
+  - `<PRIVATE_REPO_C>`
+  - `<PRIVATE_REPO_D>`
+  - `<PRIVATE_REPO_E>`
 - Runtime repos remain source-of-truth for execution behavior; arbiter remains governance-only.
 
 ## Safety Boundary

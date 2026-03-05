@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRoid Template Asset Sync"
+  short_description: "Normalize VRoid templates into a stable manifest"
+  default_prompt: "Scan local VRoid template roots, classify body/dress/shoes assets, and output a deterministic manifest for build lanes."

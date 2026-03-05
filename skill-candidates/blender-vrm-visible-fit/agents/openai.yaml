@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blender VRM Visible Fit"
+  short_description: "Live Blender checkpoints for VRM fit work"
+  default_prompt: "Run a visible Blender fit workflow with explicit checkpoints, robust weight transfer, and no destructive body edits before review."
