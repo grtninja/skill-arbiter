@@ -11,8 +11,8 @@ Compatibility policy:
 
 - VS Code built-ins (top-level): 31
 - VS Code system built-ins (`.system`): 2
-- Repository overlay candidates (`skill-candidates/`): 117
-- Total installed skills expected after overlay restore: 150
+- Repository overlay candidates (`skill-candidates/`): 119
+- Total installed skills expected after overlay restore: 152
 
 ## VS Code Built-ins (Top-Level)
 
@@ -93,6 +93,7 @@ Compatibility policy:
 | --- | --- |
 | `repo-b-agent-bridge-safety` | Operate and secure the Continue Agent Bridge in <PRIVATE_REPO_B>. Use when configuring bridge modes, validating /api/agent endpoints, enforcing controlled-write safety gates, or diagnosing bridge availability and permission failures. |
 | `repo-b-avatarcore-ops` | Run and validate <PRIVATE_REPO_B> AvatarCore proxy, provider routing, and Unreal bridge lifecycle surfaces. |
+| `repo-b-mx3-router-contracts` | Validate MX3 shim model-router network-profile contracts and policy behavior. Use when changing route-mode derivation, router environment mapping, capability metadata, or inference routing responses. |
 | `repo-b-comfy-amuse-capcut-pipeline` | Operate profile-driven ComfyUI pipelines with optional AMUSE enhancement and CapCut export guidance in <PRIVATE_REPO_B>. Use when validating /api/comfy/pipelines/*, /api/amuse/*, or CapCut handoff metadata. |
 | `repo-b-control-center-ops` | Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, desktop startup/restart behavior, or window lifecycle ownership. |
 | `repo-b-hardware-first` | Enforce hardware-first diagnosis and fixes in <PRIVATE_REPO_B>. Use for runtime probe, telemetry, inference, and integration failures where strict real-hardware behavior, no new stubs, deterministic diagnostics, and no unrequested driver/runtime mutation are required. |
@@ -141,6 +142,7 @@ Compatibility policy:
 | `skill-dependency-fan-out-inspector` | Inspect skill-to-skill dependencies and detect fan-out, cycles, and N+1 invocation risk. Use when scaling skill stacks or diagnosing hidden cross-skill cost/latency amplification. |
 | `skill-enforcer` | Enforce cross-repo policy and boundary alignment before completion. Use when a request touches multiple repositories, shared contracts, or policy docs that must stay synchronized. |
 | `skill-hub` | Route user requests into the smallest deterministic skill chain. Use when work spans multiple domains or repositories, when lane selection is ambiguous, or when you need ordered skill handoff and loopback criteria before execution. |
+| `skill-openclaw-nullclaw-integration` | Reconcile OpenClaw and NullClaw upstream changes into router-aware MeshGPT, MX3 shim, and AvatarCore lanes with privacy-safe attribution and deterministic test gates. |
 | `multitask-orchestrator` | Split multi-lane requests into deterministic parallel workstreams and merge them with explicit evidence checks. Use when a request has 2+ independent objectives that can run concurrently. |
 | `skill-installer-plus` | Run local-first skill installation with lockdown admission and a learning recommendation loop. Use when adding/updating skills so installs are evidence-gated and future install choices improve from prior outcomes. |
 | `skill-trust-ledger` | Keep a local reliability ledger for skills using recorded outcomes and arbiter evidence. Use when deciding whether to trust, restrict, or block skills over time. |

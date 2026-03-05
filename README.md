@@ -312,8 +312,8 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 
 Current overlay inventory:
 
-- `117` repository candidates total
-- `57` internal/governance candidates
+- `119` repository candidates total
+- `59` internal/governance candidates
 - `60` third-party-origin candidates with explicit source attribution
 
 For the complete installed catalog (built-ins + `.system` + overlay), see:
@@ -341,6 +341,7 @@ Representative overlay highlights:
 | `tmux` | tmux session control lane for interactive terminal workflows | utility |
 | `xurl` | authenticated X/Twitter API CLI lane with secret-safety guardrails | utility |
 | `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
+| `repo-b-mx3-router-contracts` | MX3 router-profile contract and metadata validation lane | repo-specific |
 | `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |
 | `repo-c-mass-index-ops` | repo-c sharded indexing wrapper for very large trees | repo-specific |
@@ -348,6 +349,7 @@ Representative overlay highlights:
 | `skill-auditor` | audit and classify skills (`unique` vs `upgrade`) | meta-governance |
 | `skill-enforcer` | enforce cross-repo policy alignment | meta-governance |
 | `skill-hub` | route tasks to an ordered skill chain | meta-governance |
+| `skill-openclaw-nullclaw-integration` | reconcile OpenClaw/NullClaw upstream changes into local router-aware lanes | meta-governance |
 | `multitask-orchestrator` | split independent lanes for parallel execution and deterministic merge | meta-governance |
 
 Third-party reconciliation evidence for this expansion is captured under:

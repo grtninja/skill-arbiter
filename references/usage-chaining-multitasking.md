@@ -88,6 +88,27 @@ Recommended chain:
 6. `skill-arbiter-lockdown-admission`
 7. `skill-enforcer`
 
+### Router-Aware Mesh Integration
+
+- `skill-openclaw-nullclaw-integration`: reconcile upstream OpenClaw/NullClaw deltas into local repos.
+- `repo-a-coordinator-smoke`: validate MeshGPT coordinator and NullClaw routing outcomes.
+- `repo-b-mx3-router-contracts`: validate MX3 model-router network-profile contract behavior.
+- `repo-b-avatarcore-ops`: validate AvatarCore provider-profile routing under router modes.
+
+Recommended chain:
+
+1. `skill-hub`
+2. `multitask-orchestrator` (split third-party intake, repo implementation, and docs/alignment lanes)
+3. `skills-third-party-intake`
+4. `skill-openclaw-nullclaw-integration`
+5. `repo-a-coordinator-smoke`
+6. `repo-b-mx3-router-contracts`
+7. `repo-b-avatarcore-ops`
+8. `docs-alignment-lock`
+9. `skill-auditor`
+10. `skill-arbiter-lockdown-admission`
+11. `skill-enforcer`
+
 ### Reconciled Third-Party Utility Lanes
 
 The overlay now includes a reconciled third-party utility pack (58 skills) normalized into repository policy. Common clusters:

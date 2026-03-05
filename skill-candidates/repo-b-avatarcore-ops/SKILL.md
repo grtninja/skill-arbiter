@@ -12,12 +12,15 @@ Use this skill for AvatarCore proxy and bridge-related changes in `<PRIVATE_REPO
 1. Read `docs/AGENTS.md` and repository boundary docs.
 2. Confirm local startup path works:
    - `python -m uvicorn avatarcore_proxy.main:app --host 127.0.0.1 --port 8000 --reload`
-3. Run deterministic contract smoke tests:
+3. Set router-profile environment when validating provider profile routing:
+   - `AVATARCORE_ROUTER_MODE` or `MESHGPT_ROUTER_MODE`
+4. Run deterministic contract smoke tests:
    - `avatarcore_proxy/tests/test_integration_smoke.py`
    - `avatarcore_proxy/tests/test_proxy_smoke.py` (if present)
    - `avatarcore_proxy/tests/test_config_loader.py` (if provider/env override edits occurred)
-4. Validate HTTP contract surface and bridge session lifecycle.
-5. Capture evidence for any changed provider-routing or policy-flow behavior.
+   - `avatarcore_proxy/tests/test_provider_profile_butter_passer.py` (required for router-profile edits)
+5. Validate HTTP contract surface and bridge session lifecycle.
+6. Capture evidence for any changed provider-routing or policy-flow behavior.
 
 ## Canonical Commands
 
@@ -44,11 +47,19 @@ $env:AVATARCORE_CONFIG__PROVIDERS__LLM__ORDER__0="ollama"
 python -m pytest avatarcore_proxy/tests/test_config_loader.py
 ```
 
+Router-profile diagnostic:
+
+```bash
+$env:AVATARCORE_ROUTER_MODE="gaming"
+python -m pytest avatarcore_proxy/tests/test_provider_profile_butter_passer.py
+```
+
 ## Guardrails
 
 - Keep `/v1/avatarcore/bridge/*` and `/v1/avatarcore/*` payload contracts stable unless a migration is explicitly approved.
 - Keep sanitized metadata and policy-gate behavior explicit and deterministic.
 - Fail on contract shape drift in changed endpoints, including status codes and required keys.
+- Provider profile decisions must record network profile in runtime state and avoid hidden fallback behavior.
 
 ## Scope Boundary
 

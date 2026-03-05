@@ -1,7 +1,7 @@
 # Complete Activated Skill Chain Workflow Audit
 
-- Generated: `2026-03-05T11:45:12.937370Z`
-- Activated skills audited: `146`
+- Generated: `2026-03-05T13:45:56.095794Z`
+- Activated skills audited: `150`
 - Workflow chains generated: `18`
 - Multitasking skill present: `True`
 - Multitasking step used: `multitask-orchestrator`
@@ -174,7 +174,7 @@
 
 - Vendor: `internal`
 - Intent: Route, budget, audit, admission, and policy alignment for all skill-driven work.
-- Skills covered: `28`
+- Skills covered: `31`
 - Steps:
 1. `skill-hub`
 2. `multitask-orchestrator`
@@ -200,10 +200,13 @@
 22. `skill-dependency-fan-out-inspector`
 23. `skill-enforcer`
 24. `skill-installer-plus`
-25. `skill-trust-ledger`
-26. `skills-consolidation-architect`
-27. `skills-discovery-curation`
-28. `skills-third-party-intake`
+25. `skill-openclaw-nullclaw-integration`
+26. `skill-trust-ledger`
+27. `skills-consolidation-architect`
+28. `skills-discovery-curation`
+29. `skills-third-party-intake`
+30. `skill-creator`
+31. `skill-installer`
 - Covered skills:
   - `code-gap-sweeping`
   - `docs-alignment-lock`
@@ -227,12 +230,15 @@
   - `skill-enforcer`
   - `skill-hub`
   - `skill-installer-plus`
+  - `skill-openclaw-nullclaw-integration`
   - `skill-trust-ledger`
   - `skills-consolidation-architect`
   - `skills-cross-repo-radar`
   - `skills-discovery-curation`
   - `skills-third-party-intake`
   - `usage-watcher`
+  - `skill-creator`
+  - `skill-installer`
 
 ### Microsoft Native App Chain (`microsoft-native-apps`)
 
@@ -444,7 +450,7 @@
 
 - Vendor: `<PRIVATE_REPO_B>`
 - Intent: Control center, bridge, routing, and Comfy orchestration workflows for Repo B.
-- Skills covered: `13`
+- Skills covered: `14`
 - Steps:
 1. `skill-hub`
 2. `multitask-orchestrator`
@@ -464,14 +470,15 @@
 16. `repo-b-local-comfy-orchestrator`
 17. `repo-b-mass-index-ops`
 18. `repo-b-mcp-comfy-bridge`
-19. `repo-b-preflight-doc-sync`
-20. `repo-b-starframe-ops`
-21. `repo-b-thin-waist-routing`
-22. `repo-b-wsl-hybrid-ops`
-23. `skill-installer-plus`
-24. `skill-auditor`
-25. `skill-arbiter-lockdown-admission`
-26. `skill-enforcer`
+19. `repo-b-mx3-router-contracts`
+20. `repo-b-preflight-doc-sync`
+21. `repo-b-starframe-ops`
+22. `repo-b-thin-waist-routing`
+23. `repo-b-wsl-hybrid-ops`
+24. `skill-installer-plus`
+25. `skill-auditor`
+26. `skill-arbiter-lockdown-admission`
+27. `skill-enforcer`
 - Covered skills:
   - `repo-b-agent-bridge-safety`
   - `repo-b-avatarcore-ops`
@@ -482,6 +489,7 @@
   - `repo-b-local-comfy-orchestrator`
   - `repo-b-mass-index-ops`
   - `repo-b-mcp-comfy-bridge`
+  - `repo-b-mx3-router-contracts`
   - `repo-b-preflight-doc-sync`
   - `repo-b-starframe-ops`
   - `repo-b-thin-waist-routing`
@@ -579,7 +587,7 @@
 
 - Vendor: `Mixed`
 - Intent: Catch-all fallback for utility skills without a strong vendor lane.
-- Skills covered: `3`
+- Skills covered: `5`
 - Steps:
 1. `skill-hub`
 2. `multitask-orchestrator`
@@ -590,14 +598,18 @@
 7. `chatgpt-apps`
 8. `openai-docs`
 9. `yeet`
-10. `skill-installer-plus`
-11. `skill-auditor`
-12. `skill-arbiter-lockdown-admission`
-13. `skill-enforcer`
+10. `skill-creator`
+11. `skill-installer`
+12. `skill-installer-plus`
+13. `skill-auditor`
+14. `skill-arbiter-lockdown-admission`
+15. `skill-enforcer`
 - Covered skills:
   - `chatgpt-apps`
   - `openai-docs`
   - `yeet`
+  - `skill-creator`
+  - `skill-installer`
 
 ### VRM Avatar Pipeline Chain (`vrm-avatar-pipeline`)
 
@@ -738,6 +750,7 @@
 | `repo-b-local-comfy-orchestrator` | `top-level` | `repo-b-ops` |
 | `repo-b-mass-index-ops` | `top-level` | `repo-b-ops` |
 | `repo-b-mcp-comfy-bridge` | `top-level` | `repo-b-ops` |
+| `repo-b-mx3-router-contracts` | `top-level` | `repo-b-ops` |
 | `repo-b-preflight-doc-sync` | `top-level` | `repo-b-ops` |
 | `repo-b-starframe-ops` | `top-level` | `repo-b-ops` |
 | `repo-b-thin-waist-routing` | `top-level` | `repo-b-ops` |
@@ -770,11 +783,14 @@
 | `skill-cold-start-warm-path-optimizer` | `top-level` | `governance-core` |
 | `skill-common-sense-engineering` | `top-level` | `governance-core` |
 | `skill-cost-credit-governor` | `top-level` | `governance-core` |
+| `skill-creator` | `system` | `governance-core`, `utility-general` |
 | `skill-creator-openclaw` | `top-level` | `governance-core` |
 | `skill-dependency-fan-out-inspector` | `top-level` | `governance-core` |
 | `skill-enforcer` | `top-level` | `governance-core` |
 | `skill-hub` | `top-level` | `governance-core` |
+| `skill-installer` | `system` | `governance-core`, `utility-general` |
 | `skill-installer-plus` | `top-level` | `governance-core` |
+| `skill-openclaw-nullclaw-integration` | `top-level` | `governance-core` |
 | `skill-trust-ledger` | `top-level` | `governance-core` |
 | `skills-consolidation-architect` | `top-level` | `governance-core` |
 | `skills-cross-repo-radar` | `top-level` | `governance-core` |

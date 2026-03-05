@@ -1,8 +1,8 @@
 # Lean Activated Skill Chain Pack
 
-- Generated: `2026-03-05T11:45:20.950201Z`
-- Source audit: `2026-03-05T11:45:12.937370Z`
-- Activated skills: `146`
+- Generated: `2026-03-05T13:46:05.857111Z`
+- Source audit: `2026-03-05T13:45:56.095794Z`
+- Activated skills: `150`
 - Chains: `18`
 - Multitask skill present: `True`
 - Multitask step: `multitask-orchestrator`
@@ -136,7 +136,7 @@ This pack is a compact execution profile. Use the full chain catalog for exhaust
 
 - Vendor: `internal`
 - Intent: Route, budget, audit, admission, and policy alignment for all skill-driven work.
-- Covered skills: `28`
+- Covered skills: `31`
 - Lean steps:
 1. `skill-hub`
 2. `multitask-orchestrator`
@@ -173,12 +173,15 @@ This pack is a compact execution profile. Use the full chain catalog for exhaust
   - `skill-enforcer`
   - `skill-hub`
   - `skill-installer-plus`
+  - `skill-openclaw-nullclaw-integration`
   - `skill-trust-ledger`
   - `skills-consolidation-architect`
   - `skills-cross-repo-radar`
   - `skills-discovery-curation`
   - `skills-third-party-intake`
   - `usage-watcher`
+  - `skill-creator`
+  - `skill-installer`
 
 ## Microsoft Native App Chain (`microsoft-native-apps`)
 
@@ -335,7 +338,7 @@ This pack is a compact execution profile. Use the full chain catalog for exhaust
 
 - Vendor: `<PRIVATE_REPO_B>`
 - Intent: Control center, bridge, routing, and Comfy orchestration workflows for Repo B.
-- Covered skills: `13`
+- Covered skills: `14`
 - Lean steps:
 1. `skill-hub`
 2. `multitask-orchestrator`
@@ -361,6 +364,7 @@ This pack is a compact execution profile. Use the full chain catalog for exhaust
   - `repo-b-local-comfy-orchestrator`
   - `repo-b-mass-index-ops`
   - `repo-b-mcp-comfy-bridge`
+  - `repo-b-mx3-router-contracts`
   - `repo-b-preflight-doc-sync`
   - `repo-b-starframe-ops`
   - `repo-b-thin-waist-routing`
@@ -446,7 +450,7 @@ This pack is a compact execution profile. Use the full chain catalog for exhaust
 
 - Vendor: `Mixed`
 - Intent: Catch-all fallback for utility skills without a strong vendor lane.
-- Covered skills: `3`
+- Covered skills: `5`
 - Lean steps:
 1. `skill-hub`
 2. `multitask-orchestrator`
@@ -456,12 +460,15 @@ This pack is a compact execution profile. Use the full chain catalog for exhaust
 6. `chatgpt-apps`
 7. `openai-docs`
 8. `yeet`
-9. `skill-auditor`
-10. `skill-enforcer`
+9. `skill-creator`
+10. `skill-auditor`
+11. `skill-enforcer`
 - Skill options:
   - `chatgpt-apps`
   - `openai-docs`
   - `yeet`
+  - `skill-creator`
+  - `skill-installer`
 
 ## VRM Avatar Pipeline Chain (`vrm-avatar-pipeline`)
 

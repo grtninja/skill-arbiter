@@ -2,16 +2,16 @@
 
 This document attributes all third-party-origin skills currently included in `skill-candidates/`.
 
-- Generated: `2026-03-05T11:44:56.704439Z`
+- Generated: `2026-03-05T13:43:20.848890Z`
 - Attributed skills: `60`
 
 ## Source Repositories
 
 | Label | Source Root | Repo Root | Commit | Remote | License |
 | --- | --- | --- | --- | --- | --- |
-| `openclaw` | `<THIRD_PARTY_CLONES>/openclaw/skills` | `<THIRD_PARTY_CLONES>/openclaw` | `06ff25cce4d68b3398469bc07efc808d1be1103b` | `https://github.com/openclaw/openclaw.git` | `LICENSE` |
-| `openclaw-ext` | `<THIRD_PARTY_CLONES>/openclaw/extensions` | `<THIRD_PARTY_CLONES>/openclaw` | `06ff25cce4d68b3398469bc07efc808d1be1103b` | `https://github.com/openclaw/openclaw.git` | `LICENSE` |
-| `nullclaw` | `<THIRD_PARTY_CLONES>/nullclaw` | `<THIRD_PARTY_CLONES>/nullclaw` | `0329bc9f237c4f9b176fb035e9be286636f1eb54` | `https://github.com/nullclaw/nullclaw.git` | `LICENSE` |
+| `openclaw` | `<THIRD_PARTY_CLONES>/openclaw/skills` | `<THIRD_PARTY_CLONES>/openclaw` | `4dc0c66399e107cb089e090e745679da216ff105` | `https://github.com/openclaw/openclaw.git` | `LICENSE` |
+| `openclaw-ext` | `<THIRD_PARTY_CLONES>/openclaw/extensions` | `<THIRD_PARTY_CLONES>/openclaw` | `4dc0c66399e107cb089e090e745679da216ff105` | `https://github.com/openclaw/openclaw.git` | `LICENSE` |
+| `nullclaw` | `<THIRD_PARTY_CLONES>/nullclaw` | `<THIRD_PARTY_CLONES>/nullclaw` | `ec7e147b558f7f7998be95feb0bf1dac16279310` | `https://github.com/nullclaw/nullclaw.git` | `LICENSE` |
 
 ## Skill Attribution Matrix
 

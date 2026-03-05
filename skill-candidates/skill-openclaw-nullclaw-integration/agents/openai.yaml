@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenClaw NullClaw Integration"
+  short_description: "Reconcile OpenClaw/NullClaw into local repos"
+  default_prompt: "Use $skill-openclaw-nullclaw-integration to reconcile OpenClaw and NullClaw upstream changes into router-aware MeshGPT, MX3, and AvatarCore lanes with attribution and admission evidence."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo B MX3 Router Contracts"
+  short_description: "Validate MX3 router profile contracts"
+  default_prompt: "Use $repo-b-mx3-router-contracts to validate MX3 model-router network-profile mapping, contract tests, and profile-aware routing metadata."
