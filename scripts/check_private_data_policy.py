@@ -25,6 +25,7 @@ SENSITIVE_TOKEN_PATTERNS = (
     re.compile(r"\b[a-z0-9-]+-python-shim\b", re.IGNORECASE),
     re.compile(r"\b[A-Z][A-Za-z0-9-]*-Sandbox\b"),
     re.compile(r"GitHub[\\\\/](?!<)[A-Za-z0-9._-]+"),
+    re.compile(r"\bSTARFRAME_SINGLE_SOURCE_OF_TRUTH(?:\.md)?\b", re.IGNORECASE),
 )
 
 ROOT_HINT_RE = re.compile(r"Run from `([^`]+)` root:")
