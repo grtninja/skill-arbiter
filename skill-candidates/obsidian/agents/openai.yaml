@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian"
+  short_description: "Work with Obsidian vaults (plain Markdown notes) and automate via obsidian-..."
+  default_prompt: "Use $obsidian when the request matches this lane: Work with Obsidian vaults (plain Markdown notes) and automate via obsidian-cli."

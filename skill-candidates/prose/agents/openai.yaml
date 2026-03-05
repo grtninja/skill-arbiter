@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prose"
+  short_description: "OpenProse VM skill pack. Activate on any `prose` command, .prose files, or..."
+  default_prompt: "Use $prose when the request matches this lane: OpenProse VM skill pack. Activate on any `prose` command, .prose files, or OpenProse mentions; orchestrates multi-agent workflows."

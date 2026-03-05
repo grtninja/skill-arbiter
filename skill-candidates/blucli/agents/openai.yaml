@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blucli"
+  short_description: "BluOS CLI (blu) for discovery, playback, grouping, and volume."
+  default_prompt: "Use $blucli when the request matches this lane: BluOS CLI (blu) for discovery, playback, grouping, and volume."

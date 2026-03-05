@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coding Agent"
+  short_description: "Delegate coding tasks to Codex, Claude Code, or Pi agents via background pr..."
+  default_prompt: "Use $coding-agent when the request matches this lane: Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) building/creating new featu..."

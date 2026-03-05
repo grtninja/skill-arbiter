@@ -232,6 +232,29 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/third-party-intake-pack-arbiter.json
 ```
 
+## Complete Candidate Reconcile Admission
+
+When reconciling a full third-party backlog, keep the candidate list in a newline file and admit the list in one deterministic run:
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  $(cat /tmp/imported-skills.txt) \
+  --source-dir skill-candidates \
+  --window 3 --baseline-window 1 --threshold 2 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/third-party-reconcile-arbiter.json
+```
+
+Follow with:
+
+```bash
+python3 skill-candidates/skill-auditor/scripts/skill_audit.py \
+  --skills-root skill-candidates \
+  --arbiter-report /tmp/third-party-reconcile-arbiter.json \
+  --require-arbiter-evidence \
+  --json-out /tmp/third-party-reconcile-audit.json
+```
+
 ## Default System Chain
 
 When starting new work, run this chain:
@@ -278,6 +301,8 @@ Mandatory skill-change gates:
 3. `upgrade` classifications should update existing skill lanes unless strict boundary differences are documented.
 4. Every new/updated skill should capture `skill-installer-plus` plan/admit outputs so recommendation quality improves run-over-run.
 5. Every chain proposal must include usage guardrail evidence from `$usage-watcher`, `$skill-cost-credit-governor`, and `$skill-cold-start-warm-path-optimizer`; chaining is incomplete without this evaluation.
+6. Full third-party reconciliation runs must include a deterministic import manifest mapping each imported skill to source and intake recommendation.
+7. Third-party-origin skills must remain explicitly attributed in `references/third-party-skill-attribution.md`.
 
 ## Release Workflow
 

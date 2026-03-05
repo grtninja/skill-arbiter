@@ -1,0 +1,4 @@
+interface:
+  display_name: "Acp Router"
+  short_description: "Route plain-language requests for Pi, Claude Code, Codex, OpenCode, Gemini..."
+  default_prompt: "Use $acp-router when the request matches this lane: Route plain-language requests for Pi, Claude Code, Codex, OpenCode, Gemini CLI, or ACP harness work into either OpenClaw ACP..."

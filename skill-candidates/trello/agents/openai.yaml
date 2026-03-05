@@ -1,0 +1,4 @@
+interface:
+  display_name: "Trello"
+  short_description: "Manage Trello boards, lists, and cards via the Trello REST API."
+  default_prompt: "Use $trello when the request matches this lane: Manage Trello boards, lists, and cards via the Trello REST API."

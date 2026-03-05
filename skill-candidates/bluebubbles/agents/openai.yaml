@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bluebubbles"
+  short_description: "Use when you need to send or manage iMessages via BlueBubbles (recommended..."
+  default_prompt: "Use $bluebubbles when the request matches this lane: Use when you need to send or manage iMessages via BlueBubbles (recommended iMessage integration). Calls go through the gener..."

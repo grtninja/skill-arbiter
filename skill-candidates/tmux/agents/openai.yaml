@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux"
+  short_description: "Remote-control tmux sessions for interactive CLIs by sending keystrokes and..."
+  default_prompt: "Use $tmux when the request matches this lane: Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output."

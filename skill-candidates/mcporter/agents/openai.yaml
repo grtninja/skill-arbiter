@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mcporter"
+  short_description: "Use the mcporter CLI to list, configure, auth, and call MCP servers/tools d..."
+  default_prompt: "Use $mcporter when the request matches this lane: Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, c..."

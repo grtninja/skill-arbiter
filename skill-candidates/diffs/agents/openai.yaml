@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diffs"
+  short_description: "Use the diffs tool to produce real, shareable diffs (viewer URL, file artif..."
+  default_prompt: "Use $diffs when the request matches this lane: Use the diffs tool to produce real, shareable diffs (viewer URL, file artifact, or both) instead of manual edit summaries."

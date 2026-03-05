@@ -1,0 +1,4 @@
+interface:
+  display_name: "Voice Call"
+  short_description: "Start voice calls via the OpenClaw voice-call plugin."
+  default_prompt: "Use $voice-call when the request matches this lane: Start voice calls via the OpenClaw voice-call plugin."

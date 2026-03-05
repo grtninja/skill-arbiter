@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blogwatcher"
+  short_description: "Monitor blogs and RSS/Atom feeds for updates using the blogwatcher CLI."
+  default_prompt: "Use $blogwatcher when the request matches this lane: Monitor blogs and RSS/Atom feeds for updates using the blogwatcher CLI."

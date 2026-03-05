@@ -19,8 +19,11 @@ This file tracks maturity levels for long-lived core skills.
 | `usage-watcher` | 7 | Deterministic usage analysis, planning, and explicit mode-selection rubric. |
 | `skill-cost-credit-governor` | 7 | Policy-grade spend/chatter actions with artifacted decisions. |
 | `skill-cold-start-warm-path-optimizer` | 7 | Cold/warm analysis plus prewarm/never-auto decision controls. |
-| `skill-installer-plus` | 7 | Plan/admit/feedback/show loop with arbiter + trust ingestion evidence. |
-| `skills-third-party-intake` | 3 | Deterministic third-party catalog triage with compatibility/quality/security scoring. |
+| `skill-installer-plus` | 8 | Plan/admit/feedback/show loop proven at full-catalog scale with deterministic ledger outputs. |
+| `multitask-orchestrator` | 4 | Deterministic lane split/merge contract integrated into activated chain workflows. |
+| `skills-third-party-intake` | 5 | Deterministic third-party triage now integrated with full reconciliation and admission evidence. |
+| `skills-consolidation-architect` | 5 | Used for overlap-aware reconciliation and boundary-preserving consolidation decisions. |
+| `docs-alignment-lock` | 5 | Lockstep policy/docs synchronization lane with privacy-safe publication checks. |
 | `code-gap-sweeping` | 7 | Cross-repo deterministic gap discovery with triage mapping and diff modes. |
 | `request-loopback-resume` | 7 | Interruption-safe lane state model with strict resume contract. |
 | `skill-auditor` | 6 | Deterministic classification and finding severity gate. |

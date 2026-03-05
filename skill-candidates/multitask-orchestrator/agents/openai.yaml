@@ -1,0 +1,5 @@
+interface:
+  display_name: "Multitask Orchestrator"
+  short_description: "Run independent lanes in parallel and merge deterministically."
+  default_prompt: "Use $multitask-orchestrator to split this request into independent lanes, run them in parallel, and merge with explicit evidence."
+

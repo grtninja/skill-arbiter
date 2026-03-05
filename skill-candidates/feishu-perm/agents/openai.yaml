@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feishu Perm"
+  short_description: "|"
+  default_prompt: "Use $feishu-perm when the request matches this lane: |"

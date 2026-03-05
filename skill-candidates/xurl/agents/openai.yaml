@@ -1,0 +1,4 @@
+interface:
+  display_name: "Xurl"
+  short_description: "A CLI tool for making authenticated requests to the X (Twitter) API. Use th..."
+  default_prompt: "Use $xurl when the request matches this lane: A CLI tool for making authenticated requests to the X (Twitter) API. Use this skill when you need to post tweets, reply, quote, sea..."

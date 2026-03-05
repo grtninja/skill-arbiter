@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discord"
+  short_description: "Discord ops via the message tool (channel=discord)."
+  default_prompt: "Use $discord when the request matches this lane: Discord ops via the message tool (channel=discord)."

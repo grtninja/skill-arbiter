@@ -1,0 +1,4 @@
+interface:
+  display_name: "Goplaces"
+  short_description: "Query Google Places API (New) via the goplaces CLI for text search, place d..."
+  default_prompt: "Use $goplaces when the request matches this lane: Query Google Places API (New) via the goplaces CLI for text search, place details, resolve, and reviews. Use for human-friendly..."

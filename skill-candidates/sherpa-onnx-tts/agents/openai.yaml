@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sherpa Onnx TTS"
+  short_description: "Local text-to-speech via sherpa-onnx (offline, no cloud)"
+  default_prompt: "Use $sherpa-onnx-tts when the request matches this lane: Local text-to-speech via sherpa-onnx (offline, no cloud)"

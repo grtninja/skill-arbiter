@@ -64,12 +64,17 @@ python3 scripts/arbitrate_skills.py <skills...> \
   --json-out /tmp/restore-arbiter.json
 ```
 
+Expected overlay size after the March 5, 2026 reconciliation:
+
+- `117` directories under `skill-candidates/`
+- `150` total expected installed skills when combined with built-ins (`31`) and `.system` skills (`2`)
+
 ## Ongoing Protection Plan
 
 1. Keep `skill-candidates/` as source-of-truth for overlay skills.
 2. After VS Code/Codex updates, run overlay coverage check and restore if needed.
 3. Run `skill-arbiter` safety admission for changed/new skills before enabling broad use.
-4. Keep `references/skill-catalog.md` updated whenever skills change.
+4. Keep `references/skill-catalog.md` updated whenever skills change (including overlay counts).
 5. Keep policy docs in lockstep:
    - `AGENTS.md`
    - `README.md`

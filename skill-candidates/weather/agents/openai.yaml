@@ -1,0 +1,4 @@
+interface:
+  display_name: "Weather"
+  short_description: "Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user..."
+  default_prompt: "Use $weather when the request matches this lane: Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user asks about weather, temperature, or forecasts for an..."

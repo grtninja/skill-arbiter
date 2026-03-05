@@ -23,6 +23,8 @@ Describe what changed and why.
 - [ ] For multi-repo skill-system changes: `skills-cross-repo-radar` report captured with JSON evidence path
 - [ ] For multi-repo skill-system changes: `code-gap-sweeping` report captured with JSON evidence path
 - [ ] For third-party skill-source changes: `skills-third-party-intake` report captured with recommendation counts and blocker details
+- [ ] For full third-party reconciliation imports: manifest captured (`candidate-reconcile-*.json`) mapping imported skills to source + intake recommendation
+- [ ] For third-party-origin skill changes: `references/third-party-skill-attribution.md` updated (repo/source/commit/origin path)
 - [ ] For interrupted/resumed workstreams: `request-loopback-resume` state + resume JSON evidence path captured
 - [ ] For skill-system changes: `scripts/skill_game.py` score event recorded with arbiter/auditor evidence paths
 - [ ] For multi-lane work: `multitask-orchestrator` usage and `skill-hub` loopback behavior documented

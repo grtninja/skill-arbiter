@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notion"
+  short_description: "Notion API for creating and managing pages, databases, and blocks."
+  default_prompt: "Use $notion when the request matches this lane: Notion API for creating and managing pages, databases, and blocks."

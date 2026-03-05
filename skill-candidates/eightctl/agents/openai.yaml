@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eightctl"
+  short_description: "Control Eight Sleep pods (status, temperature, alarms, schedules)."
+  default_prompt: "Use $eightctl when the request matches this lane: Control Eight Sleep pods (status, temperature, alarms, schedules)."

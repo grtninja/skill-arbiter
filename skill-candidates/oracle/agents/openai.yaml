@@ -1,0 +1,4 @@
+interface:
+  display_name: "Oracle"
+  short_description: "Best practices for using the oracle CLI (prompt + file bundling, engines, s..."
+  default_prompt: "Use $oracle when the request matches this lane: Best practices for using the oracle CLI (prompt + file bundling, engines, sessions, and file attachment patterns)."

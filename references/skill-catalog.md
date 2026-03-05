@@ -11,8 +11,8 @@ Compatibility policy:
 
 - VS Code built-ins (top-level): 31
 - VS Code system built-ins (`.system`): 2
-- Repository overlay candidates (`skill-candidates/`): 58
-- Total installed skills expected after overlay restore: 91
+- Repository overlay candidates (`skill-candidates/`): 117
+- Total installed skills expected after overlay restore: 150
 
 ## VS Code Built-ins (Top-Level)
 
@@ -141,11 +141,81 @@ Compatibility policy:
 | `skill-dependency-fan-out-inspector` | Inspect skill-to-skill dependencies and detect fan-out, cycles, and N+1 invocation risk. Use when scaling skill stacks or diagnosing hidden cross-skill cost/latency amplification. |
 | `skill-enforcer` | Enforce cross-repo policy and boundary alignment before completion. Use when a request touches multiple repositories, shared contracts, or policy docs that must stay synchronized. |
 | `skill-hub` | Route user requests into the smallest deterministic skill chain. Use when work spans multiple domains or repositories, when lane selection is ambiguous, or when you need ordered skill handoff and loopback criteria before execution. |
+| `multitask-orchestrator` | Split multi-lane requests into deterministic parallel workstreams and merge them with explicit evidence checks. Use when a request has 2+ independent objectives that can run concurrently. |
 | `skill-installer-plus` | Run local-first skill installation with lockdown admission and a learning recommendation loop. Use when adding/updating skills so installs are evidence-gated and future install choices improve from prior outcomes. |
 | `skill-trust-ledger` | Keep a local reliability ledger for skills using recorded outcomes and arbiter evidence. Use when deciding whether to trust, restrict, or block skills over time. |
 | `skills-consolidation-architect` | Consolidate repository-specific skills into modular, reusable sets. Use when auditing skill overlap, splitting monolithic skills, reducing one-shot skills, defining per-repo core vs advanced skills, and planning safe deprecations with lockdown admission tests. |
 | `skills-discovery-curation` | Discover, triage, and prioritize Codex skills for a repository or workspace. Use for one-time audits and recurring curation runs after cross-repo MX3/shim drift scans. |
 | `skills-third-party-intake` | Vet third-party skill catalogs with deterministic security and quality scoring before arbiter admission. Use when mining external repos for safe candidate imports. |
+
+### Third-Party Reconciled Candidates
+
+These imported overlay skills were reconciled on **March 5, 2026** from external catalogs and normalized to this repository's public-shape contract (`frontmatter + agents/openai.yaml + privacy-safe text`).
+
+Full attribution (all third-party-origin skills currently in `skill-candidates/`) is tracked in:
+
+- `references/third-party-skill-attribution.md`
+
+| Skill | Source | Intake Recommendation | Purpose |
+| --- | --- | --- | --- |
+| `1password` | `openclaw` | `manual_review` | Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/... |
+| `acp-router` | `openclaw-ext` | `admit` | Route plain-language requests for Pi, Claude Code, Codex, OpenCode, Gemini CLI, or ACP harness work into either OpenClaw ACP runtime sessions or direct acpx-... |
+| `apple-notes` | `openclaw` | `admit` | Manage Apple Notes via the `memo` CLI on macOS (create, view, edit, delete, search, move, and export notes). Use when a user asks OpenClaw to add a note, lis... |
+| `apple-reminders` | `openclaw` | `admit` | Manage Apple Reminders via remindctl CLI (list, add, edit, complete, delete). Supports lists, date filters, and JSON/plain output. |
+| `bear-notes` | `openclaw` | `admit` | Create, search, and manage Bear notes via grizzly CLI. |
+| `blogwatcher` | `openclaw` | `admit` | Monitor blogs and RSS/Atom feeds for updates using the blogwatcher CLI. |
+| `blucli` | `openclaw` | `admit` | BluOS CLI (blu) for discovery, playback, grouping, and volume. |
+| `bluebubbles` | `openclaw` | `manual_review` | Use when you need to send or manage iMessages via BlueBubbles (recommended iMessage integration). Calls go through the generic message tool with channel=\"bl... |
+| `camsnap` | `openclaw` | `admit` | Capture frames or clips from RTSP/ONVIF cameras. |
+| `canvas` | `openclaw` | `reject` | Imported third-party candidate skill: canvas. |
+| `clawhub` | `openclaw` | `admit` | Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed s... |
+| `coding-agent` | `openclaw` | `admit` | Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) building/creating new features or apps, (2) reviewing PRs (sp... |
+| `diffs` | `openclaw-ext` | `admit` | Use the diffs tool to produce real, shareable diffs (viewer URL, file artifact, or both) instead of manual edit summaries. |
+| `discord` | `openclaw` | `manual_review` | Discord ops via the message tool (channel=discord). |
+| `eightctl` | `openclaw` | `admit` | Control Eight Sleep pods (status, temperature, alarms, schedules). |
+| `feishu-doc` | `openclaw-ext` | `admit` | \| |
+| `feishu-drive` | `openclaw-ext` | `admit` | \| |
+| `feishu-perm` | `openclaw-ext` | `admit` | \| |
+| `feishu-wiki` | `openclaw-ext` | `admit` | \| |
+| `gemini` | `openclaw` | `admit` | Gemini CLI for one-shot Q&A, summaries, and generation. |
+| `gh-issues` | `openclaw` | `manual_review` | Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label b... |
+| `gifgrep` | `openclaw` | `admit` | Search GIF providers with CLI/TUI, download results, and extract stills/sheets. |
+| `github` | `openclaw` | `admit` | GitHub operations via `gh` CLI: issues, PRs, CI runs, code review, API queries. Use when: (1) checking PR status or CI, (2) creating/commenting on issues, (3... |
+| `gog` | `openclaw` | `admit` | Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs. |
+| `goplaces` | `openclaw` | `admit` | Query Google Places API (New) via the goplaces CLI for text search, place details, resolve, and reviews. Use for human-friendly place lookup or JSON output f... |
+| `healthcheck` | `openclaw` | `admit` | Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, r... |
+| `himalaya` | `openclaw` | `manual_review` | CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple acc... |
+| `imsg` | `openclaw` | `manual_review` | iMessage/SMS CLI for listing chats, history, and sending messages via Messages.app. |
+| `lobster` | `openclaw-ext` | `reject` | Imported third-party candidate skill: lobster. |
+| `mcporter` | `openclaw` | `admit` | Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, config edits, and CLI/type gene... |
+| `nano-banana-pro` | `openclaw` | `manual_review` | Generate or edit images via Gemini 3 Pro Image (Nano Banana Pro). |
+| `nano-pdf` | `openclaw` | `admit` | Edit PDFs with natural-language instructions using the nano-pdf CLI. |
+| `notion` | `openclaw` | `admit` | Notion API for creating and managing pages, databases, and blocks. |
+| `obsidian` | `openclaw` | `admit` | Work with Obsidian vaults (plain Markdown notes) and automate via obsidian-cli. |
+| `openai-image-gen` | `openclaw` | `admit` | Batch-generate images via OpenAI Images API. Random prompt sampler + `index.html` gallery. |
+| `openai-whisper` | `openclaw` | `admit` | Local speech-to-text with the Whisper CLI (no API key). |
+| `openai-whisper-api` | `openclaw` | `reject` | Transcribe audio via OpenAI Audio Transcriptions API (Whisper). |
+| `openhue` | `openclaw` | `admit` | Control Philips Hue lights and scenes via the OpenHue CLI. |
+| `oracle` | `openclaw` | `manual_review` | Best practices for using the oracle CLI (prompt + file bundling, engines, sessions, and file attachment patterns). |
+| `ordercli` | `openclaw` | `admit` | Foodora-only CLI for checking past orders and active order status (Deliveroo WIP). |
+| `peekaboo` | `openclaw` | `admit` | Capture and automate macOS UI with the Peekaboo CLI. |
+| `prose` | `openclaw-ext` | `manual_review` | OpenProse VM skill pack. Activate on any `prose` command, .prose files, or OpenProse mentions; orchestrates multi-agent workflows. |
+| `sag` | `openclaw` | `admit` | ElevenLabs text-to-speech with mac-style say UX. |
+| `session-logs` | `openclaw` | `admit` | Search and analyze your own session logs (older/parent conversations) using jq. |
+| `sherpa-onnx-tts` | `openclaw` | `admit` | Local text-to-speech via sherpa-onnx (offline, no cloud) |
+| `skill-creator-openclaw` | `openclaw` | `reject` | Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets. |
+| `slack` | `openclaw` | `manual_review` | Use when you need to control Slack from OpenClaw via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs. |
+| `songsee` | `openclaw` | `admit` | Generate spectrograms and feature-panel visualizations from audio with the songsee CLI. |
+| `sonoscli` | `openclaw` | `admit` | Control Sonos speakers (discover/status/play/volume/group). |
+| `spotify-player` | `openclaw` | `admit` | Terminal Spotify playback/search via spogo (preferred) or spotify_player. |
+| `summarize` | `openclaw` | `admit` | Summarize or extract text/transcripts from URLs, podcasts, and local files (great fallback for “transcribe this YouTube/video”). |
+| `things-mac` | `openclaw` | `admit` | Manage Things 3 via the `things` CLI on macOS (add/update projects+todos via URL scheme; read/search/list from the local Things database). Use when a user as... |
+| `tmux` | `openclaw` | `reject` | Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output. |
+| `trello` | `openclaw` | `manual_review` | Manage Trello boards, lists, and cards via the Trello REST API. |
+| `voice-call` | `openclaw` | `admit` | Start voice calls via the OpenClaw voice-call plugin. |
+| `wacli` | `openclaw` | `admit` | Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats). |
+| `weather` | `openclaw` | `admit` | Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user asks about weather, temperature, or forecasts for any location. NOT for: historic... |
+| `xurl` | `openclaw` | `reject` | A CLI tool for making authenticated requests to the X (Twitter) API. Use this skill when you need to post tweets, reply, quote, search, read posts, manage fo... |
 
 ## Update Rule
 

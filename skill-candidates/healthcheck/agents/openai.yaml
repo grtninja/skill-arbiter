@@ -1,0 +1,4 @@
+interface:
+  display_name: "Healthcheck"
+  short_description: "Host security hardening and risk-tolerance configuration for OpenClaw deplo..."
+  default_prompt: "Use $healthcheck when the request matches this lane: Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits,..."

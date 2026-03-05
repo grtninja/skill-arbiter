@@ -1,0 +1,4 @@
+interface:
+  display_name: "Github"
+  short_description: "GitHub operations via `gh` CLI: issues, PRs, CI runs, code review, API quer..."
+  default_prompt: "Use $github when the request matches this lane: GitHub operations via `gh` CLI: issues, PRs, CI runs, code review, API queries. Use when: (1) checking PR status or CI, (2) creat..."

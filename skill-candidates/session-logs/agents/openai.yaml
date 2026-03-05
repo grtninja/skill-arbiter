@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Logs"
+  short_description: "Search and analyze your own session logs (older/parent conversations) using..."
+  default_prompt: "Use $session-logs when the request matches this lane: Search and analyze your own session logs (older/parent conversations) using jq."

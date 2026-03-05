@@ -1,0 +1,4 @@
+interface:
+  display_name: "Things Mac"
+  short_description: "Manage Things 3 via the `things` CLI on macOS (add/update projects+todos vi..."
+  default_prompt: "Use $things-mac when the request matches this lane: Manage Things 3 via the `things` CLI on macOS (add/update projects+todos via URL scheme; read/search/list from the local Thin..."

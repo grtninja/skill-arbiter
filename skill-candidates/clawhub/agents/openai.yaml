@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clawhub"
+  short_description: "Use the ClawHub CLI to search, install, update, and publish agent skills fr..."
+  default_prompt: "Use $clawhub when the request matches this lane: Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills..."

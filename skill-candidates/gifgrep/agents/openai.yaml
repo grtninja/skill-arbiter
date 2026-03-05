@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gifgrep"
+  short_description: "Search GIF providers with CLI/TUI, download results, and extract stills/she..."
+  default_prompt: "Use $gifgrep when the request matches this lane: Search GIF providers with CLI/TUI, download results, and extract stills/sheets."

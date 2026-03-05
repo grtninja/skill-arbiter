@@ -1,0 +1,4 @@
+interface:
+  display_name: "Himalaya"
+  short_description: "CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, re..."
+  default_prompt: "Use $himalaya when the request matches this lane: CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the t..."

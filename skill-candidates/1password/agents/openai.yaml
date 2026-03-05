@@ -1,0 +1,4 @@
+interface:
+  display_name: "1password"
+  short_description: "Set up and use 1Password CLI (op). Use when installing the CLI, enabling de..."
+  default_prompt: "Use $1password when the request matches this lane: Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-..."

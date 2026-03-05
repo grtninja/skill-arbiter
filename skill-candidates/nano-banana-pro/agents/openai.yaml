@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nano Banana Pro"
+  short_description: "Generate or edit images via Gemini 3 Pro Image (Nano Banana Pro)."
+  default_prompt: "Use $nano-banana-pro when the request matches this lane: Generate or edit images via Gemini 3 Pro Image (Nano Banana Pro)."

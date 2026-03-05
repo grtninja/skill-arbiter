@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nano PDF"
+  short_description: "Edit PDFs with natural-language instructions using the nano-pdf CLI."
+  default_prompt: "Use $nano-pdf when the request matches this lane: Edit PDFs with natural-language instructions using the nano-pdf CLI."

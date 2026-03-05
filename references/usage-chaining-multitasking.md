@@ -9,6 +9,34 @@ This guide defines how to use the current skill set safely and efficiently.
 3. Route tasks through deterministic chains instead of ad-hoc skill hopping.
 4. Capture evidence artifacts for any changed skill, chain policy, or admission decision.
 
+## Complete Activated Coverage
+
+For a full activated-skill coverage audit (every activated skill mapped to one or more chain workflows), see:
+
+- `references/complete-activated-skill-chains.md`
+- `references/complete-activated-skill-chains-lean.md`
+- `references/third-party-skill-attribution.md`
+
+Generate/refresh the audit with:
+
+```bash
+python3 scripts/skill_chain_audit.py \
+  --skills-root "$env:USERPROFILE/.codex/skills" \
+  --include-system \
+  --json-out /tmp/skill-chain-audit.json \
+  --md-out references/complete-activated-skill-chains.md
+```
+
+Generate the lean execution pack from that audit:
+
+```bash
+python3 scripts/skill_chain_lean_pack.py \
+  --audit-json /tmp/skill-chain-audit.json \
+  --json-out /tmp/skill-chain-lean-pack.json \
+  --md-out references/complete-activated-skill-chains-lean.md \
+  --max-domain-skills 4
+```
+
 ## Standard Chain (Default)
 
 Use this sequence for most non-trivial work:
@@ -59,6 +87,24 @@ Recommended chain:
 5. `skill-auditor`
 6. `skill-arbiter-lockdown-admission`
 7. `skill-enforcer`
+
+### Reconciled Third-Party Utility Lanes
+
+The overlay now includes a reconciled third-party utility pack (58 skills) normalized into repository policy. Common clusters:
+
+- Workspace/ops: `github`, `gh-issues`, `gog`, `tmux`, `coding-agent`, `diffs`
+- Communication: `slack`, `discord`, `trello`, `imsg`, `bluebubbles`
+- Personal productivity: `1password`, `apple-notes`, `apple-reminders`, `things-mac`, `notion`, `obsidian`
+- Media and generation: `openai-image-gen`, `openai-whisper`, `openai-whisper-api`, `nano-banana-pro`, `songsee`
+- Device/integration: `openhue`, `sonoscli`, `spotify-player`, `weather`, `xurl`
+
+Recommended chain for third-party utility execution:
+
+1. `skill-hub`
+2. `skills-third-party-intake` (for any newly discovered variants)
+3. target utility skill
+4. `skill-auditor` when utility docs/scripts were changed
+5. `skill-arbiter-lockdown-admission` before broad rollout
 
 ### Edge Browser Automation Workflows
 

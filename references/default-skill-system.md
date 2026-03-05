@@ -16,7 +16,7 @@ This document contains the full baseline skill chain and mandatory skill-change 
 10. Run `skill-installer-plus` to plan installs/admissions and keep recommendation history current.
 11. Audit new/changed skills with `skill-auditor`.
 12. For cross-repo work, run `skill-enforcer` to enforce policy alignment.
-13. For independent lanes, run `multitask-orchestrator` if available; otherwise split lanes manually and reroute unresolved lanes through `skill-hub` loopback.
+13. For independent lanes, run `multitask-orchestrator`; if unavailable in the local environment, split lanes manually and reroute unresolved lanes through `skill-hub` loopback.
 14. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using evidence JSON paths.
 
 ## Mandatory gates for new or updated skills
@@ -26,6 +26,7 @@ This document contains the full baseline skill chain and mandatory skill-change 
 3. If classification is `upgrade`, update existing skill boundaries before adding a duplicate candidate unless boundaries are explicitly distinct.
 4. `skill-installer-plus` plan/admit outputs should be captured so recommendation quality improves over time.
 5. Chaining decisions must include usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`.
+6. Full third-party reconciliation imports must include an import manifest mapping each candidate to source and intake recommendation.
 
 ## Related docs
 

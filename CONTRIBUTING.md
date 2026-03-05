@@ -134,6 +134,8 @@ For new or updated skill candidates, include arbitration evidence summary in the
 6. Record the run in the local game ledger:
    `python3 scripts/skill_game.py --task "<skill update>" --used-skill skill-hub --used-skill skill-common-sense-engineering --used-skill usage-watcher --used-skill skill-cost-credit-governor --used-skill skill-cold-start-warm-path-optimizer --used-skill skill-installer-plus --used-skill skill-auditor --used-skill skill-enforcer --used-skill skill-arbiter-lockdown-admission --arbiter-report /tmp/skill-arbiter-evidence.json --audit-report /tmp/skill-audit.json --enforcer-pass`.
 7. If sourcing from external catalogs, attach `skills-third-party-intake` JSON evidence with recommendation and blocker counts.
+8. For full-catalog reconciliation imports, attach a reconciliation manifest mapping each imported skill to source and intake recommendation (for example `.tmp/candidate-reconcile-<date>.json`).
+9. Update `references/third-party-skill-attribution.md` for every third-party-origin skill addition/update.
 
 If a skill was added or improved in the work, include this declaration in the response/update text:
 

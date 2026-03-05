@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bear Notes"
+  short_description: "Create, search, and manage Bear notes via grizzly CLI."
+  default_prompt: "Use $bear-notes when the request matches this lane: Create, search, and manage Bear notes via grizzly CLI."

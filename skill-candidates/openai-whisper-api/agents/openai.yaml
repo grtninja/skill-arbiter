@@ -1,0 +1,4 @@
+interface:
+  display_name: "Openai Whisper API"
+  short_description: "Transcribe audio via OpenAI Audio Transcriptions API (Whisper)."
+  default_prompt: "Use $openai-whisper-api when the request matches this lane: Transcribe audio via OpenAI Audio Transcriptions API (Whisper)."

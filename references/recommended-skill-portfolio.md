@@ -43,7 +43,8 @@ Install and maintain these overlay skills for most workstreams:
 9. `skills-cross-repo-radar`
 10. `code-gap-sweeping`
 11. `request-loopback-resume`
-12. `playwright-edge-preference`
+12. `multitask-orchestrator`
+13. `playwright-edge-preference`
 
 ## Overlay Governance and Reliability
 
@@ -58,6 +59,23 @@ Use these when changing or admitting skills:
 7. `skills-consolidation-architect`
 8. `skills-discovery-curation`
 9. `docs-alignment-lock`
+
+## Third-Party Utility Overlay (Reconciled)
+
+Use this optional set when the workflow needs external utility lanes already reconciled into this repository:
+
+1. `github`
+2. `gh-issues`
+3. `weather`
+4. `tmux`
+5. `notion`
+6. `obsidian`
+7. `openai-image-gen`
+8. `openai-whisper`
+9. `openai-whisper-api`
+10. `slack`
+11. `trello`
+12. `xurl`
 
 ## VRM and Avatar Pipelines
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Openhue"
+  short_description: "Control Philips Hue lights and scenes via the OpenHue CLI."
+  default_prompt: "Use $openhue when the request matches this lane: Control Philips Hue lights and scenes via the OpenHue CLI."

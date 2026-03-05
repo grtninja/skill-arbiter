@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sonoscli"
+  short_description: "Control Sonos speakers (discover/status/play/volume/group)."
+  default_prompt: "Use $sonoscli when the request matches this lane: Control Sonos speakers (discover/status/play/volume/group)."

@@ -2,6 +2,70 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.19] - 2026-03-05
+
+### Changed
+
+- Added new governance skill candidate:
+  - `skill-candidates/multitask-orchestrator/`
+  - deterministic lane split/merge contract for parallel multi-lane requests.
+- Added complete activated-skill chaining audit tooling:
+  - `scripts/skill_chain_audit.py` (full coverage mapping for activated skills)
+  - `scripts/skill_chain_lean_pack.py` (lean execution pack generation)
+- Generated and committed deterministic chain artifacts:
+  - `references/complete-activated-skill-chains.md`
+  - `references/complete-activated-skill-chains-lean.md`
+  - `.tmp/skill-chain-audit-20260305-activated.json`
+  - `.tmp/skill-chain-lean-pack-20260305.json`
+- Activated `multitask-orchestrator` locally via lockdown admission:
+  - `.tmp/arbiter-report-20260305-activate-multitask.json`
+- Added explicit third-party attribution pipeline and published matrix:
+  - `scripts/generate_third_party_attribution.py`
+  - `references/third-party-skill-attribution.md`
+  - `.tmp/third-party-attribution-20260305.json`
+- Updated lockstep docs for multitasking/lean-chain workflows and third-party attribution requirements:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/default-skill-system.md`
+  - `references/skill-catalog.md`
+  - `references/usage-chaining-multitasking.md`
+  - `references/recommended-skill-portfolio.md`
+  - `references/skill-progression.md`
+  - `references/vscode-skill-handling.md`
+
+## [0.2.18] - 2026-03-05
+
+### Changed
+
+- Completed third-party candidate reconciliation into repository overlay:
+  - Imported and normalized `58` previously unimplemented candidates from external catalogs into `skill-candidates/`.
+  - Added `agents/openai.yaml` metadata and normalized frontmatter for each imported skill.
+  - Preserved public-shape/privacy policy by sanitizing user-specific path patterns and removing unsafe pipe-to-shell install text.
+- Captured deterministic admission and audit evidence for the full imported set:
+  - `.tmp/candidate-reconcile-20260305-complete.json`
+  - `.tmp/arbiter-report-20260305-complete.json`
+  - `.tmp/skill-audit-imported-20260305-complete.json`
+  - `.tmp/skill-installer-plus-plan-20260305-complete.json`
+  - `.tmp/skill-installer-plus-admit-20260305-complete.json`
+  - `.tmp/usage-analysis-20260305-complete.json`
+  - `.tmp/skill-cost-analysis-20260305-complete.json`
+  - `.tmp/warm-analysis-20260305-complete.json`
+- Updated lockstep documentation for the expanded overlay and reconciliation workflow:
+  - `AGENTS.md`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `.github/pull_request_template.md`
+  - `references/default-skill-system.md`
+  - `references/skill-catalog.md`
+  - `references/usage-chaining-multitasking.md`
+  - `references/vscode-skill-handling.md`
+  - `references/skill-progression.md`
+  - `references/recommended-skill-portfolio.md`
+
 ## [0.2.17] - 2026-03-05
 
 ### Changed
@@ -462,5 +526,7 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
+
+
 
 

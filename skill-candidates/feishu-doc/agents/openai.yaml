@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feishu Doc"
+  short_description: "|"
+  default_prompt: "Use $feishu-doc when the request matches this lane: |"

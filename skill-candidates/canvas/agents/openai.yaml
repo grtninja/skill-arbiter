@@ -1,0 +1,4 @@
+interface:
+  display_name: "Canvas"
+  short_description: "Imported third-party candidate skill: canvas."
+  default_prompt: "Use $canvas when the request matches this lane: Imported third-party candidate skill: canvas."

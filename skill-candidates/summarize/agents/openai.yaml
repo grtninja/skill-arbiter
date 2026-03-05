@@ -1,0 +1,4 @@
+interface:
+  display_name: "Summarize"
+  short_description: "Summarize or extract text/transcripts from URLs, podcasts, and local files..."
+  default_prompt: "Use $summarize when the request matches this lane: Summarize or extract text/transcripts from URLs, podcasts, and local files (great fallback for “transcribe this YouTube/video”)."

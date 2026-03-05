@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wacli"
+  short_description: "Send WhatsApp messages to other people or search/sync WhatsApp history via..."
+  default_prompt: "Use $wacli when the request matches this lane: Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats)."

@@ -315,6 +315,12 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 
 `skill-candidates/` is the source of truth for repository-managed overlay skills.
 
+Current overlay inventory:
+
+- `117` repository candidates total
+- `57` internal/governance candidates
+- `60` third-party-origin candidates with explicit source attribution
+
 For the complete installed catalog (built-ins + `.system` + overlay), see:
 
 - `references/skill-catalog.md`
@@ -335,6 +341,10 @@ Representative overlay highlights:
 | `playwright-edge-preference` | Edge-channel browser automation and parity checks | core |
 | `video-frames` | deterministic local video frame/clip extraction for review artifacts | utility |
 | `model-usage` | local model-level cost summaries for CodexBar usage records | utility |
+| `github` | GitHub CLI workflow operations for issues/PR/CI | utility |
+| `weather` | lightweight weather query lane for rapid situational checks | utility |
+| `tmux` | tmux session control lane for interactive terminal workflows | utility |
+| `xurl` | authenticated X/Twitter API CLI lane with secret-safety guardrails | utility |
 | `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |
@@ -343,6 +353,17 @@ Representative overlay highlights:
 | `skill-auditor` | audit and classify skills (`unique` vs `upgrade`) | meta-governance |
 | `skill-enforcer` | enforce cross-repo policy alignment | meta-governance |
 | `skill-hub` | route tasks to an ordered skill chain | meta-governance |
+| `multitask-orchestrator` | split independent lanes for parallel execution and deterministic merge | meta-governance |
+
+Third-party reconciliation evidence for this expansion is captured under:
+
+- `.tmp/candidate-reconcile-20260305-complete.json`
+- `.tmp/arbiter-report-20260305-complete.json`
+- `.tmp/skill-audit-imported-20260305-complete.json`
+
+Third-party attribution matrix (source repo + commit + origin path per skill):
+
+- `references/third-party-skill-attribution.md`
 
 ## License
 

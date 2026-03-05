@@ -109,6 +109,8 @@ Mandatory skill-change gates:
 3. If classification is `upgrade`, prefer updating existing skills instead of introducing duplicate candidates unless boundaries are explicitly documented.
 4. Every new/updated skill should include `skill-installer-plus` evidence (`plan`/`admit` JSON paths and latest recommendation decision).
 5. Every chain plan must include a usage guardrail decision with evidence paths from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`; do not finalize chaining without these evaluations.
+6. For full third-party reconciliation runs, include a deterministic reconciliation manifest (for example `.tmp/candidate-reconcile-<date>.json`) that maps each imported skill to source and prior intake recommendation.
+7. Any third-party-origin skill added or changed must be reflected in `references/third-party-skill-attribution.md` with source repository and origin path.
 
 ## 6) Security and mutation safety
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Imsg"
+  short_description: "iMessage/SMS CLI for listing chats, history, and sending messages via Messa..."
+  default_prompt: "Use $imsg when the request matches this lane: iMessage/SMS CLI for listing chats, history, and sending messages via Messages.app."

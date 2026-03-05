@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gemini"
+  short_description: "Gemini CLI for one-shot Q&A, summaries, and generation."
+  default_prompt: "Use $gemini when the request matches this lane: Gemini CLI for one-shot Q&A, summaries, and generation."

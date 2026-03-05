@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gog"
+  short_description: "Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs."
+  default_prompt: "Use $gog when the request matches this lane: Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs."

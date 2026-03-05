@@ -1,0 +1,4 @@
+interface:
+  display_name: "Camsnap"
+  short_description: "Capture frames or clips from RTSP/ONVIF cameras."
+  default_prompt: "Use $camsnap when the request matches this lane: Capture frames or clips from RTSP/ONVIF cameras."

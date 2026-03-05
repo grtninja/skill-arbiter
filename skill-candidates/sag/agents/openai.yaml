@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sag"
+  short_description: "ElevenLabs text-to-speech with mac-style say UX."
+  default_prompt: "Use $sag when the request matches this lane: ElevenLabs text-to-speech with mac-style say UX."

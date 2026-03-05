@@ -1,0 +1,4 @@
+interface:
+  display_name: "Openai Image Gen"
+  short_description: "Batch-generate images via OpenAI Images API. Random prompt sampler + `index..."
+  default_prompt: "Use $openai-image-gen when the request matches this lane: Batch-generate images via OpenAI Images API. Random prompt sampler + `index.html` gallery."

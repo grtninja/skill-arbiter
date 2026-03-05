@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lobster"
+  short_description: "Imported third-party candidate skill: lobster."
+  default_prompt: "Use $lobster when the request matches this lane: Imported third-party candidate skill: lobster."

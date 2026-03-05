@@ -1,0 +1,4 @@
+interface:
+  display_name: "Songsee"
+  short_description: "Generate spectrograms and feature-panel visualizations from audio with the..."
+  default_prompt: "Use $songsee when the request matches this lane: Generate spectrograms and feature-panel visualizations from audio with the songsee CLI."

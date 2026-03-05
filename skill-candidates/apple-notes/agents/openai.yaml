@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Notes"
+  short_description: "Manage Apple Notes via the `memo` CLI on macOS (create, view, edit, delete,..."
+  default_prompt: "Use $apple-notes when the request matches this lane: Manage Apple Notes via the `memo` CLI on macOS (create, view, edit, delete, search, move, and export notes). Use when a user..."

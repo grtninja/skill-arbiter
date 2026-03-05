@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gh Issues"
+  short_description: "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then..."
+  default_prompt: "Use $gh-issues when the request matches this lane: Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh..."

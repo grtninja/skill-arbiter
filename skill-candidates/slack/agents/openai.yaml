@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slack"
+  short_description: "Use when you need to control Slack from OpenClaw via the slack tool, includ..."
+  default_prompt: "Use $slack when the request matches this lane: Use when you need to control Slack from OpenClaw via the slack tool, including reacting to messages or pinning/unpinning items in..."

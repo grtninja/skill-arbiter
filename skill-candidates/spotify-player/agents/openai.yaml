@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spotify Player"
+  short_description: "Terminal Spotify playback/search via spogo (preferred) or spotify_player."
+  default_prompt: "Use $spotify-player when the request matches this lane: Terminal Spotify playback/search via spogo (preferred) or spotify_player."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ordercli"
+  short_description: "Foodora-only CLI for checking past orders and active order status (Delivero..."
+  default_prompt: "Use $ordercli when the request matches this lane: Foodora-only CLI for checking past orders and active order status (Deliveroo WIP)."
