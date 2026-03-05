@@ -230,14 +230,15 @@ When starting new work, run this chain:
 3. `$usage-watcher` to decide usage mode (`economy`/`standard`/`surge`) and emit usage analysis + plan JSON.
 4. `$skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and emit analysis + policy JSON.
 5. `$skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and emit analysis + plan JSON.
-6. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
-7. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
-8. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
-9. `$multitask-orchestrator` when 2+ independent lanes are present.
-10. `$skill-auditor` on new/changed skill surfaces.
-11. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
-12. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
-13. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
+6. `$skills-cross-repo-radar` for bounded multi-repo recent-work evidence.
+7. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
+8. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
+9. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
+10. `$multitask-orchestrator` when 2+ independent lanes are present.
+11. `$skill-auditor` on new/changed skill surfaces.
+12. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
+13. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
+14. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
 
 ## Skill Game Command
 

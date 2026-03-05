@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skills Cross-Repo Radar"
+  short_description: "Detect recent cross-repo work and changed surfaces."
+  default_prompt: "Run cross-repo radar for recent skill-relevant changes."

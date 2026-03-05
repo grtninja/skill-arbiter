@@ -9,13 +9,14 @@ This document contains the full baseline skill chain and mandatory skill-change 
 3. Run `usage-watcher` to set usage mode (`economy`, `standard`, or `surge`) and capture usage analysis/plan JSON artifacts.
 4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy JSON artifacts.
 5. Run `skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and capture analysis/plan JSON artifacts.
-6. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps before mutation-heavy lanes.
-7. For interrupted tasks, run `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
-8. Run `skill-installer-plus` to plan installs/admissions and keep recommendation history current.
-9. Audit new/changed skills with `skill-auditor`.
-10. For cross-repo work, run `skill-enforcer` to enforce policy alignment.
-11. For independent lanes, run `multitask-orchestrator` if available; otherwise split lanes manually and reroute unresolved lanes through `skill-hub` loopback.
-12. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using evidence JSON paths.
+6. For multi-repo work, run `skills-cross-repo-radar` to capture a bounded recent-work snapshot first.
+7. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps before mutation-heavy lanes.
+8. For interrupted tasks, run `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
+9. Run `skill-installer-plus` to plan installs/admissions and keep recommendation history current.
+10. Audit new/changed skills with `skill-auditor`.
+11. For cross-repo work, run `skill-enforcer` to enforce policy alignment.
+12. For independent lanes, run `multitask-orchestrator` if available; otherwise split lanes manually and reroute unresolved lanes through `skill-hub` loopback.
+13. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using evidence JSON paths.
 
 ## Mandatory gates for new or updated skills
 

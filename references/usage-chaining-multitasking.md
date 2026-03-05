@@ -18,11 +18,12 @@ Use this sequence for most non-trivial work:
 3. `usage-watcher` for usage mode and budget posture.
 4. `skill-cost-credit-governor` for spend/chatter controls.
 5. `skill-cold-start-warm-path-optimizer` for warm-path policy.
-6. `code-gap-sweeping` for cross-repo deterministic gap checks when applicable.
-7. `request-loopback-resume` for interruption-safe checkpoints when needed.
-8. `skill-installer-plus` for install/admission planning and recommendation memory.
-9. `skill-auditor` for new/changed skill classification.
-10. `skill-enforcer` for cross-repo policy alignment.
+6. `skills-cross-repo-radar` for bounded multi-repo recent-work snapshots.
+7. `code-gap-sweeping` for cross-repo deterministic gap checks when applicable.
+8. `request-loopback-resume` for interruption-safe checkpoints when needed.
+9. `skill-installer-plus` for install/admission planning and recommendation memory.
+10. `skill-auditor` for new/changed skill classification.
+11. `skill-enforcer` for cross-repo policy alignment.
 
 ## High-Value New Capability Patterns
 
@@ -53,6 +54,22 @@ Recommended chain:
 2. `playwright-edge-preference`
 3. `playwright-safe` (when churn sensitivity is high)
 4. `usage-watcher` + `skill-cost-credit-governor` for long-running or batch browser jobs
+
+### VRM and Avatar Workflow Lanes
+
+- `vroid-template-asset-sync`: normalize template and texture inputs.
+- `blender-vrm-visible-fit`: run checkpointed live-fit iteration in Blender.
+- `vroid-vrma-photobooth-pipeline`: export VRMA clips with deterministic output checks.
+- `vrm-roundtrip-ci-gate`: gate importer/exporter round-trip regressions.
+
+Recommended chain:
+
+1. `skill-hub`
+2. `usage-watcher` + `skill-cost-credit-governor`
+3. `vroid-template-asset-sync`
+4. `blender-vrm-visible-fit`
+5. `vroid-vrma-photobooth-pipeline`
+6. `vrm-roundtrip-ci-gate`
 
 ### Repo Governance and Safety Workflows
 

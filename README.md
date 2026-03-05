@@ -14,7 +14,7 @@ This repository is public-shape only: docs and skill candidates use placeholders
 ## STARFRAME SSOT
 
 Cross-repo governance and lane authority lives in the desktop SSOT document:
-`C:\Users\Eddie\Desktop\STARFRAME_SINGLE_SOURCE_OF_TRUTH.md`.
+`$env:USERPROFILE\Desktop\STARFRAME_SINGLE_SOURCE_OF_TRUTH.md`.
 
 ## Table of Contents
 

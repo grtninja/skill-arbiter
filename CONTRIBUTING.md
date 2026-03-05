@@ -46,13 +46,14 @@ For skill-centric workstreams, use the default system chain:
 3. Run `usage-watcher` to set usage mode and capture usage analysis/plan artifacts.
 4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy artifacts.
 5. Run `skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and capture analysis/plan artifacts.
-6. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps first.
-7. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
-8. Run `skill-installer-plus` for install recommendations and admission ledger updates.
-9. Audit new/changed skills with `skill-auditor`.
-10. If multiple repos are involved, run `skill-enforcer` for policy alignment.
-11. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
-12. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
+6. For multi-repo workstreams, run `skills-cross-repo-radar` for bounded recent-work evidence first.
+7. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps.
+8. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
+9. Run `skill-installer-plus` for install recommendations and admission ledger updates.
+10. Audit new/changed skills with `skill-auditor`.
+11. If multiple repos are involved, run `skill-enforcer` for policy alignment.
+12. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
+13. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
 
 Mandatory checks for skill additions/updates:
 

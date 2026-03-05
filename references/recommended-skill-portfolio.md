@@ -40,9 +40,10 @@ Install and maintain these overlay skills for most workstreams:
 6. `skill-installer-plus`
 7. `skill-auditor`
 8. `skill-enforcer`
-9. `code-gap-sweeping`
-10. `request-loopback-resume`
-11. `playwright-edge-preference`
+9. `skills-cross-repo-radar`
+10. `code-gap-sweeping`
+11. `request-loopback-resume`
+12. `playwright-edge-preference`
 
 ## Overlay Governance and Reliability
 
@@ -57,6 +58,15 @@ Use these when changing or admitting skills:
 7. `skills-consolidation-architect`
 8. `skills-discovery-curation`
 9. `docs-alignment-lock`
+
+## VRM and Avatar Pipelines
+
+Use this set for VRM fitting/export workflows and deterministic round-trip validation:
+
+1. `blender-vrm-visible-fit`
+2. `vroid-template-asset-sync`
+3. `vroid-vrma-photobooth-pipeline`
+4. `vrm-roundtrip-ci-gate`
 
 ## Repo-Focused Overlay Sets
 
@@ -120,10 +130,11 @@ Start with:
 3. `usage-watcher`
 4. `skill-cost-credit-governor`
 5. `skill-cold-start-warm-path-optimizer`
+6. `skills-cross-repo-radar` (for multi-repo snapshots before mutation)
 
 Then add:
 
-1. `code-gap-sweeping` for multi-repo diffs
+1. `code-gap-sweeping` for multi-repo implementation checks
 2. `request-loopback-resume` for interruption-safe continuation
 3. `skill-auditor` + `skill-enforcer` for governance closure
 

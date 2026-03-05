@@ -11,8 +11,8 @@ Compatibility policy:
 
 - VS Code built-ins (top-level): 31
 - VS Code system built-ins (`.system`): 2
-- Repository overlay candidates (`skill-candidates/`): 50
-- Total installed skills expected after overlay restore: 83
+- Repository overlay candidates (`skill-candidates/`): 55
+- Total installed skills expected after overlay restore: 88
 
 ## VS Code Built-ins (Top-Level)
 
@@ -63,6 +63,7 @@ Compatibility policy:
 
 | Skill | Purpose |
 | --- | --- |
+| `blender-vrm-visible-fit` | Run a checkpointed, in-foreground Blender workflow for VRM clothing fit and rig transfer. Use when dress/shoe fitting must be reviewed live before export and destructive body edits are not acceptable. |
 | `code-gap-sweeping` | Sweep one or more local repositories for implementation gaps and produce deterministic, evidence-backed remediation lanes. Use when you need cross-repo detection of missing tests, docs lockstep drift, risky TODO/FIXME additions, and release-hygiene misses. |
 | `docs-alignment-lock` | Keep repository policy docs aligned and privacy-safe before PRs. Use when changing workflow/policy text across AGENTS.md, README.md, CONTRIBUTING.md, SKILL.md, PR templates, or skill candidate docs. |
 | `local-compute-usage` | Enforce local-first Codex execution through VS Code workspace and connected local apps/services/hardware, with MemryX shim priority and fail-closed remote-host checks. |
@@ -70,7 +71,11 @@ Compatibility policy:
 | `playwright-safe` | Run browser automation with Playwright using a no-assets, low-churn workflow. Use when you need navigation, form actions, extraction, or screenshots without installing icon/image assets that can trigger repeated rg.exe scans. |
 | `request-loopback-resume` | Resume previously requested work deterministically after interruptions. Use when context switches, AFK gaps, or multi-lane pauses require checkpointed state, explicit next actions, and fail-closed resume validation. |
 | `safe-mass-index-core` | Build and query bounded metadata-only repository indexes without rg process churn. Use when working in very large repos and you need deterministic file discovery by path, extension, language, scope, or freshness. |
+| `skills-cross-repo-radar` | Detect recent cross-repo work and produce deterministic JSON evidence for skill curation and routing decisions. Use when workflows span multiple repos and you need a bounded view of recent commits, touched files, and policy/contract-sensitive changes. |
 | `usage-watcher` | Reduce paid credit spend and rate-limit risk with deterministic usage analysis and budget guardrails. Use when planning high-volume agent work, reviewing recent burn, or setting lean/standard/surge operating caps. |
+| `vrm-roundtrip-ci-gate` | Gate VRM importer/exporter changes using Blender, UniVRM, and VRM4U round-trip metrics. Use when PRs can affect bones, expressions, materials, or animation fidelity. |
+| `vroid-template-asset-sync` | Discover and normalize VRoid/AvatarMaker clothing templates and texture assets into a deterministic manifest for Blender and Unity lanes. Use when template paths are inconsistent or assets were saved manually. |
+| `vroid-vrma-photobooth-pipeline` | Export VRMA motion clips from VRoid animations and validate VRM-ready outputs for downstream photobooth/runtime lanes. Use when batch conversion, manifest generation, and deterministic output checks are required. |
 
 ### Repo A
 

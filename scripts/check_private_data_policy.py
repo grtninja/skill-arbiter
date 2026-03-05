@@ -12,8 +12,10 @@ from pathlib import Path
 
 USER_PATH_PATTERNS = (
     re.compile(r"/home/[A-Za-z0-9._-]+/"),
+    re.compile(r"/Users/[A-Za-z0-9._ -]+/"),
     re.compile(r"/mnt/[A-Za-z]/Users/[A-Za-z0-9._ -]+/"),
     re.compile(r"[A-Za-z]:/Users/[A-Za-z0-9._ -]+/"),
+    re.compile(r"[A-Za-z]:\\Users\\[A-Za-z0-9._ -]+\\"),
     re.compile(r"[A-Za-z]:\\\\Users\\\\[A-Za-z0-9._ -]+\\\\"),
 )
 
