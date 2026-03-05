@@ -2,6 +2,28 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.17] - 2026-03-05
+
+### Changed
+
+- Added new intake/governance overlay skill:
+  - `skill-candidates/skills-third-party-intake/`
+  - `skill-candidates/skills-third-party-intake/scripts/third_party_skill_intake.py`
+- Added vetted utility overlay skills sourced from third-party catalog review:
+  - `skill-candidates/model-usage/`
+  - `skill-candidates/video-frames/`
+- Extended default-chain documentation to include third-party skill intake before admission:
+  - `AGENTS.md`
+  - `CONTRIBUTING.md`
+  - `SKILL.md`
+  - `references/default-skill-system.md`
+  - `references/usage-chaining-multitasking.md`
+- Updated public catalog, progression, and PR checklist docs for the new skill set:
+  - `references/skill-catalog.md`
+  - `references/skill-progression.md`
+  - `.github/pull_request_template.md`
+  - `README.md`
+
 ## [0.2.16] - 2026-02-27
 
 ### Changed
@@ -440,4 +462,5 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
+
 

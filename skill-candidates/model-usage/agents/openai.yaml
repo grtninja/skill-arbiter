@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model Usage"
+  short_description: "Summarize model-level cost usage"
+  default_prompt: "Use $model-usage to summarize current-model or all-model cost breakdowns from local CodexBar JSON."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Frames"
+  short_description: "Extract frames and short clips"
+  default_prompt: "Use $video-frames to extract exact frame or short clip artifacts from local videos with deterministic ffmpeg commands."

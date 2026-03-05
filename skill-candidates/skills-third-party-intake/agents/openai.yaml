@@ -1,0 +1,4 @@
+interface:
+  display_name: "Third-Party Intake"
+  short_description: "Score and triage external skills"
+  default_prompt: "Use $skills-third-party-intake to scan external skill catalogs, compute deterministic risk/quality scores, and produce an admit/manual/reject shortlist."

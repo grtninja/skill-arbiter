@@ -19,11 +19,12 @@ Use this sequence for most non-trivial work:
 4. `skill-cost-credit-governor` for spend/chatter controls.
 5. `skill-cold-start-warm-path-optimizer` for warm-path policy.
 6. `skills-cross-repo-radar` for bounded multi-repo recent-work snapshots.
-7. `code-gap-sweeping` for cross-repo deterministic gap checks when applicable.
-8. `request-loopback-resume` for interruption-safe checkpoints when needed.
-9. `skill-installer-plus` for install/admission planning and recommendation memory.
-10. `skill-auditor` for new/changed skill classification.
-11. `skill-enforcer` for cross-repo policy alignment.
+7. `skills-third-party-intake` when external skill catalogs are part of discovery/admission.
+8. `code-gap-sweeping` for cross-repo deterministic gap checks when applicable.
+9. `request-loopback-resume` for interruption-safe checkpoints when needed.
+10. `skill-installer-plus` for install/admission planning and recommendation memory.
+11. `skill-auditor` for new/changed skill classification.
+12. `skill-enforcer` for cross-repo policy alignment.
 
 ## High-Value New Capability Patterns
 
@@ -33,6 +34,7 @@ Use this sequence for most non-trivial work:
 - `imagegen`: image generation/edit/inpaint/background workflows.
 - `speech`: text-to-speech narration and batch voice generation.
 - `transcribe`: speech-to-text with optional diarization.
+- `video-frames`: local frame and short-clip extraction with deterministic ffmpeg commands.
 
 Recommended chain:
 
@@ -41,6 +43,22 @@ Recommended chain:
 3. `skill-cost-credit-governor`
 4. Media skill (`sora`, `imagegen`, `speech`, or `transcribe`)
 5. `skill-cold-start-warm-path-optimizer` if repeated runs are expected
+
+### Third-Party Skill Intake
+
+- `skills-third-party-intake`: static risk/quality triage for external catalogs.
+- `skill-installer-plus`: admission planning and ledger feedback.
+- `skill-arbiter-lockdown-admission`: enforce keep/quarantine outcomes.
+
+Recommended chain:
+
+1. `skill-hub`
+2. `skills-cross-repo-radar` (if external repos were recently updated)
+3. `skills-third-party-intake`
+4. `skill-installer-plus`
+5. `skill-auditor`
+6. `skill-arbiter-lockdown-admission`
+7. `skill-enforcer`
 
 ### Edge Browser Automation Workflows
 

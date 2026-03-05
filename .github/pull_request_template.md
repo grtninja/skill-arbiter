@@ -22,6 +22,7 @@ Describe what changed and why.
 - [ ] For skill-system changes: `skill-cold-start-warm-path-optimizer` analysis/plan evidence captured and prewarm decision documented
 - [ ] For multi-repo skill-system changes: `skills-cross-repo-radar` report captured with JSON evidence path
 - [ ] For multi-repo skill-system changes: `code-gap-sweeping` report captured with JSON evidence path
+- [ ] For third-party skill-source changes: `skills-third-party-intake` report captured with recommendation counts and blocker details
 - [ ] For interrupted/resumed workstreams: `request-loopback-resume` state + resume JSON evidence path captured
 - [ ] For skill-system changes: `scripts/skill_game.py` score event recorded with arbiter/auditor evidence paths
 - [ ] For multi-lane work: `multitask-orchestrator` usage and `skill-hub` loopback behavior documented

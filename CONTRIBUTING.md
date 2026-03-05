@@ -47,13 +47,14 @@ For skill-centric workstreams, use the default system chain:
 4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy artifacts.
 5. Run `skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and capture analysis/plan artifacts.
 6. For multi-repo workstreams, run `skills-cross-repo-radar` for bounded recent-work evidence first.
-7. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps.
-8. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
-9. Run `skill-installer-plus` for install recommendations and admission ledger updates.
-10. Audit new/changed skills with `skill-auditor`.
-11. If multiple repos are involved, run `skill-enforcer` for policy alignment.
-12. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
-13. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
+7. For third-party skill imports, run `skills-third-party-intake` before any admission decisions.
+8. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps.
+9. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
+10. Run `skill-installer-plus` for install recommendations and admission ledger updates.
+11. Audit new/changed skills with `skill-auditor`.
+12. If multiple repos are involved, run `skill-enforcer` for policy alignment.
+13. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
+14. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
 
 Mandatory checks for skill additions/updates:
 
@@ -132,6 +133,7 @@ For new or updated skill candidates, include arbitration evidence summary in the
 5. Keep expected safe target: `action=kept`, `persistent_nonzero=false`, `max_rg=0`.
 6. Record the run in the local game ledger:
    `python3 scripts/skill_game.py --task "<skill update>" --used-skill skill-hub --used-skill skill-common-sense-engineering --used-skill usage-watcher --used-skill skill-cost-credit-governor --used-skill skill-cold-start-warm-path-optimizer --used-skill skill-installer-plus --used-skill skill-auditor --used-skill skill-enforcer --used-skill skill-arbiter-lockdown-admission --arbiter-report /tmp/skill-arbiter-evidence.json --audit-report /tmp/skill-audit.json --enforcer-pass`.
+7. If sourcing from external catalogs, attach `skills-third-party-intake` JSON evidence with recommendation and blocker counts.
 
 If a skill was added or improved in the work, include this declaration in the response/update text:
 

@@ -20,6 +20,7 @@ This file tracks maturity levels for long-lived core skills.
 | `skill-cost-credit-governor` | 7 | Policy-grade spend/chatter actions with artifacted decisions. |
 | `skill-cold-start-warm-path-optimizer` | 7 | Cold/warm analysis plus prewarm/never-auto decision controls. |
 | `skill-installer-plus` | 7 | Plan/admit/feedback/show loop with arbiter + trust ingestion evidence. |
+| `skills-third-party-intake` | 3 | Deterministic third-party catalog triage with compatibility/quality/security scoring. |
 | `code-gap-sweeping` | 7 | Cross-repo deterministic gap discovery with triage mapping and diff modes. |
 | `request-loopback-resume` | 7 | Interruption-safe lane state model with strict resume contract. |
 | `skill-auditor` | 6 | Deterministic classification and finding severity gate. |

@@ -221,6 +221,17 @@ python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
   --json-out /tmp/playwright-edge-preference-arbiter.json
 ```
 
+## Third-Party Intake Pack Admission
+
+```bash
+python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
+  skills-third-party-intake model-usage video-frames \
+  --source-dir skill-candidates \
+  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
+  --personal-lockdown \
+  --json-out /tmp/third-party-intake-pack-arbiter.json
+```
+
 ## Default System Chain
 
 When starting new work, run this chain:
@@ -231,14 +242,15 @@ When starting new work, run this chain:
 4. `$skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and emit analysis + policy JSON.
 5. `$skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and emit analysis + plan JSON.
 6. `$skills-cross-repo-radar` for bounded multi-repo recent-work evidence.
-7. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
-8. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
-9. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
-10. `$multitask-orchestrator` when 2+ independent lanes are present.
-11. `$skill-auditor` on new/changed skill surfaces.
-12. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
-13. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
-14. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
+7. `$skills-third-party-intake` when mining external skill catalogs for new candidates.
+8. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
+9. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
+10. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
+11. `$multitask-orchestrator` when 2+ independent lanes are present.
+12. `$skill-auditor` on new/changed skill surfaces.
+13. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
+14. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
+15. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
 
 ## Skill Game Command
 

@@ -300,6 +300,9 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 - `skill-candidates/skill-enforcer/`: cross-repo policy alignment candidate skill
 - `skill-candidates/skill-auditor/scripts/skill_audit.py`: skill classification and findings gate (`unique` vs `upgrade`)
 - `skill-candidates/playwright-edge-preference/`: Microsoft Edge channel browser automation preference lane
+- `skill-candidates/skills-third-party-intake/scripts/third_party_skill_intake.py`: third-party catalog intake scanner with security/quality scoring
+- `skill-candidates/video-frames/scripts/video_frames.py`: deterministic frame/clip extraction helper for local media checks
+- `skill-candidates/model-usage/scripts/model_usage.py`: per-model usage-cost summarizer for local CodexBar JSON
 - `references/default-skill-system.md`: full default-chain and skill-change gate details
 - `references/vscode-skill-handling.md`: VS Code built-in compatibility, reset incident notes, and restore protocol
 - `references/usage-chaining-multitasking.md`: end-to-end usage/chaining/multitasking playbook
@@ -326,9 +329,12 @@ Representative overlay highlights:
 | `skill-cost-credit-governor` | per-skill spend governance and warn/throttle/disable policy outputs | core |
 | `skill-cold-start-warm-path-optimizer` | cold-vs-warm latency analysis and prewarm planning | core |
 | `skill-installer-plus` | local-first install planning and admission recommendation loop | core |
+| `skills-third-party-intake` | static triage of external skill catalogs before import/admission | core |
 | `code-gap-sweeping` | deterministic cross-repo implementation gap scans | core |
 | `request-loopback-resume` | checkpoint/resume lane state for interrupted work | core |
 | `playwright-edge-preference` | Edge-channel browser automation and parity checks | core |
+| `video-frames` | deterministic local video frame/clip extraction for review artifacts | utility |
+| `model-usage` | local model-level cost summaries for CodexBar usage records | utility |
 | `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |

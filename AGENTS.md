@@ -92,13 +92,14 @@ Default skill system for new work:
 4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy JSON artifacts.
 5. Run `skill-cold-start-warm-path-optimizer` to evaluate prewarm policy and capture cold/warm analysis/plan JSON artifacts.
 6. For multi-repo work, run `skills-cross-repo-radar` to capture bounded recent-work evidence.
-7. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps.
-8. For interrupted tasks, use `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
-9. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
-10. Audit new/changed skills with `skill-auditor`.
-11. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
-12. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
-13. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
+7. For third-party skill discovery/import work, run `skills-third-party-intake` before admission decisions.
+8. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps.
+9. For interrupted tasks, use `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
+10. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
+11. Audit new/changed skills with `skill-auditor`.
+12. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
+13. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
+14. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
 
 Mandatory skill-change gates:
 
