@@ -404,7 +404,7 @@ block quick_fix_cycle(diagnosis, triage):
 DIAGNOSIS: {diagnosis}
 APPROACH: {triage.recommended_approach}
 
-Make the smallest change that fixes the issue.
+Make the complete synchronized change that fixes the issue without leaving related surfaces stale.
 Commit with: fix(scope): description"""
     permissions:
       filesystem: ["read", "write"]

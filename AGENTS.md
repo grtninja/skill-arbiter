@@ -145,3 +145,11 @@ New Skill Unlocked: <SkillName>
 
 Use the real skill name for `<SkillName>`.  
 Use a positive integer for `<LevelNumber>` (for example `1`, `12`, `99`).
+
+## 9) Maximum Effort Policy
+
+- This repository is part of a workstation-scale first-party private codebase unless an explicit boundary document says otherwise.
+- Minimal-diff behavior is forbidden.
+- Do not optimize for the smallest patch or narrow local fix.
+- When anything changes, all related repos, docs, skills, gates, tests, configs, and dependent services must be updated.
+- A task is complete only when the affected dependency graph is synchronized and no known related surface is stale.

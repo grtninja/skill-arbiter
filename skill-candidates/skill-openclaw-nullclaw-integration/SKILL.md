@@ -1,6 +1,6 @@
 ---
 name: skill-openclaw-nullclaw-integration
-description: Reconcile OpenClaw and NullClaw upstream changes into router-aware MeshGPT, MX3 shim, and AvatarCore lanes with privacy-safe attribution and deterministic test gates.
+description: Reconcile OpenClaw and NullClaw upstream changes into router-aware MeshGPT, MX3 shim, and AvatarCore lanes with privacy-safe attribution, release-provenance gating, and deterministic test gates.
 ---
 
 # Skill OpenClaw NullClaw Integration
@@ -10,14 +10,19 @@ Use this skill for cross-repo integration work when OpenClaw/NullClaw changes ne
 ## Workflow
 
 1. Pull third-party sources fast-forward only.
-2. Build a bounded change inventory focused on routing, providers, channels, and agent orchestration surfaces.
-3. Map findings into local repository lanes:
+2. Build a bounded change inventory focused on routing, providers, channels, agent orchestration surfaces, and security advisories.
+3. Verify release provenance state before trusting an upstream version bump:
+   - patched/advisory version line
+   - whether signed tags or artifact digests are actually verifiable
+   - whether local policy should block auto-apply pending provenance
+4. Map findings into local repository lanes:
    - Repo A coordinator/runtime routing
    - Repo B AvatarCore routing profiles
    - MX3 shim model-router policy
-4. Apply deterministic patches and run lane-specific tests.
-5. Refresh third-party attribution and intake evidence.
-6. Run `skill-auditor` + `skill-arbiter-lockdown-admission` before completion.
+   - control-plane release gating / fail-closed policy
+5. Apply deterministic patches and run lane-specific tests.
+6. Refresh third-party attribution and intake evidence.
+7. Run `skill-auditor` + `skill-arbiter-lockdown-admission` before completion.
 
 ## Canonical Commands
 
@@ -43,6 +48,7 @@ rg -n "router|routing|provider|channel|meshrelay|gateway|agent" <THIRD_PARTY_CLO
 - Keep imported instructions public-shape only and placeholder-safe.
 - Prefer upgrading existing local skills before adding new overlapping candidates.
 - Keep third-party source attribution current in `references/third-party-skill-attribution.md`.
+- Do not auto-promote an upstream OpenClaw release on version number alone when provenance or digest verification is missing.
 
 ## Scope Boundary
 

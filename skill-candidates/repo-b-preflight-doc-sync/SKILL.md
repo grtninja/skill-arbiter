@@ -12,6 +12,8 @@ Use this skill for PR-readiness and governance updates.
 1. Run required preflight commands for the change scope.
 2. Capture command evidence and failures with explicit repro notes.
 3. Keep docs in lockstep for behavior changes.
+   - include repo-local reconciliation docs when the repo is carrying major unreleased open diffs
+   - include startup/state-persistence docs when launch behavior changed
 4. Add target-PC rerun steps when hardware-only checks cannot run locally.
 
 ## Scope Boundary
@@ -44,6 +46,7 @@ Review and update together when behavior changes:
 - `README.md`
 - `docs/PROJECT_SCOPE.md`
 - `docs/SCOPE_TRACKER.md`
+- repo-local reconciliation/startup notes when present
 
 ## References
 

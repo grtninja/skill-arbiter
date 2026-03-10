@@ -1,6 +1,6 @@
 ---
 name: repo-d-ui-guardrails
-description: Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, no-download policy, local-only behavior, and no-CI constraints.
+description: Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, startup acceptance, state persistence, no-download policy, local-only behavior, and no-CI constraints.
 ---
 
 # Repo D Sandbox UI Guardrails
@@ -17,9 +17,13 @@ Use this skill to keep <PRIVATE_REPO_D> changes compliant with repository rules.
    - Do not add runtime asset downloads.
    - Keep front-end boundaries intact; do not embed out-of-scope orchestration logic.
    - Do not change Electron boot/renderer readiness sequencing without explicit validation notes.
+   - Do not accept backend-only startup as success for desktop lanes.
+   - Do not allow stale-window relaunches or empty console windows in canonical startup paths.
+   - Do not regress persisted user state (window placement, layout, profile/settings restore).
 4. Update progress docs on scoped work:
    - `docs/SCOPE_TRACKER.md`
    - `docs/TODO.md`
+   - repo-local reconciliation docs when present
 5. Include a status block in notes/PR summary:
    - scope lane(s),
    - changed files,
@@ -44,6 +48,7 @@ When startup flow or renderer wiring changes, also run:
 ```bash
 npm run verify-startup
 npm run dev
+npm run startup:lockdown
 ```
 ## Scope Boundary
 

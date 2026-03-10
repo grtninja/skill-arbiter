@@ -55,7 +55,17 @@ $installed = Get-ChildItem -Directory "$env:USERPROFILE\.codex\skills" | Select-
 
 Expected result: `0`.
 
-4. Validate churn safety after restore:
+4. Rebuild local control files and validate churn safety after restore:
+
+```powershell
+$skillsRoot = Join-Path $env:USERPROFILE ".codex\skills"
+foreach ($name in ".blacklist.local", ".whitelist.local", ".immutable.local") {
+  $path = Join-Path $skillsRoot $name
+  if (!(Test-Path $path)) { New-Item -ItemType File -Path $path | Out-Null }
+}
+```
+
+5. Validate churn safety after restore:
 
 ```bash
 python3 scripts/arbitrate_skills.py <skills...> \
@@ -64,18 +74,25 @@ python3 scripts/arbitrate_skills.py <skills...> \
   --json-out /tmp/restore-arbiter.json
 ```
 
-Expected overlay size after the March 5, 2026 reconciliation:
+Expected overlay size after the March 9, 2026 restore reconciliation:
 
-- `117` directories under `skill-candidates/`
-- `150` total expected installed skills when combined with built-ins (`31`) and `.system` skills (`2`)
+- `123` directories under `skill-candidates/`
+- `160` total expected installed skills when combined with top-level built-ins (`35`) and `.system` skills (`2`)
+
+The restore path is additive by design:
+
+- leave upstream `.system` and built-in skills untouched
+- restore repository overlay directories from `skill-candidates/` into `$env:USERPROFILE\.codex\skills`
+- recreate local control files from the latest freeze snapshot first, then fall back to empty local files if no snapshot exists
 
 ## Ongoing Protection Plan
 
 1. Keep `skill-candidates/` as source-of-truth for overlay skills.
-2. After VS Code/Codex updates, run overlay coverage check and restore if needed.
-3. Run `skill-arbiter` safety admission for changed/new skills before enabling broad use.
-4. Keep `references/skill-catalog.md` updated whenever skills change (including overlay counts).
-5. Keep policy docs in lockstep:
+2. After VS Code/Codex updates, run overlay coverage check and additive restore if needed.
+3. Rebuild `.blacklist.local`, `.whitelist.local`, and `.immutable.local` if a host reset removes them.
+4. Run `skill-arbiter` safety admission for changed/new skills before enabling broad use.
+5. Keep `references/skill-catalog.md` updated whenever skills change (including overlay counts).
+6. Keep policy docs in lockstep:
    - `AGENTS.md`
    - `README.md`
    - `CONTRIBUTING.md`

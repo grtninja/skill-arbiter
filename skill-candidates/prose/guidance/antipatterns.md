@@ -943,7 +943,7 @@ When reviewing OpenProse programs, ask:
 - Can independent work be parallelized?
 - Are loops bounded?
 - Are errors handled?
-- Is context minimal and explicit?
+- Is context bounded and explicit?
 - Are models matched to task complexity?
 - Are agents focused and reusable?
 - Would a stranger understand this code?

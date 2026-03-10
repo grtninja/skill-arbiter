@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo A Host Admin Ops"
+  short_description: "Operate Repo A admin-host and USB host bundle lanes"
+  default_prompt: "Use $repo-a-host-admin-ops to validate <PRIVATE_REPO_A> admin-host desktop surfaces, client-host config, host-bundle packaging, USB review scripts, and startup acceptance."

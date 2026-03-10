@@ -404,9 +404,9 @@ git checkout -b fix/issue-{number} {BASE_BRANCH}
 - Read the relevant files to understand the current behavior
 - Identify the root cause
 
-4. IMPLEMENT — Make the minimal, focused fix:
+4. IMPLEMENT — Make the complete synchronized fix:
 - Follow existing code style and conventions
-- Change only what is necessary to fix the issue
+- Update all directly related contracts, tests, docs, and dependent surfaces needed for a correct fix
 - Do not add unrelated changes or new dependencies without justification
 
 5. TEST — Discover and run the existing test suite if one exists:

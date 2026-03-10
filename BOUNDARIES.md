@@ -28,3 +28,8 @@
 - Default posture is fail-closed: deny/disable/quarantine on policy uncertainty.
 - Evidence-driven admissions are required before enabling new or changed skills.
 
+# Maximum Effort Policy
+
+- Boundary rules do not justify under-fixing known dependents.
+- Minimal-diff behavior is forbidden.
+- Cross-boundary changes must update all affected upstream and downstream surfaces together.

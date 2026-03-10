@@ -5,12 +5,12 @@ Use this checklist before finalizing work.
 ## Before Editing
 
 1. State the objective in one sentence.
-2. Confirm the target files and avoid unrelated churn.
+2. Confirm the target files, then trace related contracts, dependents, and operator-facing surfaces before editing.
 3. Prefer existing scripts/workflows over one-off ad hoc steps.
 
 ## During Work
 
-1. Keep changes minimal and reversible.
+1. Keep changes complete, synchronized, and reversible when safe to do so.
 2. Verify assumptions with commands, not memory.
 3. When recurring friction appears, update the related skill/checklist immediately.
 

@@ -111,7 +111,7 @@ Hard gates:
 
 Before opening a PR:
 
-1. Keep changes focused and scoped.
+1. Keep changes complete, synchronized, and fully aligned across affected surfaces.
 2. Update docs (`README.md`, `SKILL.md`, or `references/`) if behavior changes.
 3. Run the quick checks above.
 4. Ensure release metadata is updated for release-impacting changes (`pyproject.toml` + `CHANGELOG.md`).

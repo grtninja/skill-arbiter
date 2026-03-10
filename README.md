@@ -23,6 +23,7 @@ This repository is public-shape only: docs and skill candidates use placeholders
 - [Output contract](#output-contract)
 - [Advanced workflows](#advanced-workflows)
 - [VS Code Skill Handling](#vs-code-skill-handling)
+- [Current Diff Reconciliation](#current-diff-reconciliation)
 - [Security notes](#security-notes)
 - [Repository layout](#repository-layout)
 - [Candidate skill catalog](#candidate-skill-catalog)
@@ -270,6 +271,12 @@ Use the overlay recovery checks whenever VS Code/Codex skill handling changes:
 3. Re-run `skill-arbiter` admission checks to confirm no `rg.exe` churn regressions.
 4. Keep catalog and workflow docs aligned in the same PR.
 
+## Current Diff Reconciliation
+
+The current open-skill pass, catalog updates, and restore-document drift are explicitly tracked in:
+
+- `references/OPEN_DIFF_RECONCILIATION_2026-03-09.md`
+
 ## Security notes
 
 - The script does not require API keys.
@@ -312,8 +319,8 @@ See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` f
 
 Current overlay inventory:
 
-- `119` repository candidates total
-- `59` internal/governance candidates
+- `123` repository candidates total
+- `63` internal/governance candidates
 - `60` third-party-origin candidates with explicit source attribution
 
 For the complete installed catalog (built-ins + `.system` + overlay), see:
@@ -327,6 +334,8 @@ Representative overlay highlights:
 | --- | --- | --- |
 | `safe-mass-index-core` | bounded metadata-only indexing with no-`rg` indexing policy | core |
 | `usage-watcher` | usage analysis and budget planning for paid credit control | core |
+| `desktop-startup-acceptance` | cross-repo Windows app startup acceptance, stale-window cleanup, and shortcut/state validation | core |
+| `usb-export-reconcile` | Git-like review/reconcile discipline for USB-delivered repo and host exports | core |
 | `skill-cost-credit-governor` | per-skill spend governance and warn/throttle/disable policy outputs | core |
 | `skill-cold-start-warm-path-optimizer` | cold-vs-warm latency analysis and prewarm planning | core |
 | `skill-installer-plus` | local-first install planning and admission recommendation loop | core |
@@ -341,6 +350,7 @@ Representative overlay highlights:
 | `tmux` | tmux session control lane for interactive terminal workflows | utility |
 | `xurl` | authenticated X/Twitter API CLI lane with secret-safety guardrails | utility |
 | `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
+| `repo-a-host-admin-ops` | Repo A admin-host desktop, host-bundle, and USB update operations | repo-specific |
 | `repo-b-mx3-router-contracts` | MX3 router-profile contract and metadata validation lane | repo-specific |
 | `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
 | `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |
@@ -385,3 +395,6 @@ When a skill is newly created or improved, include this exact declaration in the
 New Skill Unlocked: <SkillName>
 <SkillName> Leveled up to <LevelNumber>
 ```
+## Maximum Effort Policy
+
+This repository is part of a workstation-scale first-party private codebase unless an explicit boundary document says otherwise. Minimal-diff behavior is forbidden. When anything changes, all related services, contracts, docs, tests, configs, and dependent surfaces must be updated before the task is complete.

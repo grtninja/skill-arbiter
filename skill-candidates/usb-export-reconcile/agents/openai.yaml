@@ -1,0 +1,4 @@
+interface:
+  display_name: "USB Export Reconcile"
+  short_description: "Review USB exports like GitHub"
+  default_prompt: "Use $usb-export-reconcile to treat a USB-delivered repo or host bundle like a GitHub sync: compare first, review the drift, snapshot before apply, reconcile deliberately, and validate afterward."

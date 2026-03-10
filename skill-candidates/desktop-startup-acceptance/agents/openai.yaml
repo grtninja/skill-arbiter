@@ -1,0 +1,4 @@
+interface:
+  display_name: "Desktop Startup Acceptance"
+  short_description: "Normalize explicit desktop startup acceptance"
+  default_prompt: "Use $desktop-startup-acceptance to enforce explicit Windows desktop startup acceptance, stale-window cleanup, frontend-plus-backend launch validation, state restore checks, and shortcut ownership proof."

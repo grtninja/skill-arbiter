@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRM Material Lighting Debug"
+  short_description: "Fix washed-out VRM shading and cloth materials"
+  default_prompt: "Use $vrm-material-lighting-debug to diagnose whether this VRM avatar issue is scene lighting, MToon material settings, or broken cloth shadow colors."

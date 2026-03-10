@@ -21,3 +21,5 @@ Thumbs.db
 # Local arbitration outputs
 .blacklist.local
 arbitration-report*.json
+.githooks/
+references/cross_repo_open_work_radar_*.json

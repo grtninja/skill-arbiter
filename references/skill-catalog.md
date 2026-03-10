@@ -9,10 +9,10 @@ Compatibility policy:
 
 ## Inventory Summary
 
-- VS Code built-ins (top-level): 31
+- VS Code built-ins (top-level): 35
 - VS Code system built-ins (`.system`): 2
-- Repository overlay candidates (`skill-candidates/`): 119
-- Total installed skills expected after overlay restore: 152
+- Repository overlay candidates (`skill-candidates/`): 123
+- Total installed skills expected after additive overlay restore: 160
 
 ## VS Code Built-ins (Top-Level)
 
@@ -66,6 +66,7 @@ Compatibility policy:
 | `blender-vrm-visible-fit` | Run a checkpointed, in-foreground Blender workflow for VRM clothing fit and rig transfer. Use when dress/shoe fitting must be reviewed live before export and destructive body edits are not acceptable. |
 | `code-gap-sweeping` | Sweep one or more local repositories for implementation gaps and produce deterministic, evidence-backed remediation lanes. Use when you need cross-repo detection of missing tests, docs lockstep drift, risky TODO/FIXME additions, and release-hygiene misses. |
 | `docs-alignment-lock` | Keep repository policy docs aligned and privacy-safe before PRs. Use when changing workflow/policy text across AGENTS.md, README.md, CONTRIBUTING.md, SKILL.md, PR templates, or skill candidate docs. |
+| `desktop-startup-acceptance` | Enforce explicit desktop startup acceptance across local app repos. Use when normalizing Windows app launchers, stale-window cleanup, frontend/backend coupling, state restore, shortcut ownership, or machine-specific app rosters. |
 | `local-compute-usage` | Enforce local-first Codex execution through VS Code workspace and connected local apps/services/hardware, with MemryX shim priority and fail-closed remote-host checks. |
 | `model-usage` | Summarize per-model usage cost from local CodexBar cost JSON. Use when you need current-model or all-model cost breakdowns for Codex or Claude usage. |
 | `playwright-edge-preference` | Run Playwright browser automation with Microsoft Edge as the default channel. Use when users request Edge-specific validation, screenshots, or parity checks while keeping deterministic low-churn automation flow. |
@@ -84,6 +85,7 @@ Compatibility policy:
 | Skill | Purpose |
 | --- | --- |
 | `repo-a-coordinator-smoke` | Run and debug Repo A DDC node/coordinator smoke workflows. Use when changing coordinator endpoints, job fetch/submit flow, runtime registration, or backend dispatch paths that must be verified with local coordinator execution. |
+| `repo-a-host-admin-ops` | Operate and validate <PRIVATE_REPO_A> admin-host desktop, client-host surfaces, and USB host-bundle workflows. Use when changing admin terminal UIs, host packaging/install scripts, startup acceptance, or USB-delivered host updates. |
 | `repo-a-policy-selftest-gate` | Enforce Repo A DDC policy and acceptance gates before PRs. Use when changing policy files, node runtime behavior, guardrail-sensitive config, or validation tooling that must satisfy AGENTS.md acceptance commands. |
 | `repo-a-telemetry-kv-guard` | Protect Repo A DDC telemetry/privacy and encrypted KV pager contracts. Use when editing repo_c_trace adapters, Repo C policy gate logic, KV tiering/crypto code, or retention/privacy behavior tied to role acceptance. |
 
@@ -95,7 +97,7 @@ Compatibility policy:
 | `repo-b-avatarcore-ops` | Run and validate <PRIVATE_REPO_B> AvatarCore proxy, provider routing, and Unreal bridge lifecycle surfaces. |
 | `repo-b-mx3-router-contracts` | Validate MX3 shim model-router network-profile contracts and policy behavior. Use when changing route-mode derivation, router environment mapping, capability metadata, or inference routing responses. |
 | `repo-b-comfy-amuse-capcut-pipeline` | Operate profile-driven ComfyUI pipelines with optional AMUSE enhancement and CapCut export guidance in <PRIVATE_REPO_B>. Use when validating /api/comfy/pipelines/*, /api/amuse/*, or CapCut handoff metadata. |
-| `repo-b-control-center-ops` | Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, desktop startup/restart behavior, or window lifecycle ownership. |
+| `repo-b-control-center-ops` | Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, canonical desktop startup/restart behavior, shortcut ownership, or window lifecycle/state ownership. |
 | `repo-b-hardware-first` | Enforce hardware-first diagnosis and fixes in <PRIVATE_REPO_B>. Use for runtime probe, telemetry, inference, and integration failures where strict real-hardware behavior, no new stubs, deterministic diagnostics, and no unrequested driver/runtime mutation are required. |
 | `repo-b-local-bridge-orchestrator` | Run credit-first local Agent Bridge orchestration in <PRIVATE_REPO_B> with strict read-only validation, bounded indexing, and fail-closed guidance hints. Excludes MCP Comfy diagnostics. |
 | `repo-b-local-comfy-orchestrator` | Compatibility wrapper for legacy local Comfy orchestration requests in <PRIVATE_REPO_B>. Route new MCP/Comfy operations to repo-b-mcp-comfy-bridge. |
@@ -124,8 +126,9 @@ Compatibility policy:
 | --- | --- |
 | `repo-d-local-packaging` | Run Windows-local packaging and release validation for <PRIVATE_REPO_D>. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows. |
 | `repo-d-mass-index-ops` | Run UI-and-packaging mass-index operations for <PRIVATE_REPO_D> workspace trees. Use when scanning renderer components, Electron startup files, workspace packages, and packaging scripts while aggressively excluding generated build artifacts. |
-| `repo-d-setup-diagnostics` | Diagnose <PRIVATE_REPO_D> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, or overlay/background behavior. |
-| `repo-d-ui-guardrails` | Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, no-download policy, local-only behavior, and no-CI constraints. |
+| `repo-d-setup-diagnostics` | Diagnose <PRIVATE_REPO_D> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, overlay/background behavior, startup acceptance, or audio-baseline drift. |
+| `repo-d-ui-guardrails` | Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, startup acceptance, state persistence, no-download policy, local-only behavior, and no-CI constraints. |
+| `usb-export-reconcile` | Review and reconcile USB-delivered repo exports as Git-like sources. Use when a USB drive carries a repo clone or host bundle that must be compared, reviewed, backed up, and only then applied. |
 
 ### Governance and Optimization
 
@@ -137,7 +140,7 @@ Compatibility policy:
 | `skill-auditor` | Audit skill candidates and classify each changed skill as unique or upgrade with severity findings. Use when creating/updating skills, preparing admission evidence, or producing audit JSON for skill-game scoring. |
 | `skill-blast-radius-simulator` | Simulate pre-install/pre-enable skill impact and require acknowledgement when risk exceeds thresholds. Use when admitting new skills or evaluating potentially risky updates. |
 | `skill-cold-start-warm-path-optimizer` | Measure first-run versus warm-run skill performance and generate prewarm/auto-invoke policy plans. Use when cold starts inflate latency or trigger retry storms. |
-| `skill-common-sense-engineering` | Apply practical human common-sense checks before and after coding work. Use when you want to prevent avoidable mistakes, keep changes proportional, and capture obvious hygiene fixes during implementation. |
+| `skill-common-sense-engineering` | Apply practical human common-sense checks before and after coding work. Use when you want to prevent avoidable mistakes, keep changes complete across related surfaces, and capture obvious hygiene fixes during implementation. |
 | `skill-cost-credit-governor` | Govern per-skill credit and token spend with deterministic warn/throttle/disable actions. Use when usage spikes, agent chatter, or budget overruns must be detected and contained. |
 | `skill-dependency-fan-out-inspector` | Inspect skill-to-skill dependencies and detect fan-out, cycles, and N+1 invocation risk. Use when scaling skill stacks or diagnosing hidden cross-skill cost/latency amplification. |
 | `skill-enforcer` | Enforce cross-repo policy and boundary alignment before completion. Use when a request touches multiple repositories, shared contracts, or policy docs that must stay synchronized. |
@@ -227,3 +230,8 @@ Whenever the skill set changes, update this file in the same PR as:
 - `CONTRIBUTING.md`
 - `SKILL.md`
 - `.github/pull_request_template.md`
+
+Restore rule:
+- overlay recovery is additive into `$HOME/.codex/skills`
+- `.system` and upstream built-ins stay intact
+- local control files `.blacklist.local`, `.whitelist.local`, and `.immutable.local` must exist after restore

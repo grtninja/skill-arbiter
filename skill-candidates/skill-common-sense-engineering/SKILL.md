@@ -1,6 +1,6 @@
 ---
 name: skill-common-sense-engineering
-description: Apply practical human common-sense checks before and after coding work. Use when you want to prevent avoidable mistakes, keep changes proportional, and capture obvious hygiene fixes during implementation.
+description: Apply practical human common-sense checks before and after coding work. Use when you want to prevent avoidable mistakes, keep changes complete across related surfaces, and capture obvious hygiene fixes during implementation.
 ---
 
 # Common-Sense Engineering
@@ -10,7 +10,7 @@ Use this skill as a lightweight sanity layer for day-to-day coding work.
 ## Workflow
 
 1. Clarify the real goal before choosing tools or edits.
-2. Prefer the smallest change that satisfies the request.
+2. Audit the affected dependency surface before deciding the implementation boundary.
 3. Check local side effects before concluding:
    - generated artifacts (`__pycache__`, `*.pyc`, tool caches),
    - accidental temp/debug files,
@@ -39,8 +39,8 @@ python3 "$CODEX_HOME/skills/skill-arbiter-lockdown-admission/scripts/artifact_hy
 
 ## Decision Heuristics
 
-1. If two fixes work, choose the one with fewer moving parts.
-2. If a change cannot be explained in one sentence, scope is probably too large.
+1. If two fixes work, choose the one that leaves the dependency graph clearer and more synchronized.
+2. If a change cannot be explained in one sentence, document the scope instead of using complexity as a reason to under-fix.
 3. If a failure can recur, codify it in a skill/workflow instead of relying on memory.
 4. If evidence is missing, do not claim success.
 ## Scope Boundary

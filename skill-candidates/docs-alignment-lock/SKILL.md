@@ -16,6 +16,7 @@ Use this skill to keep documentation policy-consistent and public-safe.
    - `CONTRIBUTING.md`
    - `SKILL.md`
    - `.github/pull_request_template.md`
+   - repo-local scope/status docs when they are part of the shipped contract (`docs/PROJECT_SCOPE.md`, `docs/SCOPE_TRACKER.md`, reconciliation notes, startup rosters, USB handoff docs)
 3. Enforce public-shape rules in docs and skill candidates:
    - no private repo identifiers
    - no user-specific absolute paths
@@ -25,6 +26,7 @@ Use this skill to keep documentation policy-consistent and public-safe.
    - `<SkillName> Leveled up to <LevelNumber>`
 5. Run privacy and release checks.
 6. If release-impacting docs/scripts changed, prepare a patch release bump.
+7. For multi-repo work, ensure the changed behavior is explicitly documented where the open diffs actually live, not only in a central control repo.
 
 ## Commands
 
