@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skill Arbiter Security Console</title>
+  <link rel="icon" href="../assets/skill_arbiter_ntm_v4.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="wrap">
+    <section class="titlebar">
+      <div class="brand-row">
+        <img class="app-mark" src="../assets/skill_arbiter_ntm_v4.png" alt="Skill Arbiter shield mark">
+        <div class="brand-copy">
+          <h1>Skill Arbiter Security Console</h1>
+          <p class="subtitle">Live skill governance, curated-source discovery, self-governance, and public-release readiness for the local host.</p>
+          <div class="mode-row">
+            <span class="pill pill-up"><span class="dot"></span> Local First</span>
+            <span class="pill pill-warn"><span class="dot"></span> Guarded Auto</span>
+            <span class="pill" id="host-chip"><span class="dot"></span> Host: pending</span>
+            <span class="pill" id="model-chip"><span class="dot"></span> Advisor: local Qwen</span>
+            <span class="pill" id="version-chip"><span class="dot"></span> Version: pending</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel workflow-panel">
+      <div class="panel-head">
+        <div>
+          <div class="layer-label">Layer 1</div>
+          <h2>Startup Flow</h2>
+        </div>
+        <div class="chip-row">
+          <span class="flow-chip" id="flow-app-open">APP OPEN</span>
+          <span class="flow-chip" id="flow-agent-start">AGENT ATTACH/START</span>
+          <span class="flow-chip" id="flow-checks">APP CHECKS</span>
+          <span class="flow-chip" id="flow-loads">APP LOADS</span>
+          <span class="flow-chip" id="flow-ready">APP READY</span>
+        </div>
+      </div>
+      <div class="status-banner" id="status-banner">Opening desktop shell.</div>
+      <div class="grid-cards">
+        <div class="card metric-card" id="agent-card">
+          <div class="k">Agent</div>
+          <div class="v" id="agent-status">starting</div>
+        </div>
+        <div class="card metric-card" id="privacy-card">
+          <div class="k">Privacy Gate</div>
+          <div class="v" id="privacy-status">pending</div>
+        </div>
+        <div class="card metric-card" id="governance-card">
+          <div class="k">Self Governance</div>
+          <div class="v" id="governance-status">pending</div>
+        </div>
+        <div class="card metric-card" id="skills-card">
+          <div class="k">Skills</div>
+          <div class="v" id="skill-count">0</div>
+        </div>
+        <div class="card metric-card" id="sources-card">
+          <div class="k">Sources</div>
+          <div class="v" id="source-count">0</div>
+        </div>
+        <div class="card metric-card" id="incidents-card">
+          <div class="k">Incidents</div>
+          <div class="v" id="incident-count">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel workflow-panel priority-panel">
+      <div class="panel-head">
+        <div>
+          <div class="layer-label">Layer 2</div>
+          <h2>Critical Queue</h2>
+        </div>
+        <div class="small-note">Critical and high findings stay at the top. Triage starts here, not deep in the inventory.</div>
+      </div>
+      <div class="summary-grid summary-grid-wide">
+        <div class="summary-card tone-critical">
+          <div class="k">Critical Findings</div>
+          <div class="v small-v" id="critical-risk-count">0</div>
+          <div class="legend-copy">Hostile or destructive patterns that can justify immediate containment.</div>
+        </div>
+        <div class="summary-card tone-high">
+          <div class="k">High Findings</div>
+          <div class="v small-v" id="high-risk-count">0</div>
+          <div class="legend-copy">Serious review pressure, but not automatic malware classification.</div>
+        </div>
+        <div class="summary-card tone-review">
+          <div class="k">Needs Review</div>
+          <div class="v small-v" id="manual-review-count">0</div>
+          <div class="legend-copy">Sensitive skills and sources that need operator judgment.</div>
+        </div>
+        <div class="summary-card tone-blocked">
+          <div class="k">Blocked Hostile</div>
+          <div class="v small-v" id="blocked-hostile-count-top">0</div>
+          <div class="legend-copy">Known-hostile or policy-denied surfaces that should stay quarantined.</div>
+        </div>
+      </div>
+      <div class="table-wrap priority-wrap">
+        <table>
+          <thead>
+            <tr><th>Severity</th><th>Subject</th><th>Ownership</th><th>Legitimacy</th><th>Action</th><th>Summary</th></tr>
+          </thead>
+          <tbody id="priority-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel workflow-panel">
+      <div class="panel-head">
+        <div>
+          <div class="layer-label">Layer 3</div>
+          <h2>Active Finding</h2>
+        </div>
+        <div class="small-note">Select any queued subject to get the full explainer, operator path, and mitigation runbook.</div>
+      </div>
+      <div class="summary-grid mitigation-summary-grid">
+        <div class="summary-card">
+          <div class="k">Selected Subject</div>
+          <div class="v small-v" id="selected-subject-label">none</div>
+          <div class="legend-copy" id="selected-subject-meta">Select a skill or incident to explain findings and stage a mitigation case.</div>
+        </div>
+        <div class="summary-card">
+          <div class="k">Ownership</div>
+          <div class="v small-v" id="selected-ownership">pending</div>
+          <div class="legend-copy" id="selected-legitimacy">No legitimacy decision yet.</div>
+        </div>
+        <div class="summary-card">
+          <div class="k">Mitigation Path</div>
+          <div class="v small-v" id="selected-path">pending</div>
+          <div class="legend-copy" id="selected-path-detail">Plan a case to branch into rebuild, review, or hostile containment.</div>
+        </div>
+        <div class="summary-card">
+          <div class="k">Next Actions</div>
+          <div class="v small-v" id="selected-next-actions">pending</div>
+          <div class="legend-copy">Immediate operator path for the selected subject.</div>
+        </div>
+      </div>
+      <div class="detail-grid detail-grid-wide">
+        <section class="subpanel">
+          <div class="k">Finding Explainer</div>
+          <pre class="feed tall-feed" id="finding-explainer">Select a skill or incident to explain why the console flagged it.</pre>
+        </section>
+        <section class="subpanel">
+          <div class="k">Runbook</div>
+          <pre class="feed tall-feed" id="runbook-feed">Plan a case to render the mitigation runbook here.</pre>
+        </section>
+      </div>
+    </section>
+
+    <section class="panel workflow-panel">
+      <div class="panel-head">
+        <div>
+          <div class="layer-label">Layer 4</div>
+          <h2>Mitigation Workflow</h2>
+        </div>
+        <div class="small-note">Preserve evidence, quarantine first, then branch into rebuild, review, strip, blacklist, or refactor.</div>
+      </div>
+      <div class="mitigation-controls">
+        <label class="subject-input">
+          <span>Subject</span>
+          <input id="mitigation-subject" type="text" placeholder="Click a queue row, skill row, or incident row, or type a skill name">
+        </label>
+        <div class="button-row">
+          <button id="plan-mitigation">Plan Case</button>
+          <button class="ghost" id="accept-review">Accept Review</button>
+          <button class="ghost" id="revoke-review">Revoke Acceptance</button>
+          <button class="ghost" id="mitigate-quarantine">Quarantine</button>
+          <button class="ghost" id="mitigate-strip">Strip</button>
+          <button class="ghost" id="mitigate-request">Request Review</button>
+          <button class="ghost" id="mitigate-rebuild">Rebuild</button>
+          <button class="ghost" id="mitigate-blacklist">Blacklist</button>
+          <button class="ghost" id="mitigate-remove">Remove/Refactor</button>
+          <button class="ghost" id="mitigate-repeat">Repeat Scan</button>
+        </div>
+      </div>
+      <div class="legend-grid">
+        <div class="summary-card tone-critical">
+          <div class="k">Critical</div>
+          <div class="legend-copy">Remote execution, credential theft, persistence, or hostile installer behavior.</div>
+        </div>
+        <div class="summary-card tone-high">
+          <div class="k">High</div>
+          <div class="legend-copy">Hidden launch, stray runtime artifacts, browser abuse, or risky process control.</div>
+        </div>
+        <div class="summary-card tone-review">
+          <div class="k">Medium / Review</div>
+          <div class="legend-copy">Capability surface that needs review but is not malware by itself.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workflow-grid">
+      <div class="stack">
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 5</div>
+              <h2>Operator Actions</h2>
+            </div>
+            <div class="button-row">
+              <button id="run-checks">Run Self Checks</button>
+              <button id="refresh-inventory">Refresh Inventory</button>
+              <button class="ghost" id="refresh-skill-game">Refresh Skill Game</button>
+              <button class="ghost" id="refresh-collaboration">Refresh Collaboration</button>
+              <button id="refresh-readiness">Refresh Public Readiness</button>
+              <button class="ghost" id="refresh-log">Refresh Audit Log</button>
+            </div>
+          </div>
+          <div class="small-note">The local agent attaches after the window opens. Destructive actions remain operator-confirmed. Support actions copy public links instead of opening browsers.</div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 6</div>
+              <h2>Inventory Summary</h2>
+            </div>
+            <div class="small-note">Built-ins, overlay drift, and review pressure.</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="k">Builtin Drift</div>
+              <div class="v small-v" id="drift-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Candidate Only</div>
+              <div class="v small-v" id="candidate-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Manual Review</div>
+              <div class="v small-v" id="manual-review-count-side">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Blocked Hostile</div>
+              <div class="v small-v" id="blocked-hostile-count">0</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <h2>Skills</h2>
+            <div class="small-note" id="advisor-note">Advisor note pending.</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Skill</th><th>Source</th><th>Presence</th><th>Risk</th><th>Action</th></tr>
+              </thead>
+              <tbody id="skills-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <h2>Incidents</h2>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Severity</th><th>Subject</th><th>Summary</th></tr>
+              </thead>
+              <tbody id="incidents-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Sources</h2>
+              <div class="small-note">Active local and interop sources stay separate from research-only watchlists.</div>
+            </div>
+          </div>
+          <div class="source-section">
+            <div class="subtable-label">Active Sources</div>
+            <div class="table-wrap short">
+              <table>
+                <thead>
+                  <tr><th>Source</th><th>Risk</th><th>Action</th></tr>
+                </thead>
+                <tbody id="sources-active-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="source-section">
+            <div class="subtable-label">Research Watchlist</div>
+            <div class="table-wrap short">
+              <table>
+                <thead>
+                  <tr><th>Source</th><th>Posture</th><th>Action</th></tr>
+                </thead>
+                <tbody id="sources-watchlist-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <h2>Interop & Vetting</h2>
+            <div class="small-note">Codex app, VS Code, GitHub Copilot, and legitimacy status for the local stack.</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="k">Official Trusted</div>
+              <div class="v small-v" id="official-trusted-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Owned Trusted</div>
+              <div class="v small-v" id="owned-trusted-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Accepted Review</div>
+              <div class="v small-v" id="accepted-review-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Needs Review</div>
+              <div class="v small-v" id="needs-review-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Blocked Hostile</div>
+              <div class="v small-v" id="blocked-hostile-count-side">0</div>
+            </div>
+          </div>
+          <div class="table-wrap short">
+            <table>
+              <thead>
+                <tr><th>Surface</th><th>Scope</th><th>Presence</th><th>Notes</th></tr>
+              </thead>
+              <tbody id="interop-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 7</div>
+              <h2>Skill Game</h2>
+            </div>
+            <div class="small-note">Longitudinal XP and original-skill level ledger attached to the live console.</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="k">Level</div>
+              <div class="v small-v" id="game-level">1</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">XP</div>
+              <div class="v small-v" id="game-xp">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Streak</div>
+              <div class="v small-v" id="game-streak">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Upgrade Targets</div>
+              <div class="v small-v" id="game-target-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Original Skills</div>
+              <div class="v small-v" id="game-original-count">0</div>
+            </div>
+          </div>
+          <div class="detail-grid">
+            <section class="subpanel">
+              <div class="k">Recent Reward Events</div>
+              <pre class="feed short-feed" id="skill-game-feed">No skill-game ledger yet.</pre>
+            </section>
+            <section class="subpanel">
+              <div class="k">Recommended Upgrade Targets</div>
+              <pre class="feed short-feed" id="skill-game-targets">No upgrade targets queued.</pre>
+            </section>
+            <section class="subpanel">
+              <div class="k">Original Skill Levels</div>
+              <pre class="feed short-feed" id="skill-game-levels">No original skill levels mapped yet.</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 7B</div>
+              <h2>Collaboration Learning</h2>
+            </div>
+            <div class="small-note">Local collaboration events feed future skill creation, upgrades, and consolidation work.</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="k">Events</div>
+              <div class="v small-v" id="collaboration-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Stable Events</div>
+              <div class="v small-v" id="collaboration-stable-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Queued Skill Work</div>
+              <div class="v small-v" id="collaboration-target-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Trust Ledger</div>
+              <div class="v small-v" id="collaboration-trust-status">pending</div>
+            </div>
+          </div>
+          <div class="detail-grid">
+            <section class="subpanel">
+              <div class="k">Recent Collaboration Events</div>
+              <pre class="feed short-feed" id="collaboration-feed">No collaboration events recorded yet.</pre>
+            </section>
+            <section class="subpanel">
+              <div class="k">Recommended Skill Work</div>
+              <pre class="feed short-feed" id="collaboration-targets">No collaboration-derived skill work queued.</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 8</div>
+              <h2>Privacy Findings</h2>
+            </div>
+          </div>
+          <pre class="feed" id="privacy-feed">No data yet.</pre>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 9</div>
+              <h2>Public Release</h2>
+            </div>
+            <div class="small-note" id="readiness-status">Pending</div>
+          </div>
+          <pre class="feed" id="readiness-feed">No release-readiness data yet.</pre>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <h2>About & Support</h2>
+            <div class="small-note">Public links only. No external browser launch.</div>
+          </div>
+          <div class="about-grid">
+            <div class="about-meta">
+              <div class="about-row"><span>Application</span><strong id="about-application">Pending</strong></div>
+              <div class="about-row"><span>Version</span><strong id="about-version">Pending</strong></div>
+              <div class="about-row"><span>Developer</span><strong id="about-developer">Pending</strong></div>
+              <div class="about-row"><span>License</span><strong id="about-license">Pending</strong></div>
+            </div>
+            <div class="support-card">
+              <div class="support-title">Support and public contact</div>
+              <div class="small-note" id="about-description">Loading about information.</div>
+              <div class="support-links" id="support-links"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <h2>Audit Log</h2>
+          </div>
+          <pre class="feed" id="audit-feed">No audit events yet.</pre>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <h2>Mitigation Cases</h2>
+            <div class="small-note">Local case history for quarantine, rebuild, blacklist, and rescan loops.</div>
+          </div>
+          <pre class="feed" id="cases-feed">No mitigation cases yet.</pre>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

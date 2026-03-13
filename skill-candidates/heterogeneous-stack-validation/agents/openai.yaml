@@ -1,0 +1,4 @@
+interface:
+  display_name: Heterogeneous Stack Validation
+  short_description: Validate mixed local and remote stack lanes with privacy-safe evidence.
+  default_prompt: "Use $heterogeneous-stack-validation to verify local and remote runtime lanes, run real inference smokes, enforce repo validation gates, and return a privacy-safe truth table."

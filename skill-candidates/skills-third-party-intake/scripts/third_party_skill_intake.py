@@ -12,6 +12,12 @@ import re
 import sys
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(ROOT / "scripts"))
+
+from supply_chain_guard import scan_skill_dir_content, scan_skill_tree
+
 MAX_READ_BYTES = 512 * 1024
 SCRIPT_SUFFIXES = (".sh", ".bash", ".zsh", ".ksh", ".fish", ".ps1", ".bat", ".cmd")
 MARKDOWN_SUFFIXES = (".md", ".markdown")
@@ -307,6 +313,10 @@ def summarize(source_label: str, source_root: Path, skill_dir: Path) -> dict[str
     high_risk_hits = detect_high_risk(scan_blob)
     if high_risk_hits:
         findings.append(Finding("high", "high_risk_snippet", f"high-risk patterns: {len(high_risk_hits)}"))
+    supply_chain_findings = scan_skill_dir_content(skill_dir)
+    supply_chain_findings.extend(scan_skill_tree(skill_dir, source_root))
+    for item in supply_chain_findings:
+        findings.append(Finding(item.severity, item.code, item.message))
 
     compatibility = 1.0
     if not fm_name:
@@ -339,6 +349,10 @@ def summarize(source_label: str, source_root: Path, skill_dir: Path) -> dict[str
     security = 1.0
     if high_risk_hits:
         security -= 0.55
+    critical_supply_chain = sum(1 for item in supply_chain_findings if item.severity == "critical")
+    high_supply_chain = sum(1 for item in supply_chain_findings if item.severity == "high")
+    security -= critical_supply_chain * 0.50
+    security -= high_supply_chain * 0.20
     if unsafe_links:
         security -= 0.35
     if shebang_files:
@@ -374,6 +388,10 @@ def summarize(source_label: str, source_root: Path, skill_dir: Path) -> dict[str
         "unsafe_links": sorted(set(unsafe_links)),
         "sensitive_markers": sorted(markers),
         "high_risk_hits": high_risk_hits,
+        "supply_chain_findings": [
+            {"severity": item.severity, "code": item.code, "message": item.message}
+            for item in supply_chain_findings
+        ],
         "compatibility": round(compatibility, 4),
         "quality": round(quality, 4),
         "security": round(security, 4),

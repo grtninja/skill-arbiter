@@ -4,36 +4,32 @@ Describe what changed and why.
 
 ## Validation
 
-- [ ] `python3 scripts/arbitrate_skills.py --help`
-- [ ] `python3 scripts/skill_game.py --help`
-- [ ] `python3 scripts/check_private_data_policy.py`
-- [ ] `python3 -m py_compile scripts/arbitrate_skills.py scripts/skill_game.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py`
-- [ ] Release metadata updated for release-impacting changes (`python3 scripts/prepare_release.py --part patch`)
+- [ ] `python scripts/arbitrate_skills.py --help`
+- [ ] `python scripts/nullclaw_agent.py --help`
+- [ ] `python scripts/generate_skill_catalog.py`
+- [ ] `python scripts/check_private_data_policy.py`
+- [ ] `python scripts/check_public_release.py`
+- [ ] `pytest -q`
+- [ ] `python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/public_readiness.py`
+- [ ] Release metadata updated for release-impacting changes (`python scripts/prepare_release.py --part patch`)
 - [ ] Docs updated if behavior changed
-- [ ] `AGENTS.md`, `README.md`, and `CONTRIBUTING.md` are aligned with policy changes
-- [ ] `references/skill-catalog.md` updated for any skill-set change
-- [ ] `references/usage-chaining-multitasking.md` updated for chaining or multitasking behavior changes
-- [ ] `references/vscode-skill-handling.md` updated if VS Code/Codex skill handling or recovery workflow changed
-- [ ] `references/skill-progression.md` updated when core skill maturity levels changed
-- [ ] Confirmed no conflict with VS Code built-ins (overlay is additive/moderation-only)
-- [ ] For skill-system changes: `skill-hub` routing plus `skill-installer-plus` plan/admit evidence captured where applicable
-- [ ] For skill-system changes: `usage-watcher` analysis/plan evidence captured and chaining mode (`economy`/`standard`/`surge`) documented
-- [ ] For skill-system changes: `skill-cost-credit-governor` analysis/policy evidence captured and any `warn`/`throttle`/`disable` actions documented
-- [ ] For skill-system changes: `skill-cold-start-warm-path-optimizer` analysis/plan evidence captured and prewarm decision documented
-- [ ] For multi-repo skill-system changes: `skills-cross-repo-radar` report captured with JSON evidence path
-- [ ] For multi-repo skill-system changes: `code-gap-sweeping` report captured with JSON evidence path
-- [ ] For third-party skill-source changes: `skills-third-party-intake` report captured with recommendation counts and blocker details
-- [ ] For full third-party reconciliation imports: manifest captured (`candidate-reconcile-*.json`) mapping imported skills to source + intake recommendation
-- [ ] For third-party-origin skill changes: `references/third-party-skill-attribution.md` updated (repo/source/commit/origin path)
-- [ ] For interrupted/resumed workstreams: `request-loopback-resume` state + resume JSON evidence path captured
-- [ ] For skill-system changes: `scripts/skill_game.py` score event recorded with arbiter/auditor evidence paths
-- [ ] For multi-lane work: `multitask-orchestrator` usage and `skill-hub` loopback behavior documented
-- [ ] For new/updated skills: attach `skill-arbiter-lockdown-admission` evidence (`action`, `persistent_nonzero`, `max_rg`) from `--json-out`
-- [ ] For new/updated skills: attach `skill-installer-plus` plan/admit outputs (decision, score, arbiter JSON path)
-- [ ] For new/updated skills: include `skill-auditor` classification (`unique` or `upgrade`) and nearest-peer rationale
-- [ ] For `upgrade` classifications: document why existing skill update was chosen (or justify a new split lane)
-- [ ] If skills were added/updated, response text includes: `New Skill Unlocked: <SkillName>` + `<SkillName> Leveled up to <LevelNumber>`
+- [ ] `AGENTS.md`, `BOUNDARIES.md`, `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `SKILL.md` are aligned
+- [ ] `docs/PROJECT_SCOPE.md` and `docs/SCOPE_TRACKER.md` are aligned
+- [ ] `references/skill-catalog.md` regenerated for inventory or source changes
+- [ ] `references/usage-chaining-multitasking.md` updated when chaining or live-ops behavior changed
+- [ ] `references/vscode-skill-handling.md` updated when baseline/overlay handling changed
+- [ ] `references/skill-progression.md` updated when core-skill maturity changed
+- [ ] Confirmed built-ins remain additive and upstream
+- [ ] Confirmed no private repo names, usernames, or absolute private paths entered repo-tracked files
+- [ ] Confirmed public support links are copy-only in the desktop UI and no browser-launch behavior was added
+- [ ] For source-risk changes: `references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md` and `references/third-party-skill-attribution.md` updated as needed
 
 ## Risk Notes
 
-Call out any behavior changes related to process sampling, deletion, blacklisting, or repo source trust.
+Call out any behavior changes related to:
+
+- quarantine/admission policy
+- destructive operator confirmations
+- local advisor model behavior
+- loopback API surface
+- self-governance and privacy gates

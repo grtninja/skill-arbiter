@@ -1,6 +1,35 @@
 # Changelog
-
 All notable changes to this project are documented in this file.
+
+## [Unreleased]
+
+### Fixed
+
+- prevent stale loopback GET caching from leaving the embedded desktop on old inventory, skill-game, or collaboration state
+- surface skill-game and collaboration refresh failures in the desktop UI instead of silently leaving zero/default placeholders
+- switch installed desktop and Start Menu launchers to a silent `wscript` path so the console does not flash empty PowerShell or `cmd` windows on start
+- keep rejected hostile third-party candidate stubs out of the active live inventory so the console focuses on installed or reviewable skills instead of archived reject lanes
+
+### Changed
+
+- make the README and operator instructions explicit that standalone desktop mode is only partial, and that the app is only fully useful when real Codex or GitHub Copilot-driven work is feeding the interop, collaboration, and skill-learning lanes
+- add an explicit AI warning that Codex, Copilot, and other AI agents can make mistakes, so the app must not be treated as infallible ground truth
+
+## [0.2.20] - 2026-03-11
+
+### Changed
+
+- chore: reconcile canonical root skill inventory updates
+- Curate router integration skills for MeshGPT and OpenClaw/NullClaw
+- chore: harden privacy scan for SSOT references
+- fix: remove private SSOT reference from readme
+- feat: reconcile third-party skills and chain workflows
+- feat: add third-party intake and vetted utility skills
+- feat: add cross-repo radar candidate and harden public-shape guardrails
+- docs: make VRoid path priority user-profile portable
+- feat: ship the Skill Arbiter Security Console desktop UI with embedded about/support and public-release readiness panels
+- feat: add loopback about/public-readiness endpoints plus branded icon and shortcut launch surfaces
+- docs: align public support, release gating, and startup contract across repo policy files
 
 ## [0.2.19] - 2026-03-05
 
@@ -526,7 +555,3 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
-
-
-
-

@@ -9,7 +9,15 @@ import json
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from pathlib import Path
+import sys
 from typing import Any
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from skill_arbiter.stack_accounting import fetch_stack_accounting
 
 DATE_FORMATS = (
     "%Y-%m-%d",
@@ -48,6 +56,22 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=-1.0,
         help="Optional weekly limit remaining percent (0-100)",
+    )
+    analyze.add_argument(
+        "--stack-health-url",
+        default="",
+        help="Optional live stack /health URL used to ingest TPK and dual-ledger evidence",
+    )
+    analyze.add_argument(
+        "--stack-summary-url",
+        default="",
+        help="Optional live stack /api/accounting/summary URL (auto-derived from --stack-health-url when omitted)",
+    )
+    analyze.add_argument(
+        "--stack-timeout-seconds",
+        type=float,
+        default=5.0,
+        help="Timeout for live stack evidence fetches",
     )
     analyze.add_argument("--json-out", default="", help="Optional report JSON output path")
     analyze.add_argument("--format", choices=("table", "json"), default="table", help="Output format")
@@ -215,6 +239,14 @@ def analyze_usage(args: argparse.Namespace) -> dict[str, Any]:
     five_hour_remaining = remaining_status(args.five_hour_limit_remaining)
     weekly_remaining = remaining_status(args.weekly_limit_remaining)
 
+    stack_evidence: dict[str, Any] | None = None
+    if str(args.stack_health_url or "").strip():
+        stack_evidence = fetch_stack_accounting(
+            health_url=str(args.stack_health_url),
+            summary_url=str(args.stack_summary_url or ""),
+            timeout_seconds=float(args.stack_timeout_seconds),
+        )
+
     recommendations: list[str] = []
     if weekly_budget["status"] == "red" or weekly_remaining["status"] == "red":
         recommendations.append(
@@ -234,6 +266,23 @@ def analyze_usage(args: argparse.Namespace) -> dict[str, Any]:
     recommendations.append(
         "Prefer targeted file lookups and bounded index/query workflows over repeated full-repo scans."
     )
+    if stack_evidence is not None:
+        if stack_evidence["preview_positive"]:
+            recommendations.append(
+                "Local stack is displacing benchmark API cost. Prefer loopback routing and local-first skills before remote-heavy chains."
+            )
+        if stack_evidence["authoritative_cost_state"] in {"derived", "verified"}:
+            recommendations.append(
+                "Measured local runtime evidence is available. Use authoritative local cost state for billing truth and preview state for displacement strategy."
+            )
+        if stack_evidence["preview_cost_state"] in {"priced", "hinted"}:
+            recommendations.append(
+                "Preview displacement value is available. Treat it as non-billing economic guidance for spend reduction and rate-limit risk management."
+            )
+        if stack_evidence["tpk"] is not None:
+            recommendations.append(
+                "TPK is live. Favor lanes with stronger TPK and low runtime latency when choosing local execution paths."
+            )
 
     service_rows = []
     for service in sorted(service_totals.keys()):
@@ -252,7 +301,7 @@ def analyze_usage(args: argparse.Namespace) -> dict[str, Any]:
         for key, value in sorted(daily_totals.items(), key=lambda item: item[0])
     ]
 
-    return {
+    report = {
         "window": {
             "start": window_start.isoformat(),
             "end": anchor_day.isoformat(),
@@ -279,6 +328,9 @@ def analyze_usage(args: argparse.Namespace) -> dict[str, Any]:
         "daily": day_rows,
         "recommendations": recommendations,
     }
+    if stack_evidence is not None:
+        report["stack_evidence"] = stack_evidence
+    return report
 
 
 def build_budget_plan(args: argparse.Namespace) -> dict[str, Any]:
@@ -408,6 +460,52 @@ def render_analyze_table(report: dict[str, Any]) -> None:
     print("\nRecommendations")
     for item in report["recommendations"]:
         print(f"- {item}")
+    stack = report.get("stack_evidence")
+    if isinstance(stack, dict):
+        print("\nStack Evidence")
+        print_kv_table(
+            [
+                ("local_ready", str(bool(stack.get("local_ready"))).lower()),
+                (
+                    "tpk",
+                    "n/a"
+                    if stack.get("tpk") is None
+                    else f"{stack.get('tpk')} ({stack.get('tpk_source') or 'unspecified'})",
+                ),
+                (
+                    "tpk_authoritative",
+                    "n/a"
+                    if stack.get("tpk_authoritative") is None
+                    else str(stack.get("tpk_authoritative")),
+                ),
+                (
+                    "tpk_preview",
+                    "n/a"
+                    if stack.get("tpk_preview") is None
+                    else str(stack.get("tpk_preview")),
+                ),
+                ("authoritative_cost_state", str(stack.get("authoritative_cost_state") or "")),
+                ("preview_cost_state", str(stack.get("preview_cost_state") or "")),
+                (
+                    "displacement_value_preview",
+                    "n/a"
+                    if stack.get("displacement_value_preview") is None
+                    else str(stack.get("displacement_value_preview")),
+                ),
+                (
+                    "benchmark_api_equivalent_cost",
+                    "n/a"
+                    if stack.get("benchmark_api_equivalent_cost") is None
+                    else str(stack.get("benchmark_api_equivalent_cost")),
+                ),
+                (
+                    "runtime_latency_ms",
+                    "n/a"
+                    if stack.get("runtime_latency_ms") is None
+                    else str(stack.get("runtime_latency_ms")),
+                ),
+            ]
+        )
 
 
 def render_plan_table(report: dict[str, Any]) -> None:

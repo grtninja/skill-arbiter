@@ -11,6 +11,13 @@
    - `docs/SCOPE_TRACKER.md`
 5. Record verification evidence in PR/work summary.
 
+## Product truth requirement
+
+- README and operator-facing instructions must say explicitly that the desktop app is only fully useful when driven by real Codex or GitHub Copilot workflows.
+- Do not present the current desktop as a fully self-sufficient security/governance console when those upstream workflows are absent.
+- Standalone local inventory and mitigation are real; collaboration, skill-game, and recommendation lanes are partial without Codex/Copilot-driven work.
+- README and operator-facing instructions must also state plainly that Codex, Copilot, and AI agents can make mistakes, and that operator review remains required.
+
 ## Guardrails
 
 - No cross-repo lane violations.

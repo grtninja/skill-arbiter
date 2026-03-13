@@ -106,12 +106,14 @@ def run_git(repo_path: Path, args: list[str]) -> str:
         ["git", "-C", str(repo_path), *args],
         check=False,
         capture_output=True,
-        text=True,
+        text=False,
     )
+    stdout = result.stdout.decode("utf-8", errors="replace")
+    stderr = result.stderr.decode("utf-8", errors="replace")
     if result.returncode != 0:
-        message = result.stderr.strip() or result.stdout.strip() or "unknown git error"
+        message = stderr.strip() or stdout.strip() or "unknown git error"
         raise ValueError(f"git {' '.join(args)} failed in {repo_path}: {message}")
-    return result.stdout
+    return stdout
 
 
 def parse_args() -> argparse.Namespace:
@@ -195,7 +197,6 @@ def resolve_base_ref(repo_path: Path, base_ref: str) -> str:
             ["git", "-C", str(repo_path), "rev-parse", "--verify", "--quiet", candidate],
             check=False,
             capture_output=True,
-            text=True,
         )
         if result.returncode == 0:
             return candidate
@@ -313,7 +314,7 @@ def todo_fixme_additions(
     merge_base: str,
     diff_mode: str = DIFF_MODE_COMBINED,
 ) -> list[str]:
-    patch = collect_patch_text(repo_path, merge_base, diff_mode)
+    patch = collect_patch_text(repo_path, merge_base, diff_mode) or ""
     evidence: list[str] = []
     current_file = ""
     for line in patch.splitlines():

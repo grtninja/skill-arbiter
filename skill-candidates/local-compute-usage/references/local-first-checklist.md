@@ -32,6 +32,13 @@ For `<PRIVATE_REPO_B>` lanes:
 2. For MemryX flows, default to `acclBench --hello`.
 3. Treat probe failures as fail-closed unless user explicitly approves a non-hardware path.
 4. Capture the exact command and first failure line in evidence output.
+5. When the stack exposes loopback accounting, capture:
+   - `TPK`
+   - `authoritative_cost_state`
+   - `preview_cost_state`
+   - `displacement_value_preview`
+   - `benchmark_api_equivalent_cost`
+   - runtime latency and lane-health context
 
 ## 5) Fail-Closed Conditions
 
@@ -41,6 +48,7 @@ Stop and reroute before mutations if any of the following are true:
 2. VS Code/local CLI preflight fails for a required local workflow.
 3. Endpoint probe fails in a workflow that requires live local service checks.
 4. Hardware readiness probe fails in a hardware-backed workflow.
+5. Required stack accounting evidence cannot be fetched in a workflow that depends on local-compute economic proof.
 
 ## 6) Evidence Capture
 
@@ -50,3 +58,4 @@ Capture and keep:
 2. Endpoint list used for locality checks.
 3. Hardware probe command(s) and result summary.
 4. Any fail-closed reason and the reroute target skill.
+5. Loopback accounting evidence showing whether local compute is actually reducing benchmark cost exposure.

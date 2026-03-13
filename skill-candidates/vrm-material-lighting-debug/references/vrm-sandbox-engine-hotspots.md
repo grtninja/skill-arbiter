@@ -1,6 +1,6 @@
-# VRM Sandbox Engine Hotspots
+# Desktop VRM Engine Hotspots
 
-Use these hotspots when applying the fix in `VRM-Sandbox`.
+Use these hotspots when applying the fix in `<PRIVATE_REPO_D>`.
 
 ## Main File
 

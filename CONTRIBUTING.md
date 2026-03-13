@@ -1,150 +1,111 @@
 # Contributing
 
-## Development Setup
+## Development setup
 
 Requirements:
 
 - Python 3.10+
 - Git
-- Windows host (for realistic `rg.exe` process sampling)
+- Windows host
+- `pywebview>=5.0` for the embedded desktop shell
 
-Quick checks:
+Install dependencies:
 
 ```bash
-python3 --version
+python -m pip install -r requirements.txt
+```
+
+Quick validation:
+
+```bash
 ./scripts/install_local_hooks.sh
-python3 scripts/arbitrate_skills.py --help
-python3 scripts/skill_game.py --help
-python3 scripts/prepare_release.py --help
-python3 scripts/check_release_hygiene.py --help
-python3 scripts/check_private_data_policy.py
-python3 -m py_compile scripts/arbitrate_skills.py scripts/skill_game.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py
+python scripts/arbitrate_skills.py --help
+python scripts/nullclaw_agent.py --help
+python scripts/generate_skill_catalog.py
+python scripts/check_private_data_policy.py
+python scripts/check_public_release.py
+pytest -q
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/public_readiness.py
 ```
 
-## Release Procedure
+## Desktop app flow
 
-For release-impacting changes (for example `scripts/`, `SKILL.md`, or non-doc files):
+Do not invert the startup model.
 
-```bash
-python3 scripts/prepare_release.py --part patch
-```
+Required lifecycle:
 
-Then update the generated `CHANGELOG.md` notes so they accurately describe the PR.
+1. app open
+2. local agent attach/start
+3. self-checks
+4. inventory refresh
+5. operator actions enabled
 
-Docs-only and metadata-only PRs (for example `README.md`, `references/`, `.github/`) can skip the release bump.
+Do not add an external browser dependency to that flow.
 
-For personal/local skill admission runs, prefer:
-
-```bash
-python3 scripts/arbitrate_skills.py <skill> --source-dir "$CODEX_HOME/skills" --personal-lockdown
-```
-
-For skill-centric workstreams, use the default system chain:
-
-1. Route requests with `skill-hub`.
-2. Apply baseline sanity checks with `skill-common-sense-engineering`.
-3. Run `usage-watcher` to set usage mode and capture usage analysis/plan artifacts.
-4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy artifacts.
-5. Run `skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and capture analysis/plan artifacts.
-6. For multi-repo workstreams, run `skills-cross-repo-radar` for bounded recent-work evidence first.
-7. For third-party skill imports, run `skills-third-party-intake` before any admission decisions.
-8. For multi-repo workstreams, run `code-gap-sweeping` to detect deterministic implementation gaps.
-9. For interrupted workstreams, run `request-loopback-resume` to checkpoint lane state and compute deterministic next actions.
-10. Run `skill-installer-plus` for install recommendations and admission ledger updates.
-11. Audit new/changed skills with `skill-auditor`.
-12. If multiple repos are involved, run `skill-enforcer` for policy alignment.
-13. For independent subtasks, run `multitask-orchestrator` and loop unresolved lanes back through `skill-hub`.
-14. Record XP/level updates with `python3 scripts/skill_game.py ...` after gate evidence is captured.
-
-Mandatory checks for skill additions/updates:
-
-1. `skill-auditor` output must classify each changed skill as `unique` or `upgrade`.
-2. `skill-arbiter-lockdown-admission` evidence must be attached and pass review (`action`, `persistent_nonzero`, `max_rg`).
-3. If classification is `upgrade`, prefer updating existing skills unless boundaries are explicitly distinct.
-4. Include `skill-installer-plus` plan/admit evidence so recommendation history stays current.
-5. Include usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer` for chain decisions.
-
-## VS Code Compatibility and Skill-Wipe Recovery
-
-This repository builds on VS Code/Codex built-ins; it does not replace them.
-
-If built-ins appear but overlay skills are missing after an editor/platform update:
-
-1. Compare overlay source with installed set:
+For Windows-host launches, prefer the managed launcher:
 
 ```powershell
-$repoSkills = Get-ChildItem -Directory skill-candidates | Select-Object -ExpandProperty Name
-$installed = Get-ChildItem -Directory "$env:USERPROFILE\.codex\skills" | Select-Object -ExpandProperty Name
-$repoSkills | Where-Object { $_ -notin $installed }
+powershell -ExecutionPolicy Bypass -File .\scripts\start_security_console.ps1
 ```
 
-2. Restore overlay skills additively:
+Install the branded desktop/start-menu shortcuts with:
 
 ```powershell
-$srcRoot = Resolve-Path "skill-candidates"
-$dstRoot = Join-Path $env:USERPROFILE ".codex\skills"
-Get-ChildItem -Directory $srcRoot | ForEach-Object {
-  $dst = Join-Path $dstRoot $_.Name
-  if (!(Test-Path $dst)) { New-Item -ItemType Directory -Path $dst | Out-Null }
-  Copy-Item -Recurse -Force (Join-Path $_.FullName '*') $dst
-}
+powershell -ExecutionPolicy Bypass -File .\scripts\install_security_console_shortcut.ps1
 ```
 
-3. Re-run skill admission safety checks (`skill-arbiter`) before broad use.
+## Release procedure
 
-See `references/vscode-skill-handling.md` for full incident notes and long-term protections.
+For release-impacting changes:
 
-## Privacy Lock
+```bash
+python scripts/prepare_release.py --part patch
+```
 
-This repository is public-shape only:
+Then update `CHANGELOG.md` so it describes the shipped runtime and doc changes accurately.
 
-- Do not commit private repository identifiers.
-- Do not commit user-specific absolute paths (for example `/home/<user>/...` or `C:\\Users\\<user>\\...`).
-- Use placeholders in docs and skills (for example `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`).
+## Privacy lock
 
-Hard gates:
+This repository is public-shape only.
 
-- Pre-commit hook runs `python3 scripts/check_private_data_policy.py --staged`.
-- CI runs `python3 scripts/check_private_data_policy.py` on all tracked files.
+- Use placeholders for private repo names and user paths.
+- Keep raw host evidence in ignored local state only.
+- Do not commit usernames, absolute private paths, or private repo identifiers.
 
-## Pull Requests
+Required gates:
+
+```bash
+python scripts/check_private_data_policy.py --staged
+python scripts/check_private_data_policy.py
+python scripts/check_public_release.py
+```
+
+## Pull requests
 
 Before opening a PR:
 
-1. Keep changes complete, synchronized, and fully aligned across affected surfaces.
-2. Update docs (`README.md`, `SKILL.md`, or `references/`) if behavior changes.
-3. Run the quick checks above.
-4. Ensure release metadata is updated for release-impacting changes (`pyproject.toml` + `CHANGELOG.md`).
-5. Confirm CI `Release hygiene check` passes on the PR.
-6. Confirm CI `Privacy policy check` passes on the PR.
-7. Include rationale and risk notes in the PR description.
-8. If skills changed, update:
-   - `references/skill-catalog.md`
-   - `references/usage-chaining-multitasking.md`
-   - `references/vscode-skill-handling.md` (when handling/reset behavior changed)
-   - `references/skill-progression.md` (when core skill maturity materially changes)
+1. Keep runtime, tests, docs, and generated references aligned.
+2. Run the validation block above.
+3. Regenerate `references/skill-catalog.md`.
+4. Update scope docs and policy docs if behavior changed.
+5. Update release metadata for release-impacting changes.
+6. Include risk notes for:
+   - quarantine behavior
+   - source trust changes
+   - local advisor behavior
+   - loopback API changes
+   - public-release readiness changes
+7. Keep built-ins additive; do not disable upstream VS Code/Codex skills.
 
-For new or updated skill candidates, include arbitration evidence summary in the PR:
+## Skills and sources
 
-1. Run `python3 scripts/arbitrate_skills.py <skill> [<skill> ...] --source-dir skill-candidates --window 10 --baseline-window 3 --threshold 3 --max-rg 3 --personal-lockdown --json-out /tmp/skill-arbiter-evidence.json`.
-2. Report per-skill `action`, `persistent_nonzero`, and `max_rg`.
-3. Run `python3 skill-candidates/skill-auditor/scripts/skill_audit.py --skills-root skill-candidates --include-skill <skill> --arbiter-report /tmp/skill-arbiter-evidence.json --require-arbiter-evidence`.
-4. Report per-skill classification: `unique` or `upgrade` (with nearest peer).
-5. Keep expected safe target: `action=kept`, `persistent_nonzero=false`, `max_rg=0`.
-6. Record the run in the local game ledger:
-   `python3 scripts/skill_game.py --task "<skill update>" --used-skill skill-hub --used-skill skill-common-sense-engineering --used-skill usage-watcher --used-skill skill-cost-credit-governor --used-skill skill-cold-start-warm-path-optimizer --used-skill skill-installer-plus --used-skill skill-auditor --used-skill skill-enforcer --used-skill skill-arbiter-lockdown-admission --arbiter-report /tmp/skill-arbiter-evidence.json --audit-report /tmp/skill-audit.json --enforcer-pass`.
-7. If sourcing from external catalogs, attach `skills-third-party-intake` JSON evidence with recommendation and blocker counts.
-8. For full-catalog reconciliation imports, attach a reconciliation manifest mapping each imported skill to source and intake recommendation (for example `.tmp/candidate-reconcile-<date>.json`).
-9. Update `references/third-party-skill-attribution.md` for every third-party-origin skill addition/update.
+For new or changed skill governance surfaces:
 
-If a skill was added or improved in the work, include this declaration in the response/update text:
-
-```text
-New Skill Unlocked: <SkillName>
-<SkillName> Leveled up to <LevelNumber>
-```
+- run the supply-chain checks
+- keep `references/third-party-skill-attribution.md` aligned
+- keep `references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md` aligned when source risk posture changes
+- keep `references/vscode-skill-handling.md` aligned when baseline or overlay handling changes
 
 ## Security
 
-- Do not commit secrets, tokens, credentials, or private keys.
-- If you identify a vulnerability, follow `SECURITY.md`.
+If you identify a security issue, follow `SECURITY.md`.

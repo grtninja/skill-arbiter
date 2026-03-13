@@ -1,350 +1,92 @@
 ---
 name: skill-arbiter
-description: Public candidate skill for arbitrating Codex skill installs on Windows hosts. Use when you need to reintroduce skills one-by-one, detect which skill triggers persistent rg.exe/CPU churn, and automatically remove or blacklist offending skills with reproducible evidence.
+description: Run the local NullClaw host security app for skill governance, curated-source discovery, guarded threat suppression, and self-governance on Windows hosts.
 ---
 
 # Skill Arbiter
 
-The St. Peter of skills.
+Use this skill when the work requires:
 
-Author: Edward Silvia  
-License: MIT
-
-Use this skill to decide which skills get admitted and which get quarantined.
+- live skill inventory and source reconciliation
+- OpenClaw / NullClaw source-risk review
+- VS Code/Codex built-in baseline drift checks
+- Codex app / VS Code / GitHub Copilot instruction-surface interop checks
+- local Codex config and loopback LM Studio advisor checks
+- stale or untracked Python detection
+- quarantine/admission decisions
+- public-shape privacy validation
+- self-governance of this repo and its release artifacts
+- ownership/legitimacy vetting for installed, candidate, and official baseline skills
 
 ## Run
 
+Open the desktop app:
+
 ```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  doc screenshot security-best-practices security-threat-model playwright \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3
+python scripts/nullclaw_desktop.py
 ```
 
-For personally-created skills:
+Run the local loopback agent without the desktop shell:
 
 ```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  my-new-skill \
-  --source-dir "$CODEX_HOME/skills" \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --promote-safe
+python scripts/nullclaw_agent.py
 ```
 
-For personal lockdown mode:
+Refresh the machine-generated catalog:
 
 ```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  my-new-skill \
-  --source-dir "$CODEX_HOME/skills" \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown
+python scripts/generate_skill_catalog.py
+```
+
+Run the public-shape gate:
+
+```bash
+python scripts/check_private_data_policy.py
+```
+
+Run the public-release gate:
+
+```bash
+python scripts/check_public_release.py
 ```
 
 ## Behavior
 
-1. Install each candidate skill one-by-one from curated source.
-2. Sample baseline `rg.exe` activity before each install and evaluate churn using delta-over-baseline samples.
-3. Remove and blacklist offenders automatically.
-4. Treat blacklisted skills as permanently denied and delete them if present.
-5. Respect local whitelist entries in `<dest>/.whitelist.local` and skip arbitration for approved skills.
-6. Respect local immutable entries in `<dest>/.immutable.local`; immutable skills are never removed/blacklisted.
-7. Third-party (repo-based) skills are deny-by-default and deleted unless `--promote-safe` is used.
-8. `--promote-safe` auto-adds passing skills to whitelist + immutable files.
-9. Emit optional JSON evidence via `--json-out`.
-10. `--personal-lockdown` requires local `--source-dir`, forces whitelist+immutable promotion, and rejects symlinked control files.
-11. Operate as an overlay moderation layer on top of VS Code/Codex built-ins; do not disable or replace upstream built-ins.
+1. Open the desktop shell first.
+2. Attach or start the loopback agent.
+3. Run privacy and self-governance checks.
+4. Refresh the full skill/source inventory.
+5. Surface the layered operator flow: startup, critical queue, active finding, mitigation, then evidence layers.
+6. Keep destructive actions operator-confirmed.
+7. Keep audit events in local state, not repo-tracked files.
+8. Use a loopback LM Studio coding model for short coding-security guidance, preferring local Qwen when available.
+9. Surface public support and security links as copy-only actions, not browser launches.
 
-## Safe Modes
+## Local advisor
 
-- Use `--dry-run` to preview actions without modifying files.
-- Use `--dest` to test in an isolated skills directory.
+Default local advisor configuration:
 
-## VS Code Overlay Recovery
+```bash
+$env:NULLCLAW_AGENT_BASE_URL="http://127.0.0.1:9000/v1"
+$env:NULLCLAW_AGENT_MODEL="auto"
+$env:NULLCLAW_AGENT_ENABLE_LLM="1"
+```
 
-If built-ins are visible but repository overlay skills are missing after a VS Code/Codex update, restore from `skill-candidates/` and re-run admission checks.
+The advisor must remain local-only by default. Any loopback LM Studio coding model is allowed; small local Qwen models are preferred when they are present.
 
-Recovery protocol and prevention notes:
+## Guardrails
 
-- `references/vscode-skill-handling.md`
+- Do not launch an external browser as part of the normal app flow.
+- Do not auto-install from unvetted third-party sources.
+- Do not publish raw host evidence into repo-tracked files.
+- Do not disable built-in VS Code/Codex skills to make overlays work.
+
+## Related references
+
+- `BOUNDARIES.md`
+- `SECURITY.md`
 - `references/skill-catalog.md`
+- `references/skill-vetting-report.md`
+- `references/vscode-skill-handling.md`
 - `references/usage-chaining-multitasking.md`
-
-## Mass-Index Skill Admission
-
-Use this command to admit the bounded no-`rg` indexing skill family:
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  safe-mass-index-core repo-b-mass-index-ops repo-d-mass-index-ops repo-c-mass-index-ops \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/mass-index-arbiter.json
-```
-
-Expected acceptance:
-
-- `action=kept`
-- `persistent_nonzero=false`
-- `max_rg=0` target for each skill
-
-## Usage-Watcher Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  usage-watcher \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/usage-watcher-arbiter.json
-```
-
-## REPO_B Local Bridge Orchestrator Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  repo-b-local-bridge-orchestrator \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/repo-b-local-bridge-orchestrator-arbiter.json
-```
-
-## REPO_B MCP Comfy Bridge Admission (Canonical)
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  repo-b-mcp-comfy-bridge \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/repo-b-mcp-comfy-bridge-arbiter.json
-```
-
-## REPO_B Comfy AMUSE CapCut Pipeline Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  repo-b-comfy-amuse-capcut-pipeline \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/repo-b-comfy-amuse-capcut-pipeline-arbiter.json
-```
-
-## REPO_B Local Comfy Orchestrator Admission (Legacy Wrapper)
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  repo-b-local-comfy-orchestrator \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/repo-b-local-comfy-orchestrator-arbiter.json
-```
-
-## Meta-Governance Skill Pack Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  skill-cost-credit-governor skill-dependency-fan-out-inspector \
-  skill-cold-start-warm-path-optimizer skill-blast-radius-simulator skill-trust-ledger \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/skill-meta-governance-arbiter.json
-```
-
-## Cross-Repo Radar Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  skills-cross-repo-radar \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/skills-cross-repo-radar-arbiter.json
-```
-
-## Code Gap Sweeping Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  code-gap-sweeping \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/code-gap-sweeping-arbiter.json
-```
-
-## Request Loopback Resume Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  request-loopback-resume \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/request-loopback-resume-arbiter.json
-```
-
-## Skill Governance System Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  skill-hub skill-installer-plus skill-auditor skill-enforcer \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/skill-governance-system-arbiter.json
-```
-
-## Common-Sense Engineering Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  skill-common-sense-engineering \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/skill-common-sense-engineering-arbiter.json
-```
-
-## Playwright Edge Preference Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  playwright-edge-preference \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/playwright-edge-preference-arbiter.json
-```
-
-## Third-Party Intake Pack Admission
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  skills-third-party-intake model-usage video-frames \
-  --source-dir skill-candidates \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/third-party-intake-pack-arbiter.json
-```
-
-## Complete Candidate Reconcile Admission
-
-When reconciling a full third-party backlog, keep the candidate list in a newline file and admit the list in one deterministic run:
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  $(cat /tmp/imported-skills.txt) \
-  --source-dir skill-candidates \
-  --window 3 --baseline-window 1 --threshold 2 --max-rg 3 \
-  --personal-lockdown \
-  --json-out /tmp/third-party-reconcile-arbiter.json
-```
-
-Follow with:
-
-```bash
-python3 skill-candidates/skill-auditor/scripts/skill_audit.py \
-  --skills-root skill-candidates \
-  --arbiter-report /tmp/third-party-reconcile-arbiter.json \
-  --require-arbiter-evidence \
-  --json-out /tmp/third-party-reconcile-audit.json
-```
-
-## Default System Chain
-
-When starting new work, run this chain:
-
-1. `$skill-hub` to route task -> skill chain.
-2. `$skill-common-sense-engineering` baseline checks.
-3. `$usage-watcher` to decide usage mode (`economy`/`standard`/`surge`) and emit usage analysis + plan JSON.
-4. `$skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and emit analysis + policy JSON.
-5. `$skill-cold-start-warm-path-optimizer` to evaluate cold/warm latency and emit analysis + plan JSON.
-6. `$skills-cross-repo-radar` for bounded multi-repo recent-work evidence.
-7. `$skills-third-party-intake` when mining external skill catalogs for new candidates.
-8. `$code-gap-sweeping` for cross-repo implementation-gap scans before broad mutation lanes.
-9. `$request-loopback-resume` to checkpoint/resume interrupted requests with deterministic next-lane actions.
-10. `$skill-installer-plus` for local install planning, lockdown admission wrappers, and feedback-led recommendation updates.
-11. `$multitask-orchestrator` when 2+ independent lanes are present.
-12. `$skill-auditor` on new/changed skill surfaces.
-13. `$skill-enforcer` for cross-repo policy alignment when operating across repos.
-14. Loop unresolved lanes back through `$skill-hub` until convergence or max loop count.
-15. Record XP/level with `python3 scripts/skill_game.py` using arbiter/auditor evidence JSON files.
-
-## Skill Game Command
-
-```bash
-python3 scripts/skill_game.py \
-  --task "skill candidate update" \
-  --used-skill skill-hub \
-  --used-skill skill-common-sense-engineering \
-  --used-skill usage-watcher \
-  --used-skill skill-cost-credit-governor \
-  --used-skill skill-cold-start-warm-path-optimizer \
-  --used-skill skill-installer-plus \
-  --used-skill skill-auditor \
-  --used-skill skill-enforcer \
-  --used-skill skill-arbiter-lockdown-admission \
-  --arbiter-report /tmp/skill-arbiter-evidence.json \
-  --audit-report /tmp/skill-audit.json \
-  --enforcer-pass
-```
-
-Mandatory skill-change gates:
-
-1. Every new/updated skill must have `skill-arbiter-lockdown-admission` evidence (`action`, `persistent_nonzero`, `max_rg`) and a passing outcome.
-2. Every new/updated skill must be classified by `$skill-auditor` as `unique` or `upgrade`.
-3. `upgrade` classifications should update existing skill lanes unless strict boundary differences are documented.
-4. Every new/updated skill should capture `skill-installer-plus` plan/admit outputs so recommendation quality improves run-over-run.
-5. Every chain proposal must include usage guardrail evidence from `$usage-watcher`, `$skill-cost-credit-governor`, and `$skill-cold-start-warm-path-optimizer`; chaining is incomplete without this evaluation.
-6. Full third-party reconciliation runs must include a deterministic import manifest mapping each imported skill to source and intake recommendation.
-7. Third-party-origin skills must remain explicitly attributed in `references/third-party-skill-attribution.md`.
-
-## Release Workflow
-
-For release-impacting changes (for example `scripts/`, `SKILL.md`, or non-doc files):
-
-```bash
-python3 scripts/prepare_release.py --part patch
-```
-
-Then refine the new `CHANGELOG.md` entry for the PR.
-
-CI enforces this on pull requests with:
-
-```bash
-python3 scripts/check_release_hygiene.py
-```
-
-## Privacy Lock
-
-This repo is public-shape only. Do not commit private repo identifiers or user-specific absolute paths.
-
-Local/staged check:
-
-```bash
-python3 scripts/check_private_data_policy.py --staged
-```
-
-CI check:
-
-```bash
-python3 scripts/check_private_data_policy.py
-```
-
-## Skill Level-Up Declaration
-
-When this workflow creates or improves a skill, include this exact two-line declaration in the response:
-
-```text
-New Skill Unlocked: <SkillName>
-<SkillName> Leveled up to <LevelNumber>
-```
-
-Core skill maturity tracking rubric:
-
-- `references/skill-progression.md`
+- `references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md`

@@ -1,221 +1,63 @@
 # Skill Usage, Chaining, and Multitasking Guide
 
-This guide defines how to use the current skill set safely and efficiently.
+This guide defines the current safe chaining model for `skill-arbiter` as a live NullClaw host security app.
 
-## Operating Model
+## Standard host-security chain
 
-1. Keep built-ins enabled as upstream defaults.
-2. Add repository overlay skills from `skill-candidates/`.
-3. Route tasks through deterministic chains instead of ad-hoc skill hopping.
-4. Capture evidence artifacts for any changed skill, chain policy, or admission decision.
-
-## Complete Activated Coverage
-
-For a full activated-skill coverage audit (every activated skill mapped to one or more chain workflows), see:
-
-- `references/complete-activated-skill-chains.md`
-- `references/complete-activated-skill-chains-lean.md`
-- `references/third-party-skill-attribution.md`
-
-Generate/refresh the audit with:
-
-```bash
-python3 scripts/skill_chain_audit.py \
-  --skills-root "$env:USERPROFILE/.codex/skills" \
-  --include-system \
-  --json-out /tmp/skill-chain-audit.json \
-  --md-out references/complete-activated-skill-chains.md
-```
-
-Generate the lean execution pack from that audit:
-
-```bash
-python3 scripts/skill_chain_lean_pack.py \
-  --audit-json /tmp/skill-chain-audit.json \
-  --json-out /tmp/skill-chain-lean-pack.json \
-  --md-out references/complete-activated-skill-chains-lean.md \
-  --max-domain-skills 4
-```
-
-## Standard Chain (Default)
-
-Use this sequence for most non-trivial work:
-
-1. `skill-hub` for route selection.
-2. `skill-common-sense-engineering` for baseline sanity.
-3. `usage-watcher` for usage mode and budget posture.
-4. `skill-cost-credit-governor` for spend/chatter controls.
-5. `skill-cold-start-warm-path-optimizer` for warm-path policy.
-6. `skills-cross-repo-radar` for bounded multi-repo recent-work snapshots.
-7. `skills-third-party-intake` when external skill catalogs are part of discovery/admission.
-8. `code-gap-sweeping` for cross-repo deterministic gap checks when applicable.
-9. `request-loopback-resume` for interruption-safe checkpoints when needed.
-10. `skill-installer-plus` for install/admission planning and recommendation memory.
-11. `skill-auditor` for new/changed skill classification.
-12. `skill-enforcer` for cross-repo policy alignment.
-
-## High-Value New Capability Patterns
-
-### Media and Asset Workflows
-
-- `sora`: video generation/remix/list/download/delete workflows.
-- `imagegen`: image generation/edit/inpaint/background workflows.
-- `speech`: text-to-speech narration and batch voice generation.
-- `transcribe`: speech-to-text with optional diarization.
-- `video-frames`: local frame and short-clip extraction with deterministic ffmpeg commands.
-
-Recommended chain:
+Use this sequence for non-trivial skill governance work:
 
 1. `skill-hub`
-2. `usage-watcher`
-3. `skill-cost-credit-governor`
-4. Media skill (`sora`, `imagegen`, `speech`, or `transcribe`)
-5. `skill-cold-start-warm-path-optimizer` if repeated runs are expected
+2. `skill-common-sense-engineering`
+3. `skills-cross-repo-radar`
+4. `skills-third-party-intake` when external catalogs are involved
+5. NullClaw self-checks
+6. NullClaw inventory refresh
+7. `skill-auditor`
+8. `skill-arbiter-lockdown-admission`
+9. `skill-enforcer`
 
-### Third-Party Skill Intake
+## OpenClaw / NullClaw cross-repo chain
 
-- `skills-third-party-intake`: static risk/quality triage for external catalogs.
-- `skill-installer-plus`: admission planning and ledger feedback.
-- `skill-arbiter-lockdown-admission`: enforce keep/quarantine outcomes.
-
-Recommended chain:
-
-1. `skill-hub`
-2. `skills-cross-repo-radar` (if external repos were recently updated)
-3. `skills-third-party-intake`
-4. `skill-installer-plus`
-5. `skill-auditor`
-6. `skill-arbiter-lockdown-admission`
-7. `skill-enforcer`
-
-### Router-Aware Mesh Integration
-
-- `skill-openclaw-nullclaw-integration`: reconcile upstream OpenClaw/NullClaw deltas into local repos.
-- `repo-a-coordinator-smoke`: validate MeshGPT coordinator and NullClaw routing outcomes.
-- `repo-b-mx3-router-contracts`: validate MX3 model-router network-profile contract behavior.
-- `repo-b-avatarcore-ops`: validate AvatarCore provider-profile routing under router modes.
-
-Recommended chain:
+Use this when recent work spans multiple repos and upstream agent-skill surfaces:
 
 1. `skill-hub`
-2. `multitask-orchestrator` (split third-party intake, repo implementation, and docs/alignment lanes)
+2. `skills-cross-repo-radar`
 3. `skills-third-party-intake`
 4. `skill-openclaw-nullclaw-integration`
-5. `repo-a-coordinator-smoke`
-6. `repo-b-mx3-router-contracts`
-7. `repo-b-avatarcore-ops`
+5. `code-gap-sweeping`
+6. NullClaw self-checks
+7. NullClaw inventory refresh
 8. `docs-alignment-lock`
 9. `skill-auditor`
-10. `skill-arbiter-lockdown-admission`
-11. `skill-enforcer`
+10. `skill-enforcer`
 
-### Reconciled Third-Party Utility Lanes
+## Multitasking rule
 
-The overlay now includes a reconciled third-party utility pack (58 skills) normalized into repository policy. Common clusters:
+Split independent lanes explicitly, then merge only after each lane returns evidence.
 
-- Workspace/ops: `github`, `gh-issues`, `gog`, `tmux`, `coding-agent`, `diffs`
-- Communication: `slack`, `discord`, `trello`, `imsg`, `bluebubbles`
-- Personal productivity: `1password`, `apple-notes`, `apple-reminders`, `things-mac`, `notion`, `obsidian`
-- Media and generation: `openai-image-gen`, `openai-whisper`, `openai-whisper-api`, `nano-banana-pro`, `songsee`
-- Device/integration: `openhue`, `sonoscli`, `spotify-player`, `weather`, `xurl`
+Common lanes:
 
-Recommended chain for third-party utility execution:
+1. runtime or API implementation
+2. source discovery and risk review
+3. docs and policy alignment
+4. app bring-up / operator verification
 
-1. `skill-hub`
-2. `skills-third-party-intake` (for any newly discovered variants)
-3. target utility skill
-4. `skill-auditor` when utility docs/scripts were changed
-5. `skill-arbiter-lockdown-admission` before broad rollout
+Use `multitask-orchestrator` when available. If not, apply the same split/merge discipline manually.
 
-### Edge Browser Automation Workflows
+## Evidence to keep
 
-- `playwright-edge-preference`: force Microsoft Edge channel execution.
-- `playwright-safe`: low-churn guardrail lane for browser automation.
-- `playwright` (built-in): broad browser automation baseline.
-
-Recommended chain:
-
-1. `skill-hub`
-2. `playwright-edge-preference`
-3. `playwright-safe` (when churn sensitivity is high)
-4. `usage-watcher` + `skill-cost-credit-governor` for long-running or batch browser jobs
-
-### VRM and Avatar Workflow Lanes
-
-- `vroid-template-asset-sync`: normalize template and texture inputs.
-- `blender-vrm-visible-fit`: run checkpointed live-fit iteration in Blender.
-- `vroid-vrma-photobooth-pipeline`: export VRMA clips with deterministic output checks.
-- `vrm-roundtrip-ci-gate`: gate importer/exporter round-trip regressions.
-
-Recommended chain:
-
-1. `skill-hub`
-2. `usage-watcher` + `skill-cost-credit-governor`
-3. `vroid-template-asset-sync`
-4. `blender-vrm-visible-fit`
-5. `vroid-vrma-photobooth-pipeline`
-6. `vrm-roundtrip-ci-gate`
-
-### Repo Governance and Safety Workflows
-
-- `docs-alignment-lock`
-- `skill-auditor`
-- `skill-arbiter-lockdown-admission`
-- `skill-enforcer`
-
-Recommended chain:
-
-1. `skill-hub`
-2. `docs-alignment-lock`
-3. `skill-auditor`
-4. `skill-arbiter-lockdown-admission`
-5. `skill-enforcer`
-
-### Large-Repo Discovery Workflows
-
-- `safe-mass-index-core`
-- `repo-b-mass-index-ops`
-- `repo-c-mass-index-ops`
-- `repo-d-mass-index-ops`
-
-Recommended chain:
-
-1. `skill-hub`
-2. Appropriate mass-index wrapper
-3. `code-gap-sweeping` for multi-repo consistency checks
-4. `request-loopback-resume` if work is interrupted
-
-## Multitasking Pattern
-
-When tasks have independent lanes, split them into explicit streams and merge only after each lane has deterministic evidence.
-
-Lane examples:
-
-1. Lane A: policy/docs alignment
-2. Lane B: runtime bug fix
-3. Lane C: skill admission/audit evidence
-
-Lane merge rules:
-
-1. Each lane must return pass/fail evidence and next action.
-2. Blocked lanes must loop through `request-loopback-resume` or back to `skill-hub`.
-3. Final merge must include conflict check across files and policy docs.
-
-If `multitask-orchestrator` is available in your environment, use it. If not, apply the same lane split/merge policy manually.
-
-## Evidence Artifacts to Keep
-
-- `usage-watcher`: usage analysis + plan JSON
-- `skill-cost-credit-governor`: analysis + policy JSON
-- `skill-cold-start-warm-path-optimizer`: analysis + plan JSON
-- `skill-arbiter-lockdown-admission`: arbiter JSON (`action`, `persistent_nonzero`, `max_rg`)
-- `skill-auditor`: audit JSON (`unique`/`upgrade` + findings)
-- `code-gap-sweeping`: repo findings JSON
+- privacy gate result
+- self-governance result
+- inventory refresh artifact
+- supply-chain findings
+- skill-auditor output
+- recent-work radar artifact
+- generated skill catalog refresh
 
 ## Guardrails
 
-1. Do not disable built-ins to make overlay skills work.
-2. Do not replace upstream built-ins with local forks in place.
-3. Keep overlay skills additive and scoped.
-4. Keep `references/skill-catalog.md` current after any skill change.
-5. Use privacy-safe placeholders in all skill docs and references.
+1. Do not disable built-ins to make overlays work.
+2. Do not auto-install directly from unvetted third-party sources.
+3. Do not run heavy inventory work as part of cold-start health polling.
+4. Do not open an external browser as part of the app path.
+5. Keep repo-tracked docs public-shape only.

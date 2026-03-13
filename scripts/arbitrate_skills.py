@@ -18,6 +18,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+from supply_chain_guard import scan_skill_dir_content, scan_skill_tree, summarize_findings
+
 DEFAULT_SKILLS_HOME = Path.home() / ".codex" / "skills"
 CURATED_PATH = Path("skills/.curated")
 DEFAULT_REPO = "https://github.com/openai/skills.git"
@@ -42,6 +44,8 @@ class ArbitrationResult:
     baseline_max: int = 0
     raw_max_rg: int = 0
     raw_persistent_nonzero: bool = False
+    supply_chain_blocked: bool = False
+    supply_chain_codes: list[str] = field(default_factory=list)
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -167,6 +171,20 @@ def install_local_skill(source_dir: Path, skills_home: Path, skill: str, dry_run
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
+
+
+def resolve_source_skill_dir(*, source_dir: Path | None, repo_root: Path | None, skill: str) -> Path:
+    """Resolve the candidate skill directory before installation."""
+
+    require_valid_skill_name(skill)
+    if source_dir is not None:
+        source_path = source_dir / skill
+        if source_path.is_symlink():
+            raise ValueError(f"Local skill path cannot be a symlink: {source_path}")
+        return source_path.resolve()
+    if repo_root is None:
+        raise RuntimeError("Internal error: missing cloned repository")
+    return (repo_root / CURATED_PATH / skill).resolve()
 
 
 def remove_skill(skills_home: Path, skill: str, dry_run: bool) -> None:
@@ -404,6 +422,43 @@ def main() -> int:
                 )
                 continue
             try:
+                source_skill_dir = resolve_source_skill_dir(
+                    source_dir=source_dir,
+                    repo_root=repo_root,
+                    skill=skill,
+                )
+                supply_chain_findings = scan_skill_dir_content(source_skill_dir)
+                scan_root = source_dir if source_dir is not None else repo_root
+                if scan_root is not None:
+                    supply_chain_findings.extend(scan_skill_tree(source_skill_dir, scan_root))
+                supply_chain_summary = summarize_findings(supply_chain_findings)
+                supply_chain_codes = list(dict.fromkeys(supply_chain_summary["codes"]))
+                if (
+                    supply_chain_summary["blocker_count"] > 0
+                    or supply_chain_summary["warning_count"] > 0
+                ):
+                    remove_skill(skills_home, skill, args.dry_run)
+                    if not args.dry_run:
+                        kill_rg_windows()
+                    blacklist.add(skill)
+                    whitelist.discard(skill)
+                    results.append(
+                        ArbitrationResult(
+                            skill=skill,
+                            installed=False,
+                            samples=[],
+                            max_rg=0,
+                            persistent_nonzero=False,
+                            action="deleted",
+                            note=(
+                                "blocked by supply-chain guard: "
+                                f"{','.join(supply_chain_codes) or 'unspecified'}"
+                            ),
+                            supply_chain_blocked=True,
+                            supply_chain_codes=supply_chain_codes,
+                        )
+                    )
+                    continue
                 if not args.dry_run:
                     kill_rg_windows()
                 baseline_samples = sample_counter(args.baseline_window)
@@ -465,6 +520,7 @@ def main() -> int:
                     baseline_max=baseline_max,
                     raw_max_rg=raw_max_rg,
                     raw_persistent_nonzero=raw_persistent,
+                    supply_chain_codes=supply_chain_codes,
                 )
             )
     finally:

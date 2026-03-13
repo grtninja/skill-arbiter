@@ -10,7 +10,15 @@ from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import statistics
+import sys
 from typing import Any
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from skill_arbiter.stack_accounting import fetch_stack_accounting
 
 DATE_FORMATS = (
     "%Y-%m-%dT%H:%M:%S.%f%z",
@@ -35,6 +43,9 @@ class UsageEvent:
     credits: float
     runtime_ms: float
     status: str
+    provider: str
+    local_execution: bool | None
+    lane_state: str
 
 
 def parse_args() -> argparse.Namespace:
@@ -58,6 +69,22 @@ def parse_args() -> argparse.Namespace:
     analyze.add_argument("--loop-threshold", type=int, default=6, help="Consecutive caller->skill run threshold")
     analyze.add_argument("--chatter-threshold", type=int, default=20, help="Caller->skill pair frequency threshold")
     analyze.add_argument("--max-runtime-ms", type=float, default=45_000.0, help="P95 runtime guardrail")
+    analyze.add_argument(
+        "--stack-health-url",
+        default="",
+        help="Optional live stack /health URL used to detect local displacement availability",
+    )
+    analyze.add_argument(
+        "--stack-summary-url",
+        default="",
+        help="Optional live stack /api/accounting/summary URL (auto-derived from --stack-health-url when omitted)",
+    )
+    analyze.add_argument(
+        "--stack-timeout-seconds",
+        type=float,
+        default=5.0,
+        help="Timeout for live stack evidence fetches",
+    )
     analyze.add_argument("--json-out", default="", help="Optional JSON report output path")
     analyze.add_argument("--format", choices=("table", "json"), default="table", help="Console output format")
 
@@ -178,6 +205,13 @@ def read_events(path: Path, credits_per_1k_tokens: float) -> list[UsageEvent]:
                 0.0,
             )
             status = str(pick(row, ("status", "result", "outcome"), "unknown")).strip() or "unknown"
+            provider = str(pick(row, ("provider", "runtime_provider", "model_provider"), "")).strip().lower()
+            local_execution_raw = pick(row, ("local_execution", "is_local", "local"), "")
+            if str(local_execution_raw).strip() == "":
+                local_execution = None
+            else:
+                local_execution = str(local_execution_raw).strip().lower() in {"1", "true", "yes", "y", "local"}
+            lane_state = str(pick(row, ("lane_state", "route_state"), "")).strip().lower()
         except Exception as exc:  # noqa: BLE001
             raise ValueError(f"failed to parse row {index}: {exc}") from exc
 
@@ -192,6 +226,9 @@ def read_events(path: Path, credits_per_1k_tokens: float) -> list[UsageEvent]:
                 credits=credits,
                 runtime_ms=runtime_ms,
                 status=status,
+                provider=provider,
+                local_execution=local_execution,
+                lane_state=lane_state,
             )
         )
 
@@ -239,6 +276,13 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
     skill_accum: dict[str, dict[str, Any]] = {}
     day_credits: dict[str, float] = {}
     pair_accum: dict[str, dict[str, Any]] = {}
+    stack_evidence: dict[str, Any] | None = None
+    if str(args.stack_health_url or "").strip():
+        stack_evidence = fetch_stack_accounting(
+            health_url=str(args.stack_health_url),
+            summary_url=str(args.stack_summary_url or ""),
+            timeout_seconds=float(args.stack_timeout_seconds),
+        )
 
     for event in window_events:
         skill = event.skill
@@ -253,6 +297,9 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
                 "runtimes": [],
                 "day_credits": {},
                 "status_counts": {},
+                "local_invocations": 0,
+                "remote_invocations": 0,
+                "provider_counts": {},
             }
         row = skill_accum[skill]
         row["invocations"] += 1
@@ -261,6 +308,12 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
         row["runtimes"].append(float(event.runtime_ms))
         row["day_credits"][day_key] = row["day_credits"].get(day_key, 0.0) + event.credits
         row["status_counts"][event.status] = row["status_counts"].get(event.status, 0) + 1
+        if event.local_execution is True:
+            row["local_invocations"] += 1
+        elif event.local_execution is False:
+            row["remote_invocations"] += 1
+        if event.provider:
+            row["provider_counts"][event.provider] = row["provider_counts"].get(event.provider, 0) + 1
 
         if event.caller_skill:
             pair_key = f"{event.caller_skill}->{event.skill}"
@@ -359,6 +412,7 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
 
     loop_skill_set = {item["skill"] for item in loop_events}
     chatter_skill_set = {item["skill"] for item in chatter_pairs}
+    local_displacement_positive = bool(stack_evidence and stack_evidence.get("preview_positive"))
 
     skill_rows: list[dict[str, Any]] = []
     policy_rows: list[dict[str, Any]] = []
@@ -378,6 +432,9 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
 
         share_percent = (credits / total_credits * 100.0) if total_credits > 0 else 0.0
         tokens_per_invocation = (tokens / invocations) if invocations > 0 else 0.0
+        remote_invocations = int(item.get("remote_invocations") or 0)
+        local_invocations = int(item.get("local_invocations") or 0)
+        remote_share = (remote_invocations / invocations) if invocations > 0 else 0.0
 
         reason_codes: list[str] = []
         if spike:
@@ -390,6 +447,8 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
             reason_codes.append("runtime_p95_high")
         if share_percent >= 25.0:
             reason_codes.append("high_spend_share")
+        if local_displacement_positive and remote_invocations > 0 and remote_share >= 0.5:
+            reason_codes.append("remote_heavy_when_local_available")
 
         severity = 0
         if "inefficient_loop" in reason_codes:
@@ -400,6 +459,8 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
             severity += 1
         if "runtime_p95_high" in reason_codes:
             severity += 1
+        if "remote_heavy_when_local_available" in reason_codes:
+            severity += 2
         if share_percent >= 40.0:
             severity += 2
         elif share_percent >= 25.0:
@@ -435,6 +496,10 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
                 "p95_runtime_ms": round(p95_runtime, 2),
                 "avg_daily_credits": round(avg_daily_skill, 4),
                 "peak_daily_credits": round(peak_daily_skill, 4),
+                "local_invocations": local_invocations,
+                "remote_invocations": remote_invocations,
+                "remote_share_percent": round(remote_share * 100.0, 2),
+                "provider_counts": dict(sorted(item["provider_counts"].items())),
                 "status_counts": dict(sorted(item["status_counts"].items())),
                 "reason_codes": sorted(set(reason_codes)),
                 "proposed_action": action,
@@ -484,6 +549,8 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
             ],
         },
     }
+    if stack_evidence is not None:
+        report["stack_evidence"] = stack_evidence
     return report
 
 
@@ -571,6 +638,32 @@ def render_table_analysis(report: dict[str, Any]) -> str:
                 p95=float(row["p95_runtime_ms"]),
                 reasons=reasons,
             )
+        )
+    stack = report.get("stack_evidence")
+    if isinstance(stack, dict):
+        lines.extend(
+            [
+                "",
+                "stack: local_ready={local_ready} tpk={tpk} authoritative_tpk={authoritative_tpk} preview_tpk={preview_tpk} authoritative={authoritative} preview={preview} displacement={displacement}".format(
+                    local_ready=str(bool(stack.get("local_ready"))).lower(),
+                    tpk=(
+                        "n/a"
+                        if stack.get("tpk") is None
+                        else f"{stack.get('tpk')} ({stack.get('tpk_source') or 'unspecified'})"
+                    ),
+                    authoritative_tpk="n/a"
+                    if stack.get("tpk_authoritative") is None
+                    else stack.get("tpk_authoritative"),
+                    preview_tpk="n/a"
+                    if stack.get("tpk_preview") is None
+                    else stack.get("tpk_preview"),
+                    authoritative=str(stack.get("authoritative_cost_state") or ""),
+                    preview=str(stack.get("preview_cost_state") or ""),
+                    displacement="n/a"
+                    if stack.get("displacement_value_preview") is None
+                    else stack.get("displacement_value_preview"),
+                )
+            ]
         )
     return "\n".join(lines)
 

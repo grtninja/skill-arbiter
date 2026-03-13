@@ -169,6 +169,21 @@ class CodeGapSweepTests(unittest.TestCase):
             self.assertIn("notes.md: +- [ ] TODO follow-up with docs", evidence)
             self.assertEqual(len(evidence), 2)
 
+    def test_run_git_decodes_non_utf8_output_with_replacement(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / ".git").mkdir()
+            completed = self.mod.subprocess.CompletedProcess(
+                args=["git"],
+                returncode=0,
+                stdout=b"src/file.py\nbad-\x9d-byte\n",
+                stderr=b"",
+            )
+            with mock.patch.object(self.mod.subprocess, "run", return_value=completed):
+                output = self.mod.run_git(repo, ["status"])
+            self.assertIn("src/file.py", output)
+            self.assertIn("bad-�-byte", output)
+
 
 if __name__ == "__main__":
     unittest.main()

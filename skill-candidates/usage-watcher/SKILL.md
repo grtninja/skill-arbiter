@@ -10,10 +10,11 @@ Use this skill to control usage cost and avoid rate-limit surprises.
 ## Workflow
 
 1. Capture recent usage history to CSV/JSON.
-2. Run `usage_guard.py analyze` to measure burn rate and risk status.
-3. Run `usage_guard.py plan` to set practical daily/session caps.
-4. Select and record a chain usage mode (`economy`, `standard`, `surge`) from the analysis and plan outputs.
-5. Apply the recommendations before large agent workflows.
+2. Ingest live local-compute accounting from the running stack (`/health` plus `/api/accounting/summary`) whenever loopback evidence is available.
+3. Run `usage_guard.py analyze` to measure burn rate, rate-limit posture, and local displacement value.
+4. Run `usage_guard.py plan` to set practical daily/session caps.
+5. Select and record a chain usage mode (`economy`, `standard`, `surge`) from the analysis and plan outputs.
+6. Apply the recommendations before large agent workflows.
 
 ## Analyze Command
 
@@ -26,6 +27,8 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" analyze \
   --credits-remaining 236 \
   --five-hour-limit-remaining 100 \
   --weekly-limit-remaining 0 \
+  --stack-health-url http://127.0.0.1:9000/health \
+  --stack-summary-url http://127.0.0.1:9000/api/accounting/summary \
   --json-out /tmp/usage-analysis.json \
   --format table
 ```
@@ -50,6 +53,7 @@ Before finalizing skill chains, provide:
 - `usage_analysis_json=/tmp/usage-analysis.json`
 - `usage_plan_json=/tmp/usage-plan.json`
 - `usage_mode=<economy|standard|surge>`
+- `stack_evidence` when a local loopback stack is available
 
 If this evidence is missing, chain selection is incomplete and must fail closed.
 
@@ -77,6 +81,7 @@ Always record rationale in one short line with the selected mode.
 - Standard mode for normal implementation tasks.
 - Surge mode only for urgent deadlines.
 - Prefer bounded scripts and cached artifacts over repeated broad discovery.
+- When preview displacement value is positive, prefer local-first routing and skill chains that preserve paid credits and included-usage headroom.
 ## Scope Boundary
 
 Use this skill only for the `usage-watcher` lane and workflow defined in this file and its references.

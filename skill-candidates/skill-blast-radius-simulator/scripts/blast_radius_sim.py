@@ -8,7 +8,14 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import re
+import sys
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(ROOT / "scripts"))
+
+from supply_chain_guard import scan_skill_dir_content, scan_skill_tree
 
 DESTRUCTIVE_PATTERNS = (
     r"\bgit\s+reset\s+--hard\b",
@@ -140,6 +147,10 @@ def simulate_skill(skill: str, path: Path) -> dict[str, Any]:
 
     rg_hits = len(RG_PATTERN.findall(combined))
     bounded_index_hits = len(re.findall(r"safe-mass-index-core|--max-seconds|--max-files-per-run", combined))
+    supply_chain_findings = scan_skill_dir_content(path)
+    supply_chain_findings.extend(scan_skill_tree(path, path))
+    critical_supply_chain = sum(1 for item in supply_chain_findings if item.severity == "critical")
+    high_supply_chain = sum(1 for item in supply_chain_findings if item.severity == "high")
 
     score = 0
     score += destructive_hits * 5
@@ -152,6 +163,8 @@ def simulate_skill(skill: str, path: Path) -> dict[str, Any]:
     score += 2 if rg_hits > 0 and bounded_index_hits == 0 else 0
     score += 1 if script_loc > 600 else 0
     score += 1 if len(script_paths) > 6 else 0
+    score += critical_supply_chain * 6
+    score += high_supply_chain * 2
     score = int(score)
 
     risk_level = classify_risk(score)
@@ -195,6 +208,10 @@ def simulate_skill(skill: str, path: Path) -> dict[str, Any]:
         reasons.append("unbounded_scan_risk")
     if write_hits > 0:
         reasons.append("file_mutation_detected")
+    if critical_supply_chain > 0:
+        reasons.append("critical_supply_chain_signal")
+    if high_supply_chain > 0:
+        reasons.append("high_supply_chain_signal")
 
     return {
         "skill": skill,
@@ -209,6 +226,8 @@ def simulate_skill(skill: str, path: Path) -> dict[str, Any]:
             "rg_hits": rg_hits,
             "bounded_index_hits": bounded_index_hits,
             "write_hits": write_hits,
+            "critical_supply_chain_hits": critical_supply_chain,
+            "high_supply_chain_hits": high_supply_chain,
             "script_count": len(script_paths),
             "script_loc": script_loc,
         },
@@ -219,6 +238,10 @@ def simulate_skill(skill: str, path: Path) -> dict[str, Any]:
             "cpu_risk": cpu_risk,
         },
         "reason_codes": sorted(set(reasons)),
+        "supply_chain_findings": [
+            {"severity": item.severity, "code": item.code, "message": item.message}
+            for item in supply_chain_findings
+        ],
     }
 
 

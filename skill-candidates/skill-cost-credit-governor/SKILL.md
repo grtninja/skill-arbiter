@@ -9,12 +9,13 @@ Use this skill to prevent silent spend escalation across multi-skill workflows.
 
 ## Workflow
 
-1. Export invocation usage history (CSV/JSON) with timestamp, skill, token, runtime, and optional caller fields.
-2. Run `skill_cost_governor.py analyze` for a rolling window.
-3. Review anomaly evidence (`cost_spike`, `inefficient_loop`, `agent_chatter`, `runtime_p95_high`).
-4. Derive explicit chain action (`allow`, `warn`, `throttle`, `disable`) from anomaly evidence.
-5. Apply proposed `warn`/`throttle`/`disable` actions.
-6. Persist analysis and policy artifacts for audits.
+1. Export invocation usage history (CSV/JSON) with timestamp, skill, token, runtime, and optional caller/provider/locality fields.
+2. Ingest live local stack accounting whenever loopback evidence is available.
+3. Run `skill_cost_governor.py analyze` for a rolling window.
+4. Review anomaly evidence (`cost_spike`, `inefficient_loop`, `agent_chatter`, `runtime_p95_high`, `remote_heavy_when_local_available`).
+5. Derive explicit chain action (`allow`, `warn`, `throttle`, `disable`) from anomaly evidence.
+6. Apply proposed `warn`/`throttle`/`disable` actions.
+7. Persist analysis and policy artifacts for audits.
 
 ## Analyze Usage
 
@@ -29,6 +30,8 @@ python3 "$CODEX_HOME/skills/skill-cost-credit-governor/scripts/skill_cost_govern
   --spike-multiplier 2.0 \
   --loop-threshold 6 \
   --chatter-threshold 20 \
+  --stack-health-url http://127.0.0.1:9000/health \
+  --stack-summary-url http://127.0.0.1:9000/api/accounting/summary \
   --json-out /tmp/skill-cost-analysis.json \
   --format table
 ```
@@ -51,6 +54,7 @@ Before finalizing skill chains, provide:
 - `skill_cost_analysis_json=/tmp/skill-cost-analysis.json`
 - `skill_cost_policy_json=/tmp/skill-cost-policy.json`
 - `global_action=<allow|warn|throttle|disable>`
+- local stack evidence when loopback accounting exists
 
 If this evidence is missing, chain selection is incomplete and must fail closed.
 
@@ -66,7 +70,8 @@ Map analysis outcomes to deterministic action:
    - no persistent loop/chatter pattern.
 3. `throttle`:
    - repeated `cost_spike` and/or `inefficient_loop`,
-   - sustained budget pressure in current window.
+   - sustained budget pressure in current window, or
+   - remote-heavy execution even though local displacement value is positive.
 4. `disable`:
    - severe or recurring `agent_chatter`/loop amplification,
    - hard-budget breach or high-confidence runaway behavior.

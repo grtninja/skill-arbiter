@@ -9,10 +9,10 @@ Use this skill when work must stay on local compute across service and hardware 
 
 ## Workflow
 
-1. Run local preflight to validate workspace, VS Code CLI availability, endpoint host locality, and hardware readiness commands.
+1. Run local preflight to validate workspace, VS Code CLI availability, endpoint host locality, hardware readiness commands, and live loopback accounting where available.
 2. Pin runtime URLs and guardrail env vars to loopback/local values.
 3. Route execution through existing local service and hardware skills (especially MemryX shim lanes).
-4. Fail closed if non-local hosts or hardware-check failures are detected.
+4. Fail closed if non-local hosts, missing live stack evidence, or hardware-check failures are detected when the lane requires them.
 
 ## Local Preflight
 
@@ -27,6 +27,8 @@ python3 "$CODEX_HOME/skills/local-compute-usage/scripts/local_compute_preflight.
   --probe-http \
   --strict-probe \
   --hardware-check "acclBench --hello" \
+  --stack-health-url http://127.0.0.1:9000/health \
+  --stack-summary-url http://127.0.0.1:9000/api/accounting/summary \
   --json-out /tmp/local-compute-preflight.json
 ```
 For non-MemryX hardware lanes, replace `--hardware-check` with lane-appropriate local hardware commands.
@@ -57,6 +59,7 @@ $env:REPO_B_CONTINUE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<PRIVATE
 2. Do not skip required hardware checks for hardware-backed workflows.
 3. Prefer local scripts, local MCP adapters, local service endpoints, and local hardware probes over cloud-hosted alternatives.
 4. Treat hostname drift or hardware-check failure as a policy violation and stop before mutation steps.
+5. If the stack publishes positive displacement preview or healthy TPK, use that as evidence for stronger local-first routing rather than an optional hint.
 
 ## Scope Boundary
 

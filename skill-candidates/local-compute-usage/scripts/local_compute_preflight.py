@@ -15,6 +15,13 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from skill_arbiter.stack_accounting import fetch_stack_accounting
+
+
 DEFAULT_ALLOWED_HOSTS = {"127.0.0.1", "localhost", "::1"}
 HTTP_SCHEMES = {"http", "https"}
 
@@ -71,6 +78,22 @@ def parse_args() -> argparse.Namespace:
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Fail when any hardware check command fails",
+    )
+    parser.add_argument(
+        "--stack-health-url",
+        default="",
+        help="Optional local stack /health URL used to ingest TPK and dual-ledger evidence",
+    )
+    parser.add_argument(
+        "--stack-summary-url",
+        default="",
+        help="Optional local stack /api/accounting/summary URL (auto-derived from --stack-health-url when omitted)",
+    )
+    parser.add_argument(
+        "--stack-timeout-seconds",
+        type=float,
+        default=5.0,
+        help="Timeout for stack evidence fetches",
     )
     parser.add_argument("--json-out", default="", help="Optional JSON output path")
     return parser.parse_args()
@@ -248,6 +271,17 @@ def main() -> int:
         if isinstance(row.get("probe"), dict) and not bool(row["probe"].get("ok"))
     ]
     hardware_failures = [row for row in hardware_rows if not bool(row.get("ok"))]
+    stack_evidence: dict[str, Any] | None = None
+    stack_error = ""
+    if str(args.stack_health_url or "").strip():
+        try:
+            stack_evidence = fetch_stack_accounting(
+                health_url=str(args.stack_health_url),
+                summary_url=str(args.stack_summary_url or ""),
+                timeout_seconds=float(args.stack_timeout_seconds),
+            )
+        except Exception as exc:  # noqa: BLE001
+            stack_error = str(exc)
 
     failures: list[str] = []
     if args.require_vscode and not code_check["available"]:
@@ -258,6 +292,8 @@ def main() -> int:
         failures.append("endpoint_probe_failed")
     if args.strict_hardware and hardware_failures:
         failures.append("hardware_check_failed")
+    if stack_error:
+        failures.append("stack_accounting_fetch_failed")
 
     payload: dict[str, Any] = {
         "workspace_root": str(workspace_root),
@@ -266,12 +302,15 @@ def main() -> int:
         "allowed_host_suffixes": allowed_suffixes,
         "urls": url_rows,
         "hardware_checks": hardware_rows,
+        "stack_evidence": stack_evidence,
+        "stack_error": stack_error or None,
         "summary": {
             "url_count": len(url_rows),
             "non_local_count": len(non_local),
             "probe_failures": len(probe_failures),
             "hardware_checks": len(hardware_rows),
             "hardware_failures": len(hardware_failures),
+            "stack_evidence_available": bool(stack_evidence),
             "failures": failures,
             "pass": not failures,
         },
@@ -294,6 +333,8 @@ def main() -> int:
             print("hardware checks failed:")
             for row in hardware_failures:
                 print(f"  - {row['command']} -> {row['output']}")
+        if stack_error:
+            print(f"stack accounting fetch failed: {stack_error}")
         return 1
 
     print("local-compute-preflight: passed")

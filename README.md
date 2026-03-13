@@ -3,398 +3,353 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.txt)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Platform: Windows-focused](https://img.shields.io/badge/platform-Windows--focused-informational)
-[![Support on Patreon](https://img.shields.io/badge/Support-Patreon-ff424d?logo=patreon&logoColor=white)](https://www.patreon.com/cw/grtninja)
 
-Admit or quarantine Codex skills by detecting persistent `rg.exe` churn and preventing CPU thrash on large Windows repos.
+`skill-arbiter` is a Windows-first NullClaw host security app for local skill governance, curated-source discovery, guarded threat suppression, and self-governance.
 
-`skill-arbiter` is a small, MIT-licensed utility skill that installs candidate Codex skills one-by-one, watches `rg.exe` process behavior, and automatically removes + blacklists noisy offenders with reproducible evidence.
+It started as an `rg.exe` churn moderator. It now acts as a capability firewall for local agent skills and related automation surfaces.
 
-This repository is public-shape only: docs and skill candidates use placeholders (`<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`, `$CODEX_HOME/skills`, `$env:USERPROFILE\\...`) instead of private identifiers and personal absolute paths.
+## Reality check
 
-## Table of Contents
+The desktop app is not a fully self-sufficient operator product yet.
 
-- [Why this exists](#why-this-exists)
-- [Key features](#key-features)
-- [How it works](#how-it-works)
-- [Quick start](#quick-start)
-- [Installation](#installation)
-- [Requirements](#requirements)
-- [CLI reference](#cli-reference)
-- [Output contract](#output-contract)
-- [Advanced workflows](#advanced-workflows)
-- [VS Code Skill Handling](#vs-code-skill-handling)
-- [Current Diff Reconciliation](#current-diff-reconciliation)
-- [Security notes](#security-notes)
-- [Repository layout](#repository-layout)
-- [Candidate skill catalog](#candidate-skill-catalog)
-- [License](#license)
-- [Support](#support)
-- [Contribution policy](#contribution-policy)
-- [Skill level-up declaration](#skill-level-up-declaration)
+- Standalone desktop use still covers local inventory, baseline reconciliation, attribution, and mitigation.
+- The app is only fully meaningful when real work is being driven through Codex or GitHub Copilot instruction surfaces.
+- Without active Codex/Copilot-driven work, the interop view, collaboration lane, skill-game lane, and upgrade/consolidation recommendations become partial, stale, or much less useful.
+- Do not describe the current app as a complete general-purpose skill-security console outside Codex/Copilot-driven workflows.
 
-## Why this exists
+## AI warning
 
-Some skills can accidentally trigger runaway repository scans on Windows hosts. This can cause:
+- Codex, GitHub Copilot, and other AI/agent systems can make mistakes.
+- This app can surface useful governance and risk signals, but it does not turn AI output into ground truth.
+- Operator review is still required before trusting destructive actions, provenance claims, upgrade advice, or security conclusions.
+- If the app, agent, or upstream AI workflow disagrees with observed reality, treat that as a bug or mismatch to investigate, not proof that the machine is right.
 
-- Sustained high CPU usage
-- Repeated `rg.exe` process storms
-- Slow or unstable editor/agent behavior
+## What it does
 
-`skill-arbiter` provides an admission gate so only safe skills stay installed. Third-party candidates are deny-by-default: they must pass checks and be explicitly promoted.
+- Inventories installed skills under `$CODEX_HOME/skills`
+- Reconciles built-in VS Code/Codex skills against the official `openai/skills` baseline
+- Tracks `.system` skills, overlay candidates, curated third-party sources, and recent-work-relevant skills
+- Scores high-risk patterns:
+  - typosquats and fake installers
+  - npm/npx/postinstall persistence
+  - stale and untracked Python
+  - vendored `python.exe` / `pythonw.exe`
+  - hidden process launch
+  - browser auto-launch abuse
+  - credential prompt theft patterns
+  - broad process-kill logic
+  - tool/resource fan-out with remote execution surfaces
+- Applies guarded local response:
+  - admit
+  - quarantine
+  - disable
+  - operator-confirmed delete / kill
+- Audits itself with the same policy engine so the app does not become part of the problem
+- Records collaboration outcomes and recommends governed skill creation, upgrades, or consolidation from real agent work
 
-## Key features
+## Runtime model
 
-- Windows-first churn detection for `rg.exe` process storms
-- Delta-over-baseline scoring to reduce false positives
-- No external Python dependencies (`requirements.txt` is documentation-only)
-- Local/personal admission modes with whitelist + immutable promotion
-- Machine-readable evidence via CSV stdout and optional JSON reports
-- Works with curated skill repos or local skill folders (`--source-dir`)
+- Desktop shell: embedded local UI via `pywebview`
+- Agent: loopback-only Python server on `127.0.0.1:17665`
+- Default policy mode: `guarded_auto`
+- UI model: layered operator workflow with critical-first triage
+- Loopback API state responses are served `no-store` so the embedded desktop cannot silently reuse stale inventory, skill-game, or collaboration data
+- Full-value mode depends on active Codex or GitHub Copilot work feeding instruction-surface, collaboration, and skill-learning evidence
+- Startup flow:
+  1. app open
+  2. agent attach/start
+  3. self-checks
+  4. inventory refresh
+  5. operator actions enabled
+- No external browser launch in the normal operator path
 
-## How it works
+## Local advisor
 
-Arbitration loop:
+The app uses a dedicated local coding-security LLM for short advisory notes.
 
-`clone/source -> baseline sample -> install one skill -> sample delta -> keep or quarantine -> emit evidence`
+Defaults:
 
-What the script does per skill:
+- `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
+- `NULLCLAW_AGENT_MODEL=auto`
+- `NULLCLAW_AGENT_ENABLE_LLM=1`
 
-1. Installs one candidate.
-2. Measures baseline `rg.exe` count and post-install samples.
-3. Scores churn using delta-over-baseline.
-4. Keeps safe candidates or removes + blacklists offenders.
-5. Writes CSV result rows and optional JSON run evidence.
+The advisor must remain local-only by default.
+
+Model policy:
+
+- Any loopback LM Studio coding-capable model is supported.
+- Small local Qwen models remain the preferred default when available.
+- If `NULLCLAW_AGENT_MODEL` is left as `auto`, the app prefers local Qwen/coder lanes and then falls back to another loopback coding model.
 
 ## Quick start
 
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  doc screenshot security-best-practices security-threat-model playwright \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3
-```
-
-Dry-run mode (no filesystem changes):
+Install dependencies:
 
 ```bash
-python3 scripts/arbitrate_skills.py doc screenshot --dry-run
+python -m pip install -r requirements.txt
 ```
 
-Personal lockdown mode (local-only + immutable pinning):
+Open the desktop app:
 
 ```bash
-python3 "$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py" \
-  my-new-skill another-skill \
-  --source-dir "$CODEX_HOME/skills" \
-  --window 10 --baseline-window 3 --threshold 3 --max-rg 3 \
-  --personal-lockdown
+python scripts/nullclaw_desktop.py
 ```
 
-## Installation
+Open the desktop app through the managed Windows launcher:
 
-`skill-arbiter` is currently intended to run from a local clone.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_security_console.ps1
+```
+
+Install branded desktop and Start Menu shortcuts:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install_security_console_shortcut.ps1
+```
+
+The installed shortcuts use a silent `wscript` launcher so the console does not bounce through visible PowerShell or `cmd` wrappers.
+
+Stop the desktop app and loopback agent cleanly:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\stop_security_console.ps1
+```
+
+Run the agent headless:
 
 ```bash
-git clone <repo-url>
-cd skill-arbiter
-./scripts/install_local_hooks.sh
-python3 scripts/arbitrate_skills.py --help
+python scripts/nullclaw_agent.py
 ```
 
-If you already use Codex local skills, you can also run from:
-
-- `$CODEX_HOME/skills/skill-arbiter/scripts/arbitrate_skills.py`
-
-## Requirements
-
-- Python 3.10+
-- Git
-- Windows host with PowerShell (`powershell.exe`)
-- `rg.exe` available on the host (the script monitors `rg` process churn)
-- Local git hook path configured once per clone:
+Refresh the machine-generated catalog:
 
 ```bash
-./scripts/install_local_hooks.sh
+python scripts/generate_skill_catalog.py
 ```
 
-Dependency declarations:
-
-- `pyproject.toml`: project metadata + Python version floor
-- `requirements.txt`: explicitly documents zero external Python dependencies
-
-## CLI reference
-
-```text
-usage: arbitrate_skills.py [-h] [--window WINDOW] [--threshold THRESHOLD]
-                           [--baseline-window BASELINE_WINDOW]
-                           [--max-rg MAX_RG] [--json-out JSON_OUT]
-                           [--repo REPO] [--source-dir SOURCE_DIR]
-                           [--dest DEST] [--blacklist BLACKLIST]
-                           [--whitelist WHITELIST] [--immutable IMMUTABLE]
-                           [--dry-run] [--promote-safe]
-                           [--personal-lockdown]
-                           skills [skills ...]
-```
-
-Key options:
-
-- `skills`: Curated skill names to test. Empty names are rejected.
-- `--window`: Sampling window in seconds (default `10`).
-- `--baseline-window`: Baseline window in seconds before each install (default `3`).
-- `--threshold`: Consecutive non-zero threshold (default `3`).
-- `--max-rg`: Remove skill if any delta sample (`raw - baseline_max`) >= value (default `3`, allowed range `1-3`).
-- `--json-out`: Optional machine-readable report path.
-- `--source-dir`: Optional local source dir; installs from `<source-dir>/<skill>` and skips repo clone.
-- `--dest`: Destination skills home (default `~/.codex/skills`).
-- `--blacklist`: Blacklist filename under `--dest` (default `.blacklist.local`).
-- `--whitelist`: Whitelist filename under `--dest` (default `.whitelist.local`).
-- `--immutable`: Immutable filename under `--dest` (default `.immutable.local`).
-- `--dry-run`: Report actions without modifying files.
-- `--promote-safe`: Add passing skills to both whitelist and immutable files.
-- `--personal-lockdown`: Personal mode; requires `--source-dir`, forces local promotion to whitelist+immutable, and rejects symlinked control files.
-
-Whitelist behavior:
-
-- Add one skill name per line in `<dest>/.whitelist.local`.
-- Whitelisted skills are kept and skip arbitration when they are not blacklisted.
-
-Immutable behavior:
-
-- Add one skill name per line in `<dest>/.immutable.local`.
-- Immutable skills are never removed or blacklisted by this script.
-
-Blacklist behavior:
-
-- Blacklisted skills are permanently denied by this script.
-- If a blacklisted skill is present under `<dest>`, it is deleted (not archived).
-
-Third-party behavior:
-
-- Third-party candidates (repo-based runs, without `--source-dir`) are deleted unless `--promote-safe` is set.
-- To admit a third-party skill after it proves safe, run with `--promote-safe` so it is added to whitelist + immutable.
-
-Personal-lockdown behavior:
-
-- Requires `--source-dir` (local-only admission; no curated clone flow for that run).
-- Forces promotion of passing skills to both whitelist and immutable files.
-- Rejects symlinked blacklist/whitelist/immutable control files.
-
-## Output contract
-
-- Stdout CSV header:
-  - `skill,installed,max_rg,persistent_nonzero,action,note`
-- JSON report (`--json-out`) includes:
-  - run metadata
-  - per-skill arbitration results (delta and raw sample fields)
-  - final blacklist/whitelist/immutable lists
-
-## Advanced workflows
-
-### Default skill system
-
-The full 12-step baseline chain and mandatory skill-change gates are documented in `references/default-skill-system.md`.
-
-### Skill Game Loop
-
-Use the local XP ledger to reward full workflow compliance:
+Run the privacy gate:
 
 ```bash
-python3 scripts/skill_game.py \
-  --task "skill candidate update" \
-  --used-skill skill-hub \
-  --used-skill skill-common-sense-engineering \
-  --used-skill usage-watcher \
-  --used-skill skill-cost-credit-governor \
-  --used-skill skill-cold-start-warm-path-optimizer \
-  --used-skill skill-installer-plus \
-  --used-skill skill-auditor \
-  --used-skill skill-enforcer \
-  --used-skill skill-arbiter-lockdown-admission \
-  --arbiter-report /tmp/skill-arbiter-evidence.json \
-  --audit-report /tmp/skill-audit.json \
-  --enforcer-pass
+python scripts/check_private_data_policy.py
 ```
 
-Inspect current score/streak:
+Refresh the machine-generated vetting report:
 
 ```bash
-python3 scripts/skill_game.py --show
+python scripts/generate_skill_vetting_report.py
 ```
 
-### Release workflow
-
-For release-impacting PRs (for example changes under `scripts/`, `SKILL.md`, or other non-doc files), run:
+Run the public-release gate:
 
 ```bash
-python3 scripts/prepare_release.py --part patch
+python scripts/check_public_release.py
 ```
 
-Then refine the generated `CHANGELOG.md` notes so they match the PR. CI enforces release hygiene with `python3 scripts/check_release_hygiene.py`.
+## Local API
 
-### Privacy lock
+The desktop UI talks to a local-only loopback API:
 
-This repository is public-shape only. Private repository identifiers and user-specific absolute paths are blocked.
+- `GET /v1/health`
+- `GET /v1/about`
+- `POST /v1/self-checks/run`
+- `GET /v1/privacy/status`
+- `POST /v1/inventory/refresh`
+- `GET /v1/inventory/skills`
+- `GET /v1/inventory/sources`
+- `GET /v1/incidents`
+- `GET /v1/mitigation/cases`
+- `POST /v1/mitigation/plan`
+- `POST /v1/mitigation/execute`
+- `GET /v1/collaboration/status`
+- `POST /v1/collaboration/record`
+- `GET /v1/public-readiness`
+- `POST /v1/public-readiness/run`
+- `POST /v1/admission/evaluate`
+- `POST /v1/quarantine/apply`
+- `POST /v1/actions/confirm`
+- `GET /v1/audit-log`
 
-Local pre-commit gate:
+## Inventory coverage
+
+The live inventory pipeline covers:
+
+- installed top-level skills
+- installed `.system` skills
+- overlay candidates under `skill-candidates/`
+- official OpenAI upstream baseline from `openai/skills`
+- local Codex config under `%USERPROFILE%\\.codex`
+- Codex app, VS Code, and GitHub Copilot instruction surfaces across the local workspace
+- curated third-party sources already tracked by the repo
+- threat-matrix references for OpenClaw / NullClaw discovery surfaces
+- recent-work relevance from cross-repo radar artifacts
+- ownership and legitimacy scoring for official built-ins, repo-owned skills, candidates, and unowned local installs
+- rejected third-party candidate stubs stay attributable in the repo references, but are kept out of the active live inventory until they are rebuilt or explicitly installed for review
+
+What this does **not** mean:
+
+- the desktop alone can infer meaningful collaboration history without Codex/Copilot-driven work
+- the skill-game lane is useful without real governed agent work being recorded
+- the interop surfaces prove much on their own beyond presence-level tracking unless Codex/Copilot workflows are actually active
+
+See:
+
+- [references/skill-catalog.md](references/skill-catalog.md)
+- [references/skill-vetting-report.md](references/skill-vetting-report.md)
+- [references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md](references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md)
+- [references/vscode-skill-handling.md](references/vscode-skill-handling.md)
+
+## Collaboration and skill learning
+
+The console now records governed collaboration outcomes from real agent work and turns repeatable
+patterns into actionable skill recommendations.
+
+- These lanes are intentionally dependent on real Codex or GitHub Copilot-driven work. Without that input, the app still opens and inventories locally, but this section is only partially useful.
+- collaboration events are stored in local-only state
+- trust-ledger and skill-game lanes receive the same outcome evidence
+- the skill-game now reports the original long-lived skill levels from `references/skill-progression.md`
+- those original levels are a longitudinal progress ledger for the real skill estate, not a deprecated legacy-only display
+- the desktop app can recommend whether a pattern should become a new skill, an upgrade, or a consolidation
+- `heterogeneous-stack-validation` is the governed candidate lane for mixed local-plus-remote validation work like the current stack sweep
+- The desktop shows section-local refresh failures in place instead of leaving zero/default placeholders that can look like data loss
+
+## Usage reduction and local compute evidence
+
+The cost and routing skills now consume loopback stack accounting evidence rather
+than reasoning only from manual credit logs or static budgets.
+
+- `usage-watcher`
+- `local-compute-usage`
+- `skill-cost-credit-governor`
+
+These skills can now ingest and compare:
+
+- `TPK`
+- `authoritative_cost`
+- `displacement_value_preview`
+- `benchmark_api_equivalent_cost`
+- `local_marginal`
+- `cloud_equivalent`
+- `savings vs cloud`
+- routing/provider provenance
+- local runtime latency and lane health
+
+The key contract is dual-ledger:
+
+- `authoritative_cost` remains strict billing truth
+- `displacement_value_preview` remains benchmarked non-billing shadow value
+
+That distinction is now a governed input to usage reduction, local-first routing,
+and skill upgrade recommendations instead of a manual after-the-fact story.
+
+## Mitigation workflow
+
+The desktop app treats findings as live mitigation cases, not static warnings.
+
+Operator flow inside the desktop app:
+
+1. startup flow and host/agent state
+2. critical queue with critical and high findings pinned at the top
+3. active finding explainer and runbook
+4. mitigation actions
+5. inventory, sources, and interop review
+6. privacy, release, support, and audit evidence
+
+Default response chain:
+
+1. preserve evidence
+2. quarantine fast
+3. strip suspicious artifacts
+4. report the case
+5. request review if the skill looks legitimate
+6. rebuild clean from a trusted source when possible
+7. blacklist if hostile
+8. remove or refactor
+9. audit threat vectors
+10. audit sources
+11. evaluate adjacent vectors
+12. document the outcome
+13. repeat the scan
+
+Case planning now separates:
+
+- `official_trusted`
+- `owned_trusted`
+- `needs_review`
+- `blocked_hostile`
+
+so the console can legitimize the local stack without pretending every dangerous capability is malware.
+
+## Public-shape rule
+
+This repository is public-shape only.
+
+- Do not commit usernames, absolute private paths, private repo names, or raw host evidence.
+- Repo-tracked docs and JSON stay placeholder-safe.
+- Raw local evidence, audit events, and destructive-action records stay in ignored local state.
+
+## Public support
+
+Public support and project links surfaced by the desktop app:
+
+- GitHub repo: `https://github.com/grtninja/skill-arbiter`
+- GitHub issues: `https://github.com/grtninja/skill-arbiter/issues`
+- GitHub security: `https://github.com/grtninja/skill-arbiter/security`
+- Patreon: `https://www.patreon.com/cw/grtninja`
+
+The desktop UI copies these links to the clipboard instead of opening external browsers automatically.
+
+See also:
+
+- [SUPPORT.md](SUPPORT.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+
+## Public release readiness
+
+Before publishing or widening distribution:
+
+1. Run `python scripts/check_private_data_policy.py`.
+2. Run `python scripts/check_public_release.py`.
+3. Confirm the desktop app shows a passing Public Release panel.
+4. Confirm icon assets and shortcut installers are present.
+5. Confirm repo-tracked files remain public-shape only.
+
+## Safety and abuse handling
+
+`skill-arbiter` is a defensive local-host security console.
+
+- It is for quarantine, review, and remediation of risky skills and automation surfaces.
+- It is not for persistence abuse, credential theft, remote compromise, or stealth operator bypass.
+- Destructive actions stay operator-mediated or clearly audited in local-only state.
+- Public docs and artifacts stay sanitized so the repository does not become a leak surface.
+
+## Validation
 
 ```bash
-python3 scripts/check_private_data_policy.py --staged
+python scripts/arbitrate_skills.py --help
+python scripts/nullclaw_agent.py --help
+python scripts/generate_skill_catalog.py
+python scripts/generate_skill_vetting_report.py
+python scripts/check_private_data_policy.py
+python scripts/check_public_release.py
+pytest -q
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
 ```
-
-CI gate:
-
-```bash
-python3 scripts/check_private_data_policy.py
-```
-
-## VS Code Skill Handling
-
-This repository is **additive** to VS Code/Codex built-ins.
-
-- Built-ins are upstream and should remain enabled.
-- `skill-candidates/` provides the overlay set this repo owns.
-- We do not disable or replace built-ins; we restore and moderate overlay skills on top.
-
-### Reset Incident Record
-
-On **February 27, 2026**, an installed-skill reset event was observed where only built-ins were visible and overlay skills were missing from the active list.
-
-Documented root cause, recovery steps, and prevention policy:
-
-- `references/vscode-skill-handling.md`
-
-### Recovery and Protection
-
-Use the overlay recovery checks whenever VS Code/Codex skill handling changes:
-
-1. Compare `skill-candidates/` with `$env:USERPROFILE\\.codex\\skills`.
-2. Restore missing overlay skills additively from `skill-candidates/`.
-3. Re-run `skill-arbiter` admission checks to confirm no `rg.exe` churn regressions.
-4. Keep catalog and workflow docs aligned in the same PR.
-
-## Current Diff Reconciliation
-
-The current open-skill pass, catalog updates, and restore-document drift are explicitly tracked in:
-
-- `references/OPEN_DIFF_RECONCILIATION_2026-03-09.md`
-
-## Security notes
-
-- The script does not require API keys.
-- It executes subprocesses using argument arrays (no shell string interpolation).
-- Blacklisting is local to the configured skills destination.
-- Symlinked control files are rejected to prevent redirected writes.
-
-See `SECURITY.md` for vulnerability reporting guidance and `SECURITY-AUDIT.md` for pre-publication scan notes.
 
 ## Repository layout
 
-- `AGENTS.md`: repository operating rules and guardrails
-- `CHANGELOG.md`: release history
-- `SKILL.md`: skill definition used by Codex
-- `scripts/arbitrate_skills.py`: arbitration implementation
-- `scripts/skill_game.py`: local XP/level scorer for workflow compliance
-- `scripts/prepare_release.py`: release bump helper
-- `scripts/check_release_hygiene.py`: PR release gate
-- `scripts/check_private_data_policy.py`: privacy and private-data policy gate
-- `scripts/install_local_hooks.sh`: one-time local git hook installer
-- `agents/openai.yaml`: agent metadata
-- `skill-candidates/skill-hub/`: request-to-chain routing candidate skill
-- `skill-candidates/skill-enforcer/`: cross-repo policy alignment candidate skill
-- `skill-candidates/skill-auditor/scripts/skill_audit.py`: skill classification and findings gate (`unique` vs `upgrade`)
-- `skill-candidates/playwright-edge-preference/`: Microsoft Edge channel browser automation preference lane
-- `skill-candidates/skills-third-party-intake/scripts/third_party_skill_intake.py`: third-party catalog intake scanner with security/quality scoring
-- `skill-candidates/video-frames/scripts/video_frames.py`: deterministic frame/clip extraction helper for local media checks
-- `skill-candidates/model-usage/scripts/model_usage.py`: per-model usage-cost summarizer for local CodexBar JSON
-- `references/default-skill-system.md`: full default-chain and skill-change gate details
-- `references/vscode-skill-handling.md`: VS Code built-in compatibility, reset incident notes, and restore protocol
-- `references/usage-chaining-multitasking.md`: end-to-end usage/chaining/multitasking playbook
-- `references/skill-catalog.md`: complete built-in + overlay skill catalog
-- `references/skill-progression.md`: core skill level rubric and current maturity levels
-- `references/publish-notes.md`: publish defaults and notes
-- `references/recommended-skill-portfolio.md`: baseline skill catalog and rollout guidance for other repos
+- `skill_arbiter/`: runtime package for the local NullClaw agent
+- `apps/nullclaw-desktop/ui/`: embedded desktop UI
+- `scripts/`: entrypoints, generators, and governance utilities
+- `skill-candidates/`: overlay skills and candidate skills
+- `references/`: generated catalog plus policy/reference material
+- `tests/`: regression coverage
+- `docs/`: project scope and tracker
 
-## Candidate skill catalog
+## Related docs
 
-`skill-candidates/` is the source of truth for repository-managed overlay skills.
-
-Current overlay inventory:
-
-- `123` repository candidates total
-- `63` internal/governance candidates
-- `60` third-party-origin candidates with explicit source attribution
-
-For the complete installed catalog (built-ins + `.system` + overlay), see:
-
-- `references/skill-catalog.md`
-- `references/usage-chaining-multitasking.md`
-
-Representative overlay highlights:
-
-| Skill name | Purpose | Type |
-| --- | --- | --- |
-| `safe-mass-index-core` | bounded metadata-only indexing with no-`rg` indexing policy | core |
-| `usage-watcher` | usage analysis and budget planning for paid credit control | core |
-| `desktop-startup-acceptance` | cross-repo Windows app startup acceptance, stale-window cleanup, and shortcut/state validation | core |
-| `usb-export-reconcile` | Git-like review/reconcile discipline for USB-delivered repo and host exports | core |
-| `skill-cost-credit-governor` | per-skill spend governance and warn/throttle/disable policy outputs | core |
-| `skill-cold-start-warm-path-optimizer` | cold-vs-warm latency analysis and prewarm planning | core |
-| `skill-installer-plus` | local-first install planning and admission recommendation loop | core |
-| `skills-third-party-intake` | static triage of external skill catalogs before import/admission | core |
-| `code-gap-sweeping` | deterministic cross-repo implementation gap scans | core |
-| `request-loopback-resume` | checkpoint/resume lane state for interrupted work | core |
-| `playwright-edge-preference` | Edge-channel browser automation and parity checks | core |
-| `video-frames` | deterministic local video frame/clip extraction for review artifacts | utility |
-| `model-usage` | local model-level cost summaries for CodexBar usage records | utility |
-| `github` | GitHub CLI workflow operations for issues/PR/CI | utility |
-| `weather` | lightweight weather query lane for rapid situational checks | utility |
-| `tmux` | tmux session control lane for interactive terminal workflows | utility |
-| `xurl` | authenticated X/Twitter API CLI lane with secret-safety guardrails | utility |
-| `repo-b-local-bridge-orchestrator` | read-only local Agent Bridge orchestration for `<PRIVATE_REPO_B>` | repo-specific |
-| `repo-a-host-admin-ops` | Repo A admin-host desktop, host-bundle, and USB update operations | repo-specific |
-| `repo-b-mx3-router-contracts` | MX3 router-profile contract and metadata validation lane | repo-specific |
-| `repo-b-mcp-comfy-bridge` | canonical MCP adapter + Comfy bridge lane for `<PRIVATE_REPO_B>` | repo-specific |
-| `repo-b-comfy-amuse-capcut-pipeline` | profile-driven Comfy pipeline with AMUSE + CapCut checks | repo-specific |
-| `repo-c-mass-index-ops` | repo-c sharded indexing wrapper for very large trees | repo-specific |
-| `repo-d-mass-index-ops` | repo-d indexing wrapper for sandbox-style UI/package trees | repo-specific |
-| `skill-auditor` | audit and classify skills (`unique` vs `upgrade`) | meta-governance |
-| `skill-enforcer` | enforce cross-repo policy alignment | meta-governance |
-| `skill-hub` | route tasks to an ordered skill chain | meta-governance |
-| `skill-openclaw-nullclaw-integration` | reconcile OpenClaw/NullClaw upstream changes into local router-aware lanes | meta-governance |
-| `multitask-orchestrator` | split independent lanes for parallel execution and deterministic merge | meta-governance |
-
-Third-party reconciliation evidence for this expansion is captured under:
-
-- `.tmp/candidate-reconcile-20260305-complete.json`
-- `.tmp/arbiter-report-20260305-complete.json`
-- `.tmp/skill-audit-imported-20260305-complete.json`
-
-Third-party attribution matrix (source repo + commit + origin path per skill):
-
-- `references/third-party-skill-attribution.md`
-
-## License
-
-MIT licensed. See `LICENSE.txt`.
-
-## Support
-
-If this project is useful in your workflow, you can support development on Patreon:  
-<https://www.patreon.com/cw/grtninja>
-
-## Contribution policy
-
-This repository is primarily owner-maintained. Issues, discussions, and practical examples are welcome. External pull requests may be declined.
-
-See `CONTRIBUTING.md` for development setup, validation checks, and release/privacy expectations.
-
-## Skill level-up declaration
-
-When a skill is newly created or improved, include this exact declaration in the response/update text:
-
-```text
-New Skill Unlocked: <SkillName>
-<SkillName> Leveled up to <LevelNumber>
-```
-## Maximum Effort Policy
-
-This repository is part of a workstation-scale first-party private codebase unless an explicit boundary document says otherwise. Minimal-diff behavior is forbidden. When anything changes, all related services, contracts, docs, tests, configs, and dependent surfaces must be updated before the task is complete.
+- [BOUNDARIES.md](BOUNDARIES.md)
+- [SECURITY.md](SECURITY.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [SKILL.md](SKILL.md)
+- [docs/PROJECT_SCOPE.md](docs/PROJECT_SCOPE.md)
+- [docs/SCOPE_TRACKER.md](docs/SCOPE_TRACKER.md)

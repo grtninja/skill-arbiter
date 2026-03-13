@@ -2,49 +2,41 @@
 
 This file tracks maturity levels for long-lived core skills.
 
-## Level Rubric
+## Level rubric
 
-1. Level 1: functional baseline with one deterministic path.
-2. Level 2: explicit scope boundary and fail-closed behavior.
-3. Level 3: evidence contract and reproducible outputs.
-4. Level 4: multi-mode operation (for example normal + incident/working-tree lanes).
-5. Level 5: integrated into default chain with measurable governance impact.
-6. Level 6+: stable, repeatedly validated, and used as a hub or policy anchor.
+1. Level 1: functional baseline
+2. Level 2: explicit boundary and fail-closed behavior
+3. Level 3: reproducible evidence contract
+4. Level 4: multi-mode operation
+5. Level 5: integrated into the default system chain
+6. Level 6+: stable policy anchor with repeated validation
+7. Level 8+: cross-repo or operator-critical hub
 
-## Current Core Levels
+## Current core levels
 
 | Skill | Level | Notes |
 | --- | --- | --- |
-| `skill-hub` | 8 | Primary routing hub with chain contract, loopback, and lane policy controls. |
-| `usage-watcher` | 7 | Deterministic usage analysis, planning, and explicit mode-selection rubric. |
-| `skill-cost-credit-governor` | 7 | Policy-grade spend/chatter actions with artifacted decisions. |
-| `skill-cold-start-warm-path-optimizer` | 7 | Cold/warm analysis plus prewarm/never-auto decision controls. |
-| `skill-installer-plus` | 8 | Plan/admit/feedback/show loop proven at full-catalog scale with deterministic ledger outputs. |
-| `multitask-orchestrator` | 4 | Deterministic lane split/merge contract integrated into activated chain workflows. |
-| `skills-third-party-intake` | 5 | Deterministic third-party triage now integrated with full reconciliation and admission evidence. |
-| `skills-consolidation-architect` | 5 | Used for overlap-aware reconciliation and boundary-preserving consolidation decisions. |
-| `docs-alignment-lock` | 5 | Lockstep policy/docs synchronization lane with privacy-safe publication checks. |
-| `code-gap-sweeping` | 7 | Cross-repo deterministic gap discovery with triage mapping and diff modes. |
+| `skill-arbiter` | 9 | Evolved from churn moderation into a live NullClaw host security app with self-governance, loopback API, and guarded response. |
+| `skill-hub` | 8 | Primary routing hub with loopback and lane policy controls. |
+| `skill-installer-plus` | 8 | Admission planning and ledger feedback loop proven at catalog scale. |
+| `usage-watcher` | 7 | Deterministic usage analysis and mode selection. |
+| `skill-cost-credit-governor` | 7 | Policy-grade spend and chatter control. |
+| `skill-cold-start-warm-path-optimizer` | 7 | Cold/warm analysis and prewarm policy. |
+| `skills-cross-repo-radar` | 7 | Bounded recent-work evidence now feeds live NullClaw prioritization. |
+| `code-gap-sweeping` | 7 | Cross-repo deterministic implementation-gap discovery. |
 | `request-loopback-resume` | 7 | Interruption-safe lane state model with strict resume contract. |
-| `skill-auditor` | 6 | Deterministic classification and finding severity gate. |
-| `skill-enforcer` | 6 | Cross-repo policy alignment gate in default chain. |
-| `safe-mass-index-core` | 6 | Large-repo discovery lane with bounded, low-churn behavior. |
-| `playwright-edge-preference` | 3 | New Edge-channel execution lane; deterministic fail-closed policy. |
+| `skill-auditor` | 6 | Deterministic skill classification and findings gate. |
+| `skill-enforcer` | 6 | Cross-repo policy alignment gate. |
+| `skills-third-party-intake` | 6 | Curated-source intake tied to supply-chain blocker logic and live host governance. |
+| `docs-alignment-lock` | 6 | Lockstep policy/doc sync with public-shape enforcement. |
+| `safe-mass-index-core` | 6 | Low-churn large-repo discovery lane. |
 
-## Level-Up Evidence Requirements
+## Level-up evidence
 
 To level up a skill, capture all applicable evidence:
 
-1. `skill-arbiter` admit evidence (`action`, `persistent_nonzero`, `max_rg`).
-2. `skill-auditor` classification and findings for changed skill set.
-3. Dependency/overlap improvements when scope or routing changes.
-4. Updated docs in lockstep for policy-visible changes.
-5. Usage/cost/cold-warm artifacts for chain-affecting changes.
-
-## Maintenance Rule
-
-Update this file whenever:
-
-1. Core skill behavior materially changes.
-2. Chain policy changes affect maturity expectations.
-3. New evidence upgrades a skill's practical level.
+1. passing privacy/public-shape gate
+2. passing self-governance scan
+3. updated tests
+4. updated docs in lockstep
+5. updated generated references where applicable

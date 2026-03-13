@@ -23,3 +23,4 @@ Thumbs.db
 arbitration-report*.json
 .githooks/
 references/cross_repo_open_work_radar_*.json
+apps/nullclaw-desktop/runtime/

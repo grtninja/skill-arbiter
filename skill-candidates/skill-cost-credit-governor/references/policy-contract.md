@@ -8,6 +8,7 @@
 - `skills[]`
 - `chatter_pairs[]`
 - `loop_events[]`
+- `stack_evidence`
 - `policy`
 
 ## Per-Skill Row Shape
@@ -22,6 +23,10 @@
 - `p95_runtime_ms`
 - `avg_daily_credits`
 - `peak_daily_credits`
+- `local_invocations`
+- `remote_invocations`
+- `remote_share_percent`
+- `provider_counts`
 - `status_counts`
 - `reason_codes`
 - `proposed_action`
@@ -46,3 +51,4 @@
 - `agent_chatter`
 - `runtime_p95_high`
 - `high_spend_share`
+- `remote_heavy_when_local_available`

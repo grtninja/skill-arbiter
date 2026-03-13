@@ -268,6 +268,146 @@ def print_status(ledger: dict[str, object], recent: int) -> None:
         print(f"- {stamp} task={task} xp_delta={delta} clear_run={str(clear_run).lower()}")
 
 
+def compute_score_event(
+    *,
+    task: str,
+    ledger: dict[str, object],
+    required_skills: list[str] | None = None,
+    used_skills: list[str] | None = None,
+    arbiter_report: str = "",
+    audit_report: str = "",
+    enforcer_pass: bool | None = None,
+) -> dict[str, object]:
+    """Compute one score event without writing the ledger."""
+
+    required = unique_ordered(required_skills or []) or DEFAULT_REQUIRED_SKILLS
+    used = unique_ordered(used_skills or [])
+    breakdown: list[Breakdown] = []
+
+    workflow_points, missing_required, workflow_breakdown = score_required(required, used)
+    breakdown.append(workflow_breakdown)
+
+    arbiter_points, arbiter_ok, arbiter_breakdown = score_arbiter(arbiter_report)
+    auditor_points, auditor_ok, auditor_breakdown = score_auditor(audit_report)
+    breakdown.append(arbiter_breakdown)
+    breakdown.append(auditor_breakdown)
+
+    enforcer_points, _enforcer_ok, enforcer_breakdown = score_enforcer(enforcer_pass)
+    breakdown.append(enforcer_breakdown)
+
+    clear_workflow = bool(used) and not missing_required
+    clear_run = clear_workflow and arbiter_ok and auditor_ok and (enforcer_pass is not False)
+
+    bonus = 0
+    if clear_run:
+        current_streak = int(ledger.get("streak", 0)) + 1
+        bonus = 150 + min(current_streak, 5) * 25
+        breakdown.append(Breakdown(category="combo", points=bonus, detail=f"full-chain streak={current_streak}"))
+        streak = current_streak
+    else:
+        streak = 0
+
+    xp_delta = workflow_points + arbiter_points + auditor_points + enforcer_points + bonus
+    xp_delta = max(-1000, min(1000, xp_delta))
+    total_xp = max(0, int(ledger.get("total_xp", 0)) + xp_delta)
+    level, progress_xp, next_needed = level_and_progress(total_xp)
+    best_streak = max(int(ledger.get("best_streak", 0)), streak)
+    event = {
+        "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        "task": task,
+        "required_skills": required,
+        "used_skills": used,
+        "missing_required_skills": missing_required,
+        "clear_run": clear_run,
+        "xp_delta": xp_delta,
+        "total_xp": total_xp,
+        "level": level,
+        "streak": streak,
+        "breakdown": [asdict(item) for item in breakdown],
+        "arbiter_report": arbiter_report,
+        "audit_report": audit_report,
+        "enforcer_pass": enforcer_pass,
+    }
+    return {
+        "event": event,
+        "required": required,
+        "used": used,
+        "missing_required": missing_required,
+        "clear_run": clear_run,
+        "xp_delta": xp_delta,
+        "total_xp": total_xp,
+        "level": level,
+        "level_progress": progress_xp,
+        "level_next_needed": next_needed,
+        "streak": streak,
+        "best_streak": best_streak,
+        "breakdown": [asdict(item) for item in breakdown],
+    }
+
+
+def record_score_event(
+    *,
+    ledger_path: Path,
+    task: str,
+    required_skills: list[str] | None = None,
+    used_skills: list[str] | None = None,
+    arbiter_report: str = "",
+    audit_report: str = "",
+    enforcer_pass: bool | None = None,
+    dry_run: bool = False,
+) -> dict[str, object]:
+    """Compute and optionally persist one score event."""
+
+    ledger = load_ledger(ledger_path)
+    payload = compute_score_event(
+        task=task,
+        ledger=ledger,
+        required_skills=required_skills,
+        used_skills=used_skills,
+        arbiter_report=arbiter_report,
+        audit_report=audit_report,
+        enforcer_pass=enforcer_pass,
+    )
+    if not dry_run:
+        events = ledger.get("events")
+        if not isinstance(events, list):
+            events = []
+        events.append(payload["event"])
+        if len(events) > 200:
+            events = events[-200:]
+        ledger["events"] = events
+        ledger["total_xp"] = payload["total_xp"]
+        ledger["level"] = payload["level"]
+        ledger["streak"] = payload["streak"]
+        ledger["best_streak"] = payload["best_streak"]
+        ledger_path.parent.mkdir(parents=True, exist_ok=True)
+        ledger_path.write_text(json.dumps(ledger, indent=2, ensure_ascii=True), encoding="utf-8")
+    payload["ledger_path"] = str(ledger_path)
+    payload["ledger_written"] = not dry_run
+    return payload
+
+
+def ledger_status(ledger_path: Path, recent: int = 5) -> dict[str, object]:
+    """Return current ledger status without recording a new event."""
+
+    ledger = load_ledger(ledger_path)
+    total_xp = int(ledger.get("total_xp", 0))
+    level, progress_xp, next_needed = level_and_progress(total_xp)
+    events = ledger.get("events")
+    recent_events = events[-max(0, recent):] if isinstance(events, list) else []
+    return {
+        "ledger_path": str(ledger_path),
+        "total_xp": total_xp,
+        "level": level,
+        "level_progress": progress_xp,
+        "level_next_needed": next_needed,
+        "streak": int(ledger.get("streak", 0)),
+        "best_streak": int(ledger.get("best_streak", 0)),
+        "recent_events": recent_events,
+        "event_count": len(events) if isinstance(events, list) else 0,
+    }
+
+
 def main() -> int:
     """CLI entrypoint."""
 
@@ -284,89 +424,33 @@ def main() -> int:
         print_status(ledger, args.recent)
         return 0
 
-    required = unique_ordered(args.required_skill) or DEFAULT_REQUIRED_SKILLS
-    used = unique_ordered(args.used_skill)
-
-    breakdown: list[Breakdown] = []
-
-    workflow_points, missing_required, workflow_breakdown = score_required(required, used)
-    breakdown.append(workflow_breakdown)
-
     try:
-        arbiter_points, arbiter_ok, arbiter_breakdown = score_arbiter(args.arbiter_report)
-        auditor_points, auditor_ok, auditor_breakdown = score_auditor(args.audit_report)
+        payload = record_score_event(
+            ledger_path=ledger_path,
+            task=args.task,
+            required_skills=args.required_skill,
+            used_skills=args.used_skill,
+            arbiter_report=args.arbiter_report,
+            audit_report=args.audit_report,
+            enforcer_pass=args.enforcer_pass,
+            dry_run=args.dry_run,
+        )
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
-    breakdown.append(arbiter_breakdown)
-    breakdown.append(auditor_breakdown)
-
-    enforcer_points, enforcer_ok, enforcer_breakdown = score_enforcer(args.enforcer_pass)
-    breakdown.append(enforcer_breakdown)
-
-    clear_workflow = bool(used) and not missing_required
-    clear_run = clear_workflow and arbiter_ok and auditor_ok and (args.enforcer_pass is not False)
-
-    bonus = 0
-    if clear_run:
-        current_streak = int(ledger.get("streak", 0)) + 1
-        bonus = 150 + min(current_streak, 5) * 25
-        breakdown.append(Breakdown(category="combo", points=bonus, detail=f"full-chain streak={current_streak}"))
-        streak = current_streak
-    else:
-        streak = 0
-
-    xp_delta = workflow_points + arbiter_points + auditor_points + enforcer_points + bonus
-    xp_delta = max(-1000, min(1000, xp_delta))
-    total_xp = max(0, int(ledger.get("total_xp", 0)) + xp_delta)
-    level, progress_xp, next_needed = level_and_progress(total_xp)
-    best_streak = max(int(ledger.get("best_streak", 0)), streak)
-
-    event = {
-        "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        "task": args.task,
-        "required_skills": required,
-        "used_skills": used,
-        "missing_required_skills": missing_required,
-        "clear_run": clear_run,
-        "xp_delta": xp_delta,
-        "total_xp": total_xp,
-        "level": level,
-        "streak": streak,
-        "breakdown": [asdict(item) for item in breakdown],
-        "arbiter_report": args.arbiter_report,
-        "audit_report": args.audit_report,
-        "enforcer_pass": args.enforcer_pass,
-    }
-
-    if not args.dry_run:
-        events = ledger.get("events")
-        if not isinstance(events, list):
-            events = []
-        events.append(event)
-        # Keep ledger bounded.
-        if len(events) > 200:
-            events = events[-200:]
-        ledger["events"] = events
-        ledger["total_xp"] = total_xp
-        ledger["level"] = level
-        ledger["streak"] = streak
-        ledger["best_streak"] = best_streak
-        ledger_path.parent.mkdir(parents=True, exist_ok=True)
-        ledger_path.write_text(json.dumps(ledger, indent=2, ensure_ascii=True), encoding="utf-8")
-
     print(f"task={args.task}")
-    print(f"xp_delta={xp_delta}")
-    print(f"total_xp={total_xp}")
-    print(f"level={level}")
-    print(f"level_progress={progress_xp}/{next_needed}")
-    print(f"streak={streak}")
-    print(f"best_streak={best_streak}")
-    print(f"clear_run={str(clear_run).lower()}")
+    print(f"xp_delta={payload['xp_delta']}")
+    print(f"total_xp={payload['total_xp']}")
+    print(f"level={payload['level']}")
+    print(f"level_progress={payload['level_progress']}/{payload['level_next_needed']}")
+    print(f"streak={payload['streak']}")
+    print(f"best_streak={payload['best_streak']}")
+    print(f"clear_run={str(payload['clear_run']).lower()}")
+    missing_required = payload["missing_required"]
     print(f"missing_required={','.join(missing_required) if missing_required else 'none'}")
-    for item in breakdown:
-        print(f"score[{item.category}]={item.points} ({item.detail})")
+    for item in payload["breakdown"]:
+        print(f"score[{item['category']}]={item['points']} ({item['detail']})")
     if args.dry_run:
         print("ledger_write=skipped (--dry-run)")
     else:

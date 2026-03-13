@@ -1,155 +1,112 @@
 # AGENTS.md
 
-Repository rules for `skill-arbiter`. Follow these rules before opening a PR.
+Repository rules for `skill-arbiter`.
 
 ## 1) Core policy
 
 - Treat this repository as public-shape only.
-- Never commit private repo details, internal names, host-specific usernames, or absolute personal paths.
-- Keep instructions generic and portable.
-- Treat VS Code/Codex built-in skills as upstream baseline.
-- Use this repository as an additive overlay and moderation layer only.
-- Do not disable/replace built-ins to make overlay skills work.
+- `skill-arbiter` is now a live NullClaw host security app, not a passive `rg.exe` moderator.
+- The shipped product is a local desktop UI plus a loopback-only Python arbitration agent.
+- Startup order is mandatory:
+  - app open
+  - agent attach/start
+  - self-checks
+  - inventory refresh
+  - operator actions enabled
+- Do not launch external browsers as part of normal app behavior.
+- Do not silently create scheduled tasks, PATH mutations, hidden workers, or vendored runtime drops.
 
-Required placeholder style:
+Required placeholders:
 
-- Repo placeholders: `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_D>`
+- Repo names: `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_D>`, `<PRIVATE_REPO_E>`
 - Skills root: `$CODEX_HOME/skills`
-- PowerShell home paths: `$env:USERPROFILE\\...`
+- User paths: `$env:USERPROFILE\\...`
+- External local roots: `<external-candidate-root>`
 
-## 2) Hard privacy lock (must pass)
+## 2) Hard privacy lock
 
-- Local pre-commit hook must be enabled:
+These must pass before commit or release:
 
 ```bash
 ./scripts/install_local_hooks.sh
-```
-
-- Commit gate (automatic via pre-commit):
-
-```bash
 python3 scripts/check_private_data_policy.py --staged
-```
-
-- CI gate (automatic on push/PR):
-
-```bash
 python3 scripts/check_private_data_policy.py
 ```
 
-If either gate fails, do not proceed until violations are removed.
+If the gate fails, stop and remove the leak before proceeding.
 
-## 3) Release workflow (must pass for release-impacting changes)
+## 3) Release workflow
 
-For release-impacting changes (for example `scripts/`, `SKILL.md`, Python files, or non-doc behavior changes):
+For release-impacting changes:
 
 ```bash
 python3 scripts/prepare_release.py --part patch
 ```
 
-Then update `CHANGELOG.md` notes to accurately match the PR.
+Then update `CHANGELOG.md` so it matches shipped behavior.
 
-PRs are checked by:
-
-```bash
-python3 scripts/check_release_hygiene.py
-```
-
-Docs-only/metadata-only changes (`README.md`, `references/`, `.github/`, etc.) may skip release bump.
-
-## 4) Validation checklist before PR
+## 4) Validation checklist
 
 Run from repo root:
 
 ```bash
 python3 scripts/arbitrate_skills.py --help
-python3 scripts/skill_game.py --help
-python3 scripts/prepare_release.py --help
-python3 scripts/check_release_hygiene.py --help
+python3 scripts/nullclaw_agent.py --help
+python3 scripts/generate_skill_catalog.py
 python3 scripts/check_private_data_policy.py
-python3 -m py_compile scripts/arbitrate_skills.py scripts/skill_game.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py
+python3 scripts/check_public_release.py
+pytest -q
+python3 -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/public_readiness.py
 ```
 
-## 5) Skill authoring rules
+## 5) Skill authoring and governance rules
 
-- Keep `SKILL.md` concise; move detailed material to `references/`.
-- Prefer reusable scripts for fragile/repeated workflows.
-- Do not hardcode private repo names or personal paths in candidate skills.
-- Keep repo-specific candidate skills under `skill-candidates/` with placeholder naming.
-- Keep overlay names distinct from VS Code built-ins unless intentionally extending existing upstream behavior.
+- Keep candidate skills concise and move detailed guidance into `references/`.
+- Use the same policy engine for third-party skills and for this repo's self-governance.
+- Do not auto-install from unvetted third-party sources.
+- Keep built-in VS Code/Codex skills as upstream baseline.
+- Reconcile overlay candidates additively; do not disable built-ins to make overlays work.
+- Every new or changed skill must remain attributable and privacy-safe.
 
-When admitting local skills, prefer lockdown mode:
+## 6) Local advisor requirement
 
-```bash
-python3 scripts/arbitrate_skills.py <skill> --source-dir "$CODEX_HOME/skills" --personal-lockdown
-```
+- The app must use a dedicated local coding-security LLM.
+- Default lane is a fast local Qwen-compatible model exposed through an OpenAI-compatible endpoint.
+- Defaults:
+  - `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
+  - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
+- Do not point the advisor at remote hosts by default.
 
-Default skill system for new work:
+## 7) Documentation lockstep
 
-1. Route with `skill-hub`.
-2. Run baseline sanity/hygiene via `skill-common-sense-engineering`.
-3. Run `usage-watcher` to set the active usage mode (`economy`, `standard`, or `surge`) and capture `usage-analysis` + `usage-plan` JSON artifacts.
-4. Run `skill-cost-credit-governor` to evaluate per-skill spend/chatter risk and capture analysis/policy JSON artifacts.
-5. Run `skill-cold-start-warm-path-optimizer` to evaluate prewarm policy and capture cold/warm analysis/plan JSON artifacts.
-6. For multi-repo work, run `skills-cross-repo-radar` to capture bounded recent-work evidence.
-7. For third-party skill discovery/import work, run `skills-third-party-intake` before admission decisions.
-8. For multi-repo work, run `code-gap-sweeping` to detect deterministic implementation gaps.
-9. For interrupted tasks, use `request-loopback-resume` to checkpoint lane state and produce deterministic next actions.
-10. Use `skill-installer-plus` to plan skill installs/admissions and keep recommendation history current.
-11. Audit new/changed skills with `skill-auditor`.
-12. Enforce cross-repo policy alignment with `skill-enforcer` when working across repos.
-13. For independent lanes, use `multitask-orchestrator`; reroute unresolved lanes through `skill-hub` loopback.
-14. Record workflow XP/level progress with `python3 scripts/skill_game.py ...` using gate evidence JSON paths.
-
-Mandatory skill-change gates:
-
-1. Every new/updated skill must pass `skill-arbiter` admission and include evidence (`action`, `persistent_nonzero`, `max_rg`).
-   Use `skill-arbiter-lockdown-admission` for this gate.
-2. Every new/updated skill must be classified by `skill-auditor` as `unique` or `upgrade`.
-3. If classification is `upgrade`, prefer updating existing skills instead of introducing duplicate candidates unless boundaries are explicitly documented.
-4. Every new/updated skill should include `skill-installer-plus` evidence (`plan`/`admit` JSON paths and latest recommendation decision).
-5. Every chain plan must include a usage guardrail decision with evidence paths from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer`; do not finalize chaining without these evaluations.
-6. For full third-party reconciliation runs, include a deterministic reconciliation manifest (for example `.tmp/candidate-reconcile-<date>.json`) that maps each imported skill to source and prior intake recommendation.
-7. Any third-party-origin skill added or changed must be reflected in `references/third-party-skill-attribution.md` with source repository and origin path.
-
-## 6) Security and mutation safety
-
-- Do not commit secrets, tokens, credentials, or private keys.
-- Preserve symlink safety controls and local-control-file protections in arbitration logic.
-- Keep subprocess calls argument-safe (no shell interpolation).
-
-## 7) Documentation alignment rule
-
-When policy or workflow changes, update all relevant docs in the same PR:
+When policy or workflow changes, update the affected docs in the same change:
 
 - `AGENTS.md`
+- `BOUNDARIES.md`
 - `README.md`
 - `CONTRIBUTING.md`
+- `SECURITY.md`
 - `SKILL.md`
 - `.github/pull_request_template.md`
+- `docs/PROJECT_SCOPE.md`
+- `docs/SCOPE_TRACKER.md`
 - `references/skill-catalog.md`
 - `references/usage-chaining-multitasking.md`
 - `references/vscode-skill-handling.md`
 - `references/skill-progression.md`
-
-No PR should merge with contradictory instructions across these files.
+- `references/default-skill-system.md`
 
 ## 8) Skill level-up declaration
 
-When a skill is newly created or improved using this skillset, include this exact two-line declaration in the response:
+When a skill is created or materially improved, include:
 
 ```text
 New Skill Unlocked: <SkillName>
 <SkillName> Leveled up to <LevelNumber>
 ```
 
-Use the real skill name for `<SkillName>`.  
-Use a positive integer for `<LevelNumber>` (for example `1`, `12`, `99`).
+## 9) Maximum effort policy
 
-## 9) Maximum Effort Policy
-
-- This repository is part of a workstation-scale first-party private codebase unless an explicit boundary document says otherwise.
 - Minimal-diff behavior is forbidden.
-- Do not optimize for the smallest patch or narrow local fix.
-- When anything changes, all related repos, docs, skills, gates, tests, configs, and dependent services must be updated.
-- A task is complete only when the affected dependency graph is synchronized and no known related surface is stale.
+- Synchronize runtime, docs, tests, release metadata, and generated references together.
+- The task is not complete until related governance and dependent repo-facing surfaces are updated.

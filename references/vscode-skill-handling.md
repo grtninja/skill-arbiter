@@ -1,110 +1,67 @@
-# VS Code Skill Handling and Overlay Recovery
+# VS Code / Codex Baseline Handling
 
-This document records how VS Code/Codex skill handling interacts with this repository's overlay skills.
+This repository treats VS Code/Codex built-ins as upstream baseline and overlays repository-owned skills on top.
 
-## Non-Conflict Policy
+## Policy
 
-- VS Code/Codex built-in skills are upstream and are not modified by this repository.
-- This repository only adds and moderates an overlay skill set from `skill-candidates/`.
-- Built-ins remain enabled; overlay skills are restored and validated on top.
+- Built-ins remain enabled.
+- `.system` skills remain enabled.
+- Overlay candidates are additive.
+- This repo does not disable or replace upstream skills to make overlays work.
 
-## Incident Record
+## Current reconciliation model
 
-Observed on: **February 27, 2026**
+The live inventory pipeline checks:
 
-Observed state:
+- installed top-level skills in `$CODEX_HOME/skills`
+- installed `.system` skills
+- overlay candidates in `skill-candidates/`
+- official upstream baseline from `openai/skills`
+- local Codex configuration in `%USERPROFILE%\\.codex`
+- Codex app instruction surfaces via `AGENTS.md`
+- VS Code instruction surfaces under `.vscode/`
+- GitHub Copilot instruction and prompt surfaces under `.github/`
+- curated source references already tracked by the repo
 
-- The Codex UI skill list showed built-ins only.
-- Repository overlay skills were not present in the active installed list.
-- Installed built-ins had older synchronized timestamps, indicating a host-level skill refresh/reset event.
+It also tags each skill row with:
 
-Most likely cause:
+- `ownership`
+- `legitimacy_status`
+- `legitimacy_reason`
 
-- A VS Code/Codex built-in skill refresh reset the active local skill inventory to baseline built-ins, leaving repository overlay skills unapplied.
+so official built-ins, repo-owned skills, and unowned local installs do not collapse into the same trust lane.
 
-## Recovery Procedure (Executed)
+The machine-generated catalog is the current inventory reference:
 
-1. Verify overlay coverage:
+- `references/skill-catalog.md`
+- `references/skill-vetting-report.md`
 
-```powershell
-$repoSkills = Get-ChildItem -Directory skill-candidates | Select-Object -ExpandProperty Name
-$installed = Get-ChildItem -Directory "$env:USERPROFILE\.codex\skills" | Select-Object -ExpandProperty Name
-$missing = $repoSkills | Where-Object { $_ -notin $installed }
-$missing
-```
+## Recovery flow
 
-2. Restore overlay skill directories additively:
+When overlays are missing after a host/editor refresh:
 
-```powershell
-$srcRoot = Resolve-Path "skill-candidates"
-$dstRoot = Join-Path $env:USERPROFILE ".codex\skills"
-Get-ChildItem -Directory $srcRoot | ForEach-Object {
-  $dst = Join-Path $dstRoot $_.Name
-  if (!(Test-Path $dst)) { New-Item -ItemType Directory -Path $dst | Out-Null }
-  Copy-Item -Recurse -Force (Join-Path $_.FullName '*') $dst
-}
-```
+1. Open the NullClaw desktop app.
+2. Let the app complete:
+   - app open
+   - agent attach/start
+   - self-checks
+   - inventory refresh
+3. Review missing-overlay and missing-builtin drift in the inventory tables.
+4. Restore overlay candidates additively from `skill-candidates/`.
+5. Re-run admission and source-risk review before broad use.
 
-3. Re-check coverage:
+## Current expected counts
 
-```powershell
-$repoSkills = Get-ChildItem -Directory skill-candidates | Select-Object -ExpandProperty Name
-$installed = Get-ChildItem -Directory "$env:USERPROFILE\.codex\skills" | Select-Object -ExpandProperty Name
-($repoSkills | Where-Object { $_ -notin $installed }).Count
-```
+These are refreshed by the generated catalog rather than maintained by hand:
 
-Expected result: `0`.
+- top-level built-ins
+- `.system` built-ins
+- overlay candidates
+- total expected additive inventory
 
-4. Rebuild local control files and validate churn safety after restore:
+## Guardrails
 
-```powershell
-$skillsRoot = Join-Path $env:USERPROFILE ".codex\skills"
-foreach ($name in ".blacklist.local", ".whitelist.local", ".immutable.local") {
-  $path = Join-Path $skillsRoot $name
-  if (!(Test-Path $path)) { New-Item -ItemType File -Path $path | Out-Null }
-}
-```
-
-5. Validate churn safety after restore:
-
-```bash
-python3 scripts/arbitrate_skills.py <skills...> \
-  --source-dir skill-candidates \
-  --personal-lockdown \
-  --json-out /tmp/restore-arbiter.json
-```
-
-Expected overlay size after the March 9, 2026 restore reconciliation:
-
-- `123` directories under `skill-candidates/`
-- `160` total expected installed skills when combined with top-level built-ins (`35`) and `.system` skills (`2`)
-
-The restore path is additive by design:
-
-- leave upstream `.system` and built-in skills untouched
-- restore repository overlay directories from `skill-candidates/` into `$env:USERPROFILE\.codex\skills`
-- recreate local control files from the latest freeze snapshot first, then fall back to empty local files if no snapshot exists
-
-## Ongoing Protection Plan
-
-1. Keep `skill-candidates/` as source-of-truth for overlay skills.
-2. After VS Code/Codex updates, run overlay coverage check and additive restore if needed.
-3. Rebuild `.blacklist.local`, `.whitelist.local`, and `.immutable.local` if a host reset removes them.
-4. Run `skill-arbiter` safety admission for changed/new skills before enabling broad use.
-5. Keep `references/skill-catalog.md` updated whenever skills change (including overlay counts).
-6. Keep policy docs in lockstep:
-   - `AGENTS.md`
-   - `README.md`
-   - `CONTRIBUTING.md`
-   - `SKILL.md`
-   - `.github/pull_request_template.md`
-
-## Audit Addendum
-
-The full installed-skill churn audit should include:
-
-- top-level built-ins under `$env:USERPROFILE\.codex\skills`
-- system built-ins under `$env:USERPROFILE\.codex\skills\.system`
-- repository overlay candidates from `skill-candidates/`
-
-This ensures regressions are caught across both upstream and overlay layers.
+1. Do not restore unknown third-party content blindly.
+2. Do not treat public catalog presence as trusted provenance.
+3. Do not use overlay recovery to bypass quarantine or source-risk policy.
+4. Keep `references/skill-catalog.md` current after any inventory-affecting change.

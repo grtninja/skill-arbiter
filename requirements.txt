@@ -1,6 +1,7 @@
-# This project has no external Python package dependencies.
+# Runtime and desktop-shell dependencies for the local NullClaw host app.
 # Runtime requirements:
 # - Python 3.10+
 # - Git
 # - Windows PowerShell (for rg.exe process sampling)
 # - rg.exe available on the host
+pywebview>=5.0
