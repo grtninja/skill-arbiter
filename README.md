@@ -8,6 +8,14 @@
 
 It started as an `rg.exe` churn moderator. It now acts as a capability firewall for local agent skills and related automation surfaces.
 
+Local skill governance and threat suppression console with guarded operator actions, source legitimacy tracking, and operator-confirmed remediation.
+
+## App preview
+
+Public-safe preview capture from an isolated browser session:
+
+![Skill Arbiter Security Console preview](docs/images/skill-arbiter-security-console-public-preview.png)
+
 ## Reality check
 
 The desktop app is not a fully self-sufficient operator product yet.
