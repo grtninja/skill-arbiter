@@ -411,6 +411,30 @@
               <div class="k">Trust Ledger</div>
               <div class="v small-v" id="collaboration-trust-status">pending</div>
             </div>
+            <div class="summary-card">
+              <div class="k">MX3 Mode</div>
+              <div class="v small-v" id="collaboration-mx3-mode">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">MX3 Feeder</div>
+              <div class="v small-v" id="collaboration-mx3-feeder">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">MX3 Active Sequence</div>
+              <div class="v small-v" id="collaboration-mx3-seq">none</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Subagent Source</div>
+              <div class="v small-v" id="collaboration-subagents-source">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Active Subagents</div>
+              <div class="v small-v" id="collaboration-subagents-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Subagent Events</div>
+              <div class="v small-v" id="collaboration-subagents-event-count">0</div>
+            </div>
           </div>
           <div class="detail-grid">
             <section class="subpanel">
@@ -421,6 +445,10 @@
               <div class="k">Recommended Skill Work</div>
               <pre class="feed short-feed" id="collaboration-targets">No collaboration-derived skill work queued.</pre>
             </section>
+            <section class="subpanel">
+              <div class="k">Active Subagents</div>
+              <pre class="feed short-feed" id="collaboration-subagents-detail">No collaboration subagents reported.</pre>
+            </section>
           </div>
         </section>
 
@@ -428,6 +456,64 @@
           <div class="panel-head">
             <div>
               <div class="layer-label">Layer 8</div>
+              <h2>Stack Runtime Health</h2>
+            </div>
+            <div class="small-note">MX3 and stack telemetry surfaced from the stack runtime contract.</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="k">Stack Mode</div>
+              <div class="v small-v" id="stack-mode">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Health URL</div>
+              <div class="v small-v" id="stack-health-url">not-set</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Stack Health</div>
+              <div class="v small-v" id="stack-runtime-status">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">MX3 Mode</div>
+              <div class="v small-v" id="stack-runtime-mode">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">MX3 Feeder</div>
+              <div class="v small-v" id="stack-runtime-feeder">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">MX3 Sequence</div>
+              <div class="v small-v" id="stack-runtime-seq">none</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">DFP Path</div>
+              <div class="v small-v" id="stack-runtime-seq-path">none</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Subagent Source</div>
+              <div class="v small-v" id="health-stack-subagents-source">unknown</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Active Subagents</div>
+              <div class="v small-v" id="health-stack-subagents-count">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="k">Subagent Events</div>
+              <div class="v small-v" id="health-stack-subagents-event-count">0</div>
+            </div>
+          </div>
+          <div class="detail-grid">
+            <section class="subpanel">
+              <div class="k">Active Stack Subagents</div>
+              <pre class="feed short-feed" id="health-stack-subagents-detail">No stack subagents reported.</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel workflow-panel">
+          <div class="panel-head">
+            <div>
+              <div class="layer-label">Layer 9</div>
               <h2>Privacy Findings</h2>
             </div>
           </div>
@@ -437,7 +523,7 @@
         <section class="panel workflow-panel">
           <div class="panel-head">
             <div>
-              <div class="layer-label">Layer 9</div>
+              <div class="layer-label">Layer 10</div>
               <h2>Public Release</h2>
             </div>
             <div class="small-note" id="readiness-status">Pending</div>

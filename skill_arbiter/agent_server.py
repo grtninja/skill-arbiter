@@ -1,15 +1,23 @@
 from __future__ import annotations
 
 import json
+import copy
+import threading
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from .about import about_payload
 from .accepted_risk import accept_subject, revoke_subject
 from .audit_log import append_audit_event, read_audit_events
-from .collaboration import record_payload as record_collaboration_payload, status_payload as collaboration_status_payload
+from .collaboration import (
+    read_collaboration_events,
+    record_payload as record_collaboration_payload,
+    status_payload as collaboration_status_payload,
+)
 from .contracts import AuditEvent, IncidentRecord, PolicyDecision
 from .inventory import build_inventory_snapshot, load_cached_inventory
 from .llm_advisor import advisor_base_url, advisor_model, advisor_status, enabled as advisor_enabled
@@ -20,6 +28,7 @@ from .public_readiness import load_cached_public_readiness, run_public_readiness
 from .quarantine import apply_quarantine, confirm_delete_skill, confirm_kill_process, release_quarantine
 from .self_governance import run_self_governance_scan
 from .skill_game_runtime import record_payload as record_skill_game_payload, status_payload as skill_game_status_payload
+from .stack_runtime import load_poll_profile, stack_runtime_snapshot
 from supply_chain_guard import scan_skill_dir_content, scan_skill_tree, summarize_findings
 
 
@@ -28,6 +37,11 @@ class NullClawState:
         self.skills_root = skills_root or DEFAULT_SKILLS_ROOT
         self.candidate_root = candidate_root or DEFAULT_CANDIDATES_ROOT
         self.host_id = host_id()
+        self._inventory_refresh_lock = threading.Lock()
+        self._inventory_refresh_cache: dict[str, Any] = {
+            "expires_at": 0.0,
+            "payload": None,
+        }
 
     def _candidate_root_label(self) -> str:
         try:
@@ -38,6 +52,11 @@ class NullClawState:
     def health(self) -> dict[str, object]:
         about = about_payload(self.host_id)
         advisor = advisor_status()
+        collaboration_events = (
+            read_collaboration_events(limit=200)
+            if not about.get("stack_runtime_contract", {}).get("stack_health_url", "")
+            else None
+        )
         return {
             "status": "ok",
             "service": "nullclaw-agent",
@@ -55,6 +74,10 @@ class NullClawState:
             "advisor_base_url": advisor_base_url(),
             "advisor_status": advisor["status"],
             "advisor_detail": advisor["detail"],
+            "stack_mode": about.get("stack_runtime_contract", {}).get("stack_mode", ""),
+            "stack_health_url": about.get("stack_runtime_contract", {}).get("stack_health_url", ""),
+            "stack_runtime": stack_runtime_snapshot(fallback_events=collaboration_events),
+            "poll_profile": load_poll_profile(),
         }
 
     def load_self_checks(self) -> dict[str, object]:
@@ -85,8 +108,17 @@ class NullClawState:
         return payload
 
     def inventory_refresh(self) -> dict[str, object]:
+        now = time.time()
+        with self._inventory_refresh_lock:
+            cached = self._inventory_refresh_cache.get("payload")
+            if self._inventory_refresh_cache["expires_at"] > now and cached is not None:
+                payload = copy.deepcopy(cached)
+                payload["refresh_cached"] = True
+                return payload
+
         payload = build_inventory_snapshot(self.skills_root, self.candidate_root)
         reconcile_cases(payload)
+        payload["refresh_cached"] = False
         append_audit_event(
             AuditEvent(
                 event_type="inventory_refresh",
@@ -96,6 +128,12 @@ class NullClawState:
                 evidence_codes=[item["severity"] for item in payload.get("incidents", [])[:6]],
             )
         )
+        with self._inventory_refresh_lock:
+            self._inventory_refresh_cache["payload"] = payload
+            self._inventory_refresh_cache["expires_at"] = now + max(
+                10.0,
+                load_poll_profile().get("passive_inventory_ms", 120000) / 1000.0,
+            )
         return payload
 
     def public_readiness(self) -> dict[str, object]:
@@ -159,13 +197,48 @@ class NullClawState:
         return {"decision": decision.to_dict(), "findings": summary}
 
 
+_LOOPBACK_ORIGIN_HOSTS = {"127.0.0.1", "localhost", "::1"}
+
+
+def _requested_origin(handler: BaseHTTPRequestHandler) -> str:
+    return str(handler.headers.get("Origin", "")).strip()
+
+
+def _resolve_allowed_origin(origin: str) -> str:
+    requested = str(origin or "").strip()
+    if not requested:
+        return ""
+    if requested == "null":
+        return "null"
+    parsed = urlparse(requested)
+    host = str(parsed.hostname or "").strip().lower()
+    if parsed.scheme in {"http", "https"} and host in _LOOPBACK_ORIGIN_HOSTS:
+        return requested
+    return ""
+
+
+def _origin_allowed(handler: BaseHTTPRequestHandler) -> bool:
+    origin = _requested_origin(handler)
+    if not origin:
+        return True
+    return bool(_resolve_allowed_origin(origin))
+
+
+def _write_cors_headers(handler: BaseHTTPRequestHandler) -> None:
+    allowed_origin = _resolve_allowed_origin(_requested_origin(handler))
+    if not allowed_origin:
+        return
+    handler.send_header("Access-Control-Allow-Origin", allowed_origin)
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
+    handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    handler.send_header("Vary", "Origin")
+
+
 def _json_response(handler: BaseHTTPRequestHandler, status: int, payload: dict[str, Any]) -> None:
     body = json.dumps(payload, ensure_ascii=True, indent=2).encode("utf-8")
     handler.send_response(status)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
-    handler.send_header("Access-Control-Allow-Origin", "*")
-    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
-    handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    _write_cors_headers(handler)
     handler.send_header("Cache-Control", "no-store, max-age=0")
     handler.send_header("Pragma", "no-cache")
     handler.send_header("Expires", "0")
@@ -180,10 +253,11 @@ def build_handler(state: NullClawState):
             return
 
         def do_OPTIONS(self) -> None:
+            if not _origin_allowed(self):
+                _json_response(self, HTTPStatus.FORBIDDEN, {"error": "origin_not_allowed"})
+                return
             self.send_response(HTTPStatus.NO_CONTENT)
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            _write_cors_headers(self)
             self.send_header("Cache-Control", "no-store, max-age=0")
             self.send_header("Pragma", "no-cache")
             self.send_header("Expires", "0")
@@ -197,6 +271,9 @@ def build_handler(state: NullClawState):
             return json.loads(self.rfile.read(length).decode("utf-8"))
 
         def do_GET(self) -> None:
+            if not _origin_allowed(self):
+                _json_response(self, HTTPStatus.FORBIDDEN, {"error": "origin_not_allowed"})
+                return
             if self.path == "/v1/health":
                 _json_response(self, HTTPStatus.OK, state.health())
                 return
@@ -236,7 +313,9 @@ def build_handler(state: NullClawState):
                 return
             if self.path == "/v1/collaboration/status":
                 inventory = load_cached_inventory()
-                _json_response(self, HTTPStatus.OK, {"host_id": state.host_id, **collaboration_status_payload(inventory)})
+                payload = collaboration_status_payload(inventory)
+                payload["stack_runtime"] = stack_runtime_snapshot(fallback_events=payload.get("recent_events", []))
+                _json_response(self, HTTPStatus.OK, {"host_id": state.host_id, **payload})
                 return
             if self.path == "/v1/mitigation/cases":
                 _json_response(self, HTTPStatus.OK, {"host_id": state.host_id, "cases": list_cases()})
@@ -247,6 +326,9 @@ def build_handler(state: NullClawState):
             _json_response(self, HTTPStatus.NOT_FOUND, {"error": "not_found"})
 
         def do_POST(self) -> None:
+            if not _origin_allowed(self):
+                _json_response(self, HTTPStatus.FORBIDDEN, {"error": "origin_not_allowed"})
+                return
             try:
                 payload = self._read_json()
             except json.JSONDecodeError as exc:

@@ -20,6 +20,74 @@ THREAT_MATRIX_ROW_RE = re.compile(r"^\| `?([^|`]+?)`? \| `([^`]+)` \| ([^|]+) \|
 THIRD_PARTY_SKILL_ROW_RE = re.compile(r"^\| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \|$")
 
 
+_RADAR_FIELD_PATHS = ("changed_files_sample", "dirty_files_sample", "skill_paths")
+_RADAR_TOKEN_SPLIT_RE = re.compile(r"[^a-z0-9-]")
+_PATH_SEGMENT_RE = re.compile(r"[\\/]")
+
+
+def _iter_recent_work_radar_paths(*, limit: int = 2) -> list[Path]:
+    refs = sorted((REPO_ROOT / "references").glob("cross_repo_open_work_radar_*.json"))
+    return refs[-max(1, limit) :]
+
+
+def _safe_load_radar_payload(path: Path) -> dict[str, object] | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8", errors="ignore"))
+        return payload if isinstance(payload, dict) else None
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _extract_tokens_from_path(path: str, candidate_names: set[str]) -> set[str]:
+    found: set[str] = set()
+    if not path:
+        return found
+    for segment in _PATH_SEGMENT_RE.split(path.replace(".", "/")):
+        segment = segment.strip().lower()
+        if not segment:
+            continue
+        if segment in candidate_names:
+            found.add(segment)
+        stem = segment.rsplit(".", 1)[0]
+        if stem in candidate_names:
+            found.add(stem)
+    return found
+
+
+def _extract_tokens_from_subject(subject: str, candidate_names: set[str]) -> set[str]:
+    found: set[str] = set()
+    for token in _RADAR_TOKEN_SPLIT_RE.split((subject or "").lower()):
+        if token and token in candidate_names:
+            found.add(token)
+    return found
+
+
+def _candidate_names_from_radar(payload: dict[str, object], candidate_names: set[str]) -> set[str]:
+    found: set[str] = set()
+    repos = payload.get("repos")
+    if not isinstance(repos, list):
+        return found
+    for repo_entry in repos:
+        if not isinstance(repo_entry, dict):
+            continue
+        for field in _RADAR_FIELD_PATHS:
+            rows = repo_entry.get(field)
+            if not isinstance(rows, list):
+                continue
+            for raw in rows:
+                if not isinstance(raw, str):
+                    continue
+                found.update(_extract_tokens_from_path(raw, candidate_names))
+        commits = repo_entry.get("commits_sample")
+        if not isinstance(commits, list):
+            continue
+        for commit in commits:
+            if not isinstance(commit, dict):
+                continue
+            found.update(_extract_tokens_from_subject(str(commit.get("subject") or ""), candidate_names))
+    return found
+
+
 def _read_skill_description(skill_dir: Path) -> str:
     skill_md = skill_dir / "SKILL.md"
     if not skill_md.is_file():
@@ -369,11 +437,31 @@ def _candidate_names(candidate_root: Path) -> set[str]:
 
 
 def _recent_work_skill_names(candidate_root: Path) -> set[str]:
-    refs = sorted((REPO_ROOT / "references").glob("cross_repo_open_work_radar_*.json"))
-    if not refs:
+    candidate_names = _candidate_names(candidate_root)
+    if not candidate_names:
         return set()
-    payload = refs[-1].read_text(encoding="utf-8", errors="ignore")
-    return {name for name in _candidate_names(candidate_root) if name in payload}
+    radar_paths = _iter_recent_work_radar_paths()
+    radar_payloads: list[dict[str, object]] = []
+    for path in radar_paths:
+        payload = _safe_load_radar_payload(path)
+        if payload is not None:
+            radar_payloads.append(payload)
+    if not radar_payloads:
+        return set()
+    detected = set()
+    normalized_candidates = {name.lower() for name in candidate_names}
+    for payload in radar_payloads:
+        detected.update(_candidate_names_from_radar(payload, normalized_candidates))
+    if detected:
+        return detected
+    radar_text = "\n".join(
+        json.dumps(payload, ensure_ascii=True, sort_keys=True).lower() for payload in radar_payloads
+    )
+    return {
+        name
+        for name in candidate_names
+        if str(name).lower() in radar_text
+    }
 
 
 def build_inventory_snapshot(

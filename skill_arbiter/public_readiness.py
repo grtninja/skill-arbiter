@@ -34,7 +34,7 @@ README_REQUIRED_SNIPPETS = [
     "https://github.com/grtninja/skill-arbiter",
     "https://www.patreon.com/cw/grtninja",
 ]
-SUSPICIOUS_TRACKED_PATTERNS = ("*.lnk", "*.jsonl", "*.sqlite", "*.sqlite3", "*.db")
+SUSPICIOUS_TRACKED_PATTERNS = ("*.lnk", "*.jsonl", "*.sqlite", "*.sqlite3", "*.db", "*.pyc", "__pycache__/**")
 UNSANITIZED_HOST_ID_RE = re.compile(r'(?m)(Host ID:\s*`(?!<LOCAL_HOST_ID>)[^`]+`|"host_id"\s*:\s*"(?!<LOCAL_HOST_ID>)[^"]+")')
 
 

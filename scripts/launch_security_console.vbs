@@ -1,19 +1,23 @@
 Option Explicit
 
-Dim shell, fso, repoRoot, pythonw, desktopScript, command
+Dim shell, fso, repoRoot, desktopRoot, nodeExe, launchScript, command
 
 Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
 repoRoot = fso.GetParentFolderName(WScript.ScriptFullName)
 repoRoot = fso.GetParentFolderName(repoRoot)
+desktopRoot = repoRoot & "\apps\nullclaw-desktop"
+launchScript = desktopRoot & "\electron\launchDesktop.cjs"
 
-pythonw = shell.ExpandEnvironmentStrings("%LocalAppData%") & "\Programs\Python\Python313\pythonw.exe"
-desktopScript = repoRoot & "\scripts\nullclaw_desktop.py"
-
-If Not fso.FileExists(pythonw) Then
-  pythonw = "pythonw.exe"
+nodeExe = shell.ExpandEnvironmentStrings("%ProgramFiles%") & "\nodejs\node.exe"
+If Not fso.FileExists(nodeExe) Then
+  nodeExe = shell.ExpandEnvironmentStrings("%LocalAppData%") & "\Programs\nodejs\node.exe"
+End If
+If Not fso.FileExists(nodeExe) Then
+  nodeExe = "node.exe"
 End If
 
-command = """" & pythonw & """ """ & desktopScript & """"
+shell.CurrentDirectory = desktopRoot
+command = """" & nodeExe & """ """ & launchScript & """"
 shell.Run command, 0, False

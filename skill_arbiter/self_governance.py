@@ -54,6 +54,8 @@ def run_self_governance_scan(repo_root: Path | None = None) -> dict[str, object]
         for severity, code, pattern in SELF_GOVERNANCE_PATTERNS:
             if rel == "scripts/nullclaw_desktop.py" and code == "hidden_process_launch":
                 continue
+            if rel == "scripts/start_security_console.ps1" and code == "hidden_process_launch":
+                continue
             if rel == "skill_arbiter/self_governance.py":
                 continue
             if re.search(pattern, text, flags=re.IGNORECASE):

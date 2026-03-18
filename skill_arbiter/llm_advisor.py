@@ -14,11 +14,20 @@ def _local_only(url_text: str) -> bool:
 
 
 def _default_base_url() -> str:
-    return os.environ.get("NULLCLAW_AGENT_BASE_URL", "http://127.0.0.1:9000/v1").rstrip("/")
+    return os.environ.get(
+        "NULLCLAW_AGENT_BASE_URL",
+        os.environ.get("STARFRAME_SHARED_AGENT_BASE_URL", "http://127.0.0.1:9000/v1"),
+    ).rstrip("/")
 
 
 def _default_model() -> str:
-    return os.environ.get("NULLCLAW_AGENT_MODEL", "auto")
+    return os.environ.get(
+        "NULLCLAW_AGENT_MODEL",
+        os.environ.get(
+            "STARFRAME_SHARED_AGENT_MODEL",
+            os.environ.get("MX3_LMSTUDIO_TOOL_MODEL", "radeon-qwen3.5-4b"),
+        ),
+    )
 
 
 def enabled() -> bool:
@@ -31,7 +40,7 @@ def advisor_model(refresh: bool = False) -> str:
         return configured
     available = available_models(refresh=refresh)
     if not available:
-        return "radeon-qwen3.5-4b"
+        return os.environ.get("STARFRAME_SHARED_AGENT_MODEL", "radeon-qwen3.5-4b").strip() or "radeon-qwen3.5-4b"
     return _select_model(available)
 
 
@@ -92,7 +101,9 @@ def _model_score(model_id: str) -> tuple[int, int, int, str]:
 
 def _select_model(models: list[str]) -> str:
     ranked = sorted(models, key=_model_score)
-    return ranked[0] if ranked else "radeon-qwen3.5-4b"
+    if ranked:
+        return ranked[0]
+    return os.environ.get("STARFRAME_SHARED_AGENT_MODEL", "radeon-qwen3.5-4b").strip() or "radeon-qwen3.5-4b"
 
 
 def request_local_advice(subject: str, findings: list[str], timeout_s: float = 4.0) -> str:

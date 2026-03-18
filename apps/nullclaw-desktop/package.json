@@ -1,0 +1,13 @@
+{
+  "name": "skill-arbiter-security-console",
+  "private": true,
+  "version": "0.1.0",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "desktop:start": "node electron/launchDesktop.cjs",
+    "desktop:binary": "node electron/launchDesktop.cjs --print-binary"
+  },
+  "devDependencies": {
+    "electron": "31.7.7"
+  }
+}

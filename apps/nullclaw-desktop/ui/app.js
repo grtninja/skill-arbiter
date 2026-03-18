@@ -6,6 +6,17 @@ let currentCaseId = "";
 let inventoryState = { skills: [], incidents: [], sources: [], legitimacy_summary: {}, interop_sources: [] };
 let casesState = [];
 let lastPassiveInventoryRefreshAt = 0;
+const pollStartTimers = {};
+let pollProfile = {
+  health_ms: 30000,
+  passive_inventory_ms: 180000,
+  skill_game_ms: 120000,
+  collaboration_ms: 120000,
+  stack_runtime_ms: 60000,
+};
+const pollRunning = {};
+const pollLastRun = {};
+const pollTimers = {};
 
 const SEVERITY_ORDER = {
   critical: 0,
@@ -138,6 +149,90 @@ function setMetricStatus(cardId, valueId, value) {
 function setMetricCount(cardId, valueId, count, tone = "neutral") {
   setCardTone(cardId, tone);
   setText(valueId, String(count));
+}
+
+function parsePollProfile(payload) {
+  const profile = payload?.poll_profile || payload?.stack_runtime_contract?.poll_profile || {};
+  const sanitize = (value, fallback) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+  };
+  return {
+    health_ms: sanitize(profile.health_ms, 30000),
+    passive_inventory_ms: sanitize(profile.passive_inventory_ms, 180000),
+    skill_game_ms: sanitize(profile.skill_game_ms, 120000),
+    collaboration_ms: sanitize(profile.collaboration_ms, 120000),
+    stack_runtime_ms: sanitize(profile.stack_runtime_ms, 60000),
+  };
+}
+
+function withPollGate(name, handler, options = {}) {
+  const minGap = Math.max(250, Number(options.minGapMs || 0));
+  const visibleOnly = Boolean(options.visibleOnly ?? true);
+  const now = Date.now();
+  const lastRun = pollLastRun[name] || 0;
+  if (pollRunning[name] || now - lastRun < minGap) {
+    return;
+  }
+  if (visibleOnly && document.visibilityState === "hidden") {
+    return;
+  }
+  pollRunning[name] = true;
+  pollLastRun[name] = now;
+  Promise.resolve()
+    .then(() => handler())
+    .catch(() => null)
+    .finally(() => {
+      pollRunning[name] = false;
+    });
+}
+
+function scheduleRefresh(name, intervalMs, handler, options = {}) {
+  const initialDelay = Number(options.initialDelayMs || 0);
+  const visibleOnly = Boolean(options.visibleOnly ?? true);
+  const interval = Math.max(5000, Number(intervalMs || 10000));
+  const jitter = Math.floor(Math.random() * 2000);
+  if (pollTimers[name]) {
+    clearInterval(pollTimers[name]);
+  }
+  if (pollStartTimers[name]) {
+    clearTimeout(pollStartTimers[name]);
+  }
+  const run = async () => {
+    if (visibleOnly && document.visibilityState === "hidden") {
+      return;
+    }
+    withPollGate(name, handler, { minGapMs: 250, visibleOnly: false });
+  };
+  const timer = setTimeout(() => {
+    run().catch(() => null);
+    pollTimers[name] = setInterval(run, interval);
+  }, Math.max(0, initialDelay + jitter));
+  pollStartTimers[name] = timer;
+  return timer;
+}
+
+function clearScheduledRefresh(name) {
+  if (pollStartTimers[name]) {
+    clearTimeout(pollStartTimers[name]);
+    delete pollStartTimers[name];
+  }
+  if (pollTimers[name]) {
+    clearInterval(pollTimers[name]);
+    delete pollTimers[name];
+  }
+}
+
+function renderSubagentPayload(prefix, payload) {
+  const source = payload?.source || "unknown";
+  const active = payload?.active_subagents || [];
+  const eventCount = payload?.observed_event_count || 0;
+  setText(`${prefix}-source`, String(source));
+  setText(`${prefix}-count`, String(active.length));
+  setText(`${prefix}-event-count`, String(eventCount));
+  setFeedText(`${prefix}-detail`, active.length
+    ? active.map((row) => `${row.name} · ${row.state || "active"} (${row.event_count || 0})`).join("\n")
+    : "No active subagents reported.");
 }
 
 function setSelectedSubject(value) {
@@ -615,10 +710,16 @@ async function refreshCollaboration() {
   const payload = await api("/v1/collaboration/status");
   const events = payload.recent_events || [];
   const targets = payload.recommended_skill_work || [];
+  const mx3Runtime = payload.mx3_runtime || payload.stack_runtime?.mx3 || {};
+  const subagents = payload.subagent_coordination || payload.stack_runtime?.subagent_coordination || {};
   setText("collaboration-count", String(payload.event_count || 0));
   setText("collaboration-stable-count", String(payload.stable_event_count || 0));
   setText("collaboration-target-count", String(targets.length));
   setText("collaboration-trust-status", payload.trust_ledger_available ? "online" : "offline");
+  setText("collaboration-mx3-mode", mx3Runtime.mode || "unknown");
+  setText("collaboration-mx3-feeder", mx3Runtime.feeder_state || "unknown");
+  setText("collaboration-mx3-seq", mx3Runtime.active_sequence_name || "none");
+  renderSubagentPayload("collaboration-subagents", subagents);
   setFeedText("collaboration-feed", events.length
     ? events.map((row) => {
       const who = (row.collaborators || []).join(", ") || "local";
@@ -650,6 +751,13 @@ function renderCollaborationError(error) {
   setText("collaboration-stable-count", "error");
   setText("collaboration-target-count", "error");
   setText("collaboration-trust-status", "error");
+  setText("collaboration-mx3-mode", "error");
+  setText("collaboration-mx3-feeder", "error");
+  setText("collaboration-mx3-seq", "error");
+  setText("collaboration-subagents-source", "error");
+  setText("collaboration-subagents-count", "error");
+  setText("collaboration-subagents-event-count", "error");
+  setFeedText("collaboration-subagents-detail", `Collaboration subagent refresh failed.\n${message}`);
   setFeedText("collaboration-feed", `Collaboration refresh failed.\n${message}`);
   setFeedText("collaboration-targets", "Collaboration-derived skill work is unavailable until refresh succeeds.");
 }
@@ -659,6 +767,14 @@ async function refreshHealth() {
     const payload = await api("/v1/health");
     setHtml("host-chip", `<span class="dot"></span> Host: ${escapeHtml(payload.host_id)}`);
     setMetricStatus("agent-card", "agent-status", payload.status);
+    setText("stack-mode", payload.stack_mode || "unknown");
+    setText("stack-health-url", payload.stack_health_url || "not-set");
+    setText("stack-runtime-status", payload.stack_runtime?.health?.status || payload.stack_runtime?.status || "unknown");
+    setText("stack-runtime-mode", payload.stack_runtime?.mx3?.mode || "unknown");
+    setText("stack-runtime-feeder", payload.stack_runtime?.mx3?.feeder_state || "unknown");
+    setText("stack-runtime-seq", payload.stack_runtime?.mx3?.active_sequence_name || "none");
+    setText("stack-runtime-seq-path", payload.stack_runtime?.mx3?.active_dfp_path || "none");
+    renderSubagentPayload("health-stack-subagents", payload.stack_runtime?.subagent_coordination || {});
     const advisorText = payload.advisor_enabled
       ? `${payload.advisor_model} (${payload.advisor_status || "pending"})`
       : "disabled";
@@ -669,11 +785,24 @@ async function refreshHealth() {
       ? "Window open. Local arbitration agent attached. Advisor offline; deterministic mode is active."
       : "Window open. Local arbitration agent attached.";
     setBanner(banner);
-    return true;
+    const profile = parsePollProfile(payload);
+    pollProfile = profile;
+    return payload;
   } catch (error) {
     setMetricStatus("agent-card", "agent-status", "starting");
+    setText("stack-mode", "error");
+    setText("stack-health-url", "error");
+    setText("stack-runtime-status", "error");
+    setText("stack-runtime-mode", "error");
+    setText("stack-runtime-feeder", "error");
+    setText("stack-runtime-seq", "error");
+    setText("stack-runtime-seq-path", "error");
+    setText("health-stack-subagents-source", "error");
+    setText("health-stack-subagents-count", "error");
+    setText("health-stack-subagents-event-count", "error");
+    setFeedText("health-stack-subagents-detail", "Stack runtime unavailable.");
     setBanner("Waiting for the local arbitration agent.");
-    return false;
+    return null;
   }
 }
 
@@ -769,7 +898,6 @@ async function passiveRefreshInventory() {
     return;
   }
   lastPassiveInventoryRefreshAt = now;
-  await refreshHealth().catch(() => null);
   await refreshInventory().catch(() => null);
 }
 
@@ -789,6 +917,8 @@ async function refreshAbout() {
   setText("about-developer", payload.developer || "grtninja");
   setText("about-license", payload.license || "MIT");
   setText("about-description", payload.description || "No description available.");
+  const profile = parsePollProfile(payload);
+  pollProfile = profile;
   renderSupportChannels(payload.support_channels || []);
 }
 
@@ -871,9 +1001,11 @@ async function revokeSelectedReview() {
 async function bootstrap() {
   setFlow("app-open");
   await refreshAbout().catch(() => null);
+  let healthPayload = null;
   let attached = false;
   for (let attempt = 0; attempt < 12; attempt += 1) {
-    attached = await refreshHealth();
+    healthPayload = await refreshHealth();
+    attached = Boolean(healthPayload);
     if (attached) {
       break;
     }
@@ -896,18 +1028,41 @@ async function bootstrap() {
   await refreshPublicReadiness();
   await refreshAuditLog();
   await refreshCases();
-  window.setInterval(() => {
-    passiveRefreshInventory().catch(() => null);
-  }, 60000);
-  window.setInterval(() => {
-    refreshHealth().catch(() => null);
-  }, 10000);
+  const profileFromHealth = parsePollProfile(healthPayload || {});
+  const profile = pollProfile;
+  pollProfile = {
+    health_ms: Math.max(10000, profile.health_ms || profileFromHealth.health_ms),
+    passive_inventory_ms: Math.max(30000, profile.passive_inventory_ms || profileFromHealth.passive_inventory_ms),
+    skill_game_ms: Math.max(30000, profile.skill_game_ms || profileFromHealth.skill_game_ms),
+    collaboration_ms: Math.max(30000, profile.collaboration_ms || profileFromHealth.collaboration_ms),
+    stack_runtime_ms: Math.max(10000, profile.stack_runtime_ms || profileFromHealth.stack_runtime_ms),
+  };
+  scheduleRefresh("health", pollProfile.health_ms, () => refreshHealth(), {
+    initialDelayMs: 0,
+    visibleOnly: false,
+  });
+  scheduleRefresh("inventory", pollProfile.passive_inventory_ms, () => passiveRefreshInventory(), {
+    initialDelayMs: Math.min(60000, pollProfile.health_ms + 2000),
+    visibleOnly: true,
+  });
+  scheduleRefresh("skill-game", pollProfile.skill_game_ms, () => refreshSkillGame().catch((error) => {
+    renderSkillGameError(error);
+  }), {
+    initialDelayMs: Math.min(120000, pollProfile.health_ms + 6000),
+    visibleOnly: true,
+  });
+  scheduleRefresh("collaboration", pollProfile.collaboration_ms, () => refreshCollaboration().catch((error) => {
+    renderCollaborationError(error);
+  }), {
+    initialDelayMs: Math.min(90000, pollProfile.health_ms + 4000),
+    visibleOnly: true,
+  });
   window.addEventListener("focus", () => {
-    passiveRefreshInventory().catch(() => null);
+    withPollGate("health", () => refreshHealth(), { minGapMs: 3000, visibleOnly: false });
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-      passiveRefreshInventory().catch(() => null);
+      withPollGate("health", () => refreshHealth(), { minGapMs: 3000, visibleOnly: false });
     }
   });
 }

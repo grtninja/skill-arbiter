@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import json
+import os
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 import tempfile
 import threading
 import unittest
 from unittest import mock
-from urllib import request
+from urllib import error, request
 
 from skill_arbiter.agent_server import NullClawState, build_handler
-from skill_arbiter.inventory import _review_fingerprint, build_inventory_snapshot
+from skill_arbiter.inventory import _recent_work_skill_names, _review_fingerprint, build_inventory_snapshot
 from skill_arbiter.llm_advisor import advisor_model
 from skill_arbiter.mitigation import plan_case, reconcile_cases
 
@@ -36,6 +37,37 @@ def _write_skill(root: Path, name: str, description: str = "demo skill") -> Path
 
 
 class InventorySnapshotTests(unittest.TestCase):
+    def test_recent_work_skill_names_reads_radar_payloads_and_commits(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            candidate_root = root / "skill-candidates"
+            (root / "references").mkdir()
+            candidate_root.mkdir()
+            (candidate_root / "alpha").mkdir()
+            (candidate_root / "gamma").mkdir()
+            radar_payload = {
+                "repos": [
+                    {
+                        "changed_files_sample": [
+                            "alpha/src/render_notes.txt",
+                            "third_party/notes.md",
+                        ],
+                        "dirty_files_sample": ["x", "tools/gamma-review.patch"],
+                        "skill_paths": ["scripts/alpha_setup.py"],
+                        "commits_sample": [{"subject": "Reviewed gamma and alpha in one pass"}],
+                    }
+                ]
+            }
+            (root / "references" / "cross_repo_open_work_radar_20260317.json").write_text(
+                json.dumps(radar_payload),
+                encoding="utf-8",
+            )
+
+            with mock.patch("skill_arbiter.inventory.REPO_ROOT", root):
+                recent_work = _recent_work_skill_names(candidate_root)
+
+        self.assertEqual(recent_work, {"alpha", "gamma"})
+
     def test_build_inventory_snapshot_reconciles_openai_baseline_and_overlay_drift(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -314,6 +346,28 @@ class InventorySnapshotTests(unittest.TestCase):
 
 
 class AgentServerTests(unittest.TestCase):
+    def test_inventory_refresh_is_throttled(self) -> None:
+        state = NullClawState(skills_root=Path("/tmp"), candidate_root=Path("/tmp/skill-candidates"))
+        base_payload = {
+            "host_id": "host1234",
+            "skill_count": 1,
+            "source_count": 1,
+            "incident_count": 0,
+            "legitimacy_summary": {"official_trusted": 0, "owned_trusted": 0, "accepted_review": 0, "needs_review": 0, "blocked_hostile": 0},
+            "skills": [],
+            "sources": [],
+            "incidents": [],
+        }
+        with mock.patch("skill_arbiter.agent_server.load_poll_profile", return_value={"passive_inventory_ms": 120000}):
+            with mock.patch("skill_arbiter.agent_server.build_inventory_snapshot", return_value=base_payload) as build_snapshot:
+                with mock.patch("skill_arbiter.agent_server.reconcile_cases") as reconcile_cases:
+                    first = state.inventory_refresh()
+                    second = state.inventory_refresh()
+            self.assertFalse(first["refresh_cached"])
+            self.assertTrue(second["refresh_cached"])
+            self.assertEqual(build_snapshot.call_count, 1)
+            self.assertEqual(reconcile_cases.call_count, 1)
+
     def test_loopback_api_serves_health_checks_and_inventory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -410,6 +464,37 @@ class AgentServerTests(unittest.TestCase):
                                                                         self.assertEqual(response.headers.get("Cache-Control"), "no-store, max-age=0")
                                                                         self.assertEqual(response.headers.get("Pragma"), "no-cache")
                                                                         health = json.loads(response.read().decode("utf-8"))
+                                                                    with request.urlopen(
+                                                                        request.Request(
+                                                                            f"{base}/v1/health",
+                                                                            headers={"Origin": "http://127.0.0.1:3000"},
+                                                                            method="GET",
+                                                                        ),
+                                                                        timeout=3,
+                                                                    ) as response:
+                                                                        self.assertEqual(
+                                                                            response.headers.get("Access-Control-Allow-Origin"),
+                                                                            "http://127.0.0.1:3000",
+                                                                        )
+                                                                    with request.urlopen(
+                                                                        request.Request(
+                                                                            f"{base}/v1/health",
+                                                                            headers={"Origin": "null"},
+                                                                            method="GET",
+                                                                        ),
+                                                                        timeout=3,
+                                                                    ) as response:
+                                                                        self.assertEqual(response.headers.get("Access-Control-Allow-Origin"), "null")
+                                                                    with self.assertRaises(error.HTTPError) as blocked_origin:
+                                                                        request.urlopen(
+                                                                            request.Request(
+                                                                                f"{base}/v1/health",
+                                                                                headers={"Origin": "https://example.com"},
+                                                                                method="GET",
+                                                                            ),
+                                                                            timeout=3,
+                                                                        )
+                                                                    self.assertEqual(blocked_origin.exception.code, 403)
                                                                     about = json.loads(request.urlopen(f"{base}/v1/about", timeout=3).read().decode("utf-8"))
                                                                     readiness = json.loads(request.urlopen(f"{base}/v1/public-readiness", timeout=3).read().decode("utf-8"))
                                                                     with request.urlopen(f"{base}/v1/skill-game/status", timeout=3) as response:
@@ -573,6 +658,10 @@ class MitigationTests(unittest.TestCase):
 
 
 class AdvisorSelectionTests(unittest.TestCase):
+    def test_default_prefers_shared_qwen_lane(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(advisor_model(), "radeon-qwen3.5-4b")
+
     def test_auto_prefers_local_qwen_coding_model(self) -> None:
         response = mock.MagicMock()
         response.read.return_value = json.dumps(

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import os
-import platform
+import socket
 from pathlib import Path
 
 
@@ -68,5 +68,9 @@ def quarantine_artifacts_root() -> Path:
 
 
 def host_id() -> str:
-    raw = platform.node() or "unknown-host"
+    raw = (
+        os.environ.get("COMPUTERNAME")
+        or socket.gethostname()
+        or "unknown-host"
+    )
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]

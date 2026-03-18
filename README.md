@@ -25,6 +25,39 @@ The desktop app is not a fully self-sufficient operator product yet.
 - Without active Codex/Copilot-driven work, the interop view, collaboration lane, skill-game lane, and upgrade/consolidation recommendations become partial, stale, or much less useful.
 - Do not describe the current app as a complete general-purpose skill-security console outside Codex/Copilot-driven workflows.
 
+## OpenJarvis Wave 1 role
+
+In the private OpenJarvis-style rollout, `skill-arbiter` is the bounded
+governance and learning engine.
+
+It may schedule, critique, archive, and tune within declared limits, but it may
+not silently promote accepted baselines or perform destructive cleanup without
+operator confirmation.
+
+## Response governance alignment
+
+`skill-arbiter` participates in the shared response loop as a bounded
+governance layer:
+
+1. candidate generation
+2. decision telemetry
+3. ranked arbitration
+4. trace recording
+5. final emission
+
+In that loop, this repo may:
+
+- critique candidates
+- gate risky or out-of-policy candidates
+- recommend tuning or retries
+- record trust and reliability outcomes
+
+It may not:
+
+- invent a second persona authority
+- silently emit final answers on behalf of endpoint repos
+- bypass trace requirements because a candidate "looks good enough"
+
 ## AI warning
 
 - Codex, GitHub Copilot, and other AI/agent systems can make mistakes.
@@ -78,16 +111,16 @@ The app uses a dedicated local coding-security LLM for short advisory notes.
 Defaults:
 
 - `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
-- `NULLCLAW_AGENT_MODEL=auto`
+- `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
 - `NULLCLAW_AGENT_ENABLE_LLM=1`
 
 The advisor must remain local-only by default.
 
 Model policy:
 
-- Any loopback LM Studio coding-capable model is supported.
-- Small local Qwen models remain the preferred default when available.
-- If `NULLCLAW_AGENT_MODEL` is left as `auto`, the app prefers local Qwen/coder lanes and then falls back to another loopback coding model.
+- The shared app-agent lane is `radeon-qwen3.5-4b` through the local shim.
+- Hui Hui / GPT-OSS class models are not the general app default; those stay reserved for avatar-specialized lanes.
+- Operator overrides are still allowed for narrow specialized tasks, but the default desktop/runtime path is Qwen-only.
 
 ## Quick start
 
@@ -95,6 +128,13 @@ Install dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
+```
+
+Install desktop shell dependencies (required for the managed security-console launcher):
+
+```bash
+cd apps/nullclaw-desktop
+npm install
 ```
 
 Open the desktop app:
@@ -108,6 +148,8 @@ Open the desktop app through the managed Windows launcher:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\start_security_console.ps1
 ```
+
+The managed launcher expects a repo-local Electron runtime under `apps/nullclaw-desktop/node_modules/electron`.
 
 Install branded desktop and Start Menu shortcuts:
 

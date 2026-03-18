@@ -25,6 +25,18 @@ LR_DEFAULTSIZE = 0x0040
 _ICON_HANDLE = c_void_p()
 
 
+def _console_free_python() -> str:
+    executable = Path(sys.executable).resolve()
+    if sys.platform != "win32":
+        return str(executable)
+    if executable.name.lower() == "pythonw.exe":
+        return str(executable)
+    sibling = executable.with_name("pythonw.exe")
+    if sibling.is_file():
+        return str(sibling)
+    return str(executable)
+
+
 def _health() -> dict[str, object] | None:
     try:
         with request.urlopen(f"http://{DEFAULT_AGENT_HOST}:{DEFAULT_AGENT_PORT}/v1/health", timeout=2) as response:
@@ -78,7 +90,7 @@ def _attach_or_start_agent(*_args: object) -> None:
     script = Path(__file__).resolve().parent / "nullclaw_agent.py"
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     subprocess.Popen(
-        [sys.executable, str(script), "--host", DEFAULT_AGENT_HOST, "--port", str(DEFAULT_AGENT_PORT)],
+        [_console_free_python(), str(script), "--host", DEFAULT_AGENT_HOST, "--port", str(DEFAULT_AGENT_PORT)],
         creationflags=creationflags,
     )
     for _ in range(12):

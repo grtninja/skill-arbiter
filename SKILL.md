@@ -20,6 +20,13 @@ Use this skill when the work requires:
 
 ## Run
 
+Install desktop launcher dependencies when using the managed security-console startup flow:
+
+```bash
+cd apps/nullclaw-desktop
+npm install
+```
+
 Open the desktop app:
 
 ```bash
@@ -68,11 +75,11 @@ Default local advisor configuration:
 
 ```bash
 $env:NULLCLAW_AGENT_BASE_URL="http://127.0.0.1:9000/v1"
-$env:NULLCLAW_AGENT_MODEL="auto"
+$env:NULLCLAW_AGENT_MODEL="radeon-qwen3.5-4b"
 $env:NULLCLAW_AGENT_ENABLE_LLM="1"
 ```
 
-The advisor must remain local-only by default. Any loopback LM Studio coding model is allowed; small local Qwen models are preferred when they are present.
+The advisor must remain local-only by default. The shared app-agent lane is `radeon-qwen3.5-4b`; Hui Hui stays reserved for avatar-specialized endpoints.
 
 ## Guardrails
 

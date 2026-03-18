@@ -7,6 +7,7 @@ This document is the canonical high-level scope for `skill-arbiter`.
 `skill-arbiter` is a Windows-first NullClaw host security app with:
 
 - embedded desktop operator UI
+- repo-local Electron dependency for managed security-console startup flow
 - loopback-only local arbitration agent
 - curated-source discovery and upgrade reconciliation
 - Codex app, VS Code, and GitHub Copilot instruction-surface interoperability tracking
@@ -36,6 +37,8 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Public support/about surfacing without browser auto-launch
 - Cross-repo recent-work relevance for skill prioritization
 - Local loopback coding-model advisor integration for short coding-security guidance, with Qwen preference by default
+- Bounded OpenJarvis-style governance roles for scheduling, critique, QC intake,
+  archive stewardship, and guarded tuning
 
 ## Out of scope
 
@@ -43,5 +46,10 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Persona execution ownership
 - Remote bind/listen behavior for the local agent
 - Automatic destructive cleanup without operator confirmation
+
+## Wave 1 alignment artifacts
+
+- `docs/BOUNDED_PIPELINE_ROLE_CONTRACT.md`
+- `../Starframe-PC-Control/docs/OPENJARVIS_CROSS_REPO_IMPLEMENTATION_PLAN.md`
 
 See `docs/SCOPE_TRACKER.md` for current completion state.

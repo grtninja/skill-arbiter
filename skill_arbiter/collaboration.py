@@ -3,14 +3,17 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-from collections import defaultdict
+from collections import Counter
 from pathlib import Path
 from typing import Any
+import threading
+import time
 
 from .contracts import CollaborationEvent, utc_now
 from .paths import REPO_ROOT, collaboration_log_path
 from .skill_game_runtime import record_payload as record_skill_game_payload
 from .skill_game_runtime import recommended_targets as skill_game_recommended_targets
+from .stack_runtime import normalize_mx3_from_events, summarize_subagents_from_events
 
 DEFAULT_TRUST_LEDGER = Path.home() / ".codex" / "skills" / ".trust-ledger.local.json"
 VALID_OUTCOMES = {"success", "partial", "blocked", "failed"}
@@ -22,6 +25,89 @@ OUTCOME_TO_TRUST_EVENT = {
     "blocked": "throttled",
     "failed": "failure",
 }
+COLLABORATION_CACHE_SECONDS = 2.5
+MAX_COLLABORATORS_PER_RECORD = 10
+MAX_REPO_SCOPE_PER_RECORD = 10
+MAX_PROPOSED_WORK_PER_RECORD = 6
+SUBAGENT_LOOP_WINDOW = 120
+SUBAGENT_LOOP_DOMINANCE_LIMIT = 3
+SUBAGENT_LOOP_SHARE_THRESHOLD = 0.70
+KNOWN_RECURSIVE_SUBAGENTS = {"faraday", "lovelace", "fermat"}
+
+_COLLAB_EVENTS_LOCK = threading.Lock()
+_COLLAB_EVENTS_CACHE: dict[str, Any] = {"expires_at": 0.0, "events": None}
+_COLLABORATION_IGNORE_ACTORS = {
+    "",
+    "local",
+    "operator",
+    "skill-arbiter",
+    "skill_arbiter",
+    "system",
+    "skill-enforcer",
+    "meshgpt-dcc",
+    "meshgpt_admin",
+    "meshgpt-admin",
+}
+
+def _to_event_list(payload: Any) -> list[dict[str, Any]]:
+    events = payload.get("events") if isinstance(payload, dict) else None
+    if not isinstance(events, list):
+        return []
+    return [item for item in events if isinstance(item, dict)]
+
+
+def _as_collaboration_name(value: object) -> str:
+    text = str(value or "").strip().lower()
+    if text in _COLLABORATION_IGNORE_ACTORS:
+        return ""
+    return text
+
+
+def _is_subagent_name(value: object) -> bool:
+    name = _as_collaboration_name(value)
+    return bool(name) and (name.startswith("subagent-") or name in KNOWN_RECURSIVE_SUBAGENTS)
+
+
+def _bounded_string_list(rows: object, *, field_name: str, max_items: int) -> tuple[list[str], list[str]]:
+    cap = int(max_items)
+    if cap <= 0:
+        cap = 1
+    if field_name == "collaborators":
+        normalized = [_as_collaboration_name(row) for row in rows or []]
+    else:
+        normalized = [str(row or "").strip().lower() for row in rows or [] if str(row or "").strip()]
+    values = list(dict.fromkeys([row for row in normalized if row]))
+    clipped = len(values) - min(len(values), cap)
+    if clipped <= 0:
+        return values, []
+    return values[:cap], [f"{field_name}_trimmed"]
+
+
+def _bounded_skill_work(rows: object, *, max_items: int) -> tuple[list[dict[str, str]], list[str]]:
+    cap = int(max_items)
+    if cap <= 0:
+        cap = 1
+    proposals = _normalize_skill_work(rows)
+    clipped = len(proposals) - min(len(proposals), cap)
+    if clipped <= 0:
+        return proposals, []
+    return proposals[:cap], ["proposed_skill_work_trimmed"]
+
+
+def _load_events() -> list[dict[str, Any]]:
+    return _to_event_list(_load_log())
+
+
+def _cached_events() -> list[dict[str, Any]]:
+    now = time.time()
+    with _COLLAB_EVENTS_LOCK:
+        events = _COLLAB_EVENTS_CACHE.get("events")
+        if isinstance(events, list) and _COLLAB_EVENTS_CACHE.get("expires_at", 0.0) > now:
+            return list(events)
+        events = list(_load_events())
+        _COLLAB_EVENTS_CACHE["events"] = events
+        _COLLAB_EVENTS_CACHE["expires_at"] = now + COLLABORATION_CACHE_SECONDS
+        return events
 
 
 def _load_log() -> dict[str, Any]:
@@ -42,19 +128,11 @@ def _load_log() -> dict[str, Any]:
 
 
 def _save_log(payload: dict[str, Any]) -> None:
+    with _COLLAB_EVENTS_LOCK:
+        _COLLAB_EVENTS_CACHE["events"] = None
+        _COLLAB_EVENTS_CACHE["expires_at"] = 0.0
     path = collaboration_log_path()
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
-
-
-def _string_list(rows: object, *, field_name: str) -> list[str]:
-    values: list[str] = []
-    for row in rows or []:
-        text = str(row or "").strip()
-        if text:
-            values.append(text)
-    if not values and field_name in {"collaborators", "repo_scope"}:
-        return values
-    return list(dict.fromkeys(values))
 
 
 def _normalize_skill_work(rows: object) -> list[dict[str, str]]:
@@ -88,12 +166,175 @@ def _normalize_skill_work(rows: object) -> list[dict[str, str]]:
 
 
 def read_collaboration_events(limit: int = 50) -> list[dict[str, Any]]:
-    payload = _load_log()
-    events = payload.get("events")
-    if not isinstance(events, list):
-        return []
-    trimmed = [item for item in events if isinstance(item, dict)]
-    return trimmed[-max(1, limit) :]
+    normalized_limit = max(1, int(limit) if isinstance(limit, int) else 1)
+    return _cached_events()[-normalized_limit:]
+
+
+def _collaboration_churn_metrics(events: list[dict[str, Any]], *, window_size: int = 120) -> dict[str, Any]:
+    sample = events[-max(1, window_size) :]
+    collaborator_counts = Counter()
+    scope_counts = Counter()
+    total = 0
+    for row in sample:
+        collaborators = row.get("collaborators")
+        if isinstance(collaborators, list):
+            normalized = [_as_collaboration_name(item) for item in collaborators]
+            normalized = [item for item in normalized if item]
+            if normalized:
+                total += 1
+                for item in set(normalized):
+                    collaborator_counts[item] += 1
+        scopes = row.get("repo_scope")
+        if isinstance(scopes, list):
+            scope_counts.update([str(item or "").strip().lower() for item in scopes if str(item or "").strip()])
+
+    top_collaborators = [
+        {"name": name, "event_count": int(count)}
+        for name, count in collaborator_counts.most_common(4)
+        if name
+    ]
+    dominant_count = top_collaborators[0]["event_count"] if top_collaborators else 0
+    dominance_ratio = float(dominant_count) / total if total else 0.0
+    possible_loop = dominant_count >= SUBAGENT_LOOP_DOMINANCE_LIMIT and dominance_ratio >= SUBAGENT_LOOP_SHARE_THRESHOLD
+    stable_recent = total >= 6 and (sample[-1].get("stability") if sample else None) in {"stable", "repeatable", "emerging"}
+
+    return {
+        "window_events": int(total),
+        "total_events_considered": int(len(sample)),
+        "active_collaborator_count": int(len(collaborator_counts)),
+        "active_collaborator_share": round(dominance_ratio, 3),
+        "top_collaborators": top_collaborators,
+        "dominant_collaborator": top_collaborators[0]["name"] if top_collaborators else "",
+        "scope_diversity": int(len(scope_counts)),
+        "possible_review_loop": bool(possible_loop),
+        "stable_recent": bool(stable_recent),
+        "assessment": "watch" if possible_loop else "ok" if total >= 2 else "idle",
+    }
+
+
+def _subagent_admission_assessment(events: list[dict[str, Any]]) -> dict[str, Any]:
+    window = events[-min(len(events), SUBAGENT_LOOP_WINDOW) :]
+    violations: list[dict[str, object]] = []
+    active_subagents: list[dict[str, object]] = []
+    subagent_counts: Counter[str] = Counter()
+    task_repeats: Counter[tuple[str, tuple[str, ...]]] = Counter()
+
+    for event in window:
+        collaborators = [item for item in event.get("collaborators", []) if _as_collaboration_name(item)]
+        repo_scope = [str(item or "").strip().lower() for item in event.get("repo_scope", []) if str(item or "").strip()]
+        proposed_work = [item for item in event.get("proposed_skill_work", []) if isinstance(item, dict)]
+        task = str(event.get("task") or "").strip().lower()
+
+        if len(collaborators) > MAX_COLLABORATORS_PER_RECORD:
+            violations.append(
+                {
+                    "type": "collaborator_burst",
+                    "count": len(collaborators),
+                    "limit": MAX_COLLABORATORS_PER_RECORD,
+                    "task": task,
+                }
+            )
+        if len(repo_scope) > MAX_REPO_SCOPE_PER_RECORD:
+            violations.append(
+                {
+                    "type": "repo_scope_burst",
+                    "count": len(repo_scope),
+                    "limit": MAX_REPO_SCOPE_PER_RECORD,
+                    "task": task,
+                }
+            )
+        if len(proposed_work) > MAX_PROPOSED_WORK_PER_RECORD:
+            violations.append(
+                {
+                    "type": "proposed_work_burst",
+                    "count": len(proposed_work),
+                    "limit": MAX_PROPOSED_WORK_PER_RECORD,
+                    "task": task,
+                }
+            )
+
+        active_subagents_in_event = [item for item in collaborators if _is_subagent_name(item)]
+        for name in active_subagents_in_event:
+            subagent_counts[name] += 1
+        if task:
+            task_repeats[(task, tuple(active_subagents_in_event))] += 1
+
+    for name, count in subagent_counts.most_common(6):
+        active_subagents.append({"name": name, "event_count": int(count)})
+
+    recommendations: list[str] = []
+    if violations:
+        recommendations.append("apply_bounded_workload_gate")
+    for key, count in task_repeats.items():
+        task_name, _ = key
+        if count >= SUBAGENT_LOOP_DOMINANCE_LIMIT:
+            recommendations.append(f"stagger_task_loop:{task_name}")
+    if not violations and not task_repeats:
+        recommendations.append("bounded_workload")
+
+    return {
+        "mode": "throttle" if violations else "bounded",
+        "violation_count": len(violations),
+        "violations": violations[:12],
+        "recommendations": sorted(set(recommendations)),
+        "active_subagents": active_subagents,
+        "bounds": {
+            "max_collaborators_per_event": MAX_COLLABORATORS_PER_RECORD,
+            "max_repo_scope_per_event": MAX_REPO_SCOPE_PER_RECORD,
+            "max_proposed_work_per_event": MAX_PROPOSED_WORK_PER_RECORD,
+            "loop_window": SUBAGENT_LOOP_WINDOW,
+        },
+    }
+
+
+def _candidate_intake_summary(inventory: dict[str, Any]) -> dict[str, Any]:
+    rows = inventory.get("skills", [])
+    if not isinstance(rows, list):
+        return {
+            "candidates": [],
+            "total": 0,
+            "counts": {"admitted": 0, "pending": 0, "rejected": 0},
+        }
+    recent_work = {str(item).strip().lower() for item in inventory.get("recent_work_skills", []) if str(item).strip()}
+    candidates: list[dict[str, Any]] = []
+    counts = {"admitted": 0, "pending": 0, "rejected": 0}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("source_type") or "") != "overlay_candidate":
+            continue
+        name = str(row.get("name") or "").strip()
+        if not name:
+            continue
+        notes = [str(item).strip().lower() for item in row.get("notes", []) if str(item).strip()]
+        is_recent = "recent_work_relevant" in notes or (name.lower() in recent_work)
+        if not is_recent:
+            continue
+        legitimacy = str(row.get("legitimacy_status") or "").strip().lower()
+        recommended_action = str(row.get("recommended_action") or "").strip().lower()
+        if legitimacy == "blocked_hostile":
+            decision = "rejected"
+        elif recommended_action in {"install_candidate", "keep"} and legitimacy != "blocked_hostile":
+            decision = "admitted"
+        else:
+            decision = "pending"
+        counts[decision] += 1
+        candidates.append(
+            {
+                "name": name,
+                "decision": decision,
+                "origin": str(row.get("origin") or ""),
+                "recommended_action": recommended_action,
+                "legitimacy_status": legitimacy,
+                "recent_work_relevant": is_recent,
+            }
+        )
+    candidates.sort(key=lambda row: row["name"])
+    return {
+        "candidates": candidates,
+        "total": len(candidates),
+        "counts": counts,
+    }
 
 
 def _resolve_trust_ledger_script() -> Path | None:
@@ -213,13 +454,23 @@ def status_payload(inventory: dict[str, Any], recent: int = 6) -> dict[str, Any]
     events = read_collaboration_events(limit=200)
     recent_events = list(reversed(events[-max(1, recent) :]))
     stable_count = sum(1 for item in events if str(item.get("stability") or "") == "stable")
+    mx3_runtime = normalize_mx3_from_events(events)
+    subagent_coordination = summarize_subagents_from_events(events, max_items=6)
+    collaboration_churn = _collaboration_churn_metrics(events, window_size=120)
+    subagent_admission = _subagent_admission_assessment(events)
+    candidate_intake = _candidate_intake_summary(inventory)
     return {
         "event_count": len(events),
         "stable_event_count": stable_count,
         "recent_events": recent_events,
         "recommended_skill_work": _skill_work_recommendations(events, inventory),
         "inventory_targets": skill_game_recommended_targets(inventory),
+        "mx3_runtime": mx3_runtime,
+        "subagent_coordination": subagent_coordination,
+        "subagent_admission": subagent_admission,
         "trust_ledger_available": _resolve_trust_ledger_script() is not None,
+        "churn": collaboration_churn,
+        "candidate_intake": candidate_intake,
     }
 
 
@@ -247,25 +498,48 @@ def record_payload(
     if normalized_stability not in VALID_STABILITY:
         raise ValueError(f"unsupported stability: {stability}")
 
+    collaborators_normalized, collaborators_trimmed = _bounded_string_list(
+        collaborators or [],
+        field_name="collaborators",
+        max_items=MAX_COLLABORATORS_PER_RECORD,
+    )
+    repo_scope_normalized, repo_scope_trimmed = _bounded_string_list(
+        repo_scope or [],
+        field_name="repo_scope",
+        max_items=MAX_REPO_SCOPE_PER_RECORD,
+    )
+    skills_used_normalized, skills_used_trimmed = _bounded_string_list(
+        skills_used or [],
+        field_name="skills_used",
+        max_items=MAX_PROPOSED_WORK_PER_RECORD,
+    )
+    proposed_skill_work_normalized, proposed_skill_work_trimmed = _bounded_skill_work(
+        proposed_skill_work or [],
+        max_items=MAX_PROPOSED_WORK_PER_RECORD,
+    )
     event = CollaborationEvent(
         event_id=f"collab-{utc_now().replace(':', '').replace('-', '')}",
         task=task_name,
         outcome=normalized_outcome,
         host_id=host_id,
-        collaborators=_string_list(collaborators or [], field_name="collaborators"),
-        repo_scope=_string_list(repo_scope or [], field_name="repo_scope"),
-        skills_used=_string_list(skills_used or [], field_name="skills_used"),
-        proposed_skill_work=_normalize_skill_work(proposed_skill_work or []),
+        collaborators=collaborators_normalized,
+        repo_scope=repo_scope_normalized,
+        skills_used=skills_used_normalized,
+        proposed_skill_work=proposed_skill_work_normalized,
         note=str(note or "").strip(),
         stability=normalized_stability,
     )
+    event_metadata = sorted(set(collaborators_trimmed + repo_scope_trimmed + skills_used_trimmed + proposed_skill_work_trimmed))
+    event_payload = event.to_dict()
+    if event_metadata:
+        event_payload["field_trims"] = event_metadata
 
     payload = _load_log()
     events = payload.setdefault("events", [])
     if not isinstance(events, list):
         raise ValueError("collaboration log events must be a list")
     if not dry_run:
-        events.append(event.to_dict())
+        events.append(event_payload)
         payload["updated_at"] = utc_now()
         _save_log(payload)
 
@@ -286,8 +560,9 @@ def record_payload(
     )
     status = status_payload(inventory)
     return {
-        "event": event.to_dict(),
+        "event": event_payload,
         "event_written": not dry_run,
+        "subagent_admission": status.get("subagent_admission", {}),
         "trust_ledger": trust_payload,
         "skill_game": skill_game,
         **status,

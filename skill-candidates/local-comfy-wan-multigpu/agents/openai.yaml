@@ -1,0 +1,4 @@
+interface:
+  display_name: "Local Comfy Wan MultiGPU"
+  short_description: "Quality-first local Wan video renders"
+  default_prompt: "Use $local-comfy-wan-multigpu to run a local ComfyUI Wan image-to-video workflow with MultiGPU placement, a properly staged source still, the longest practical clip length, and Explorer-based export handoff."

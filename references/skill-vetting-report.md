@@ -4,10 +4,10 @@ This document is machine-generated from the live inventory model and is safe for
 
 ## Summary
 
-- Generated: `2026-03-13T17:27:35.303824Z`
+- Generated: `2026-03-17T14:27:38.091907Z`
 - Host ID: `<LOCAL_HOST_ID>`
 - Official trusted: `38`
-- Owned trusted: `64`
+- Owned trusted: `65`
 - Needs review: `0`
 - Blocked hostile: `0`
 
@@ -15,8 +15,8 @@ This document is machine-generated from the live inventory model and is safe for
 
 | Surface | Scope | Presence | Notes |
 | --- | --- | --- | --- |
-| `codex-local` | `local` | `present` | config=present, skills=100 |
-| `codex-app` | `workspace` | `present` | repos=9, files=11 |
+| `codex-local` | `local` | `present` | config=present, skills=101 |
+| `codex-app` | `workspace` | `present` | repos=10, files=12 |
 | `vscode-codex` | `workspace` | `present` | repos=2, files=2 |
 | `github-copilot` | `workspace` | `not_detected` | repos=0, files=0 |
 
@@ -29,6 +29,7 @@ This document is machine-generated from the live inventory model and is safe for
 | `desktop-startup-acceptance` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `docs-alignment-lock` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `heterogeneous-stack-validation` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `local-comfy-wan-multigpu` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `local-compute-usage` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `multitask-orchestrator` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `playwright-edge-preference` | `repo_owned` | `owned_trusted` | `low` | `keep` |
