@@ -15,6 +15,18 @@ All notable changes to this project are documented in this file.
 - make the README and operator instructions explicit that standalone desktop mode is only partial, and that the app is only fully useful when real Codex or GitHub Copilot-driven work is feeding the interop, collaboration, and skill-learning lanes
 - add an explicit AI warning that Codex, Copilot, and other AI agents can make mistakes, so the app must not be treated as infallible ground truth
 
+## [0.2.21] - 2026-03-19
+
+### Fixed
+
+- upgrade `apps/nullclaw-desktop` from `electron 31.7.7` to `^35.7.5` to resolve the
+  ASAR integrity bypass advisory (`CVE-2025-55305` / `GHSA-vmqv-hx8q-j7mg`)
+
+### Changed
+
+- refresh the desktop app lockfile to the patched Electron runtime and transitive Node
+  type dependency set used by the local security console
+
 ## [0.2.20] - 2026-03-11
 
 ### Changed
@@ -555,3 +567,4 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
+
