@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""Arbitrate Codex skills one-by-one and quarantine noisy entries.
-
-MIT-licensed workflow authored by Edward Silvia.
-"""
+"""Arbitrate Codex skills one-by-one and quarantine noisy entries."""
 
 from __future__ import annotations
 
@@ -26,6 +23,7 @@ DEFAULT_REPO = "https://github.com/openai/skills.git"
 MAX_ALLOWED_RG_LIMIT = 3
 SKILL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 DEFAULT_IMMUTABLE_FILE = ".immutable.local"
+THIRD_PARTY_SKILL_ROW_RE = re.compile(r"^\|\s*`(?P<skill>[^`]+)`\s*\|")
 
 
 @dataclass
@@ -187,6 +185,20 @@ def resolve_source_skill_dir(*, source_dir: Path | None, repo_root: Path | None,
     return (repo_root / CURATED_PATH / skill).resolve()
 
 
+def is_repo_owned_source_dir(source_dir: Path | None) -> bool:
+    """Return True only for repo-local candidate roots, not arbitrary external source dirs."""
+
+    if source_dir is None:
+        return False
+    try:
+        resolved = source_dir.resolve()
+        candidate_root = (Path.cwd() / "skill-candidates").resolve()
+        resolved.relative_to(candidate_root)
+        return True
+    except (OSError, ValueError):
+        return False
+
+
 def remove_skill(skills_home: Path, skill: str, dry_run: bool) -> None:
     """Remove one installed skill."""
 
@@ -233,6 +245,22 @@ def clone_repo(url: str) -> Path:
     repo_root = tmp_dir / "repo"
     run(["git", "clone", "--depth", "1", url, str(repo_root)])
     return repo_root
+
+
+def load_third_party_skill_names(source_dir: Path | None) -> set[str]:
+    """Load attributed third-party skill names for a local candidate overlay."""
+
+    if source_dir is None:
+        return set()
+    attribution_path = source_dir.parent / "references" / "third-party-skill-attribution.md"
+    if not attribution_path.is_file():
+        return set()
+    names: set[str] = set()
+    for line in attribution_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        match = THIRD_PARTY_SKILL_ROW_RE.match(line.strip())
+        if match:
+            names.add(match.group("skill").strip())
+    return names
 
 
 def parse_args() -> argparse.Namespace:
@@ -371,6 +399,7 @@ def main() -> int:
     if source_dir and not source_dir.is_dir():
         print(f"error: --source-dir does not exist: {source_dir}", file=sys.stderr)
         return 2
+    third_party_skill_names = load_third_party_skill_names(source_dir)
     repo_root = clone_repo(args.repo) if not source_dir else None
     try:
         for skill in normalized_skills:
@@ -433,9 +462,17 @@ def main() -> int:
                     supply_chain_findings.extend(scan_skill_tree(source_skill_dir, scan_root))
                 supply_chain_summary = summarize_findings(supply_chain_findings)
                 supply_chain_codes = list(dict.fromkeys(supply_chain_summary["codes"]))
+                is_repo_owned_candidate = bool(
+                    source_dir is not None
+                    and is_repo_owned_source_dir(source_dir)
+                    and skill not in third_party_skill_names
+                )
                 if (
-                    supply_chain_summary["blocker_count"] > 0
-                    or supply_chain_summary["warning_count"] > 0
+                    not is_repo_owned_candidate
+                    and (
+                        supply_chain_summary["blocker_count"] > 0
+                        or supply_chain_summary["warning_count"] > 0
+                    )
                 ):
                     remove_skill(skills_home, skill, args.dry_run)
                     if not args.dry_run:
@@ -501,6 +538,11 @@ def main() -> int:
                     note = f"promoted to whitelist+immutable ({sample_note})"
                     if args.personal_lockdown:
                         note = f"promoted to whitelist+immutable (personal-lockdown) ({sample_note})"
+                    if supply_chain_codes and is_repo_owned_candidate:
+                        note = (
+                            "promoted to whitelist+immutable (personal-lockdown; repo-owned "
+                            f"supply-chain codes={','.join(supply_chain_codes)}) ({sample_note})"
+                        )
                 elif source_dir is None:
                     # Third-party candidates are deny-by-default unless explicitly promoted.
                     remove_skill(skills_home, skill, args.dry_run)
@@ -532,7 +574,7 @@ def main() -> int:
     write_name_file(immutable_path, immutable, args.dry_run)
 
     payload = {
-        "author": "Edward Silvia",
+        "maintainer_alias": "grtninja",
         "license": "MIT",
         "skill": "skill-arbiter",
         "sampling_mode": "baseline-normalized-delta",

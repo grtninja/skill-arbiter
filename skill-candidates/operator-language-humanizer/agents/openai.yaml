@@ -1,0 +1,7 @@
+interface:
+  display_name: "Operator Language Humanizer"
+  short_description: "Opt-in cleanup for operator-facing prompt text"
+  default_prompt: "Use $operator-language-humanizer to clean up operator-facing prompts, run titles, queue notes, QC summaries, or output text without changing system behavior or hidden instructions."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cybertron Fabric Host Ops"
+  short_description: "Audit Cybertron host readiness and offload contracts"
+  default_prompt: "Use $cybertron-fabric-host-ops to audit Cybertron remote-host readiness, repo parity, WinRM auth-state, MeshGPT host-terminal bootstrap, canonical model-matrix validation, Starframe/Cybertron offload checks, and VRM display readiness."

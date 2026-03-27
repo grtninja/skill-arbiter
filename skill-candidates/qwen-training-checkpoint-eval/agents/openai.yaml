@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qwen Checkpoint Eval"
+  short_description: "Validate saved Qwen training checkpoints"
+  default_prompt: "Use $qwen-training-checkpoint-eval to inspect checkpoint.eval.json, verify saved adapter batches, and smoke-test the trained Radeon eval lane before promotion."

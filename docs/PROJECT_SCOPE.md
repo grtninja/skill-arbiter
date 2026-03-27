@@ -12,6 +12,7 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - curated-source discovery and upgrade reconciliation
 - Codex app, VS Code, and GitHub Copilot instruction-surface interoperability tracking
 - local Codex config and loopback LM Studio coding-model interoperability
+- loopback-hosted OpenAI-compatible coding-model interoperability across LM Studio, MemryX shim lanes, and other local model software
 - active threat suppression for hostile skills and related automation surfaces
 - strict self-governance and public-shape publication controls
 - branded desktop launch surfaces, support/about metadata, and public-release readiness checks
@@ -37,6 +38,7 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Public support/about surfacing without browser auto-launch
 - Cross-repo recent-work relevance for skill prioritization
 - Local loopback coding-model advisor integration for short coding-security guidance, with Qwen preference by default
+- SkillHub discovery-only intake, source reputation tracking, and bounded marketplace alignment
 - Bounded OpenJarvis-style governance roles for scheduling, critique, QC intake,
   archive stewardship, and guarded tuning
 
@@ -50,6 +52,6 @@ This document is the canonical high-level scope for `skill-arbiter`.
 ## Wave 1 alignment artifacts
 
 - `docs/BOUNDED_PIPELINE_ROLE_CONTRACT.md`
-- `../Starframe-PC-Control/docs/OPENJARVIS_CROSS_REPO_IMPLEMENTATION_PLAN.md`
+- paired private control-plane implementation plan (kept outside this public repo)
 
 See `docs/SCOPE_TRACKER.md` for current completion state.

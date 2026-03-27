@@ -12,7 +12,7 @@ from urllib import error, request
 
 from skill_arbiter.agent_server import NullClawState, build_handler
 from skill_arbiter.inventory import _recent_work_skill_names, _review_fingerprint, build_inventory_snapshot
-from skill_arbiter.llm_advisor import advisor_model
+from skill_arbiter.llm_advisor import advisor_base_url, advisor_model, available_models
 from skill_arbiter.mitigation import plan_case, reconcile_cases
 
 
@@ -136,6 +136,40 @@ class InventorySnapshotTests(unittest.TestCase):
             self.assertEqual(row["risk_class"], "low")
             self.assertEqual(payload["legitimacy_summary"]["blocked_hostile"], 0)
 
+    def test_vscode_baseline_addition_does_not_claim_official_ownership_for_local_collision(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skills_root = root / "skills"
+            candidate_root = root / "skill-candidates"
+            refs = root / "references"
+            cache_path = root / "inventory.json"
+            skills_root.mkdir()
+            candidate_root.mkdir()
+            refs.mkdir()
+            (refs / "vscode-codex-baseline-additions.md").write_text(
+                "# VS Code Codex Baseline Additions\n\n- `canvas`\n",
+                encoding="utf-8",
+            )
+            _write_skill(skills_root, "canvas", "installed local collision")
+
+            with mock.patch("skill_arbiter.inventory.REPO_ROOT", root):
+                with mock.patch("skill_arbiter.inventory.fetch_openai_baseline", return_value={"top_level": [], "system": [], "sha": "abc123", "status": "online"}):
+                    with mock.patch("skill_arbiter.inventory._parse_third_party_sources", return_value=[]):
+                        with mock.patch("skill_arbiter.inventory._parse_threat_matrix_sources", return_value=[]):
+                            with mock.patch("skill_arbiter.inventory.scan_interop_sources", return_value=[]):
+                                with mock.patch("skill_arbiter.inventory._recent_work_skill_names", return_value=set()):
+                                    with mock.patch("skill_arbiter.inventory.request_local_advice", return_value="Use the local Qwen lane."):
+                                        with mock.patch("skill_arbiter.inventory.inventory_cache_path", return_value=cache_path):
+                                            with mock.patch("skill_arbiter.inventory.host_id", return_value="host1234"):
+                                                with mock.patch("skill_arbiter.inventory._evaluate_skill_dir", return_value=("low", [])):
+                                                    payload = build_inventory_snapshot(skills_root=skills_root, candidate_root=candidate_root)
+
+        row = next(item for item in payload["skills"] if item["name"] == "canvas")
+        self.assertEqual(row["origin"], "vscode_codex_baseline_addition")
+        self.assertEqual(row["ownership"], "baseline_addition")
+        self.assertEqual(row["legitimacy_status"], "owned_trusted")
+        self.assertNotEqual(row["legitimacy_status"], "official_trusted")
+
     def test_third_party_attribution_keeps_imported_skill_trusted_but_provenance_tracked(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -176,6 +210,51 @@ class InventorySnapshotTests(unittest.TestCase):
             self.assertEqual(row["legitimacy_status"], "third_party_trusted")
             self.assertEqual(row["risk_class"], "low")
             self.assertEqual(row["recommended_action"], "keep")
+
+    def test_skillhub_source_ledger_adds_marketplace_source_row(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skills_root = root / "skills"
+            candidate_root = root / "skill-candidates"
+            refs = root / "references"
+            cache_path = root / "inventory.json"
+            skills_root.mkdir()
+            candidate_root.mkdir()
+            refs.mkdir()
+            (refs / "skillhub-source-ledger.json").write_text(
+                json.dumps(
+                    {
+                        "source_id": "skillhub",
+                        "source_status": "discovery_only",
+                        "remote_url": "https://skills.palebluedot.live",
+                        "first_wave_size": 11,
+                        "clean_pass_count": 3,
+                        "manual_review_count": 6,
+                        "reject_count": 2,
+                        "promotion_decision": "discovery_only",
+                        "risk_class": "medium",
+                        "recommended_action": "discovery_only",
+                        "compatibility_surface": "marketplace_catalog",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with mock.patch("skill_arbiter.inventory.REPO_ROOT", root):
+                with mock.patch("skill_arbiter.inventory.fetch_openai_baseline", return_value={"top_level": [], "system": [], "sha": "abc123", "status": "online"}):
+                    with mock.patch("skill_arbiter.inventory._parse_third_party_sources", return_value=[]):
+                        with mock.patch("skill_arbiter.inventory._parse_threat_matrix_sources", return_value=[]):
+                            with mock.patch("skill_arbiter.inventory.scan_interop_sources", return_value=[]):
+                                with mock.patch("skill_arbiter.inventory._recent_work_skill_names", return_value=set()):
+                                    with mock.patch("skill_arbiter.inventory.request_local_advice", return_value="Use the local Qwen lane."):
+                                        with mock.patch("skill_arbiter.inventory.inventory_cache_path", return_value=cache_path):
+                                            with mock.patch("skill_arbiter.inventory.host_id", return_value="host1234"):
+                                                payload = build_inventory_snapshot(skills_root=skills_root, candidate_root=candidate_root)
+
+            sources = {row["source_id"]: row for row in payload["sources"]}
+            self.assertIn("skillhub", sources)
+            self.assertEqual(sources["skillhub"]["source_type"], "marketplace_catalog")
+            self.assertEqual(sources["skillhub"]["recommended_action"], "discovery_only")
 
     def test_rejected_third_party_skill_is_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -454,16 +533,29 @@ class AgentServerTests(unittest.TestCase):
                                                             "trust_ledger_available": True,
                                                         },
                                                     ):
-                                                        with mock.patch("skill_arbiter.agent_server.release_quarantine") as release_quarantine:
-                                                            release_quarantine.return_value = mock.Mock(to_dict=lambda: {"action": "release_quarantine"})
-                                                            with mock.patch("skill_arbiter.agent_server.accept_subject") as accept_subject:
-                                                                accept_subject.return_value = mock.Mock(to_dict=lambda: {"action": "accept_review"})
-                                                                with mock.patch("skill_arbiter.agent_server.revoke_subject") as revoke_subject:
-                                                                    revoke_subject.return_value = mock.Mock(to_dict=lambda: {"action": "revoke_accept_review"})
-                                                                    with request.urlopen(f"{base}/v1/health", timeout=3) as response:
-                                                                        self.assertEqual(response.headers.get("Cache-Control"), "no-store, max-age=0")
-                                                                        self.assertEqual(response.headers.get("Pragma"), "no-cache")
-                                                                        health = json.loads(response.read().decode("utf-8"))
+                                                        with mock.patch(
+                                                            "skill_arbiter.agent_server.stack_runtime_snapshot",
+                                                            return_value={
+                                                                "status": "ok",
+                                                                "mx3": {"mode": "balanced", "feeder_state": "active", "active_sequence_name": "demo", "active_dfp_path": "demo.dfp"},
+                                                                "subagent_coordination": {"source": "stack_coordination", "active_subagents": [], "observed_event_count": 0},
+                                                                "local_supervision": {
+                                                                    "vscode": {"window_count": 2, "workspace_hints": ["demo.code-workspace"]},
+                                                                    "active_tasks": ["media-workbench: desktop live"],
+                                                                    "advisor": {"selected_model": "radeon-qwen3.5-4b", "qwen_models": ["radeon-qwen3.5-4b"], "note": "watch the live lane"},
+                                                                },
+                                                            },
+                                                        ):
+                                                            with mock.patch("skill_arbiter.agent_server.release_quarantine") as release_quarantine:
+                                                                release_quarantine.return_value = mock.Mock(to_dict=lambda: {"action": "release_quarantine"})
+                                                                with mock.patch("skill_arbiter.agent_server.accept_subject") as accept_subject:
+                                                                    accept_subject.return_value = mock.Mock(to_dict=lambda: {"action": "accept_review"})
+                                                                    with mock.patch("skill_arbiter.agent_server.revoke_subject") as revoke_subject:
+                                                                        revoke_subject.return_value = mock.Mock(to_dict=lambda: {"action": "revoke_accept_review"})
+                                                                        with request.urlopen(f"{base}/v1/health", timeout=3) as response:
+                                                                            self.assertEqual(response.headers.get("Cache-Control"), "no-store, max-age=0")
+                                                                            self.assertEqual(response.headers.get("Pragma"), "no-cache")
+                                                                            health = json.loads(response.read().decode("utf-8"))
                                                                     with request.urlopen(
                                                                         request.Request(
                                                                             f"{base}/v1/health",
@@ -501,6 +593,7 @@ class AgentServerTests(unittest.TestCase):
                                                                         self.assertEqual(response.headers.get("Cache-Control"), "no-store, max-age=0")
                                                                         skill_game_status = json.loads(response.read().decode("utf-8"))
                                                                     collaboration_status = json.loads(request.urlopen(f"{base}/v1/collaboration/status", timeout=3).read().decode("utf-8"))
+                                                                    agent_runtime = json.loads(request.urlopen(f"{base}/v1/agent-runtime/status", timeout=3).read().decode("utf-8"))
                                                                     checks = json.loads(
                                                                         request.urlopen(
                                                                             request.Request(f"{base}/v1/self-checks/run", data=b"{}", headers={"Content-Type": "application/json"}, method="POST"),
@@ -577,6 +670,7 @@ class AgentServerTests(unittest.TestCase):
             self.assertTrue(readiness["passed"])
             self.assertEqual(skill_game_status["level"], 4)
             self.assertEqual(collaboration_status["event_count"], 1)
+            self.assertEqual(agent_runtime["stack_runtime"]["local_supervision"]["vscode"]["window_count"], 2)
             self.assertTrue(checks["privacy_passed"])
             self.assertEqual(inventory["skill_count"], 2)
             self.assertEqual(skill_game_record["xp_delta"], 125)
@@ -660,7 +754,8 @@ class MitigationTests(unittest.TestCase):
 class AdvisorSelectionTests(unittest.TestCase):
     def test_default_prefers_shared_qwen_lane(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(advisor_model(), "radeon-qwen3.5-4b")
+            with mock.patch("skill_arbiter.llm_advisor.available_models", return_value=[]):
+                self.assertEqual(advisor_model(), "radeon-qwen3.5-4b")
 
     def test_auto_prefers_local_qwen_coding_model(self) -> None:
         response = mock.MagicMock()
@@ -683,6 +778,23 @@ class AdvisorSelectionTests(unittest.TestCase):
                         with mock.patch("skill_arbiter.llm_advisor.request.urlopen", return_value=response):
                             with mock.patch("skill_arbiter.llm_advisor._cached_available_models", return_value=("phi-4-mini", "qwen2.5-coder-7b-instruct", "deepseek-coder-lite")):
                                 self.assertEqual(advisor_model(), "qwen2.5-coder-7b-instruct")
+
+    def test_falls_back_to_first_live_loopback_endpoint(self) -> None:
+        with mock.patch("skill_arbiter.llm_advisor.enabled", return_value=True):
+            with mock.patch(
+                "skill_arbiter.llm_advisor._candidate_base_urls",
+                return_value=["http://127.0.0.1:9000/v1", "http://127.0.0.1:2244/v1"],
+            ):
+                with mock.patch(
+                    "skill_arbiter.llm_advisor._endpoint_reachable",
+                    side_effect=[True, True],
+                ):
+                    with mock.patch(
+                        "skill_arbiter.llm_advisor._fetch_models",
+                        side_effect=[[], ["radeon-qwen3.5-4b-trained-eval"]],
+                    ):
+                        self.assertEqual(advisor_base_url(), "http://127.0.0.1:2244/v1")
+                        self.assertEqual(available_models(refresh=True), ["radeon-qwen3.5-4b-trained-eval"])
 
 
 if __name__ == "__main__":

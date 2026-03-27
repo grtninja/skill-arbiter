@@ -30,8 +30,7 @@ def about_payload(host_id: str) -> dict[str, object]:
             "curated-source discovery, guarded threat suppression, and self-governance."
         ),
         "developer": "grtninja",
-        "creator": "Edward A. Silvia",
-        "email": "grtninja@hotmail.com",
+        "creator": "grtninja",
         "version": _project_version(),
         "license": "MIT",
         "host_id": host_id,
@@ -60,6 +59,12 @@ def about_payload(host_id: str) -> dict[str, object]:
             "subagent_contract": {
                 "source_priority": ["stack_endpoint", "collaboration_fallback"],
                 "fields": ["name", "event_count", "state", "repo_scope", "last_seen"],
+                "routing_policy": {
+                    "operator_mode_authoritative": True,
+                    "preferred_lane_order": ["local_openclaw", "cloud_sidecar_low_reasoning"],
+                    "cloud_default": "lower_reasoning_sidecar",
+                    "fast_mode_permitted": False,
+                },
             },
         },
         "advisor": {
@@ -68,6 +73,7 @@ def about_payload(host_id: str) -> dict[str, object]:
             "base_url": advisor_base_url(),
             "mode": "local_only",
             "selection_policy": "shared loopback Qwen agent lane by default; operator override only for specialized lanes",
+            "subagent_policy": "local OpenClaw-compatible subagents first; cloud sidecars lower-reasoning by default; user-selected mode remains authoritative",
             "available_models": available_models(),
             "status": advisor["status"],
             "detail": advisor["detail"],

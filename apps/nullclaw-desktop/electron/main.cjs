@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const http = require('node:http');
 const os = require('node:os');
 const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const { pathToFileURL } = require('node:url');
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 
@@ -39,43 +40,18 @@ const AGENT_HOST = process.env.SKILL_ARBITER_AGENT_HOST || '127.0.0.1';
 const AGENT_PORT = Number.parseInt(process.env.SKILL_ARBITER_AGENT_PORT || '17665', 10);
 const UI_INDEX = path.resolve(__dirname, '..', 'ui', 'index.html');
 const ICON_PATH = path.resolve(__dirname, '..', 'assets', 'skill_arbiter_ntm_v4.ico');
+const ELECTRON_LOG = path.join(os.tmpdir(), 'skill-arbiter-electron.log');
 const AGENT_SCRIPT = path.resolve(ROOT, 'scripts', 'nullclaw_agent.py');
 const BACKEND_STDOUT_LOG = path.join(os.tmpdir(), 'skill-arbiter-backend.stdout.log');
 const BACKEND_STDERR_LOG = path.join(os.tmpdir(), 'skill-arbiter-backend.stderr.log');
 
 let mainWindow = null;
-let ownedBackend = null;
 let revealTimer = null;
+let ownedBackend = null;
 
-function candidatePaths() {
-  const localAppData = process.env.LOCALAPPDATA || '';
-  return [
-    process.env.SKILL_ARBITER_PYTHON || '',
-    path.join(ROOT, '.venv', 'Scripts', 'python.exe'),
-    path.join(localAppData, 'Programs', 'Python', 'Python313', 'python.exe'),
-    path.join(localAppData, 'Programs', 'Python', 'Python312', 'python.exe'),
-    path.join(localAppData, 'Programs', 'Python', 'Python311', 'python.exe'),
-    'python.exe',
-  ].filter(Boolean);
-}
-
-function resolvePythonExecutables() {
-  const seen = new Set();
-  const candidates = [];
-  for (const candidate of candidatePaths()) {
-    if (candidate.includes(path.sep) && !fs.existsSync(candidate)) {
-      continue;
-    }
-    if (seen.has(candidate)) {
-      continue;
-    }
-    seen.add(candidate);
-    candidates.push(candidate);
-  }
-  if (candidates.length > 0) {
-    return candidates;
-  }
-  throw new Error('Unable to resolve a Python interpreter for Skill Arbiter.');
+function appendElectronLog(message) {
+  const line = `[${new Date().toISOString()}] ${message}\n`;
+  fs.appendFileSync(ELECTRON_LOG, line, 'utf8');
 }
 
 function healthUrl() {
@@ -125,82 +101,91 @@ async function waitForBackend(timeoutMs = 20000) {
   return false;
 }
 
-function appendBackendLog(message) {
-  const line = `[${new Date().toISOString()}] ${message}\n`;
-  fs.appendFileSync(BACKEND_STDERR_LOG, line, 'utf8');
-}
-
-function resetBackendLogs() {
-  for (const filePath of [BACKEND_STDOUT_LOG, BACKEND_STDERR_LOG]) {
-    try {
-      fs.unlinkSync(filePath);
-    } catch {
-      // Ignore missing prior logs.
-    }
-  }
-}
-
-function stopBackendProcess(child) {
-  if (!child || child.killed) {
-    return;
-  }
-  try {
-    process.kill(child.pid);
-  } catch {
-    // Best effort on failed child recycle.
-  }
-}
-
-function spawnBackendForCandidate(pythonExe) {
-  const stdoutFd = fs.openSync(BACKEND_STDOUT_LOG, 'a');
-  const stderrFd = fs.openSync(BACKEND_STDERR_LOG, 'a');
-  const childEnv = { ...process.env };
-  for (const key of ['PYTHONHOME', 'PYTHONPATH', 'PYTHONEXECUTABLE', 'VIRTUAL_ENV', 'UV_PYTHON']) {
-    delete childEnv[key];
-  }
-  const child = spawn(
-    pythonExe,
-    [AGENT_SCRIPT, '--host', AGENT_HOST, '--port', String(AGENT_PORT)],
-    {
-      cwd: ROOT,
-      detached: false,
-      env: childEnv,
-      stdio: ['ignore', stdoutFd, stderrFd],
-      windowsHide: true,
-    }
-  );
-  child.on('error', (error) => {
-    appendBackendLog(`spawn error for ${pythonExe}: ${error.message}`);
-  });
-  child.on('exit', (code, signal) => {
-    appendBackendLog(`backend exit for ${pythonExe}: code=${code ?? 'null'} signal=${signal ?? 'null'}`);
-  });
-  return child;
-}
-
 async function ensureBackend() {
   if (await isBackendHealthy()) {
     return;
   }
-  resetBackendLogs();
-  const candidates = resolvePythonExecutables();
-  appendBackendLog(`backend candidates=${JSON.stringify(candidates)}`);
-  for (const pythonExe of candidates) {
-    appendBackendLog(`trying backend candidate=${pythonExe}`);
-    ownedBackend = spawnBackendForCandidate(pythonExe);
-    if (await waitForBackend(7000)) {
-      appendBackendLog(`backend healthy on candidate=${pythonExe}`);
-      return;
-    }
-    stopBackendProcess(ownedBackend);
-    ownedBackend = null;
+  const pythonwPath = resolvePythonwPath();
+  if (!pythonwPath || !fs.existsSync(pythonwPath)) {
+    throw new Error(`Pinned Skill Arbiter backend runtime missing: ${pythonwPath || 'unset'}`);
   }
-  throw new Error(
-    `Skill Arbiter backend failed to become healthy. See ${BACKEND_STDERR_LOG}`
+  if (!fs.existsSync(AGENT_SCRIPT)) {
+    throw new Error(`Skill Arbiter backend entrypoint missing: ${AGENT_SCRIPT}`);
+  }
+  appendElectronLog(`starting pinned backend runtime ${pythonwPath}`);
+  const childEnv = { ...process.env };
+  for (const key of ['PYTHONHOME', 'PYTHONPATH', 'PYTHONEXECUTABLE', 'VIRTUAL_ENV', 'UV_PYTHON']) {
+    delete childEnv[key];
+  }
+  const stdoutFd = fs.openSync(BACKEND_STDOUT_LOG, 'a');
+  const stderrFd = fs.openSync(BACKEND_STDERR_LOG, 'a');
+  ownedBackend = spawn(
+    pythonwPath,
+    [AGENT_SCRIPT, '--host', AGENT_HOST, '--port', String(AGENT_PORT)],
+    {
+      cwd: ROOT,
+      env: childEnv,
+      detached: false,
+      stdio: ['ignore', stdoutFd, stderrFd],
+      windowsHide: true,
+    },
   );
+  ownedBackend.on('exit', (code, signal) => {
+    appendElectronLog(`owned backend exited code=${code ?? 'null'} signal=${signal ?? 'null'}`);
+    ownedBackend = null;
+  });
+  if (await waitForBackend(30000)) {
+    appendElectronLog('backend became healthy after pinned spawn');
+    return;
+  }
+  throw new Error('Skill Arbiter backend unavailable after pinned startup.');
+}
+
+function resolvePythonwPath() {
+  const candidates = [];
+  const envPinned = String(process.env.SKILL_ARBITER_PYTHONW || '').trim();
+  if (envPinned) {
+    candidates.push(envPinned);
+  }
+  const localAppData = process.env.LOCALAPPDATA || '';
+  if (localAppData) {
+    const pythonRoot = path.join(localAppData, 'Programs', 'Python');
+    candidates.push(path.join(pythonRoot, 'Python313', 'pythonw.exe'));
+    candidates.push(path.join(pythonRoot, 'Python312', 'pythonw.exe'));
+    candidates.push(path.join(pythonRoot, 'Python311', 'pythonw.exe'));
+    candidates.push(path.join(pythonRoot, 'Python310', 'pythonw.exe'));
+  }
+  candidates.push(path.join(ROOT, '.venv', 'Scripts', 'pythonw.exe'));
+
+  for (const candidate of candidates) {
+    const normalized = String(candidate || '').trim();
+    if (normalized && fs.existsSync(normalized)) {
+      return normalized;
+    }
+  }
+
+  try {
+    const lookedUp = spawnSync('where', ['pythonw.exe'], {
+      windowsHide: true,
+      stdio: ['ignore', 'pipe', 'ignore'],
+      shell: false,
+      timeout: 1500,
+    });
+    if (lookedUp.status === 0 && lookedUp.stdout) {
+      const first = String(lookedUp.stdout).split(/\r?\n/).map((line) => line.trim()).find(Boolean);
+      if (first && fs.existsSync(first)) {
+        return first;
+      }
+    }
+  } catch {
+    // Keep startup deterministic: fall through to missing-runtime error.
+  }
+
+  return envPinned || '';
 }
 
 function showStartupFailure(message) {
+  appendElectronLog(`startup failure: ${message}`);
   if (!mainWindow || mainWindow.isDestroyed()) {
     return;
   }
@@ -212,8 +197,10 @@ function showStartupFailure(message) {
 }
 
 function createWindow() {
+  appendElectronLog('createWindow called');
   const revealWindow = () => {
     if (!mainWindow || mainWindow.isDestroyed()) {
+      appendElectronLog('revealWindow skipped: no mainWindow');
       return;
     }
     if (revealTimer) {
@@ -221,8 +208,10 @@ function createWindow() {
       revealTimer = null;
     }
     if (!mainWindow.isVisible()) {
+      appendElectronLog('revealWindow show()');
       mainWindow.show();
     }
+    appendElectronLog('revealWindow focus()');
     mainWindow.focus();
   };
 
@@ -244,16 +233,26 @@ function createWindow() {
     },
   });
   mainWindow.once('ready-to-show', () => {
+    appendElectronLog('ready-to-show');
     revealWindow();
   });
   mainWindow.webContents.once('did-finish-load', () => {
+    appendElectronLog('did-finish-load');
     revealWindow();
   });
   mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription) => {
+    appendElectronLog(`did-fail-load ${errorCode} ${errorDescription}`);
     process.stderr.write(`[${APP_TITLE}] window load failed: ${errorCode} ${errorDescription}\n`);
     revealWindow();
   });
+  mainWindow.webContents.on('render-process-gone', (_event, details) => {
+    appendElectronLog(`render-process-gone reason=${details?.reason || 'unknown'} exitCode=${details?.exitCode ?? 'null'}`);
+  });
+  mainWindow.webContents.on('unresponsive', () => {
+    appendElectronLog('webContents unresponsive');
+  });
   mainWindow.on('closed', () => {
+    appendElectronLog('window closed');
     if (revealTimer) {
       clearTimeout(revealTimer);
       revealTimer = null;
@@ -262,51 +261,65 @@ function createWindow() {
   });
   mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   revealTimer = setTimeout(() => {
+    appendElectronLog('reveal timer fired');
     revealWindow();
   }, 3000);
+  appendElectronLog(`loading UI ${UI_INDEX}`);
   void mainWindow.loadURL(pathToFileURL(UI_INDEX).toString());
 }
 
-function stopOwnedBackend() {
-  if (!ownedBackend || ownedBackend.killed) {
-    return;
-  }
-  try {
-    process.kill(ownedBackend.pid);
-  } catch {
-    // Best effort on shutdown.
-  }
-}
-
 async function main() {
+  appendElectronLog('main start');
   app.setName(APP_TITLE);
   if (process.platform === 'win32') {
     app.setAppUserModelId(APP_ID);
   }
   await app.whenReady();
+  appendElectronLog('app ready');
   createWindow();
-  await ensureBackend();
+  void ensureBackend()
+    .then(() => {
+      appendElectronLog('backend ensured');
+    })
+    .catch((error) => {
+      process.stderr.write(`[${APP_TITLE}] ${error.message}\n`);
+      showStartupFailure(error.message);
+      app.exit(1);
+    });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+      void ensureBackend().then(() => {
+        appendElectronLog('activate ensureBackend resolved');
+      }).catch((error) => {
+        appendElectronLog(`activate ensureBackend failed: ${error.message}`);
+        process.stderr.write(`[${APP_TITLE}] ${error.message}\n`);
+      });
     }
   });
 }
 
 app.on('window-all-closed', () => {
+  appendElectronLog('window-all-closed');
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
 app.on('will-quit', () => {
-  stopOwnedBackend();
+  appendElectronLog('will-quit');
+  if (ownedBackend && !ownedBackend.killed) {
+    try {
+      process.kill(ownedBackend.pid);
+    } catch {
+      // best effort
+    }
+  }
 });
 
 main().catch((error) => {
   process.stderr.write(`[${APP_TITLE}] ${error.message}\n`);
   showStartupFailure(error.message);
-  stopOwnedBackend();
   app.exit(1);
 });

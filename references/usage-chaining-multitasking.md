@@ -31,6 +31,19 @@ Use this when recent work spans multiple repos and upstream agent-skill surfaces
 9. `skill-auditor`
 10. `skill-enforcer`
 
+## Cybertron fabric host ops chain
+
+Use this when building or auditing Cybertron host readiness, repo parity, model placement, or VRM display contracts:
+
+1. `skill-hub`
+2. `skills-cross-repo-radar`
+3. `skill-common-sense-engineering`
+4. `multitask-orchestrator`
+5. `cybertron-fabric-host-ops`
+6. `skill-auditor`
+7. `skill-arbiter-lockdown-admission`
+8. `skill-enforcer`
+
 ## Multitasking rule
 
 Split independent lanes explicitly, then merge only after each lane returns evidence.
@@ -43,6 +56,14 @@ Common lanes:
 4. app bring-up / operator verification
 
 Use `multitask-orchestrator` when available. If not, apply the same split/merge discipline manually.
+
+## Subagent routing policy
+
+1. The user chooses the operating mode. Arbiter recommendations may inform the plan, but they must not silently switch the session away from the operator-selected mode.
+2. Prefer healthy local OpenClaw-compatible agents for quick bounded subagent tasks.
+3. Treat local and cloud subagents as one governed pool, but preserve premium reasoning budget by assigning cloud lanes to lower-reasoning sidecar work first.
+4. Use heavier cloud reasoning only when the operator explicitly asks for it or a hard blocker justifies it.
+5. Fast mode is not part of the default governed subagent workflow.
 
 ## Evidence to keep
 

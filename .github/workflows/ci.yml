@@ -5,32 +5,69 @@ on:
     branches: ["main"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   python-checks:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Clone repository
+        run: |
+          set -euxo pipefail
+          git clone --depth 1 "https://github.com/${GITHUB_REPOSITORY}.git" repo
+          cd repo
+          git fetch --depth 2 origin "${GITHUB_SHA}"
+          git checkout "${GITHUB_SHA}"
 
       - name: CLI help
-        run: python3 scripts/arbitrate_skills.py --help
+        run: |
+          cd repo
+          python3 scripts/arbitrate_skills.py --help
 
       - name: Release helper help
-        run: python3 scripts/prepare_release.py --help
+        run: |
+          cd repo
+          python3 scripts/prepare_release.py --help
 
       - name: Release hygiene check
         if: github.event_name == 'pull_request'
-        run: python3 scripts/check_release_hygiene.py
+        run: |
+          cd repo
+          python3 scripts/check_release_hygiene.py
 
       - name: Privacy policy check
-        run: python3 scripts/check_private_data_policy.py
+        run: |
+          cd repo
+          python3 scripts/check_private_data_policy.py
+
+      - name: Secret hygiene check
+        run: |
+          cd repo
+          python3 scripts/check_secret_hygiene.py
+
+      - name: Public release check
+        run: |
+          cd repo
+          python3 scripts/check_public_release.py
 
       - name: Syntax check
-        run: python3 -m py_compile scripts/arbitrate_skills.py scripts/prepare_release.py scripts/check_release_hygiene.py scripts/check_private_data_policy.py
+        run: |
+          cd repo
+          python3 -m py_compile \
+            scripts/arbitrate_skills.py \
+            scripts/prepare_release.py \
+            scripts/check_release_hygiene.py \
+            scripts/check_private_data_policy.py \
+            scripts/check_public_release.py \
+            scripts/check_secret_hygiene.py
+
+      - name: Test suite
+        run: |
+          cd repo
+          python3 -m pytest tests -q
+
+      - name: UI syntax check
+        run: |
+          cd repo
+          node --check apps/nullclaw-desktop/ui/app.js

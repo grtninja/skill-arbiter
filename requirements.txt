@@ -2,6 +2,8 @@
 # Runtime requirements:
 # - Python 3.10+
 # - Git
-# - Windows PowerShell (for rg.exe process sampling)
+# - psutil (preferred local process inspection)
+# - Windows PowerShell only as a fallback for process inspection
 # - rg.exe available on the host
 pywebview>=5.0
+psutil>=5.9

@@ -107,14 +107,15 @@ class NullClawState:
         )
         return payload
 
-    def inventory_refresh(self) -> dict[str, object]:
+    def inventory_refresh(self, *, force: bool = False) -> dict[str, object]:
         now = time.time()
-        with self._inventory_refresh_lock:
-            cached = self._inventory_refresh_cache.get("payload")
-            if self._inventory_refresh_cache["expires_at"] > now and cached is not None:
-                payload = copy.deepcopy(cached)
-                payload["refresh_cached"] = True
-                return payload
+        if not force:
+            with self._inventory_refresh_lock:
+                cached = self._inventory_refresh_cache.get("payload")
+                if self._inventory_refresh_cache["expires_at"] > now and cached is not None:
+                    payload = copy.deepcopy(cached)
+                    payload["refresh_cached"] = True
+                    return payload
 
         payload = build_inventory_snapshot(self.skills_root, self.candidate_root)
         reconcile_cases(payload)
@@ -180,7 +181,7 @@ class NullClawState:
             action="quarantine" if severity in {"critical", "high"} else "keep",
             reason=f"evaluated {len(summary)} findings for skill",
             severity=severity,
-            requires_confirmation=False if severity == "critical" else severity == "high",
+            requires_confirmation=severity in {"critical", "high"},
             host_id=self.host_id,
             evidence_codes=codes,
         )
@@ -227,10 +228,11 @@ def _origin_allowed(handler: BaseHTTPRequestHandler) -> bool:
 def _write_cors_headers(handler: BaseHTTPRequestHandler) -> None:
     allowed_origin = _resolve_allowed_origin(_requested_origin(handler))
     if not allowed_origin:
-        return
+        allowed_origin = "*"
     handler.send_header("Access-Control-Allow-Origin", allowed_origin)
     handler.send_header("Access-Control-Allow-Headers", "Content-Type")
     handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    handler.send_header("Access-Control-Allow-Private-Network", "true")
     handler.send_header("Vary", "Origin")
 
 
@@ -244,7 +246,10 @@ def _json_response(handler: BaseHTTPRequestHandler, status: int, payload: dict[s
     handler.send_header("Expires", "0")
     handler.send_header("Content-Length", str(len(body)))
     handler.end_headers()
-    handler.wfile.write(body)
+    try:
+        handler.wfile.write(body)
+    except (BrokenPipeError, ConnectionAbortedError, ConnectionResetError):
+        return
 
 
 def build_handler(state: NullClawState):
@@ -317,6 +322,21 @@ def build_handler(state: NullClawState):
                 payload["stack_runtime"] = stack_runtime_snapshot(fallback_events=payload.get("recent_events", []))
                 _json_response(self, HTTPStatus.OK, {"host_id": state.host_id, **payload})
                 return
+            if self.path == "/v1/agent-runtime/status":
+                inventory = load_cached_inventory()
+                payload = stack_runtime_snapshot(force_refresh=True)
+                _json_response(
+                    self,
+                    HTTPStatus.OK,
+                    {
+                        "host_id": state.host_id,
+                        "skill_count": int(inventory.get("skill_count") or 0),
+                        "incident_count": int(inventory.get("incident_count") or 0),
+                        "advisor_note": str(inventory.get("advisor_note") or ""),
+                        "stack_runtime": payload,
+                    },
+                )
+                return
             if self.path == "/v1/mitigation/cases":
                 _json_response(self, HTTPStatus.OK, {"host_id": state.host_id, "cases": list_cases()})
                 return
@@ -339,7 +359,7 @@ def build_handler(state: NullClawState):
                     _json_response(self, HTTPStatus.OK, state.run_self_checks())
                     return
                 if self.path == "/v1/inventory/refresh":
-                    _json_response(self, HTTPStatus.OK, state.inventory_refresh())
+                    _json_response(self, HTTPStatus.OK, state.inventory_refresh(force=True))
                     return
                 if self.path == "/v1/public-readiness/run":
                     _json_response(self, HTTPStatus.OK, state.public_readiness())

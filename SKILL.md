@@ -68,6 +68,7 @@ python scripts/check_public_release.py
 7. Keep audit events in local state, not repo-tracked files.
 8. Use a loopback LM Studio coding model for short coding-security guidance, preferring local Qwen when available.
 9. Surface public support and security links as copy-only actions, not browser launches.
+10. Keep subagent routing local-first: use healthy local OpenClaw-compatible lanes before cloud sidecars, and keep cloud sidecars on lower-reasoning bounded work unless the operator explicitly chooses otherwise.
 
 ## Local advisor
 
@@ -80,6 +81,13 @@ $env:NULLCLAW_AGENT_ENABLE_LLM="1"
 ```
 
 The advisor must remain local-only by default. The shared app-agent lane is `radeon-qwen3.5-4b`; Hui Hui stays reserved for avatar-specialized endpoints.
+
+Subagent policy:
+
+- The user chooses the operating mode; arbiter recommendations do not override operator intent.
+- Healthy local subagents should be used first for quick bounded tasks.
+- Cloud subagents should default to cheaper, lower-reasoning sidecar work.
+- Fast mode is not part of the governed default path.
 
 ## Guardrails
 

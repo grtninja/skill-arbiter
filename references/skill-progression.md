@@ -29,6 +29,7 @@ This file tracks maturity levels for long-lived core skills.
 | `skill-enforcer` | 6 | Cross-repo policy alignment gate. |
 | `skills-third-party-intake` | 6 | Curated-source intake tied to supply-chain blocker logic and live host governance. |
 | `docs-alignment-lock` | 6 | Lockstep policy/doc sync with public-shape enforcement. |
+| `cybertron-fabric-host-ops` | 1 | Cybertron host readiness, repo parity, and offload baseline. |
 | `safe-mass-index-core` | 6 | Low-churn large-repo discovery lane. |
 
 ## Level-up evidence

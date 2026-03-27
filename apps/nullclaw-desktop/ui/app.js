@@ -6,13 +6,14 @@ let currentCaseId = "";
 let inventoryState = { skills: [], incidents: [], sources: [], legitimacy_summary: {}, interop_sources: [] };
 let casesState = [];
 let lastPassiveInventoryRefreshAt = 0;
+let bootstrapHydrated = false;
 const pollStartTimers = {};
 let pollProfile = {
-  health_ms: 30000,
-  passive_inventory_ms: 180000,
-  skill_game_ms: 120000,
-  collaboration_ms: 120000,
-  stack_runtime_ms: 60000,
+  health_ms: 60000,
+  passive_inventory_ms: 300000,
+  skill_game_ms: 0,
+  collaboration_ms: 0,
+  stack_runtime_ms: 0,
 };
 const pollRunning = {};
 const pollLastRun = {};
@@ -158,11 +159,11 @@ function parsePollProfile(payload) {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
   };
   return {
-    health_ms: sanitize(profile.health_ms, 30000),
-    passive_inventory_ms: sanitize(profile.passive_inventory_ms, 180000),
-    skill_game_ms: sanitize(profile.skill_game_ms, 120000),
-    collaboration_ms: sanitize(profile.collaboration_ms, 120000),
-    stack_runtime_ms: sanitize(profile.stack_runtime_ms, 60000),
+    health_ms: sanitize(profile.health_ms, 60000),
+    passive_inventory_ms: sanitize(profile.passive_inventory_ms, 300000),
+    skill_game_ms: 0,
+    collaboration_ms: 0,
+    stack_runtime_ms: 0,
   };
 }
 
@@ -233,6 +234,40 @@ function renderSubagentPayload(prefix, payload) {
   setFeedText(`${prefix}-detail`, active.length
     ? active.map((row) => `${row.name} · ${row.state || "active"} (${row.event_count || 0})`).join("\n")
     : "No active subagents reported.");
+}
+
+function renderAgentRuntimePayload(payload) {
+  const runtime = payload?.stack_runtime || {};
+  const local = runtime?.local_supervision || {};
+  const vscode = local?.vscode || {};
+  const advisor = local?.advisor || {};
+  const activeTasks = local?.active_tasks || [];
+  const workspaceHints = vscode?.workspace_hints || [];
+  const qwenModels = advisor?.qwen_models || [];
+  setText("runtime-vscode-count", String(vscode.window_count || 0));
+  setText("runtime-task-count", String(activeTasks.length || 0));
+  setText("runtime-qwen-count", String(qwenModels.length || 0));
+  setText("game-vscode-count", String(vscode.window_count || 0));
+  setText("game-active-task-count", String(activeTasks.length || 0));
+  setText("game-qwen-count", String(qwenModels.length || 0));
+  setFeedText(
+    "runtime-local-detail",
+    [
+      `VS Code windows: ${vscode.window_count || 0}`,
+      `Workspace hints: ${workspaceHints.length ? workspaceHints.join(", ") : "none"}`,
+      `Active tasks: ${activeTasks.length ? activeTasks.join("; ") : "none"}`,
+    ].join("\n"),
+  );
+  setFeedText("runtime-supervisor-note", advisor.note || payload?.advisor_note || "Local Qwen supervisor note unavailable.");
+  setFeedText(
+    "skill-game-runtime",
+    [
+      `Selected advisor model: ${advisor.selected_model || "unknown"}`,
+      `Visible Qwen lanes: ${qwenModels.length ? qwenModels.join(", ") : "none"}`,
+      `Active tasks: ${activeTasks.length ? activeTasks.join("; ") : "none"}`,
+      `Supervisor note: ${advisor.note || payload?.advisor_note || "none"}`,
+    ].join("\n"),
+  );
 }
 
 function setSelectedSubject(value) {
@@ -394,14 +429,19 @@ function buildPriorityRows(payload) {
     const legitimacy = String(skill.legitimacy_status || "").toLowerCase();
     const risk = String(skill.risk_class || "").toLowerCase();
     const sourceType = String(skill.source_type || "").toLowerCase();
+    const action = String(skill.recommended_action || "").toLowerCase();
     const thirdPartyInstalled =
       sourceType === "installed_skill" &&
       !["official_trusted", "owned_trusted"].includes(legitimacy) &&
       !String(skill.origin || "").toLowerCase().includes("openai_builtin") &&
       !String(skill.origin || "").toLowerCase().includes("overlay_candidate_installed");
+    const actionableThirdPartyInstalled =
+      thirdPartyInstalled &&
+      !["keep", "observe", "accepted"].includes(action) &&
+      ["critical", "high", "medium"].includes(risk);
     if (
       !["blocked_hostile", "needs_review", "manual_review", "accepted_review"].includes(legitimacy) &&
-      !(thirdPartyInstalled && ["critical", "high", "monitor"].includes(risk))
+      !actionableThirdPartyInstalled
     ) {
       return;
     }
@@ -703,6 +743,7 @@ async function refreshSkillGame() {
   setFeedText("skill-game-levels", originalLevels.length
     ? originalLevels.map((row) => `- ${row.name} [L${row.level}] ${row.notes || ""}`).join("\n")
     : "No original skill levels mapped yet.");
+  await refreshAgentRuntime().catch(() => null);
   return payload;
 }
 
@@ -743,6 +784,10 @@ function renderSkillGameError(error) {
   setFeedText("skill-game-feed", `Skill Game refresh failed.\n${message}`);
   setFeedText("skill-game-targets", "Skill Game targets unavailable until refresh succeeds.");
   setFeedText("skill-game-levels", "Original skill levels unavailable until refresh succeeds.");
+  setText("game-vscode-count", "error");
+  setText("game-active-task-count", "error");
+  setText("game-qwen-count", "error");
+  setFeedText("skill-game-runtime", "Live local supervision unavailable.");
 }
 
 function renderCollaborationError(error) {
@@ -775,6 +820,7 @@ async function refreshHealth() {
     setText("stack-runtime-seq", payload.stack_runtime?.mx3?.active_sequence_name || "none");
     setText("stack-runtime-seq-path", payload.stack_runtime?.mx3?.active_dfp_path || "none");
     renderSubagentPayload("health-stack-subagents", payload.stack_runtime?.subagent_coordination || {});
+    renderAgentRuntimePayload({ stack_runtime: payload.stack_runtime, advisor_note: payload.advisor_detail || "" });
     const advisorText = payload.advisor_enabled
       ? `${payload.advisor_model} (${payload.advisor_status || "pending"})`
       : "disabled";
@@ -801,9 +847,24 @@ async function refreshHealth() {
     setText("health-stack-subagents-count", "error");
     setText("health-stack-subagents-event-count", "error");
     setFeedText("health-stack-subagents-detail", "Stack runtime unavailable.");
+    setText("runtime-vscode-count", "error");
+    setText("runtime-task-count", "error");
+    setText("runtime-qwen-count", "error");
+    setText("game-vscode-count", "error");
+    setText("game-active-task-count", "error");
+    setText("game-qwen-count", "error");
+    setFeedText("runtime-local-detail", "Local runtime unavailable.");
+    setFeedText("runtime-supervisor-note", "Supervisor unavailable.");
+    setFeedText("skill-game-runtime", "Live local supervision unavailable.");
     setBanner("Waiting for the local arbitration agent.");
     return null;
   }
+}
+
+async function refreshAgentRuntime() {
+  const payload = await api("/v1/agent-runtime/status");
+  renderAgentRuntimePayload(payload);
+  return payload;
 }
 
 async function runSelfChecks() {
@@ -934,6 +995,52 @@ async function refreshCases() {
   renderSubjectDetails(selectedSubject());
 }
 
+async function completeBootstrap(healthPayload = null) {
+  if (bootstrapHydrated) {
+    return;
+  }
+  bootstrapHydrated = true;
+  clearScheduledRefresh("bootstrap-recover");
+  await runSelfChecks();
+  await refreshInventory();
+  await refreshSkillGame().catch((error) => {
+    renderSkillGameError(error);
+    setBanner(`Skill Game refresh failed: ${error.message}`);
+  });
+  await refreshCollaboration().catch((error) => {
+    renderCollaborationError(error);
+    setBanner(`Collaboration refresh failed: ${error.message}`);
+  });
+  await refreshPublicReadiness();
+  await refreshAuditLog();
+  await refreshCases();
+  const profileFromHealth = parsePollProfile(healthPayload || {});
+  const profile = pollProfile;
+  pollProfile = {
+    health_ms: Math.max(60000, profile.health_ms || profileFromHealth.health_ms),
+    passive_inventory_ms: Math.max(300000, profile.passive_inventory_ms || profileFromHealth.passive_inventory_ms),
+    skill_game_ms: 0,
+    collaboration_ms: 0,
+    stack_runtime_ms: 0,
+  };
+  scheduleRefresh("health", pollProfile.health_ms, () => refreshHealth(), {
+    initialDelayMs: 0,
+    visibleOnly: false,
+  });
+  scheduleRefresh("inventory", pollProfile.passive_inventory_ms, () => passiveRefreshInventory(), {
+    initialDelayMs: Math.min(300000, pollProfile.health_ms + 5000),
+    visibleOnly: true,
+  });
+  window.addEventListener("focus", () => {
+    withPollGate("health", () => refreshHealth(), { minGapMs: 10000, visibleOnly: false });
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      withPollGate("health", () => refreshHealth(), { minGapMs: 10000, visibleOnly: false });
+    }
+  });
+}
+
 async function planMitigationCase() {
   const subject = selectedSubject();
   if (!subject) {
@@ -1003,68 +1110,28 @@ async function bootstrap() {
   await refreshAbout().catch(() => null);
   let healthPayload = null;
   let attached = false;
-  for (let attempt = 0; attempt < 12; attempt += 1) {
+  for (let attempt = 0; attempt < 30; attempt += 1) {
     healthPayload = await refreshHealth();
     attached = Boolean(healthPayload);
     if (attached) {
       break;
     }
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
   if (!attached) {
     setBanner("Agent unavailable. Review the local Python/runtime state.");
+    scheduleRefresh("bootstrap-recover", 5000, async () => {
+      const recovered = await refreshHealth();
+      if (recovered) {
+        await completeBootstrap(recovered);
+      }
+    }, {
+      initialDelayMs: 1000,
+      visibleOnly: false,
+    });
     return;
   }
-  await runSelfChecks();
-  await refreshInventory();
-  await refreshSkillGame().catch((error) => {
-    renderSkillGameError(error);
-    setBanner(`Skill Game refresh failed: ${error.message}`);
-  });
-  await refreshCollaboration().catch((error) => {
-    renderCollaborationError(error);
-    setBanner(`Collaboration refresh failed: ${error.message}`);
-  });
-  await refreshPublicReadiness();
-  await refreshAuditLog();
-  await refreshCases();
-  const profileFromHealth = parsePollProfile(healthPayload || {});
-  const profile = pollProfile;
-  pollProfile = {
-    health_ms: Math.max(10000, profile.health_ms || profileFromHealth.health_ms),
-    passive_inventory_ms: Math.max(30000, profile.passive_inventory_ms || profileFromHealth.passive_inventory_ms),
-    skill_game_ms: Math.max(30000, profile.skill_game_ms || profileFromHealth.skill_game_ms),
-    collaboration_ms: Math.max(30000, profile.collaboration_ms || profileFromHealth.collaboration_ms),
-    stack_runtime_ms: Math.max(10000, profile.stack_runtime_ms || profileFromHealth.stack_runtime_ms),
-  };
-  scheduleRefresh("health", pollProfile.health_ms, () => refreshHealth(), {
-    initialDelayMs: 0,
-    visibleOnly: false,
-  });
-  scheduleRefresh("inventory", pollProfile.passive_inventory_ms, () => passiveRefreshInventory(), {
-    initialDelayMs: Math.min(60000, pollProfile.health_ms + 2000),
-    visibleOnly: true,
-  });
-  scheduleRefresh("skill-game", pollProfile.skill_game_ms, () => refreshSkillGame().catch((error) => {
-    renderSkillGameError(error);
-  }), {
-    initialDelayMs: Math.min(120000, pollProfile.health_ms + 6000),
-    visibleOnly: true,
-  });
-  scheduleRefresh("collaboration", pollProfile.collaboration_ms, () => refreshCollaboration().catch((error) => {
-    renderCollaborationError(error);
-  }), {
-    initialDelayMs: Math.min(90000, pollProfile.health_ms + 4000),
-    visibleOnly: true,
-  });
-  window.addEventListener("focus", () => {
-    withPollGate("health", () => refreshHealth(), { minGapMs: 3000, visibleOnly: false });
-  });
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      withPollGate("health", () => refreshHealth(), { minGapMs: 3000, visibleOnly: false });
-    }
-  });
+  await completeBootstrap(healthPayload);
 }
 
 document.getElementById("run-checks").addEventListener("click", () => {

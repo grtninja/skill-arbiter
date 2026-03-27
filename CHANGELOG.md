@@ -3,17 +3,29 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.2.22] - 2026-03-27
+
 ### Fixed
 
 - prevent stale loopback GET caching from leaving the embedded desktop on old inventory, skill-game, or collaboration state
 - surface skill-game and collaboration refresh failures in the desktop UI instead of silently leaving zero/default placeholders
 - switch installed desktop and Start Menu launchers to a silent `wscript` path so the console does not flash empty PowerShell or `cmd` windows on start
 - keep rejected hostile third-party candidate stubs out of the active live inventory so the console focuses on installed or reviewable skills instead of archived reject lanes
+- keep local advisor selection attached to the first live loopback OpenAI-compatible model lane instead of stalling on one dead default port
+- stop external `--source-dir` skills from being treated as repo-owned during lockdown admission unless they really originate from the repo candidate root
+- sanitize repo-facing docs and generated SkillHub artifacts away from workstation-specific private paths
+- replace blocked marketplace GitHub Actions steps with repo-local shell workflows so CI and secret-scan jobs can start under `allowed_actions=local_only`
 
 ### Changed
 
+- admit `cybertron-fabric-host-ops`, `media-workbench-desktop-ops`, `operator-language-humanizer`, `qwen-training-checkpoint-eval`, `qwen-training-desktop-ops`, and `qwen-training-workbench-ops` as repo-owned trusted candidates
+- add Cybertron-specific portfolio, progression, and multitasking guidance so admission tooling has an explicit lane for remote-host readiness and offload checks
+- add SkillHub Phase 1 discovery-only intake, source reputation ledger, and bounded alignment matrix generation
+- add a dedicated `/v1/agent-runtime/status` lane plus live local-supervision tracking for VS Code windows, active tasks, and visible local Qwen/model lanes
 - make the README and operator instructions explicit that standalone desktop mode is only partial, and that the app is only fully useful when real Codex or GitHub Copilot-driven work is feeding the interop, collaboration, and skill-learning lanes
 - add an explicit AI warning that Codex, Copilot, and other AI agents can make mistakes, so the app must not be treated as infallible ground truth
+- update README, scope docs, contribution policy, and security guidance to reflect public-shape constraints and generic local model-host compatibility
+- add a repo-local `scripts/check_secret_hygiene.py` gate plus tests, and document the local-only Actions policy in the README
 
 ## [0.2.21] - 2026-03-19
 

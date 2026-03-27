@@ -18,6 +18,7 @@ from supply_chain_guard import scan_skill_dir_content, scan_skill_tree, summariz
 THIRD_PARTY_SOURCE_ROW_RE = re.compile(r"^\| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \|$")
 THREAT_MATRIX_ROW_RE = re.compile(r"^\| `?([^|`]+?)`? \| `([^`]+)` \| ([^|]+) \| `([^`]+)` \| (.+?) \|$")
 THIRD_PARTY_SKILL_ROW_RE = re.compile(r"^\| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \|$")
+BASELINE_SKILL_BULLET_RE = re.compile(r"^\s*-\s*`?([a-z0-9._-]+)`?\s*$", re.IGNORECASE)
 
 
 _RADAR_FIELD_PATHS = ("changed_files_sample", "dirty_files_sample", "skill_paths")
@@ -172,6 +173,8 @@ def _ownership_for_skill(
 ) -> str:
     if origin in {"openai_builtin", "openai_builtin_system"}:
         return "official_builtin"
+    if origin == "vscode_codex_baseline_addition":
+        return "baseline_addition"
     if third_party_source_label:
         return "third_party_candidate" if source_type == "overlay_candidate" else "third_party_imported"
     if source_type == "overlay_candidate":
@@ -199,6 +202,8 @@ def _legitimacy_for_skill(
         return "blocked_hostile", "Hostile signatures detected in the skill content."
     if ownership == "official_builtin":
         return "official_trusted", "Matches the official OpenAI/Codex baseline and is accepted by baseline policy on this host."
+    if ownership == "baseline_addition":
+        return "owned_trusted", "Matches a host-recognized VS Code Codex baseline addition without claiming upstream OpenAI ownership."
     if ownership in {"repo_owned", "repo_owned_candidate"}:
         return "owned_trusted", "Owned by the local stack and accepted by local ownership policy on this host."
     if ownership in {"third_party_imported", "third_party_candidate"}:
@@ -367,6 +372,18 @@ def fetch_openai_baseline() -> dict[str, object]:
         return {"top_level": [], "system": [], "sha": "", "status": "offline"}
 
 
+def _load_vscode_codex_baseline_additions() -> set[str]:
+    path = REPO_ROOT / "references" / "vscode-codex-baseline-additions.md"
+    if not path.is_file():
+        return set()
+    additions: set[str] = set()
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        match = BASELINE_SKILL_BULLET_RE.match(line)
+        if match:
+            additions.add(match.group(1).strip())
+    return additions
+
+
 def _parse_third_party_sources() -> list[SourceRecord]:
     path = REPO_ROOT / "references" / "third-party-skill-attribution.md"
     if not path.is_file():
@@ -430,6 +447,45 @@ def _parse_threat_matrix_sources() -> list[SourceRecord]:
     return rows
 
 
+def _parse_skillhub_source_ledger() -> list[SourceRecord]:
+    path = REPO_ROOT / "references" / "skillhub-source-ledger.json"
+    if not path.is_file():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return []
+    current_host = host_id()
+    first_wave_size = int(payload.get("first_wave_size") or 0)
+    clean_pass_count = int(payload.get("clean_pass_count") or 0)
+    manual_review_count = int(payload.get("manual_review_count") or 0)
+    reject_count = int(payload.get("reject_count") or 0)
+    notes = [
+        f"source_status={payload.get('source_status') or 'unknown'}",
+        f"first_wave_size={first_wave_size}",
+        f"clean_pass_count={clean_pass_count}",
+        f"manual_review_count={manual_review_count}",
+        f"reject_count={reject_count}",
+        f"promotion_decision={payload.get('promotion_decision') or 'unknown'}",
+    ]
+    return [
+        SourceRecord(
+            source_id=str(payload.get("source_id") or "skillhub"),
+            source_type="marketplace_catalog",
+            origin="skillhub",
+            version_or_commit="phase1",
+            local_presence="tracked_reference",
+            drift_state="tracked",
+            risk_class=str(payload.get("risk_class") or "medium"),
+            recommended_action=str(payload.get("recommended_action") or "discovery_only"),
+            host_id=current_host,
+            remote_url=str(payload.get("remote_url") or "https://skills.palebluedot.live"),
+            compatibility_surface=str(payload.get("compatibility_surface") or "marketplace_catalog"),
+            notes=notes,
+        )
+    ]
+
+
 def _candidate_names(candidate_root: Path) -> set[str]:
     if not candidate_root.is_dir():
         return set()
@@ -474,6 +530,7 @@ def build_inventory_snapshot(
     openai_baseline = fetch_openai_baseline()
     openai_top_level = set(openai_baseline["top_level"])
     openai_system = set(openai_baseline["system"])
+    vscode_baseline_additions = _load_vscode_codex_baseline_additions()
     third_party_attribution = _parse_third_party_skill_attribution()
     candidates = _candidate_names(overlay_root)
     recent_work = _recent_work_skill_names(overlay_root)
@@ -533,10 +590,17 @@ def build_inventory_snapshot(
             intake_recommendation = str(attribution.get("intake_recommendation") or "").strip()
             if entry.name in candidates:
                 origin = "overlay_candidate_installed"
-            elif entry.name not in openai_top_level:
+            elif entry.name in vscode_baseline_additions:
+                origin = "vscode_codex_baseline_addition"
+                notes.append("vscode_codex_baseline_addition")
+            elif entry.name not in openai_top_level and entry.name not in vscode_baseline_additions:
                 drift_state = "local_only"
                 notes.append("installed skill not tracked by overlay or OpenAI baseline")
-            if third_party_source_label:
+            if entry.name in openai_top_level:
+                origin = "openai_builtin"
+                third_party_source_label = ""
+                intake_recommendation = ""
+            elif third_party_source_label:
                 origin = f"third_party_{third_party_source_label}"
                 notes.extend(
                     [
@@ -614,7 +678,7 @@ def build_inventory_snapshot(
                 )
             )
 
-    missing_builtin = sorted(openai_top_level - {row.name for row in skill_rows if row.source_type == "installed_skill"})
+    missing_builtin = sorted((openai_top_level | vscode_baseline_additions) - {row.name for row in skill_rows if row.source_type == "installed_skill"})
     for name in missing_builtin:
         skill_rows.append(
             SkillRecord(
@@ -758,6 +822,7 @@ def build_inventory_snapshot(
         )
     source_rows.extend(_parse_third_party_sources())
     source_rows.extend(_parse_threat_matrix_sources())
+    source_rows.extend(_parse_skillhub_source_ledger())
     source_rows.extend(scan_interop_sources())
 
     advisor_note = request_local_advice(

@@ -2,7 +2,7 @@
 
 - Skill name: `skill-arbiter`
 - Role: admission/quarantine gate for skill installs.
-- Author attribution: Edward Silvia.
+- Maintainer alias: `grtninja`.
 - License: MIT.
 
 Recommended defaults:

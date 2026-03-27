@@ -4,19 +4,29 @@ import copy
 import ipaddress
 import json
 import os
+import subprocess
 import time
 import urllib.error
 from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from shutil import which
 from typing import Any
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
+
+from .llm_advisor import advisor_model, available_models, request_local_advice
+
+try:
+    import psutil
+except ModuleNotFoundError:  # pragma: no cover - optional dependency fallback
+    psutil = None
 
 
 STACK_HEALTH_URL_ENV = "STARFRAME_STACK_HEALTH_URL"
 STACK_MODE_ENV = "SKILL_ARBITER_STACK_MODE"
 POLL_PROFILE_ENV = "SKILL_ARBITER_STACK_POLL_PROFILE"
+ENABLE_CODEX_WATCH_ENV = "SKILL_ARBITER_ENABLE_CODEX_WATCH"
 POLL_PROFILE_OVERRIDES = {
     "SKILL_ARBITER_STACK_HEALTH_MS": "health_ms",
     "SKILL_ARBITER_STACK_PASSIVE_INVENTORY_MS": "passive_inventory_ms",
@@ -67,14 +77,91 @@ STACK_POLL_PROFILES: dict[str, StackPollProfile] = {
 
 STACK_TIMEOUT_SECONDS = 2.0
 STACK_RUNTIME_CACHE_SECONDS = 3.0
+LOCAL_SUPERVISION_CACHE_SECONDS = 5.0
 
 _STACK_RUNTIME_CACHE: dict[str, Any] = {
+    "expires_at": 0.0,
+    "payload": None,
+}
+_LOCAL_SUPERVISION_CACHE: dict[str, Any] = {
     "expires_at": 0.0,
     "payload": None,
 }
 
 
 _LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
+_LOCAL_PROCESS_COMMAND = r"""
+$targets = @('electron.exe','python.exe','LM Studio.exe','lms.exe')
+Get-CimInstance Win32_Process |
+  Where-Object {
+    $_.Name -in $targets -or
+    ($_.CommandLine -match 'media-workbench' -or
+     $_.CommandLine -match 'skill-arbiter' -or
+     $_.CommandLine -match 'qwen[- ]training[- ]workbench' -or
+     $_.CommandLine -match 'run_complete_media_loop.py' -or
+     $_.CommandLine -match 'run_wan_flf2v.py')
+  } |
+  Select-Object Name,ProcessId,CommandLine |
+  ConvertTo-Json -Depth 4
+"""
+
+_CODEX_PROCESS_COMMAND = r"""
+$targets = @('Code.exe','codex.exe')
+Get-CimInstance Win32_Process |
+  Where-Object {
+    $_.Name -in $targets -or
+    $_.CommandLine -match 'codex.exe' -or
+    $_.CommandLine -match '\.code-workspace'
+  } |
+  Select-Object Name,ProcessId,CommandLine |
+  ConvertTo-Json -Depth 4
+"""
+
+
+def _psutil_process_rows(include_codex: bool = False) -> list[dict[str, Any]]:
+    if psutil is None:
+        return []
+    rows: list[dict[str, Any]] = []
+    target_names = {"electron.exe", "python.exe", "lm studio.exe", "lms.exe"}
+    if include_codex:
+        target_names |= {"code.exe", "codex.exe"}
+    for proc in psutil.process_iter(["name", "pid", "cmdline"]):
+        try:
+            info = proc.info
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+        name = _first_str(info.get("name"), "")
+        command_parts = info.get("cmdline") or []
+        if isinstance(command_parts, str):
+            command = command_parts
+        else:
+            command = " ".join(part for part in command_parts if isinstance(part, str))
+        lowered_name = name.lower()
+        lowered_command = command.lower()
+        local_match = lowered_name in target_names or any(
+            token in lowered_command
+            for token in (
+                "media-workbench",
+                "skill-arbiter",
+                "qwen-training-workbench",
+                "qwen training workbench",
+                "run_complete_media_loop.py",
+                "run_wan_flf2v.py",
+            )
+        )
+        codex_match = include_codex and (
+            lowered_name in {"code.exe", "codex.exe"} or "codex.exe" in lowered_command or ".code-workspace" in lowered_command
+        )
+        if not local_match and not codex_match:
+            continue
+        rows.append(
+            {
+                "Name": name,
+                "ProcessId": int(info.get("pid") or 0),
+                "CommandLine": command,
+            }
+        )
+    return rows
 
 
 def _first_str(value: Any, default: str = "") -> str:
@@ -127,6 +214,164 @@ def _sanitize_path_hint(value: str) -> str:
         return normalized[:120]
     leaf = normalized.split("/")[-1]
     return leaf[:120]
+
+
+def _windows_no_window_subprocess_kwargs(kwargs: dict[str, Any] | None = None) -> dict[str, Any]:
+    normalized: dict[str, Any] = dict(kwargs or {})
+    if os.name != "nt":
+        return normalized
+
+    startupinfo_obj = normalized.get("startupinfo")
+    startupinfo_type = getattr(subprocess, "STARTUPINFO", None)
+    if startupinfo_type is not None and startupinfo_obj is None:
+        startupinfo_obj = startupinfo_type()
+    if startupinfo_obj is not None:
+        startf_use_show_window = int(getattr(subprocess, "STARTF_USESHOWWINDOW", 0))
+        if hasattr(startupinfo_obj, "dwFlags"):
+            startupinfo_obj.dwFlags |= startf_use_show_window
+        if hasattr(startupinfo_obj, "wShowWindow"):
+            startupinfo_obj.wShowWindow = 0
+        normalized["startupinfo"] = startupinfo_obj
+    return normalized
+
+
+def _powershell_json(command: str) -> Any:
+    if os.name != "nt":
+        return []
+    executable = which("powershell.exe") or which("pwsh")
+    if not executable:
+        return []
+    completed = subprocess.run(
+        [executable, "-NoLogo", "-NoProfile", "-NonInteractive", "-WindowStyle", "Hidden", "-Command", command],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=3,
+        **_windows_no_window_subprocess_kwargs(),
+    )
+    if completed.returncode != 0:
+        return []
+    raw = completed.stdout.strip()
+    if not raw:
+        return []
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return []
+
+
+def _process_rows() -> list[dict[str, Any]]:
+    psutil_rows = _psutil_process_rows()
+    if psutil_rows:
+        return psutil_rows
+    payload = _powershell_json(_LOCAL_PROCESS_COMMAND)
+    if isinstance(payload, dict):
+        return [payload]
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    return []
+
+
+def _codex_watch_enabled() -> bool:
+    return _first_str(os.environ.get(ENABLE_CODEX_WATCH_ENV), "0").lower() in {"1", "true", "yes", "on"}
+
+
+def _codex_rows() -> list[dict[str, Any]]:
+    if not _codex_watch_enabled():
+        return []
+    psutil_rows = _psutil_process_rows(include_codex=True)
+    if psutil_rows:
+        return [
+            row
+            for row in psutil_rows
+            if _first_str(row.get("Name"), "").lower() in {"code.exe", "codex.exe"}
+            or "codex.exe" in _first_str(row.get("CommandLine"), "").lower()
+            or ".code-workspace" in _first_str(row.get("CommandLine"), "").lower()
+        ]
+    payload = _powershell_json(_CODEX_PROCESS_COMMAND)
+    if isinstance(payload, dict):
+        return [payload]
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    return []
+
+
+def _local_supervision_snapshot() -> dict[str, Any]:
+    now = time.time()
+    if _LOCAL_SUPERVISION_CACHE["expires_at"] > now and _LOCAL_SUPERVISION_CACHE["payload"] is not None:
+        return copy.deepcopy(_LOCAL_SUPERVISION_CACHE["payload"])
+    rows = _process_rows()
+    codex_rows = _codex_rows()
+    vscode_windows = 0
+    codex_processes = 0
+    active_tasks: list[str] = []
+    workspace_hints: list[str] = []
+    for row in rows:
+        name = _first_str(row.get("Name"), "")
+        command = _first_str(row.get("CommandLine"), "")
+        lowered = command.lower()
+        if "run_complete_media_loop.py" in lowered:
+            active_tasks.append("media-workbench: complete_media_loop")
+        elif "run_wan_flf2v.py" in lowered:
+            active_tasks.append("media-workbench: raw render slice")
+        elif "starframe-media-workbench" in lowered and "electron.exe" in lowered:
+            active_tasks.append("media-workbench: desktop live")
+        elif "qwen training workbench" in lowered:
+            active_tasks.append("qwen-training: desktop live")
+        elif "skill-arbiter" in lowered and ("electron.exe" in lowered or "python.exe" in lowered):
+            active_tasks.append("skill-arbiter: local supervisor live")
+    for row in codex_rows:
+        name = _first_str(row.get("Name"), "")
+        command = _first_str(row.get("CommandLine"), "")
+        lowered = command.lower()
+        if name == "Code.exe" and "--type=" not in command:
+            vscode_windows += 1
+        if "codex.exe" in lowered:
+            codex_processes += 1
+        if ".code-workspace" in lowered:
+            workspace_hints.append(_sanitize_path_hint(command))
+    model_list = available_models(refresh=True)
+    qwen_models = [model for model in model_list if "qwen" in model.lower() or "huihui" in model.lower()]
+    findings = [
+        f"vscode_windows={vscode_windows if _codex_watch_enabled() else 'disabled'}",
+        f"codex_processes={codex_processes if _codex_watch_enabled() else 'disabled'}",
+        f"active_tasks={len(active_tasks)}",
+        f"qwen_models={len(qwen_models)}",
+        f"advisor_model={advisor_model(refresh=True)}",
+    ]
+    supervisor_note = request_local_advice("agent_runtime_supervision", findings, timeout_s=0.8)
+    selected_model = advisor_model(refresh=True)
+    if not supervisor_note:
+        if qwen_models:
+            supervisor_note = (
+                f"Watching {len(active_tasks)} active task(s) through local Qwen lane "
+                f"{selected_model}; richer advisor reply unavailable, continue supervised polling."
+            )
+        else:
+            supervisor_note = "Local supervisor is watching VS Code and host activity, but no live Qwen lane responded yet."
+    payload = {
+        "available": True,
+        "observed_process_count": len(rows),
+        "vscode": {
+            "window_count": vscode_windows,
+            "workspace_hints": workspace_hints[:4],
+            "watch_enabled": _codex_watch_enabled(),
+        },
+        "codex": {
+            "process_count": codex_processes,
+            "watch_enabled": _codex_watch_enabled(),
+        },
+        "active_tasks": list(dict.fromkeys(active_tasks))[:8],
+        "advisor": {
+            "selected_model": selected_model,
+            "available_models": model_list[:24],
+            "qwen_models": qwen_models[:16],
+            "note": supervisor_note,
+        },
+    }
+    _LOCAL_SUPERVISION_CACHE["payload"] = copy.deepcopy(payload)
+    _LOCAL_SUPERVISION_CACHE["expires_at"] = now + LOCAL_SUPERVISION_CACHE_SECONDS
+    return payload
 
 
 def stack_mode() -> str:
@@ -359,6 +604,7 @@ def _normalize_stack_snapshot(payload: dict[str, Any], *, requested_mode: str, s
             "status": status or "unknown",
             "target": _stack_health_target(stack_health_url()),
         },
+        "local_supervision": _local_supervision_snapshot(),
     }
 
 
@@ -421,6 +667,7 @@ def stack_runtime_snapshot(
             "status": "unavailable",
             "target": "",
         },
+        "local_supervision": _local_supervision_snapshot(),
     }
 
     if not url:
@@ -435,7 +682,7 @@ def stack_runtime_snapshot(
         payload = _fetch_stack_payload(url)
         normalized = _normalize_stack_snapshot(payload, requested_mode=requested_mode, source="stack_health")
         ttl = max(1.0, load_poll_profile().get("stack_runtime_ms", 30000) / 1000.0)
-        cache_ttl = min(max(ttl * 0.75, 1.0), STACK_RUNTIME_CACHE_SECONDS)
+        cache_ttl = max(STACK_RUNTIME_CACHE_SECONDS, min(ttl * 0.75, 15.0))
         _STACK_RUNTIME_CACHE["payload"] = copy.deepcopy(normalized)
         _STACK_RUNTIME_CACHE["expires_at"] = now + cache_ttl
         return normalized

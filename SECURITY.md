@@ -51,9 +51,10 @@ The app must not become the threat surface it is trying to stop.
 - No silent scheduled-task creation
 - No PATH mutation
 - No repo-tracked host evidence
-- No public commit of usernames or absolute private paths
+- No public commit of usernames, personal names, or absolute private paths unless explicitly authorized
 - No undeclared long-running background workers outside the local agent
 - No silent remote advisor model use; the advisor must remain loopback-local and visible in the app
+- No repo-tracked requirement that binds the app to only one local model host; the public contract must remain compatible with loopback-hosted OpenAI-style local model services
 
 ## Public release gate
 

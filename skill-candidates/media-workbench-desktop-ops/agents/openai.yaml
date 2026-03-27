@@ -1,0 +1,4 @@
+interface:
+  display_name: "Media Workbench Desktop"
+  short_description: "Operate the STARFRAME media desktop app and 9040 worker"
+  default_prompt: "Use $media-workbench-desktop-ops to operate or validate the STARFRAME Media Workbench Electron app and its local 9040 worker, including source staging, automatic prompt generation, queue submission, live telemetry, output preview, and restart-safe desktop acceptance."

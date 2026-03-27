@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qwen Training Desktop"
+  short_description: "Operate the local 9041 Qwen desktop shell"
+  default_prompt: "Use $qwen-training-desktop-ops to operate or validate the local Qwen Training Workbench desktop shell and its 9041 worker, including launch acceptance, worker readiness, queue visibility, campaigns, and job status."

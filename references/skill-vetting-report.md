@@ -4,19 +4,19 @@ This document is machine-generated from the live inventory model and is safe for
 
 ## Summary
 
-- Generated: `2026-03-17T14:27:38.091907Z`
+- Generated: `2026-03-27T22:21:57.419957Z`
 - Host ID: `<LOCAL_HOST_ID>`
-- Official trusted: `38`
-- Owned trusted: `65`
-- Needs review: `0`
-- Blocked hostile: `0`
+- Official trusted: `39`
+- Owned trusted: `71`
+- Needs review: `1`
+- Blocked hostile: `6`
 
 ## Interop surfaces
 
 | Surface | Scope | Presence | Notes |
 | --- | --- | --- | --- |
-| `codex-local` | `local` | `present` | config=present, skills=101 |
-| `codex-app` | `workspace` | `present` | repos=10, files=12 |
+| `codex-local` | `local` | `present` | config=present, skills=163 |
+| `codex-app` | `workspace` | `present` | repos=12, files=14 |
 | `vscode-codex` | `workspace` | `present` | repos=2, files=2 |
 | `github-copilot` | `workspace` | `not_detected` | repos=0, files=0 |
 
@@ -26,14 +26,20 @@ This document is machine-generated from the live inventory model and is safe for
 | --- | --- | --- | --- | --- |
 | `blender-vrm-visible-fit` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `code-gap-sweeping` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `cybertron-fabric-host-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `desktop-startup-acceptance` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `docs-alignment-lock` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `heterogeneous-stack-validation` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `local-comfy-wan-multigpu` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `local-compute-usage` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `media-workbench-desktop-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `multitask-orchestrator` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `operator-language-humanizer` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `playwright-edge-preference` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `playwright-safe` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `qwen-training-checkpoint-eval` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `qwen-training-desktop-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `qwen-training-workbench-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `repo-a-coordinator-smoke` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `repo-a-host-admin-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `repo-a-policy-selftest-gate` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
@@ -101,6 +107,7 @@ This document is machine-generated from the live inventory model and is safe for
 | `doc` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
 | `figma` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
 | `figma-implement-design` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
+| `frontend-skill` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
 | `gh-address-comments` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
 | `gh-fix-ci` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
 | `imagegen` | `official_builtin` | `official_trusted` | `trusted` | `keep` |
@@ -135,8 +142,21 @@ This document is machine-generated from the live inventory model and is safe for
 
 ## Needs Review
 
-_None._
+| Skill | Ownership | Legitimacy | Risk | Action |
+| --- | --- | --- | --- | --- |
+| `plugin-creator` | `local_system` | `baseline_review` | `medium` | `review` |
 
 ## Blocked Hostile
 
-_None._
+| Skill | Ownership | Legitimacy | Risk | Action |
+| --- | --- | --- | --- | --- |
+| `canvas` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
+| `lobster` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
+| `openai-whisper-api` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
+| `skill-creator-openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
+| `tmux` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
+| `video-frames` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
+
+## Review Notes
+
+- `plugin-creator`: Local system skill is present but not yet reconciled to the official baseline. Findings: _no finding codes_.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qwen Training Workbench"
+  short_description: "Operate the private local Huihui to Qwen training lane"
+  default_prompt: "Use $qwen-training-workbench-ops to operate or monitor the private local Huihui-to-Qwen3.5-4B training workbench, including dataset-factory jobs, staggered continuation batches, and training-agent supervision."

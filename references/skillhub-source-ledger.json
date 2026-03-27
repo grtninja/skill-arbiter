@@ -1,0 +1,25 @@
+{
+  "source_id": "skillhub",
+  "source_status": "discovery_only",
+  "api_base": "https://skills.palebluedot.live/api/skills",
+  "remote_url": "https://skills.palebluedot.live",
+  "query_pack": [
+    "review",
+    "audit",
+    "skills",
+    "workflow",
+    "debug",
+    "trace",
+    "monitor",
+    "browser"
+  ],
+  "first_wave_size": 11,
+  "clean_pass_count": 0,
+  "manual_review_count": 7,
+  "reject_count": 2,
+  "promotion_decision": "discovery_only",
+  "promotion_rationale": "SkillHub remains discovery_only until the first wave proves stable through third-party intake, lockdown admission, and practical usefulness review.",
+  "risk_class": "medium",
+  "recommended_action": "discovery_only",
+  "compatibility_surface": "marketplace_catalog"
+}

@@ -76,6 +76,8 @@ python3 -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_pol
   - `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
   - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
 - Do not point the advisor at remote hosts by default.
+- Keep the public repo host-agnostic: the advisor must work with any loopback-hosted OpenAI-compatible coding-model surface, including LM Studio, MemryX shim lanes, and other local model software.
+- Do not hard-code one private workstation topology into repo-tracked docs unless it is expressed as a placeholder or compatibility example.
 
 ## 7) Documentation lockstep
 
@@ -110,3 +112,17 @@ New Skill Unlocked: <SkillName>
 - Minimal-diff behavior is forbidden.
 - Synchronize runtime, docs, tests, release metadata, and generated references together.
 - The task is not complete until related governance and dependent repo-facing surfaces are updated.
+
+## Skill-Arbiter Workflow (Binding)
+
+- Skill-arbiter discipline is explicit in this repo: do not take a skill-less turn when an applicable local skill exists.
+- Route substantial work through `skill-hub` first and state the selected skill order in the work summary.
+- For local hardware-, desktop-, or service-backed work, use `local-compute-usage` early and fail closed if the required local lane is unavailable.
+- For high-volume, long-running, or agent-heavy work, use `usage-watcher` to choose a bounded operating mode and keep local churn under control.
+- When the task has 2 or more independent lanes, use `multitask-orchestrator` and keep merge criteria explicit.
+- Use bounded subagents only for sidecar analysis or truly parallel independent lanes; do not leave idle agents open and do not delegate away local ownership.
+- The user's selected operating mode is authoritative. Recommendations from `usage-watcher` or `skill-cost-credit-governor` may inform the lane plan, but they must not silently override operator intent.
+- Healthy local OpenClaw-compatible subagents are the preferred lane for quick bounded tasks.
+- Cloud subagents must default to lower-reasoning, low-cost sidecar work, preserving premium reasoning budget for the main lane.
+- Fast mode is not permitted as an automatic escalation path in this repo's governed subagent workflow.
+- If the user explicitly names skills, use all named skills in that turn.

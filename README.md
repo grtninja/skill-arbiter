@@ -10,6 +10,12 @@ It started as an `rg.exe` churn moderator. It now acts as a capability firewall 
 
 Local skill governance and threat suppression console with guarded operator actions, source legitimacy tracking, and operator-confirmed remediation.
 
+## Shared Governance Baseline
+
+This repo stays aligned to the public-safe governance baseline in
+`BOUNDARIES.md`, `docs/PROJECT_SCOPE.md`, `docs/SCOPE_TRACKER.md`, and the
+generated alignment references shipped in `references/`.
+
 ## App preview
 
 Public-safe preview capture from an isolated browser session:
@@ -106,7 +112,8 @@ It may not:
 
 ## Local advisor
 
-The app uses a dedicated local coding-security LLM for short advisory notes.
+The app uses a dedicated local coding-security advisor for short notes and live
+runtime supervision.
 
 Defaults:
 
@@ -114,13 +121,27 @@ Defaults:
 - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
 - `NULLCLAW_AGENT_ENABLE_LLM=1`
 
-The advisor must remain local-only by default.
+The advisor must remain loopback-local by default.
+
+Compatibility contract:
+
+- The advisor may use any loopback-hosted OpenAI-compatible coding-model surface.
+- Supported local hosts include LM Studio, MemryX shim lanes, and other local model services exposing `/v1/models` and `/v1/chat/completions`.
+- The runtime now probes multiple local loopback endpoints and follows the first live compatible lane instead of assuming one fixed model host forever.
+- No remote advisor host is allowed by default.
 
 Model policy:
 
-- The shared app-agent lane is `radeon-qwen3.5-4b` through the local shim.
-- Hui Hui / GPT-OSS class models are not the general app default; those stay reserved for avatar-specialized lanes.
-- Operator overrides are still allowed for narrow specialized tasks, but the default desktop/runtime path is Qwen-only.
+- Fast local Qwen-compatible lanes are preferred for the default operator path.
+- Operator overrides are allowed for narrow specialized tasks, but they must remain local, explicit, and visible in the app state.
+- Repo-tracked docs must describe model compatibility generically rather than hard-coding one private workstation layout.
+
+Subagent routing policy:
+
+- The user's selected mode remains authoritative.
+- Healthy local OpenClaw-compatible subagents are preferred for quick bounded work.
+- Cloud subagents are treated as part of the same governed pool, but default to lower-reasoning, lower-cost sidecar work.
+- Fast mode is not part of the governed default path.
 
 ## Quick start
 
@@ -189,11 +210,33 @@ Refresh the machine-generated vetting report:
 python scripts/generate_skill_vetting_report.py
 ```
 
+Refresh the machine-generated SkillHub alignment artifacts:
+
+```bash
+python scripts/generate_skillhub_alignment.py
+```
+
+Run the secret hygiene gate:
+
+```bash
+python scripts/check_secret_hygiene.py
+```
+
 Run the public-release gate:
 
 ```bash
 python scripts/check_public_release.py
 ```
+
+## GitHub Actions policy
+
+This public repo is configured for a `local_only` GitHub Actions policy.
+
+- CI and secret-scan workflows must remain self-contained and repo-local.
+- Do not add marketplace or third-party `uses:` steps unless the repository
+  policy changes first.
+- Workflow startup should rely on shell steps plus in-repo Python checks so the
+  public branch still validates under restricted Actions settings.
 
 ## Local API
 
@@ -214,6 +257,7 @@ The desktop UI talks to a local-only loopback API:
 - `POST /v1/collaboration/record`
 - `GET /v1/public-readiness`
 - `POST /v1/public-readiness/run`
+- `GET /v1/agent-runtime/status`
 - `POST /v1/admission/evaluate`
 - `POST /v1/quarantine/apply`
 - `POST /v1/actions/confirm`
@@ -247,6 +291,8 @@ See:
 - [references/skill-vetting-report.md](references/skill-vetting-report.md)
 - [references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md](references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md)
 - [references/vscode-skill-handling.md](references/vscode-skill-handling.md)
+- [references/skillhub-alignment-matrix.md](references/skillhub-alignment-matrix.md)
+- [references/skillhub-source-ledger.md](references/skillhub-source-ledger.md)
 
 ## Collaboration and skill learning
 
@@ -291,6 +337,25 @@ The key contract is dual-ledger:
 That distinction is now a governed input to usage reduction, local-first routing,
 and skill upgrade recommendations instead of a manual after-the-fact story.
 
+Empirical mode selection is also a governed input now.
+
+See:
+
+- [references/empirical-mode-routing-telemetry.md](references/empirical-mode-routing-telemetry.md)
+- [references/usage-mode-session-template.json](references/usage-mode-session-template.json)
+
+Use these when a real usage pattern shows that:
+
+- greenfield app work behaves differently from maintenance,
+- lower-cost sessions can still outperform high-burn sessions on steady progress,
+- completion-adjusted progress is a better policy signal than raw spend alone.
+
+The same telemetry also governs subagent placement:
+
+- local OpenClaw-compatible subagents first
+- lower-reasoning cloud sidecars second
+- premium reasoning preserved for the main lane unless the operator explicitly escalates
+
 ## Mitigation workflow
 
 The desktop app treats findings as live mitigation cases, not static warnings.
@@ -333,9 +398,19 @@ so the console can legitimize the local stack without pretending every dangerous
 
 This repository is public-shape only.
 
-- Do not commit usernames, absolute private paths, private repo names, or raw host evidence.
+- Do not commit usernames, personal names, absolute private paths, private repo names, raw host evidence, or secrets unless explicitly authorized for public release.
 - Repo-tracked docs and JSON stay placeholder-safe.
 - Raw local evidence, audit events, and destructive-action records stay in ignored local state.
+
+## SkillHub alignment
+
+`skill-arbiter` now treats SkillHub as a bounded discovery surface, not a
+trusted install source by default.
+
+- SkillHub metadata may be used for shortlist building and gap mapping.
+- Candidate content must still be resolved back to GitHub and pass third-party intake plus lockdown admission before import.
+- The current source posture is recorded in `references/skillhub-source-ledger.*`.
+- SkillHub is only promotable above `discovery_only` after a clean bounded first wave.
 
 ## Public support
 
@@ -379,10 +454,12 @@ python scripts/arbitrate_skills.py --help
 python scripts/nullclaw_agent.py --help
 python scripts/generate_skill_catalog.py
 python scripts/generate_skill_vetting_report.py
+python scripts/generate_skillhub_alignment.py
 python scripts/check_private_data_policy.py
+python scripts/check_secret_hygiene.py
 python scripts/check_public_release.py
 pytest -q
-python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_secret_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\secret_hygiene.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
 ```
 
 ## Repository layout

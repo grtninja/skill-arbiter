@@ -109,12 +109,13 @@ def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
     findings: list[dict[str, str]] = []
 
     for item in privacy.findings:
+        detail = f"{item.path}:{item.line}:{item.col}"
         findings.append(
             _finding(
                 "critical",
                 f"privacy_{item.kind}",
                 "privacy gate failed",
-                item.detail,
+                detail,
                 "remove or sanitize the tracked leak before publishing",
             )
         )

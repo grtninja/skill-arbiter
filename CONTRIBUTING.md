@@ -22,6 +22,7 @@ Quick validation:
 python scripts/arbitrate_skills.py --help
 python scripts/nullclaw_agent.py --help
 python scripts/generate_skill_catalog.py
+python scripts/generate_skillhub_alignment.py
 python scripts/check_private_data_policy.py
 python scripts/check_public_release.py
 pytest -q
@@ -95,6 +96,7 @@ Before opening a PR:
    - local advisor behavior
    - loopback API changes
    - public-release readiness changes
+   - public-shape or maintainer-attribution changes
 7. Keep built-ins additive; do not disable upstream VS Code/Codex skills.
 
 ## Skills and sources
@@ -105,6 +107,7 @@ For new or changed skill governance surfaces:
 - keep `references/third-party-skill-attribution.md` aligned
 - keep `references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md` aligned when source risk posture changes
 - keep `references/vscode-skill-handling.md` aligned when baseline or overlay handling changes
+- keep `references/skillhub-alignment-matrix.md` and `references/skillhub-source-ledger.md` aligned when SkillHub intake posture changes
 
 ## Security
 
