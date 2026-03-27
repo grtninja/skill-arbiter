@@ -62,10 +62,16 @@ jobs:
             scripts/check_public_release.py \
             scripts/check_secret_hygiene.py
 
+      - name: Prepare test environment
+        run: |
+          cd repo
+          python3 -m venv .venv-ci
+          ./.venv-ci/bin/python -m pip install --disable-pip-version-check pytest
+
       - name: Test suite
         run: |
           cd repo
-          python3 -m pytest tests -q
+          ./.venv-ci/bin/python -m pytest tests -q
 
       - name: UI syntax check
         run: |
