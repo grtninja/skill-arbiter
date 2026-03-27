@@ -14,6 +14,10 @@ def _init_repo(root: Path) -> None:
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=root, check=True, capture_output=True, text=True)
 
 
+def _synthetic_github_token() -> str:
+    return "ghp_" + ("A" * 32)
+
+
 class SecretHygieneTests(unittest.TestCase):
     def test_scan_repo_flags_real_github_token(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -21,7 +25,7 @@ class SecretHygieneTests(unittest.TestCase):
             _init_repo(root)
             sample = root / "README.md"
             sample.write_text(
-                "token=ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\n",
+                f"token={_synthetic_github_token()}\n",
                 encoding="utf-8",
             )
             subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
@@ -39,7 +43,7 @@ class SecretHygieneTests(unittest.TestCase):
             sample.write_text("token=placeholder\n", encoding="utf-8")
             subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
             subprocess.run(["git", "commit", "-m", "safe baseline"], cwd=root, check=True, capture_output=True, text=True)
-            sample.write_text("token=ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\n", encoding="utf-8")
+            sample.write_text(f"token={_synthetic_github_token()}\n", encoding="utf-8")
             subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
             subprocess.run(["git", "commit", "-m", "introduce secret"], cwd=root, check=True, capture_output=True, text=True)
 

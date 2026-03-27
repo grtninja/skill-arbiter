@@ -170,6 +170,89 @@ class InventorySnapshotTests(unittest.TestCase):
         self.assertEqual(row["legitimacy_status"], "owned_trusted")
         self.assertNotEqual(row["legitimacy_status"], "official_trusted")
 
+    def test_system_baseline_addition_trusts_host_recognized_local_system_skill(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skills_root = root / "skills"
+            system_root = skills_root / ".system"
+            candidate_root = root / "skill-candidates"
+            refs = root / "references"
+            cache_path = root / "inventory.json"
+            system_root.mkdir(parents=True)
+            candidate_root.mkdir()
+            refs.mkdir()
+            (refs / "vscode-codex-baseline-additions.md").write_text(
+                "# VS Code Codex Baseline Additions\n\n## System Skills\n\n- `plugin-creator`\n",
+                encoding="utf-8",
+            )
+            _write_skill(system_root, "plugin-creator", "installed system baseline addition")
+
+            with mock.patch("skill_arbiter.inventory.REPO_ROOT", root):
+                with mock.patch("skill_arbiter.inventory.fetch_openai_baseline", return_value={"top_level": [], "system": [], "sha": "abc123", "status": "online"}):
+                    with mock.patch("skill_arbiter.inventory._parse_third_party_sources", return_value=[]):
+                        with mock.patch("skill_arbiter.inventory._parse_threat_matrix_sources", return_value=[]):
+                            with mock.patch("skill_arbiter.inventory.scan_interop_sources", return_value=[]):
+                                with mock.patch("skill_arbiter.inventory._recent_work_skill_names", return_value=set()):
+                                    with mock.patch("skill_arbiter.inventory.request_local_advice", return_value="Use the local Qwen lane."):
+                                        with mock.patch("skill_arbiter.inventory.inventory_cache_path", return_value=cache_path):
+                                            with mock.patch("skill_arbiter.inventory.host_id", return_value="host1234"):
+                                                payload = build_inventory_snapshot(skills_root=skills_root, candidate_root=candidate_root)
+
+        row = next(item for item in payload["skills"] if item["name"] == "plugin-creator")
+        self.assertEqual(row["origin"], "vscode_codex_system_baseline_addition")
+        self.assertEqual(row["ownership"], "baseline_addition")
+        self.assertEqual(row["legitimacy_status"], "owned_trusted")
+        self.assertEqual(row["recommended_action"], "keep")
+
+    def test_vscode_baseline_addition_wins_over_third_party_attribution(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skills_root = root / "skills"
+            candidate_root = root / "skill-candidates"
+            refs = root / "references"
+            cache_path = root / "inventory.json"
+            skills_root.mkdir()
+            candidate_root.mkdir()
+            refs.mkdir()
+            (refs / "vscode-codex-baseline-additions.md").write_text(
+                "# VS Code Codex Baseline Additions\n\n## Top-Level Skills\n\n- `canvas`\n",
+                encoding="utf-8",
+            )
+            _write_skill(skills_root, "canvas", "installed baseline addition with imported ancestry")
+
+            with mock.patch("skill_arbiter.inventory.REPO_ROOT", root):
+                with mock.patch("skill_arbiter.inventory.fetch_openai_baseline", return_value={"top_level": [], "system": [], "sha": "abc123", "status": "online"}):
+                    with mock.patch("skill_arbiter.inventory._parse_third_party_sources", return_value=[]):
+                        with mock.patch("skill_arbiter.inventory._parse_threat_matrix_sources", return_value=[]):
+                            with mock.patch("skill_arbiter.inventory.scan_interop_sources", return_value=[]):
+                                with mock.patch("skill_arbiter.inventory._recent_work_skill_names", return_value=set()):
+                                    with mock.patch("skill_arbiter.inventory.request_local_advice", return_value="Use the local Qwen lane."):
+                                        with mock.patch("skill_arbiter.inventory.inventory_cache_path", return_value=cache_path):
+                                            with mock.patch("skill_arbiter.inventory.host_id", return_value="host1234"):
+                                                with mock.patch(
+                                                    "skill_arbiter.inventory._parse_third_party_skill_attribution",
+                                                    return_value={
+                                                        "canvas": {
+                                                            "origin_skill": "canvas",
+                                                            "source_label": "openclaw",
+                                                            "intake_recommendation": "reject",
+                                                            "origin_path": "<THIRD_PARTY_CLONES>/openclaw/skills/canvas",
+                                                        }
+                                                    },
+                                                ):
+                                                    with mock.patch(
+                                                        "skill_arbiter.inventory._evaluate_skill_dir",
+                                                        return_value=("critical", ["openclaw_nullclaw_tool_surface"], [{"code": "openclaw_nullclaw_tool_surface", "title": "tool surface"}]),
+                                                    ):
+                                                        payload = build_inventory_snapshot(skills_root=skills_root, candidate_root=candidate_root)
+
+        row = next(item for item in payload["skills"] if item["name"] == "canvas")
+        self.assertEqual(row["origin"], "vscode_codex_baseline_addition")
+        self.assertEqual(row["ownership"], "baseline_addition")
+        self.assertEqual(row["legitimacy_status"], "owned_trusted")
+        self.assertEqual(row["risk_class"], "low")
+        self.assertEqual(payload["incident_count"], 0)
+
     def test_third_party_attribution_keeps_imported_skill_trusted_but_provenance_tracked(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -422,6 +505,44 @@ class InventorySnapshotTests(unittest.TestCase):
             self.assertFalse(any(item["name"] == "xurl" for item in payload["skills"]))
             self.assertEqual(payload["incident_count"], 0)
             self.assertEqual(payload["legitimacy_summary"]["blocked_hostile"], 0)
+
+    def test_watchlisted_third_party_candidate_is_kept_out_of_active_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            skills_root = root / "skills"
+            candidate_root = root / "skill-candidates"
+            cache_path = root / "inventory.json"
+            skills_root.mkdir()
+            candidate_root.mkdir()
+            _write_skill(candidate_root, "oracle", "candidate only research skill")
+
+            with mock.patch("skill_arbiter.inventory.fetch_openai_baseline", return_value={"top_level": [], "system": [], "sha": "abc123", "status": "online"}):
+                with mock.patch("skill_arbiter.inventory._parse_third_party_sources", return_value=[]):
+                    with mock.patch("skill_arbiter.inventory._parse_threat_matrix_sources", return_value=[]):
+                        with mock.patch("skill_arbiter.inventory.scan_interop_sources", return_value=[]):
+                            with mock.patch("skill_arbiter.inventory._recent_work_skill_names", return_value=set()):
+                                with mock.patch("skill_arbiter.inventory.request_local_advice", return_value="Use the local Qwen lane."):
+                                    with mock.patch("skill_arbiter.inventory.inventory_cache_path", return_value=cache_path):
+                                        with mock.patch("skill_arbiter.inventory.host_id", return_value="host1234"):
+                                            with mock.patch(
+                                                "skill_arbiter.inventory._parse_third_party_skill_attribution",
+                                                return_value={
+                                                    "oracle": {
+                                                        "origin_skill": "oracle",
+                                                        "source_label": "openclaw",
+                                                        "intake_recommendation": "manual_review",
+                                                        "origin_path": "<THIRD_PARTY_CLONES>/openclaw/skills/oracle",
+                                                    }
+                                                },
+                                            ):
+                                                with mock.patch(
+                                                    "skill_arbiter.inventory._evaluate_skill_dir",
+                                                    return_value=("low", ["ephemeral_exec_command"], [{"code": "ephemeral_exec_command", "title": "ephemeral exec"}]),
+                                                ):
+                                                    payload = build_inventory_snapshot(skills_root=skills_root, candidate_root=candidate_root)
+
+        self.assertFalse(any(item["name"] == "oracle" for item in payload["skills"]))
+        self.assertEqual(payload["incident_count"], 0)
 
 
 class AgentServerTests(unittest.TestCase):

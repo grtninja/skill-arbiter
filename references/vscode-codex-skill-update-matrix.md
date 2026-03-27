@@ -5,14 +5,14 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 
 ## Summary
 
-- Generated: `2026-03-27T22:21:59.989442Z`
+- Generated: `2026-03-27T23:20:57.131696Z`
 - Host ID: `<LOCAL_HOST_ID>`
 - Installed skills tracked: `166`
 - Official trusted: `39`
-- Owned trusted: `71`
+- Owned trusted: `78`
 - Third-party trusted: `39`
 - Third-party watch: `10`
-- Active incidents: `6`
+- Active incidents: `0`
 
 ## Installed Skill Matrix
 
@@ -28,7 +28,7 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `blucli` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
 | `bluebubbles` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
 | `camsnap` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `canvas` | `third_party_openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` | `manual_attention` |
+| `canvas` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `chatgpt-apps` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
 | `cloudflare-deploy` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
 | `code-gap-sweeping` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
@@ -62,7 +62,7 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `imsg` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
 | `jupyter-notebook` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
 | `linear` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `lobster` | `third_party_openclaw-ext` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` | `manual_attention` |
+| `lobster` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `local-comfy-wan-multigpu` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
 | `local-compute-usage` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `mcporter` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
@@ -82,7 +82,7 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `openai-docs` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
 | `openai-image-gen` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
 | `openai-whisper` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `openai-whisper-api` | `third_party_openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` | `manual_attention` |
+| `openai-whisper-api` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `openhue` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
 | `operator-language-humanizer` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `ordercli` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
@@ -92,7 +92,7 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `playwright-edge-preference` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
 | `playwright-interactive` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
 | `playwright-safe` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `plugin-creator` | `local_system` | `local_system` | `baseline_review` | `medium` | `review` | `manual_attention` |
+| `plugin-creator` | `vscode_codex_system_baseline_addition` | `baseline_addition` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
 | `prose` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
 | `qwen-training-checkpoint-eval` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `qwen-training-desktop-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
@@ -146,7 +146,7 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `skill-common-sense-engineering` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-cost-credit-governor` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-creator` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `skill-creator-openclaw` | `third_party_openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` | `manual_attention` |
+| `skill-creator-openclaw` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-dependency-fan-out-inspector` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-enforcer` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-hub` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
@@ -168,13 +168,13 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `spreadsheet` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
 | `summarize` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
 | `things-mac` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `tmux` | `third_party_openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` | `manual_attention` |
+| `tmux` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `transcribe` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
 | `trello` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
 | `usage-watcher` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `usb-export-reconcile` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `vercel-deploy` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `video-frames` | `third_party_openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` | `manual_attention` |
+| `video-frames` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `voice-call` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
 | `vrm-material-lighting-debug` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
 | `vrm-roundtrip-ci-gate` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |

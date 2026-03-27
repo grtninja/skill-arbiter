@@ -19,6 +19,7 @@ THIRD_PARTY_SOURCE_ROW_RE = re.compile(r"^\| `([^`]+)` \| `([^`]+)` \| `([^`]+)`
 THREAT_MATRIX_ROW_RE = re.compile(r"^\| `?([^|`]+?)`? \| `([^`]+)` \| ([^|]+) \| `([^`]+)` \| (.+?) \|$")
 THIRD_PARTY_SKILL_ROW_RE = re.compile(r"^\| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \|$")
 BASELINE_SKILL_BULLET_RE = re.compile(r"^\s*-\s*`?([a-z0-9._-]+)`?\s*$", re.IGNORECASE)
+BASELINE_SECTION_HEADING_RE = re.compile(r"^\s*##\s+(.+?)\s*$")
 
 
 _RADAR_FIELD_PATHS = ("changed_files_sample", "dirty_files_sample", "skill_paths")
@@ -173,7 +174,7 @@ def _ownership_for_skill(
 ) -> str:
     if origin in {"openai_builtin", "openai_builtin_system"}:
         return "official_builtin"
-    if origin == "vscode_codex_baseline_addition":
+    if origin in {"vscode_codex_baseline_addition", "vscode_codex_system_baseline_addition"}:
         return "baseline_addition"
     if third_party_source_label:
         return "third_party_candidate" if source_type == "overlay_candidate" else "third_party_imported"
@@ -329,7 +330,7 @@ def _suppress_candidate_from_active_inventory(*, ownership: str, legitimacy_stat
     return (
         local_presence == "candidate_only"
         and ownership == "third_party_candidate"
-        and legitimacy_status == "blocked_hostile"
+        and legitimacy_status in {"blocked_hostile", "third_party_watch"}
     )
 
 
@@ -372,16 +373,24 @@ def fetch_openai_baseline() -> dict[str, object]:
         return {"top_level": [], "system": [], "sha": "", "status": "offline"}
 
 
-def _load_vscode_codex_baseline_additions() -> set[str]:
+def _load_vscode_codex_baseline_additions() -> tuple[set[str], set[str]]:
     path = REPO_ROOT / "references" / "vscode-codex-baseline-additions.md"
     if not path.is_file():
-        return set()
+        return set(), set()
     additions: set[str] = set()
+    system_additions: set[str] = set()
+    section = "top_level"
     for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        heading_match = BASELINE_SECTION_HEADING_RE.match(line)
+        if heading_match:
+            heading = heading_match.group(1).strip().lower()
+            section = "system" if "system" in heading else "top_level"
+            continue
         match = BASELINE_SKILL_BULLET_RE.match(line)
         if match:
-            additions.add(match.group(1).strip())
-    return additions
+            target = system_additions if section == "system" else additions
+            target.add(match.group(1).strip())
+    return additions, system_additions
 
 
 def _parse_third_party_sources() -> list[SourceRecord]:
@@ -530,7 +539,7 @@ def build_inventory_snapshot(
     openai_baseline = fetch_openai_baseline()
     openai_top_level = set(openai_baseline["top_level"])
     openai_system = set(openai_baseline["system"])
-    vscode_baseline_additions = _load_vscode_codex_baseline_additions()
+    vscode_baseline_additions, vscode_system_additions = _load_vscode_codex_baseline_additions()
     third_party_attribution = _parse_third_party_skill_attribution()
     candidates = _candidate_names(overlay_root)
     recent_work = _recent_work_skill_names(overlay_root)
@@ -546,15 +555,22 @@ def build_inventory_snapshot(
                 for system_entry in sorted(entry.iterdir(), key=lambda item: item.name.lower()):
                     if not system_entry.is_dir():
                         continue
-                    drift_state = "ok" if system_entry.name in openai_system else "local_system_drift"
-                    risk_class = "trusted" if system_entry.name in openai_system else "medium"
-                    ownership = _ownership_for_skill(system_entry.name, "installed_system", "openai_builtin_system" if system_entry.name in openai_system else "local_system")
+                    system_origin = "local_system"
+                    system_notes: list[str] = []
+                    if system_entry.name in openai_system:
+                        system_origin = "openai_builtin_system"
+                    elif system_entry.name in vscode_system_additions:
+                        system_origin = "vscode_codex_system_baseline_addition"
+                        system_notes.append("vscode_codex_system_baseline_addition")
+                    drift_state = "ok" if system_origin != "local_system" else "local_system_drift"
+                    risk_class = "trusted" if system_origin != "local_system" else "medium"
+                    ownership = _ownership_for_skill(system_entry.name, "installed_system", system_origin)
                     legitimacy_status, legitimacy_reason = _legitimacy_for_skill(ownership, risk_class, [])
                     legitimacy_status, legitimacy_reason, review_fingerprint = _apply_review_acceptance(
                         name=system_entry.name,
                         ownership=ownership,
                         source_type="installed_system",
-                        origin="openai_builtin_system" if system_entry.name in openai_system else "local_system",
+                        origin=system_origin,
                         drift_state=drift_state,
                         codes=[],
                         legitimacy_status=legitimacy_status,
@@ -566,7 +582,7 @@ def build_inventory_snapshot(
                         SkillRecord(
                             name=system_entry.name,
                             source_type="installed_system",
-                            origin="openai_builtin_system" if system_entry.name in openai_system else "local_system",
+                            origin=system_origin,
                             description=_read_skill_description(system_entry),
                             local_presence="installed",
                             version_or_commit=str(openai_baseline.get("sha") or ""),
@@ -578,6 +594,7 @@ def build_inventory_snapshot(
                             legitimacy_status=legitimacy_status,
                             legitimacy_reason=legitimacy_reason,
                             review_fingerprint=review_fingerprint,
+                            notes=system_notes,
                         )
                     )
                 continue
@@ -598,6 +615,9 @@ def build_inventory_snapshot(
                 notes.append("installed skill not tracked by overlay or OpenAI baseline")
             if entry.name in openai_top_level:
                 origin = "openai_builtin"
+                third_party_source_label = ""
+                intake_recommendation = ""
+            elif entry.name in vscode_baseline_additions:
                 third_party_source_label = ""
                 intake_recommendation = ""
             elif third_party_source_label:

@@ -3,6 +3,19 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.2.23] - 2026-03-27
+
+### Fixed
+
+- replace token-shaped secret-hygiene test literals with runtime-generated fixtures so the public repo no longer trips published secret scanning
+- treat host-recognized Codex baseline additions as higher precedence than imported third-party attribution so baseline additions are not misclassified as blocked hostile
+- reconcile local system baseline additions and third-party candidate suppression in the live inventory so `plugin-creator` and research-only candidates do not inflate active review counts
+
+### Changed
+
+- split `references/vscode-codex-baseline-additions.md` into top-level and system sections so inventory reconciliation can classify both surfaces consistently
+- refresh the generated catalog, vetting report, and VS Code Codex matrix to match the corrected live inventory contract
+
 ## [0.2.22] - 2026-03-27
 
 ### Fixed

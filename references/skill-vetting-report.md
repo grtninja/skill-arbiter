@@ -4,12 +4,12 @@ This document is machine-generated from the live inventory model and is safe for
 
 ## Summary
 
-- Generated: `2026-03-27T22:21:57.419957Z`
+- Generated: `2026-03-27T23:20:57.119594Z`
 - Host ID: `<LOCAL_HOST_ID>`
 - Official trusted: `39`
-- Owned trusted: `71`
-- Needs review: `1`
-- Blocked hostile: `6`
+- Owned trusted: `78`
+- Needs review: `0`
+- Blocked hostile: `0`
 
 ## Interop surfaces
 
@@ -25,15 +25,18 @@ This document is machine-generated from the live inventory model and is safe for
 | Skill | Ownership | Legitimacy | Risk | Action |
 | --- | --- | --- | --- | --- |
 | `blender-vrm-visible-fit` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `canvas` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `code-gap-sweeping` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `cybertron-fabric-host-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `desktop-startup-acceptance` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `docs-alignment-lock` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `heterogeneous-stack-validation` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `lobster` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `local-comfy-wan-multigpu` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `local-compute-usage` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `media-workbench-desktop-ops` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `multitask-orchestrator` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `openai-whisper-api` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `operator-language-humanizer` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `playwright-edge-preference` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `playwright-safe` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
@@ -79,6 +82,7 @@ This document is machine-generated from the live inventory model and is safe for
 | `skill-cold-start-warm-path-optimizer` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skill-common-sense-engineering` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skill-cost-credit-governor` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `skill-creator-openclaw` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skill-dependency-fan-out-inspector` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skill-enforcer` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skill-hub` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
@@ -89,12 +93,15 @@ This document is machine-generated from the live inventory model and is safe for
 | `skills-cross-repo-radar` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skills-discovery-curation` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `skills-third-party-intake` | `repo_owned` | `owned_trusted` | `low` | `keep` |
+| `tmux` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `usage-watcher` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `usb-export-reconcile` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `video-frames` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `vrm-material-lighting-debug` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `vrm-roundtrip-ci-gate` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
 | `vroid-template-asset-sync` | `repo_owned` | `owned_trusted` | `low` | `keep` |
 | `vroid-vrma-photobooth-pipeline` | `repo_owned` | `owned_trusted` | `trusted` | `keep` |
+| `plugin-creator` | `baseline_addition` | `owned_trusted` | `low` | `keep` |
 
 ## Official Trusted
 
@@ -142,21 +149,8 @@ This document is machine-generated from the live inventory model and is safe for
 
 ## Needs Review
 
-| Skill | Ownership | Legitimacy | Risk | Action |
-| --- | --- | --- | --- | --- |
-| `plugin-creator` | `local_system` | `baseline_review` | `medium` | `review` |
+_None._
 
 ## Blocked Hostile
 
-| Skill | Ownership | Legitimacy | Risk | Action |
-| --- | --- | --- | --- | --- |
-| `canvas` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
-| `lobster` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
-| `openai-whisper-api` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
-| `skill-creator-openclaw` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
-| `tmux` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
-| `video-frames` | `third_party_imported` | `blocked_hostile` | `critical` | `quarantine` |
-
-## Review Notes
-
-- `plugin-creator`: Local system skill is present but not yet reconciled to the official baseline. Findings: _no finding codes_.
+_None._
