@@ -7,7 +7,7 @@ SkillHub stays a discovery-first source until bounded first-wave intake, lockdow
 - Query set: `review, audit, skills, workflow, debug, trace, monitor, browser`
 - First wave size: `11`
 - Clean pass count: `0`
-- Manual review count: `3`
-- Reject count: `8`
+- Manual review count: `7`
+- Reject count: `2`
 - Promotion decision: `discovery_only`
 - Promotion rationale: SkillHub remains discovery_only until the first wave proves stable through third-party intake, lockdown admission, and practical usefulness review.
