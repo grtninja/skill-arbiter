@@ -1,57 +1,46 @@
 ---
 name: skill-common-sense-engineering
-description: Apply practical human common-sense checks before and after coding work. Use when you want to prevent avoidable mistakes, keep changes complete across related surfaces, and capture obvious hygiene fixes during implementation.
+description: "Apply practical sanity checks before and after coding work to prevent avoidable mistakes. Use when verifying dependency surfaces, cleaning generated artifacts, checking privacy policy compliance, auditing artifact hygiene, or ensuring multi-skill chain guardrail evidence is present before claiming readiness."
 ---
 
 # Common-Sense Engineering
 
-Use this skill as a lightweight sanity layer for day-to-day coding work.
+Lightweight sanity layer for day-to-day coding work. Prevents avoidable mistakes by enforcing pre/post checks on every change.
 
 ## Workflow
 
-1. Clarify the real goal before choosing tools or edits.
-2. Audit the affected dependency surface before deciding the implementation boundary.
-3. Check local side effects before concluding:
-   - generated artifacts (`__pycache__`, `*.pyc`, tool caches),
-   - accidental temp/debug files,
-   - obviously stale docs references.
-4. For multi-skill chains, verify usage guardrail evidence from `usage-watcher`, `skill-cost-credit-governor`, and `skill-cold-start-warm-path-optimizer` before claiming chain readiness.
-5. If a repeatable issue appears during work, update the relevant skill/checklist in the same change.
-6. Capture short evidence of what was checked and what was fixed.
-
-## Common-Sense Checks
-
-Run from repo root:
-
-```bash
-git status --short
-python3 scripts/check_private_data_policy.py
-test -f /tmp/usage-analysis.json && test -f /tmp/usage-plan.json
-test -f /tmp/skill-cost-analysis.json && test -f /tmp/skill-cost-policy.json
-test -f /tmp/cold-warm-analysis.json && test -f /tmp/cold-warm-plan.json
-```
-
-Artifact hygiene scan:
-
-```bash
-python3 "$CODEX_HOME/skills/skill-arbiter-lockdown-admission/scripts/artifact_hygiene_scan.py" . --fail-on-found
-```
+1. **Clarify the goal** — state the objective in one sentence before choosing tools or edits.
+2. **Audit dependency surface** — trace related contracts, dependents, and operator-facing surfaces before deciding the implementation boundary.
+3. **Execute the change** — prefer existing scripts/workflows over ad hoc steps.
+4. **Run common-sense checks** before concluding:
+   ```bash
+   git status --short
+   python3 scripts/check_private_data_policy.py
+   python3 "$CODEX_HOME/skills/skill-arbiter-lockdown-admission/scripts/artifact_hygiene_scan.py" . --fail-on-found
+   ```
+5. **Verify guardrail evidence** for multi-skill chains:
+   ```bash
+   test -f /tmp/usage-analysis.json && test -f /tmp/usage-plan.json
+   test -f /tmp/skill-cost-analysis.json && test -f /tmp/skill-cost-policy.json
+   test -f /tmp/cold-warm-analysis.json && test -f /tmp/cold-warm-plan.json
+   ```
+6. **Capture evidence** — summarize what was checked, what was fixed, and any unresolved risks.
+7. If a repeatable issue appeared, update the relevant skill or checklist in the same change.
 
 ## Decision Heuristics
 
-1. If two fixes work, choose the one that leaves the dependency graph clearer and more synchronized.
-2. If a change cannot be explained in one sentence, document the scope instead of using complexity as a reason to under-fix.
+1. Between two fixes, choose the one that leaves the dependency graph clearer.
+2. If a change cannot be explained in one sentence, document the scope rather than under-fixing.
 3. If a failure can recur, codify it in a skill/workflow instead of relying on memory.
 4. If evidence is missing, do not claim success.
+
 ## Scope Boundary
 
-Use this skill only for the `skill-common-sense-engineering` lane and workflow defined in this file and its references.
-
-Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
+Use this skill only for common-sense engineering checks. Route unrelated work through `$skill-hub`.
 
 ## References
 
-- `references/common-sense-checklist.md`
+- `references/common-sense-checklist.md` — full before/during/after checklist.
 
 ## Loopback
 

@@ -1,61 +1,69 @@
 ---
 name: skill-hub
-description: Route user requests into the smallest deterministic skill chain. Use when work spans multiple domains or repositories, when lane selection is ambiguous, or when you need ordered skill handoff and loopback criteria before execution.
+description: "Coordinate multi-step workflows by routing requests into ordered skill chains — runs audits, enforces fixes, then updates docs automatically. Use when a task requires multiple tools or steps, when automating a batch pipeline across different repos, when delegating to specialized skills like usage-watcher or skill-auditor, when picking up interrupted work, or when the user says 'do X then Y' across code, docs, and policy."
 ---
 
 # Skill Hub
 
-Use this skill as the entry router for skill chaining.
+Coordinates complex requests by breaking them into ordered skill chains. Routes each part of a request to the right specialized skill, defines completion criteria, and handles re-routing when steps get blocked.
 
 ## Workflow
 
-1. Parse request scope (repositories, domains, risk level, and deliverables).
-2. Select the minimum set of skills that fully covers the request.
-3. Order skills as: routing -> guardrails -> execution -> release/policy gates.
-4. Add loopback criteria for unresolved lanes before execution begins.
-5. Capture required evidence paths for usage guardrail lanes (usage watcher, cost governor, and cold-start warm-path optimizer).
+1. **Parse request scope** — identify which repositories, domains (code, docs, policy, infra), risk level, and deliverables are involved.
+2. **Select skills** from the routing matrix below — pick the minimum set that fully covers the request.
+3. **Order the chain**: routing skills first, then guardrails (`usage-watcher`, `skill-cost-credit-governor`, `skill-cold-start-warm-path-optimizer`), then execution skills, then policy gates (`skill-enforcer`, `skill-arbiter-lockdown-admission`).
+4. **Emit chain contract** before any execution starts:
+   ```json
+   {
+     "task": "update host packaging and add new overlay skill",
+     "lanes": ["host-packaging", "skill-creation"],
+     "skills_by_lane": {
+       "host-packaging": ["repo-a-host-admin-ops", "skill-common-sense-engineering"],
+       "skill-creation": ["skill-creator-openclaw", "skill-auditor", "skill-arbiter-lockdown-admission"]
+     },
+     "evidence_paths": ["/tmp/usage-analysis.json", "/tmp/skill-cost-analysis.json"],
+     "loopback_criteria": "re-route if host validation fails or audit blocks admission",
+     "stop_conditions": ["all lanes emit evidence", "blocked lane triggers loopback", "operator cancels"]
+   }
+   ```
+5. **Fail closed** if the contract is incomplete — every field must be populated. Record the gap and suggest a bounded fallback.
 
 ## Routing Matrix
 
-Use this fast matrix before final chain output:
-
-1. Single-repo + low risk: routing lane -> execution lane -> validation lane.
-2. Multi-repo + policy risk: routing lane -> usage/cost/cold-warm guardrails -> execution lanes -> policy-enforcement lane.
-3. New or changed skills: routing lane -> guardrails -> execution -> audit lane -> lockdown-admission lane.
-4. Interrupted work: routing lane -> resume lane -> remaining deterministic lanes.
-5. Independent lanes: split into parallel chains; merge only after per-lane evidence is present.
+| Scenario | Example Request | Chain Pattern |
+| -------- | --------------- | ------------- |
+| Single-repo, low risk | "Fix a bug in the admin terminal" | `skill-hub` -> `repo-a-host-admin-ops` -> `skill-common-sense-engineering` |
+| Multi-repo, policy risk | "Sync packaging across repo-A and repo-D" | `skill-hub` -> `usage-watcher` + `skill-cost-credit-governor` -> execution skills -> `skill-enforcer` |
+| New or changed skills | "Create a new overlay skill for Blender" | `skill-hub` -> guardrails -> `skill-creator-openclaw` -> `skill-auditor` -> `skill-arbiter-lockdown-admission` |
+| Interrupted work | "Continue the release prep from yesterday" | `skill-hub` -> `request-loopback-resume` -> remaining lanes |
+| Independent lanes | "Update docs AND run host validation" | split into parallel chains; merge only after per-lane evidence is present |
 
 ## Chain Rules
 
-- Prefer one primary execution skill per independent lane.
-- Avoid optional skills unless they add deterministic value for the request.
-- For multi-repo work, include a policy-enforcement lane before finalizing code changes.
-- For new or updated skills, include auditing and lockdown-admission lanes.
+- One primary execution skill per independent lane.
+- Skip optional skills unless they add concrete value for the specific request.
+- Multi-repo work requires `skill-enforcer` before finalizing code changes.
+- New or updated skills require `skill-auditor` and `skill-arbiter-lockdown-admission`.
 - If a required skill is missing, fail closed with a bounded fallback and record the gap.
 
-## Chain Output Contract
+## Referenced Skills
 
-Emit or capture a compact chain payload before execution:
+Key skills this hub routes to (see each skill's SKILL.md for full details):
 
-- `task`
-- `lanes[]` (ordered lane identifiers)
-- `skills_by_lane`
-- `evidence_paths[]` (usage/cost/cold-warm + audit/arbiter when applicable)
-- `loopback_criteria`
-- `stop_conditions` (done, blocked, reroute)
-
-If this contract is incomplete, chain selection is incomplete and must fail closed.
+- **Guardrails**: `usage-watcher`, `skill-cost-credit-governor`, `skill-cold-start-warm-path-optimizer`
+- **Execution**: `repo-a-host-admin-ops`, `repo-b-*` skills, `skill-creator-openclaw`, domain-specific skills
+- **Policy gates**: `skill-enforcer`, `skill-arbiter-lockdown-admission`, `skill-auditor`
+- **Resume**: `request-loopback-resume`
+- **Hygiene**: `skill-common-sense-engineering`
 
 ## Scope Boundary
 
-Use this skill only for request-to-chain routing and loopback decisioning.
-
-Do not use this skill to implement repository changes directly.
+Use this skill only for request-to-chain routing. Do not use it to implement repository changes directly — delegate to the execution skills in the chain.
 
 ## Loopback
 
-If any lane remains unresolved, blocked, or ambiguous:
+If any part of the chain is blocked or ambiguous:
 
-1. Capture lane blockers and current evidence.
+1. Capture blockers and current evidence from the stuck lane.
 2. Re-run routing through `$skill-hub` with updated constraints.
-3. Resume only when every lane has a deterministic next action.
+3. Resume only when every lane has a concrete next action.
