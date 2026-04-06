@@ -1,0 +1,4 @@
+interface:
+  display_name: "AvatarCore Desktop Acceptance"
+  short_description: "Enforce combined frontend/backend launcher acceptance for AvatarCore."
+  default_prompt: "Use $avatarcore-desktop-acceptance when AvatarCore needs a real workstation app launcher, stale-window cleanup, visible frontend proof, or desktop acceptance validation."

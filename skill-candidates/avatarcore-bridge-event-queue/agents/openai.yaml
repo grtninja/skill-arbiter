@@ -1,0 +1,4 @@
+interface:
+  display_name: "AvatarCore Bridge Event Queue"
+  short_description: "Operate AvatarCore bridge sessions and paired event queues."
+  default_prompt: "Use $avatarcore-bridge-event-queue when AvatarCore bridge heartbeats, engine events, directives, or drain semantics change together."

@@ -10,18 +10,25 @@ Use this skill to build a practical skill portfolio for a repo.
 ## Workflow
 
 1. Route the request through `$skill-hub` for baseline chain selection.
-2. Inventory available skills and currently installed skills.
-3. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
-4. Map repository workflows to missing capabilities.
-5. Include practical baseline checks via `$skill-common-sense-engineering`.
-6. Run `$usage-watcher` and capture usage mode plus analysis/plan artifacts.
-7. Run `$skill-cost-credit-governor` and capture analysis/policy artifacts.
-8. Run `$skill-cold-start-warm-path-optimizer` and capture cold/warm analysis/plan artifacts.
-9. Include quality/compliance lanes where needed (`$skill-auditor`, `$skill-enforcer`).
-10. For candidate additions/updates, classify each skill as `unique` vs `upgrade` using `$skill-auditor`.
-11. Require arbiter evidence status `pass` before admitting candidates.
-12. Propose a minimal prioritized skill set (core first, optional second) with usage guardrail status.
-13. Provide admission plan using local `skill-arbiter` lockdown flow.
+2. Capture the current meta-harness authority contract for the curation pass:
+   - PC Control evidence/status surfaces first
+   - canonical repo root `G:\GitHub` on the maintainer workstation
+   - authoritative model lanes `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1`
+   - `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface
+3. Inventory available skills and currently installed skills.
+4. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
+5. When the ask is about recent Codex work, inspect recent local workstreams/continuity artifacts as evidence in addition to git history.
+6. Map repository workflows to missing capabilities.
+7. Include practical baseline checks via `$skill-common-sense-engineering`.
+8. Run `$usage-watcher` and capture usage mode plus analysis/plan artifacts.
+9. Run `$skill-cost-credit-governor` and capture analysis/policy artifacts.
+10. Run `$skill-cold-start-warm-path-optimizer` and capture cold/warm analysis/plan artifacts.
+11. Include quality/compliance lanes where needed (`$skill-auditor`, `$skill-enforcer`).
+12. For candidate additions/updates, classify each skill as `unique` vs `upgrade` using `$skill-auditor`.
+13. Require arbiter evidence status `pass` before admitting candidates.
+14. Propose a minimal prioritized skill set (core first, optional second) with usage guardrail status.
+15. Provide admission plan using local `skill-arbiter` lockdown flow.
+16. For meta-harness or whole-PC curation, normalize repo paths to `G:\GitHub`, capture PC Control status/evidence first, and treat `http://127.0.0.1:9000/v1` plus `http://127.0.0.1:2337/v1` as the authoritative model lanes.
 
 ## Discovery Commands
 

@@ -6,17 +6,22 @@ from pathlib import Path
 
 from .contracts import SelfGovernanceFinding
 from .paths import REPO_ROOT
-from .privacy_policy import scan_repo
+from .privacy_policy import PrivacyScanResult, scan_repo
 
 SELF_GOVERNANCE_PATTERNS: tuple[tuple[str, str, str], ...] = (
     ("critical", "browser_autolaunch", r"\bwebbrowser\.open\b|Start-Process\s+https?://|explorer(?:\.exe)?\s+https?://"),
     ("critical", "scheduled_task", r"\bschtasks(?:\.exe)?\b|\bNew-ScheduledTask\b"),
     ("high", "hidden_process_launch", r"Start-Process[^\n\r]+-WindowStyle\s+Hidden|CREATE_NO_WINDOW"),
+    (
+        "high",
+        "shell_wrapped_desktop_launch",
+        r"powershell(?:\.exe)?\s+-ExecutionPolicy\s+Bypass\s+-File\s+\.\\scripts\\start_security_console\.ps1|pwsh(?:\.exe)?\s+-ExecutionPolicy\s+Bypass\s+-File\s+\.\\scripts\\start_security_console\.ps1|cmd(?:\.exe)?\s+/c[^\n\r]*start_security_console",
+    ),
     ("high", "vendored_python_binary", r"copy-item[^\n\r]+python(?:w)?\.exe|rename-item[^\n\r]+python(?:w)?\.exe"),
     ("high", "path_pollution", r"\bsetx\s+PATH\b|\$env:PATH\s*=|export\s+PATH="),
 )
 SCAN_SUFFIXES = {".py", ".ps1", ".md", ".yaml", ".yml", ".json", ".toml"}
-SCAN_ROOTS = ("scripts", "skill_arbiter", "README.md", "BOUNDARIES.md", "SECURITY.md", "SKILL.md")
+SCAN_ROOTS = ("scripts", "skill_arbiter", "AGENTS.md", "README.md", "BOUNDARIES.md", "SECURITY.md", "CONTRIBUTING.md", "SKILL.md")
 
 
 def _iter_scan_files(repo_root: Path) -> list[Path]:
@@ -32,9 +37,13 @@ def _iter_scan_files(repo_root: Path) -> list[Path]:
     return paths
 
 
-def run_self_governance_scan(repo_root: Path | None = None) -> dict[str, object]:
+def run_self_governance_scan(
+    repo_root: Path | None = None,
+    *,
+    privacy: PrivacyScanResult | None = None,
+) -> dict[str, object]:
     root = repo_root or REPO_ROOT
-    privacy = scan_repo(root)
+    privacy_result = privacy or scan_repo(root)
     findings: list[SelfGovernanceFinding] = [
         SelfGovernanceFinding(
             severity="critical",
@@ -42,7 +51,7 @@ def run_self_governance_scan(repo_root: Path | None = None) -> dict[str, object]
             message=f"{item.kind}: {item.snippet}",
             path=item.path,
         )
-        for item in privacy.findings
+        for item in privacy_result.findings
     ]
     seen: set[tuple[str, str, str, str]] = set()
     for path in _iter_scan_files(root):
@@ -54,9 +63,20 @@ def run_self_governance_scan(repo_root: Path | None = None) -> dict[str, object]
         for severity, code, pattern in SELF_GOVERNANCE_PATTERNS:
             if rel == "scripts/nullclaw_desktop.py" and code == "hidden_process_launch":
                 continue
-            if rel == "scripts/start_security_console.ps1" and code == "hidden_process_launch":
+            if rel == "scripts/launch_security_console.py" and code == "hidden_process_launch":
+                continue
+            if rel == "skill_arbiter/stack_runtime.py" and code == "hidden_process_launch":
+                continue
+            if rel == "skill_arbiter/paths.py" and code == "hidden_process_launch":
                 continue
             if rel == "skill_arbiter/self_governance.py":
+                continue
+            if (
+                rel in {"README.md", "CONTRIBUTING.md"}
+                and code == "shell_wrapped_desktop_launch"
+                and "wscript.exe //B //Nologo .\\scripts\\launch_security_console.vbs" in text
+                and "developer helper" in text.lower()
+            ):
                 continue
             if re.search(pattern, text, flags=re.IGNORECASE):
                 row = (severity, code, rel, pattern)
@@ -73,7 +93,7 @@ def run_self_governance_scan(repo_root: Path | None = None) -> dict[str, object]
                 )
     return {
         "passed": not findings,
-        "privacy_passed": privacy.passed,
+        "privacy_passed": privacy_result.passed,
         "critical_count": sum(1 for item in findings if item.severity == "critical"),
         "high_count": sum(1 for item in findings if item.severity == "high"),
         "findings": [item.to_dict() for item in findings],

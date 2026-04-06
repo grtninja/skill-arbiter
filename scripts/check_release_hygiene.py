@@ -77,6 +77,27 @@ def changed_files_since_merge_base(base_ref: str) -> tuple[str, list[str]]:
     return merge_base, files
 
 
+def working_tree_changed_files() -> list[str]:
+    """Return tracked and untracked working-tree file changes."""
+
+    buckets = [
+        run(["git", "diff", "--name-only"]).stdout.splitlines(),
+        run(["git", "diff", "--cached", "--name-only"]).stdout.splitlines(),
+        run(["git", "ls-files", "--others", "--exclude-standard"]).stdout.splitlines(),
+    ]
+    files = {line.strip() for bucket in buckets for line in bucket if line.strip()}
+    return sorted(files)
+
+
+def collect_changed_files(base_ref: str) -> tuple[str, list[str]]:
+    """Return merge-base plus committed and open-worktree changes."""
+
+    merge_base, committed_files = changed_files_since_merge_base(base_ref)
+    all_files = set(committed_files)
+    all_files.update(working_tree_changed_files())
+    return merge_base, sorted(all_files)
+
+
 def is_release_impacting(path: str) -> bool:
     """Return True when a changed file should require release metadata updates."""
 
@@ -141,7 +162,7 @@ def main() -> int:
     errors: list[str] = []
     try:
         base_ref = resolve_base_ref(args.base_ref)
-        merge_base, changed_files = changed_files_since_merge_base(base_ref)
+        merge_base, changed_files = collect_changed_files(base_ref)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

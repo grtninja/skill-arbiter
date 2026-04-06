@@ -32,10 +32,15 @@ python skill-candidates/cybertron-fabric-host-ops/scripts/cybertron_repo_parity.
 
 python skill-candidates/cybertron-fabric-host-ops/scripts/cybertron_model_matrix_check.py --json-out .tmp/cybertron-model-matrix.json
 
-python skill-candidates/cybertron-fabric-host-ops/scripts/cybertron_host_readiness.py --host CYBERTRON_CORE --ports 5985 3389 1234 8892 --json-out .tmp/cybertron-host-readiness.json
+python skill-candidates/cybertron-fabric-host-ops/scripts/cybertron_host_readiness.py --host CYBERTRON_CORE --ports 5985 3389 9000 2337 8892 --json-out .tmp/cybertron-host-readiness.json
 
 python skill-candidates/cybertron-fabric-host-ops/scripts/cybertron_fabric_host_audit.py --skill-root skill-candidates/cybertron-fabric-host-ops --json-out .tmp/cybertron-fabric-host-audit.json
 ```
+
+Model-plane note:
+
+- Treat `:9000` and `:2337` as authoritative model lanes.
+- Treat `:1234` only as a non-authoritative operator surface if it is inspected at all.
 
 ## Guardrails
 

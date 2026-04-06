@@ -24,6 +24,7 @@ Thumbs.db
 .blacklist.local
 arbitration-report*.json
 .githooks/
+.codex-index/
 evidence/
 references/cross_repo_open_work_radar_*.json
 apps/nullclaw-desktop/runtime/

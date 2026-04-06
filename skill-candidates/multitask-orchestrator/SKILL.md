@@ -51,9 +51,10 @@ Each lane must provide:
 
 - Keep lane scope minimal; avoid cross-lane file overlap when possible.
 - Prefer deterministic scripts/evidence over free-form narrative.
+- Healthy local OpenClaw-compatible subagents are preferred when a lane needs bounded sidecar analysis.
+- If cloud sidecars are required, keep them lower-reasoning and low-cost.
 - Do not suppress failing lane results to unblock completion.
 
 ## References
 
 - `references/lane-contract.md`
-

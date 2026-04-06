@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRM Sandbox Startup Acceptance"
+  short_description: "Validate VRM Sandbox launch acceptance with shim-first local runtime proof."
+  default_prompt: "Use $vrm-sandbox-startup-acceptance when VRM Sandbox launch behavior, shim-first authority, frontend/backend coupling, or runtime handoff acceptance must be verified end to end."

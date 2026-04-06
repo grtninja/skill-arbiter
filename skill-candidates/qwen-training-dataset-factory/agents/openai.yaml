@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qwen Training Dataset Factory"
+  short_description: "Prepare and validate local Qwen training datasets, manifests, and weighted studies."
+  default_prompt: "Use $qwen-training-dataset-factory when local Qwen training work needs dataset export, enrichment, label distillation, weighted-study assembly, or training-input validation."

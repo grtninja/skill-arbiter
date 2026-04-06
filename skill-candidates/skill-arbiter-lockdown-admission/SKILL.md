@@ -14,6 +14,7 @@ Use this skill to admit local skills safely.
 3. Run arbitration in local-only lockdown mode.
 4. Confirm pass/fail actions and persisted lists.
 5. Keep only passing skills whitelisted and immutable.
+6. Reject or repair candidates that still encode legacy `Documents\GitHub` roots instead of canonical `G:\GitHub`, or that treat `:1234` as anything other than a non-authoritative operator surface.
 
 ## Maintenance Trigger
 

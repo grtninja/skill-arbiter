@@ -66,6 +66,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--show", action="store_true", help="Show current ledger status without recording")
     parser.add_argument("--recent", type=int, default=5, help="Number of recent events to display with --show")
     parser.add_argument("--dry-run", action="store_true", help="Compute score without writing ledger")
+    parser.add_argument("--bonus-points", type=int, default=0, help="Optional bounded bonus XP, for example from quest completion")
+    parser.add_argument("--bonus-label", default="", help="Label for optional bonus XP")
+    parser.add_argument("--context-json", default="", help="Optional JSON object to attach as event context")
     return parser.parse_args()
 
 
@@ -277,6 +280,9 @@ def compute_score_event(
     arbiter_report: str = "",
     audit_report: str = "",
     enforcer_pass: bool | None = None,
+    bonus_points: int = 0,
+    bonus_label: str = "",
+    context: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Compute one score event without writing the ledger."""
 
@@ -307,7 +313,12 @@ def compute_score_event(
     else:
         streak = 0
 
-    xp_delta = workflow_points + arbiter_points + auditor_points + enforcer_points + bonus
+    extra_bonus = max(-250, min(250, int(bonus_points or 0)))
+    if extra_bonus:
+        label = str(bonus_label or "manual_bonus").strip() or "manual_bonus"
+        breakdown.append(Breakdown(category="bonus", points=extra_bonus, detail=label))
+
+    xp_delta = workflow_points + arbiter_points + auditor_points + enforcer_points + bonus + extra_bonus
     xp_delta = max(-1000, min(1000, xp_delta))
     total_xp = max(0, int(ledger.get("total_xp", 0)) + xp_delta)
     level, progress_xp, next_needed = level_and_progress(total_xp)
@@ -327,6 +338,7 @@ def compute_score_event(
         "arbiter_report": arbiter_report,
         "audit_report": audit_report,
         "enforcer_pass": enforcer_pass,
+        "context": context or {},
     }
     return {
         "event": event,
@@ -355,6 +367,9 @@ def record_score_event(
     audit_report: str = "",
     enforcer_pass: bool | None = None,
     dry_run: bool = False,
+    bonus_points: int = 0,
+    bonus_label: str = "",
+    context: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Compute and optionally persist one score event."""
 
@@ -367,6 +382,9 @@ def record_score_event(
         arbiter_report=arbiter_report,
         audit_report=audit_report,
         enforcer_pass=enforcer_pass,
+        bonus_points=bonus_points,
+        bonus_label=bonus_label,
+        context=context,
     )
     if not dry_run:
         events = ledger.get("events")
@@ -424,6 +442,18 @@ def main() -> int:
         print_status(ledger, args.recent)
         return 0
 
+    context_payload: dict[str, object] | None = None
+    if args.context_json:
+        try:
+            loaded_context = json.loads(args.context_json)
+        except json.JSONDecodeError as exc:
+            print(f"error: invalid --context-json: {exc}", file=sys.stderr)
+            return 2
+        if not isinstance(loaded_context, dict):
+            print("error: --context-json must decode to an object", file=sys.stderr)
+            return 2
+        context_payload = loaded_context
+
     try:
         payload = record_score_event(
             ledger_path=ledger_path,
@@ -434,6 +464,9 @@ def main() -> int:
             audit_report=args.audit_report,
             enforcer_pass=args.enforcer_pass,
             dry_run=args.dry_run,
+            bonus_points=args.bonus_points,
+            bonus_label=args.bonus_label,
+            context=context_payload,
         )
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)

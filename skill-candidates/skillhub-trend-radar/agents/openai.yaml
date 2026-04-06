@@ -1,0 +1,4 @@
+interface:
+  display_name: "SkillHub Trend Radar"
+  short_description: "Track SkillHub trend drift and rewrite-worthy families."
+  default_prompt: "Use $skillhub-trend-radar when SkillHub topics, trend families, or rewrite watchlists need a bounded refresh."

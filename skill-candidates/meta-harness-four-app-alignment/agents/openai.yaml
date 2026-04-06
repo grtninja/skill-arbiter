@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Harness Four-App Alignment"
+  short_description: "Align the four core local app surfaces under one meta-harness contract"
+  default_prompt: "Use $meta-harness-four-app-alignment when PC Control, shim/control-center, STARFRAME app, and avatar-runtime surfaces need one coordinated pass to normalize authority, continuity, repo-root, and endpoint contracts."

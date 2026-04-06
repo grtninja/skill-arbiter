@@ -37,9 +37,14 @@ Check auxiliary endpoints:
 
 ```powershell
 curl http://127.0.0.1:8188/system_stats
-curl http://127.0.0.1:1234/v1/models
+curl http://127.0.0.1:9000/v1/models
+curl http://127.0.0.1:2337/v1/models
 python tools/hybrid_doctor.py --pretty
 ```
+
+LM Studio note:
+
+- `http://127.0.0.1:1234/v1` is a non-authoritative operator surface only; do not use it as the success gate for hybrid readiness.
 
 Hardware strict (Windows-only):
 

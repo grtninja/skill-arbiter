@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross-Repo Open Diff Reconciliation"
+  short_description: "Map recent open diffs to deterministic remediation skills"
+  default_prompt: "Use $cross-repo-open-diff-reconciliation when several repos have recent open diffs and you need a deterministic audit that classifies release, docs, tests, startup, and policy gaps before patching or curating new skills."

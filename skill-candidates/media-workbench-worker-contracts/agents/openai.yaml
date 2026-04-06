@@ -1,0 +1,4 @@
+interface:
+  display_name: "Media Workbench Worker Contracts"
+  short_description: "Protect the 9040 worker contract, queue lifecycle, and desktop-visible state."
+  default_prompt: "Use $media-workbench-worker-contracts when the Media Workbench 9040 worker, job/status payloads, resumable work items, or desktop-to-worker contract surfaces change."

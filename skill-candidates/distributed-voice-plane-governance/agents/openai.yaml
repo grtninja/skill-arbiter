@@ -1,0 +1,4 @@
+interface:
+  display_name: "Distributed Voice Plane Governance"
+  short_description: "Keep Penny's local-first speech plane aligned across repos."
+  default_prompt: "Use $distributed-voice-plane-governance when ASR, TTS, endpoint voice behavior, or backend routing shift across the STARFRAME speech fabric."

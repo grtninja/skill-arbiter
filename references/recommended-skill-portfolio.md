@@ -63,6 +63,10 @@ Use these when changing or admitting skills:
 8. `skills-discovery-curation`
 9. `docs-alignment-lock`
 10. `cybertron-fabric-host-ops`
+11. `skillhub-marketplace-sync`
+12. `skillhub-trend-radar`
+13. `skillhub-source-reputation-watch`
+14. `local-trace-evidence-correlation`
 
 Use `cybertron-fabric-host-ops` for paired-host readiness, repo parity, WinRM auth-state, distributed host-terminal bootstrap, canonical model-matrix validation, bounded offload checks, and avatar display readiness.
 
@@ -114,11 +118,12 @@ Admit or keep:
 4. `heterogeneous-stack-validation`
 5. `local-compute-usage`
 6. `multitask-orchestrator`
+7. `media-workbench-worker-contracts`
 
-Planned dedicated additions:
+Curated candidate additions:
 
-1. `media-workbench-worker-contracts`
-2. `media-workbench-indexing-governance`
+1. `media-workbench-indexing-governance`
+2. `media-staging-prompthead-ops`
 
 Operator-language assist:
 
@@ -135,11 +140,12 @@ Admit or keep:
 5. `heterogeneous-stack-validation`
 6. `local-compute-usage`
 7. `usage-watcher`
+8. `qwen-training-dataset-factory`
 
-Planned dedicated additions:
+Curated candidate additions:
 
 1. `qwen-training-campaign-ops`
-2. `qwen-training-dataset-factory`
+2. `dataset-provenance-manifest-governance`
 
 Operator-language assist:
 
@@ -153,11 +159,13 @@ Admit or keep:
 2. `desktop-startup-acceptance`
 3. `local-compute-usage`
 4. `usage-watcher`
+5. `avatarcore-desktop-acceptance`
 
-Planned dedicated additions:
+Curated candidate additions:
 
-1. `avatarcore-desktop-acceptance`
-2. `avatarcore-runtime-handoff-ops`
+1. `avatarcore-runtime-handoff-ops`
+2. `avatarcore-bridge-event-queue`
+3. `distributed-voice-plane-governance`
 
 Operator-language assist:
 
@@ -170,11 +178,14 @@ Admit or keep:
 1. `desktop-startup-acceptance`
 2. `local-compute-usage`
 3. `usage-watcher`
+4. `meta-harness-four-app-alignment`
+5. `shockwave-dashboard-ops`
+6. `shockwave-operator-handoff`
 
-Planned dedicated additions:
+Curated candidate additions:
 
-1. `shockwave-dashboard-ops`
-2. `shockwave-operator-handoff`
+1. `shockwave-voice-command-governance`
+2. `cross-app-queue-backpressure-governance`
 
 Operator-language assist:
 
@@ -190,7 +201,7 @@ Admit or keep:
 4. `local-compute-usage`
 5. `multitask-orchestrator`
 
-Planned dedicated additions:
+Curated candidate additions:
 
 1. `vrm-private-local-asset-staging`
 2. `vroid-safe-ops-workflow`
@@ -210,12 +221,12 @@ Admit or keep:
 5. `vrm-roundtrip-ci-gate`
 6. `desktop-startup-acceptance`
 7. `local-compute-usage`
+8. `vrm-sandbox-startup-acceptance`
 
 Planned dedicated additions:
 
-1. `vrm-sandbox-startup-acceptance`
-2. `vrm-sandbox-avatar-host-smoke`
-3. `vrm-sandbox-audio-overlay-ops`
+1. `vrm-sandbox-avatar-host-smoke`
+2. `vrm-sandbox-audio-overlay-ops`
 
 Operator-language assist:
 
@@ -275,6 +286,21 @@ Advanced:
 2. `repo-d-setup-diagnostics`
 3. `repo-d-local-packaging`
 4. `repo-d-mass-index-ops`
+
+## Deep SkillHub Pass Candidates
+
+These came out of the broader SkillHub topic sweep and are intentionally repo-owned rewrites, not direct upstream imports:
+
+1. `skillhub-trend-radar`
+2. `skillhub-source-reputation-watch`
+3. `cross-app-queue-backpressure-governance`
+4. `local-trace-evidence-correlation`
+5. `distributed-voice-plane-governance`
+6. `endpoint-admission-voice-actions`
+7. `dataset-provenance-manifest-governance`
+8. `media-staging-prompthead-ops`
+9. `avatarcore-bridge-event-queue`
+10. `shockwave-voice-command-governance`
 
 ## Large-Repo Discovery Set
 

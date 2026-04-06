@@ -1,0 +1,4 @@
+interface:
+  display_name: "SkillHub Source Reputation Watch"
+  short_description: "Track SkillHub source posture and promotion blockers over time."
+  default_prompt: "Use $skillhub-source-reputation-watch when SkillHub source reputation, promotion blockers, or repeated fetch mismatches need a bounded review."

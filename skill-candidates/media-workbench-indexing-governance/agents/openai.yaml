@@ -1,0 +1,4 @@
+interface:
+  display_name: "Media Workbench Indexing Governance"
+  short_description: "Govern metadata-only indexing, local catalogs, and opt-in derived indexing in Media Workbench."
+  default_prompt: "Use $media-workbench-indexing-governance when Media Workbench indexing policy, manifests, catalog builders, or metadata-only guarantees need a coordinated pass."

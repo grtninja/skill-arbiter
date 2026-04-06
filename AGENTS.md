@@ -13,6 +13,11 @@ Repository rules for `skill-arbiter`.
   - self-checks
   - inventory refresh
   - operator actions enabled
+- Desktop launch acceptance is strict:
+  - no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open during startup
+  - transient empty-shell flash during startup counts as a failed launch, not a cosmetic issue
+  - PowerShell or `cmd` wrapper commands are developer helper paths only, not accepted public desktop launch surfaces
+  - canonical no-shell launch surfaces are `scripts/launch_security_console.vbs` and installed shortcuts targeting `wscript.exe`
 - Do not launch external browsers as part of normal app behavior.
 - Do not silently create scheduled tasks, PATH mutations, hidden workers, or vendored runtime drops.
 
@@ -22,6 +27,9 @@ Required placeholders:
 - Skills root: `$CODEX_HOME/skills`
 - User paths: `$env:USERPROFILE\\...`
 - External local roots: `<external-candidate-root>`
+- Canonical STARFRAME repo root on this workstation: `G:\\GitHub`
+- Authoritative model planes for meta-harness work: `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1`
+- Non-authoritative operator surface: `http://127.0.0.1:1234/v1`
 
 ## 2) Hard privacy lock
 
@@ -56,7 +64,7 @@ python3 scripts/generate_skill_catalog.py
 python3 scripts/check_private_data_policy.py
 python3 scripts/check_public_release.py
 pytest -q
-python3 -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/public_readiness.py
+python3 -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py
 ```
 
 ## 5) Skill authoring and governance rules
@@ -74,7 +82,10 @@ python3 -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_pol
 - Default lane is a fast local Qwen-compatible model exposed through an OpenAI-compatible endpoint.
 - Defaults:
   - `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
+  - `STARFRAME_HOSTED_LARGE_BASE_URL=http://127.0.0.1:2337/v1`
   - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
+- Candidate skills that encode workstation model authority must treat `:9000` and `:2337` as authoritative, and `:1234` only as a non-authoritative operator surface.
+- Candidate skills that encode local repo paths must normalize legacy `Documents\\GitHub` aliases to `G:\\GitHub`.
 - Do not point the advisor at remote hosts by default.
 - Keep the public repo host-agnostic: the advisor must work with any loopback-hosted OpenAI-compatible coding-model surface, including LM Studio, MemryX shim lanes, and other local model software.
 - Do not hard-code one private workstation topology into repo-tracked docs unless it is expressed as a placeholder or compatibility example.
@@ -125,4 +136,5 @@ New Skill Unlocked: <SkillName>
 - Healthy local OpenClaw-compatible subagents are the preferred lane for quick bounded tasks.
 - Cloud subagents must default to lower-reasoning, low-cost sidecar work, preserving premium reasoning budget for the main lane.
 - Fast mode is not permitted as an automatic escalation path in this repo's governed subagent workflow.
+- Substantial governed work should be framed and recorded as quests so each request has a human-readable chain, checkpoints, and a usable end-state, with cumulative agent progression rising from repeated quest completion.
 - If the user explicitly names skills, use all named skills in that turn.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Media Staging Prompthead Ops"
+  short_description: "Operate staging, prompt-head ordering, and resume-safe media flow."
+  default_prompt: "Use $media-staging-prompthead-ops when Media Workbench staging, prompt-head generation order, preview truth, or resumable draft flow change together."

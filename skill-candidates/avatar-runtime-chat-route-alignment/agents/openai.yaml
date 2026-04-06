@@ -1,0 +1,4 @@
+interface:
+  display_name: "Avatar Runtime Chat-Route Alignment"
+  short_description: "Align chat routing, autonomy, speech fallback, and runtime UI state across avatar apps."
+  default_prompt: "Use $avatar-runtime-chat-route-alignment when avatar-facing desktop apps need coordinated fixes across chat routing, autonomy loops, live research, speech fallback, and runtime-visible UI state."

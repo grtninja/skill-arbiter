@@ -82,13 +82,15 @@ class StackRuntimeTests(unittest.TestCase):
         with mock.patch.object(stack_runtime.os, "name", "nt"):
             with mock.patch.object(stack_runtime.subprocess, "STARTUPINFO", _StartupInfo, create=True):
                 with mock.patch.object(stack_runtime.subprocess, "STARTF_USESHOWWINDOW", 0x0001, create=True):
-                    payload = stack_runtime._windows_no_window_subprocess_kwargs({"check": False})
+                    with mock.patch.object(stack_runtime.subprocess, "CREATE_NO_WINDOW", 0x08000000, create=True):
+                        payload = stack_runtime._windows_no_window_subprocess_kwargs({"check": False})
 
         self.assertFalse(payload["check"])
         startup = payload.get("startupinfo")
         self.assertIsNotNone(startup)
         self.assertTrue(int(startup.dwFlags) & 0x0001)
         self.assertEqual(int(startup.wShowWindow), 0)
+        self.assertEqual(int(payload.get("creationflags") or 0), 0x08000000)
 
     def test_powershell_json_uses_hidden_windows_flags(self) -> None:
         completed = mock.Mock(returncode=0, stdout="[]")
@@ -105,8 +107,9 @@ class StackRuntimeTests(unittest.TestCase):
             ):
                 with mock.patch.object(stack_runtime.subprocess, "STARTUPINFO", _StartupInfo, create=True):
                     with mock.patch.object(stack_runtime.subprocess, "STARTF_USESHOWWINDOW", 0x0001, create=True):
-                        with mock.patch.object(stack_runtime.subprocess, "run", return_value=completed) as run_mock:
-                            payload = stack_runtime._powershell_json("Get-Process")
+                        with mock.patch.object(stack_runtime.subprocess, "CREATE_NO_WINDOW", 0x08000000, create=True):
+                            with mock.patch.object(stack_runtime.subprocess, "run", return_value=completed) as run_mock:
+                                payload = stack_runtime._powershell_json("Get-Process")
 
         self.assertEqual(payload, [])
         args, kwargs = run_mock.call_args
@@ -124,6 +127,7 @@ class StackRuntimeTests(unittest.TestCase):
             ],
         )
         self.assertIn("startupinfo", kwargs)
+        self.assertEqual(int(kwargs.get("creationflags") or 0), 0x08000000)
 
     def test_process_rows_prefer_psutil_over_powershell(self) -> None:
         proc = mock.Mock(info={"name": "python.exe", "pid": 42, "cmdline": ["python.exe", "skill-arbiter", "worker.py"]})
@@ -149,6 +153,21 @@ class StackRuntimeTests(unittest.TestCase):
 
         self.assertEqual(rows, [{"Name": "Code.exe", "ProcessId": 77, "CommandLine": "Code.exe workspace.code-workspace"}])
         shell_mock.assert_not_called()
+
+    def test_local_supervision_snapshot_skips_live_advisor_chat_by_default(self) -> None:
+        stack_runtime._LOCAL_SUPERVISION_CACHE["expires_at"] = 0.0
+        stack_runtime._LOCAL_SUPERVISION_CACHE["payload"] = None
+
+        with mock.patch("skill_arbiter.stack_runtime._process_rows", return_value=[]):
+            with mock.patch("skill_arbiter.stack_runtime._codex_rows", return_value=[]):
+                with mock.patch("skill_arbiter.stack_runtime.available_models", return_value=["radeon-qwen3.5-4b"]):
+                    with mock.patch("skill_arbiter.stack_runtime.advisor_model", return_value="radeon-qwen3.5-4b"):
+                        with mock.patch("skill_arbiter.stack_runtime.request_local_advice") as advice_mock:
+                            payload = stack_runtime._local_supervision_snapshot()
+
+        advice_mock.assert_not_called()
+        self.assertEqual(payload["advisor"]["selected_model"], "radeon-qwen3.5-4b")
+        self.assertIn("local Qwen lane", payload["advisor"]["note"])
 
 
 if __name__ == "__main__":

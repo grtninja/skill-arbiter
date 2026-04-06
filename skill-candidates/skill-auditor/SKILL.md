@@ -15,7 +15,8 @@ Use this skill to classify and gate new or updated skills.
    - frontmatter completeness (`name`, `description`),
    - `agents/openai.yaml` presence,
    - size/readability guardrails,
-   - required arbiter evidence when enabled.
+   - required arbiter evidence when enabled,
+   - meta-harness drift such as legacy `Documents\GitHub` roots or `:1234` treated as an authority surface.
 4. Review findings by severity (`high`, `medium`, `low`) and fix failures.
 5. Re-run until `high_count=0` for admission-ready output.
 
@@ -47,6 +48,7 @@ python3 scripts/skill_audit.py \
 - `upgrade`: near-peer overlap indicates refinement/extension of an existing lane.
 - `high` findings block completion.
 - `medium` findings should be addressed before admission when possible.
+- Meta-harness-sensitive skills should also encode the canonical `G:\GitHub` root contract, authoritative `:9000/:2337` model lanes, and PC Control-first evidence rules where applicable.
 
 ## Scope Boundary
 

@@ -9,6 +9,33 @@ from .paths import REPO_ROOT
 LEGACY_LEVELS_PATH = REPO_ROOT / "references" / "skill-progression.md"
 
 
+def _agent_rank(level: int) -> str:
+    if level >= 10:
+        return "legendary"
+    if level >= 8:
+        return "operator_critical"
+    if level >= 6:
+        return "system_anchor"
+    if level >= 4:
+        return "multi_lane"
+    if level >= 2:
+        return "functional"
+    return "baseline"
+
+
+def _agent_progression(payload: dict[str, object]) -> dict[str, object]:
+    level = int(payload.get("level") or 1)
+    return {
+        "level": level,
+        "total_xp": int(payload.get("total_xp") or 0),
+        "rank": _agent_rank(level),
+        "streak": int(payload.get("streak") or 0),
+        "best_streak": int(payload.get("best_streak") or 0),
+        "level_progress": int(payload.get("level_progress") or 0),
+        "level_next_needed": int(payload.get("level_next_needed") or 0),
+    }
+
+
 def original_skill_levels(path: Path | None = None) -> list[dict[str, object]]:
     target = path or LEGACY_LEVELS_PATH
     if not target.is_file():
@@ -103,6 +130,19 @@ def status_payload(inventory: dict[str, object], ledger_path: Path | None = None
     payload["original_skill_count"] = len(levels)
     payload["inventory_skill_count"] = int(inventory.get("skill_count") or 0)
     payload["incident_count"] = int(inventory.get("incident_count") or 0)
+    payload["agent_progression"] = _agent_progression(payload)
+    try:
+        from .quest_runtime import status_payload as quest_status_payload
+
+        quest_status = quest_status_payload(inventory, recent=recent)
+    except Exception:
+        quest_status = {"quest_count": 0, "completed_count": 0, "top_skills": [], "active_chains": []}
+    payload["quest_progression"] = {
+        "quest_count": int(quest_status.get("quest_count") or 0),
+        "completed_count": int(quest_status.get("completed_count") or 0),
+        "top_skills": quest_status.get("top_skills", []),
+        "active_chains": quest_status.get("active_chains", []),
+    }
     return payload
 
 
@@ -117,6 +157,9 @@ def record_payload(
     audit_report: str = "",
     enforcer_pass: bool | None = None,
     dry_run: bool = False,
+    bonus_points: int = 0,
+    bonus_label: str = "",
+    context: dict[str, object] | None = None,
 ) -> dict[str, object]:
     path = ledger_path or DEFAULT_LEDGER
     payload = record_score_event(
@@ -128,9 +171,13 @@ def record_payload(
         audit_report=audit_report,
         enforcer_pass=enforcer_pass,
         dry_run=dry_run,
+        bonus_points=bonus_points,
+        bonus_label=bonus_label,
+        context=context,
     )
     levels = original_skill_levels()
     payload["recommended_targets"] = recommended_targets(inventory)
     payload["original_skill_levels"] = levels
     payload["original_skill_count"] = len(levels)
+    payload["agent_progression"] = _agent_progression(payload)
     return payload

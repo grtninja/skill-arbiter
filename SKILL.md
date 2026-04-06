@@ -27,10 +27,16 @@ cd apps/nullclaw-desktop
 npm install
 ```
 
-Open the desktop app:
+Open the desktop app for developer/debug work:
 
 ```bash
 python scripts/nullclaw_desktop.py
+```
+
+Open the desktop app through the accepted no-shell Windows launcher:
+
+```powershell
+wscript.exe //B //Nologo .\scripts\launch_security_console.vbs
 ```
 
 Run the local loopback agent without the desktop shell:
@@ -69,6 +75,8 @@ python scripts/check_public_release.py
 8. Use a loopback LM Studio coding model for short coding-security guidance, preferring local Qwen when available.
 9. Surface public support and security links as copy-only actions, not browser launches.
 10. Keep subagent routing local-first: use healthy local OpenClaw-compatible lanes before cloud sidecars, and keep cloud sidecars on lower-reasoning bounded work unless the operator explicitly chooses otherwise.
+11. Treat no-shell desktop launch acceptance as mandatory: no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open during startup.
+12. When governed work is substantial, record it as a quest with steps, checkpoints, deliverables, and evidence so the full request-to-result path stays human-readable and feeds cumulative agent progression.
 
 ## Local advisor
 
@@ -81,6 +89,7 @@ $env:NULLCLAW_AGENT_ENABLE_LLM="1"
 ```
 
 The advisor must remain local-only by default. The shared app-agent lane is `radeon-qwen3.5-4b`; Hui Hui stays reserved for avatar-specialized endpoints.
+Treat `http://127.0.0.1:9000/v1` as the public authoritative model plane, `http://127.0.0.1:2337/v1` as the hosted large-model lane, and `http://127.0.0.1:1234/v1` as a non-authoritative operator surface only.
 
 Subagent policy:
 

@@ -30,15 +30,20 @@ Do not use this skill for:
 $env:REPO_B_CONTINUE_BRIDGE_ENABLED = "1"
 $env:REPO_B_CONTINUE_BRIDGE_URL = "http://127.0.0.1:11420"
 $env:REPO_B_CONTINUE_MODE = "read_only"
-$env:REPO_B_CONTINUE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>"
+$env:REPO_B_CONTINUE_ALLOWED_ROOTS = "G:\GitHub\<PRIVATE_REPO_B>"
 ```
 
 Optional controlled-write limits:
 
 ```powershell
-$env:REPO_B_CONTINUE_WRITE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>\repo_b_repo_b_python_shim,$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>\tests"
+$env:REPO_B_CONTINUE_WRITE_ALLOWED_ROOTS = "G:\GitHub\<PRIVATE_REPO_B>\repo_b_repo_b_python_shim,G:\GitHub\<PRIVATE_REPO_B>\tests"
 $env:REPO_B_CONTINUE_APPLY_ENABLED = "0"
 ```
+
+Model-plane note:
+
+- Treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative.
+- Treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface when debugging connector drift.
 
 ## API Checks
 

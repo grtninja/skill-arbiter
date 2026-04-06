@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .contracts import PrivacyFinding
+from .paths import windows_no_window_subprocess_kwargs
 
 USER_PATH_PATTERNS = (
     re.compile(r"/home/[A-Za-z0-9._-]+/"),
@@ -44,6 +45,7 @@ def _run_git(repo_root: Path, args: list[str]) -> str:
         check=False,
         capture_output=True,
         text=True,
+        **windows_no_window_subprocess_kwargs(),
     )
     if result.returncode != 0:
         message = result.stderr.strip() or result.stdout.strip() or "unknown git error"

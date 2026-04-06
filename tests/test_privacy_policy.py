@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 import unittest
+from unittest import mock
 
 from skill_arbiter.privacy_policy import scan_repo
 from skill_arbiter.self_governance import run_self_governance_scan
@@ -77,6 +78,34 @@ class PrivacyPolicyTests(unittest.TestCase):
             codes = {item["code"] for item in payload["findings"]}
             self.assertIn("browser_autolaunch", codes)
             self.assertIn("hidden_process_launch", codes)
+
+    def test_self_governance_scan_flags_shell_wrapped_desktop_launch_docs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _init_repo(root)
+            (root / "README.md").write_text(
+                "Launch with:\n"
+                "powershell -ExecutionPolicy Bypass -File .\\scripts\\start_security_console.ps1\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
+
+            payload = run_self_governance_scan(root)
+
+            self.assertFalse(payload["passed"])
+            codes = {item["code"] for item in payload["findings"]}
+            self.assertIn("shell_wrapped_desktop_launch", codes)
+
+    def test_self_governance_scan_reuses_provided_privacy_result(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _init_repo(root)
+            privacy = mock.Mock(passed=True, findings=[])
+            with mock.patch("skill_arbiter.self_governance.scan_repo", side_effect=AssertionError("unexpected rescan")):
+                payload = run_self_governance_scan(root, privacy=privacy)
+
+            self.assertTrue(payload["passed"])
+            self.assertTrue(payload["privacy_passed"])
 
 
 if __name__ == "__main__":

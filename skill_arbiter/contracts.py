@@ -143,6 +143,60 @@ class CollaborationEvent:
 
 
 @dataclass
+class QuestCheckpoint:
+    checkpoint_id: str
+    label: str
+    status: str
+    summary: str = ""
+    evidence: list[str] = field(default_factory=list)
+    created_at: str = field(default_factory=utc_now)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class QuestStep:
+    step_id: str
+    label: str
+    status: str
+    skills: list[str] = field(default_factory=list)
+    summary: str = ""
+    checkpoint_ids: list[str] = field(default_factory=list)
+    created_at: str = field(default_factory=utc_now)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class QuestRecord:
+    quest_id: str
+    chain_id: str
+    title: str
+    request: str
+    outcome: str
+    host_id: str
+    required_skills: list[str] = field(default_factory=list)
+    skills_used: list[str] = field(default_factory=list)
+    repo_scope: list[str] = field(default_factory=list)
+    meta_harness: bool = False
+    final_outcome: str = ""
+    deliverables: list[str] = field(default_factory=list)
+    evidence: list[str] = field(default_factory=list)
+    checkpoints: list[QuestCheckpoint] = field(default_factory=list)
+    steps: list[QuestStep] = field(default_factory=list)
+    skill_xp_awards: list[dict[str, Any]] = field(default_factory=list)
+    created_at: str = field(default_factory=utc_now)
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        payload["checkpoints"] = [item.to_dict() for item in self.checkpoints]
+        payload["steps"] = [item.to_dict() for item in self.steps]
+        return payload
+
+
+@dataclass
 class MitigationStep:
     step_id: str
     label: str

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shockwave Dashboard Ops"
+  short_description: "Operate the Shockwave dashboard/router lane with shim-first startup and bridge contract checks."
+  default_prompt: "Use $shockwave-dashboard-ops when the Shockwave dashboard/router needs startup-contract, shim-first routing, tool-bridge, or operator-handoff work."

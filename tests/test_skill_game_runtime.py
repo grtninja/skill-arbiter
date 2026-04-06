@@ -18,6 +18,9 @@ class SkillGameRuntimeTests(unittest.TestCase):
         self.assertIn("original_skill_levels", payload)
         self.assertIn("original_skill_count", payload)
         self.assertGreater(payload["original_skill_count"], 0)
+        self.assertIn("agent_progression", payload)
+        self.assertIn("quest_progression", payload)
+        self.assertEqual(payload["agent_progression"]["level"], payload["level"])
 
 
 if __name__ == "__main__":

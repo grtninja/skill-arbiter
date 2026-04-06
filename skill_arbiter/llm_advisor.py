@@ -7,6 +7,17 @@ from functools import lru_cache
 from urllib import error, parse, request
 
 
+_NETWORK_FAILURES = (
+    error.URLError,
+    error.HTTPError,
+    TimeoutError,
+    socket.timeout,
+    json.JSONDecodeError,
+    OSError,
+    ValueError,
+)
+
+
 def _local_only(url_text: str) -> bool:
     parsed = parse.urlparse(url_text)
     hostname = (parsed.hostname or "").lower()
@@ -18,6 +29,10 @@ def _default_base_url() -> str:
         "NULLCLAW_AGENT_BASE_URL",
         os.environ.get("STARFRAME_SHARED_AGENT_BASE_URL", "http://127.0.0.1:9000/v1"),
     ).rstrip("/")
+
+
+def _hosted_large_base_url() -> str:
+    return os.environ.get("STARFRAME_HOSTED_LARGE_BASE_URL", "http://127.0.0.1:2337/v1").rstrip("/")
 
 
 def _default_model() -> str:
@@ -37,15 +52,13 @@ def enabled() -> bool:
 def _candidate_base_urls() -> list[str]:
     configured = [
         _default_base_url(),
+        _hosted_large_base_url(),
         os.environ.get("MX3_SHARED_AGENT_BASE_URL", "").rstrip("/"),
         os.environ.get("LMSTUDIO_BASE_URL", "").rstrip("/"),
     ]
     fallbacks = [
         "http://127.0.0.1:9000/v1",
-        "http://127.0.0.1:2244/v1",
-        "http://127.0.0.1:2235/v1",
-        "http://127.0.0.1:2234/v1",
-        "http://127.0.0.1:1234/v1",
+        "http://127.0.0.1:2337/v1",
     ]
     ordered: list[str] = []
     for item in [*configured, *fallbacks]:
@@ -61,7 +74,7 @@ def _fetch_models(base_url: str, timeout_s: float = 1.5) -> list[str]:
     try:
         with request.urlopen(req, timeout=timeout_s) as response:
             body = json.loads(response.read().decode("utf-8"))
-    except (error.URLError, error.HTTPError, TimeoutError, socket.timeout, json.JSONDecodeError):
+    except _NETWORK_FAILURES:
         return []
     rows = body.get("data") or []
     models: list[str] = []
@@ -202,7 +215,7 @@ def request_local_advice(subject: str, findings: list[str], timeout_s: float = 4
     try:
         with request.urlopen(req, timeout=timeout_s) as response:
             body = json.loads(response.read().decode("utf-8"))
-    except (error.URLError, error.HTTPError, TimeoutError, socket.timeout, json.JSONDecodeError):
+    except _NETWORK_FAILURES:
         return ""
     choices = body.get("choices") or []
     if not choices:

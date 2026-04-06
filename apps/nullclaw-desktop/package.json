@@ -8,6 +8,6 @@
     "desktop:binary": "node electron/launchDesktop.cjs --print-binary"
   },
   "devDependencies": {
-    "electron": "^35.7.5"
+    "electron": "^39.8.6"
   }
 }

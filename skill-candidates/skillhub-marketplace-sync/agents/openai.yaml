@@ -1,0 +1,4 @@
+interface:
+  display_name: "SkillHub Marketplace Sync"
+  short_description: "Refresh SkillHub discovery artifacts and bounded promotion decisions."
+  default_prompt: "Use $skillhub-marketplace-sync when SkillHub query coverage, alignment artifacts, source reputation, or promotion posture need a bounded refresh."

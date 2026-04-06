@@ -55,7 +55,7 @@ function appendElectronLog(message) {
 }
 
 function healthUrl() {
-  return `http://${AGENT_HOST}:${AGENT_PORT}/v1/health`;
+  return `http://${AGENT_HOST}:${AGENT_PORT}/v1/ready`;
 }
 
 function requestJson(url, timeoutMs = 1500) {

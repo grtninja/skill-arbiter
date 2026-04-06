@@ -43,7 +43,7 @@ $env:REPO_B_LOCAL_ORCH_FAIL_CLOSED = "1"
 $env:REPO_B_LOCAL_ORCH_MAX_HINTS = "12"
 $env:REPO_B_CONTINUE_BRIDGE_ENABLED = "1"
 $env:REPO_B_CONTINUE_MODE = "read_only"
-$env:REPO_B_CONTINUE_ALLOWED_ROOTS = "$env:USERPROFILE\Documents\GitHub\<PRIVATE_REPO_B>"
+$env:REPO_B_CONTINUE_ALLOWED_ROOTS = "G:\GitHub\<PRIVATE_REPO_B>"
 ```
 
 ## Run Command
@@ -78,6 +78,11 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
   --burst-multiplier 1.5 \
   --format table
 ```
+
+Authority reminder:
+
+- Treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative model lanes.
+- Treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface.
 
 ## References
 

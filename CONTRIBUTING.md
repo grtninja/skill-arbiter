@@ -26,7 +26,7 @@ python scripts/generate_skillhub_alignment.py
 python scripts/check_private_data_policy.py
 python scripts/check_public_release.py
 pytest -q
-python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/public_readiness.py
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py
 ```
 
 ## Desktop app flow
@@ -43,11 +43,19 @@ Required lifecycle:
 
 Do not add an external browser dependency to that flow.
 
-For Windows-host launches, prefer the managed launcher:
+For Windows-host launches, the accepted desktop path is the no-shell launcher:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\start_security_console.ps1
+wscript.exe //B //Nologo .\scripts\launch_security_console.vbs
 ```
+
+Keep the PowerShell helper for already-open developer shells only:
+
+```powershell
+.\scripts\start_security_console.ps1
+```
+
+Do not describe the PowerShell helper as an accepted public desktop startup surface. Release-ready startup means no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open.
 
 Install the branded desktop/start-menu shortcuts with:
 

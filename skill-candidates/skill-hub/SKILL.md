@@ -1,32 +1,23 @@
 ---
 name: skill-hub
-description: "Coordinate multi-step workflows by routing requests into ordered skill chains — runs audits, enforces fixes, then updates docs automatically. Use when a task requires multiple tools or steps, when automating a batch pipeline across different repos, when delegating to specialized skills like usage-watcher or skill-auditor, when picking up interrupted work, or when the user says 'do X then Y' across code, docs, and policy."
+description: Route user requests into the smallest deterministic skill chain. Use when work spans multiple domains or repositories, when lane selection is ambiguous, or when you need ordered skill handoff and loopback criteria before execution.
 ---
 
 # Skill Hub
 
-Coordinates complex requests by breaking them into ordered skill chains. Routes each part of a request to the right specialized skill, defines completion criteria, and handles re-routing when steps get blocked.
+Use this skill as the entry router for skill chaining.
 
 ## Workflow
 
-1. **Parse request scope** — identify which repositories, domains (code, docs, policy, infra), risk level, and deliverables are involved.
-2. **Select skills** from the routing matrix below — pick the minimum set that fully covers the request.
-3. **Order the chain**: routing skills first, then guardrails (`usage-watcher`, `skill-cost-credit-governor`, `skill-cold-start-warm-path-optimizer`), then execution skills, then policy gates (`skill-enforcer`, `skill-arbiter-lockdown-admission`).
-4. **Emit chain contract** before any execution starts:
-   ```json
-   {
-     "task": "update host packaging and add new overlay skill",
-     "lanes": ["host-packaging", "skill-creation"],
-     "skills_by_lane": {
-       "host-packaging": ["repo-a-host-admin-ops", "skill-common-sense-engineering"],
-       "skill-creation": ["skill-creator-openclaw", "skill-auditor", "skill-arbiter-lockdown-admission"]
-     },
-     "evidence_paths": ["/tmp/usage-analysis.json", "/tmp/skill-cost-analysis.json"],
-     "loopback_criteria": "re-route if host validation fails or audit blocks admission",
-     "stop_conditions": ["all lanes emit evidence", "blocked lane triggers loopback", "operator cancels"]
-   }
-   ```
-5. **Fail closed** if the contract is incomplete — every field must be populated. Record the gap and suggest a bounded fallback.
+1. Parse request scope (repositories, domains, risk level, and deliverables).
+2. For meta-harness or large-system work, capture the current local authority contract first:
+   - treat `G:\GitHub` as the canonical repo root on the maintainer workstation
+   - treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative model lanes
+   - treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface
+3. Select skills from the routing matrix below and keep the chain to the minimum set that fully covers the request.
+4. Order the chain as: routing -> guardrails -> execution -> release/policy gates.
+5. Emit or capture the chain output contract before execution begins.
+6. Add loopback criteria for unresolved lanes before execution starts.
 
 ## Routing Matrix
 
@@ -40,11 +31,50 @@ Coordinates complex requests by breaking them into ordered skill chains. Routes 
 
 ## Chain Rules
 
-- One primary execution skill per independent lane.
-- Skip optional skills unless they add concrete value for the specific request.
-- Multi-repo work requires `skill-enforcer` before finalizing code changes.
-- New or updated skills require `skill-auditor` and `skill-arbiter-lockdown-admission`.
+- Prefer one primary execution skill per independent lane.
+- Avoid optional skills unless they add deterministic value for the request.
+- For multi-repo work, include a policy-enforcement lane before finalizing code changes.
+- For new or updated skills, include auditing and lockdown-admission lanes.
+- Prefer healthy local OpenClaw-compatible subagents first for quick bounded sidecar work.
+- When cloud sidecars are unavoidable, keep them on a lower-reasoning, low-cost sidecar lane.
+- For whole-PC or meta-harness tasks, capture PC Control local-agent or status-surface evidence before assuming missing context.
 - If a required skill is missing, fail closed with a bounded fallback and record the gap.
+
+## Chain Output Contract
+
+Emit or capture a compact chain payload before execution:
+
+- `task`
+- `lanes[]` (ordered lane identifiers)
+- `skills_by_lane`
+- `evidence_paths[]` (usage/cost/cold-warm + audit/arbiter when applicable)
+- `loopback_criteria`
+- `stop_conditions` (done, blocked, reroute)
+
+Illustrative example:
+
+```json
+{
+  "task": "update host packaging and add new overlay skill",
+  "lanes": ["host-packaging", "skill-creation"],
+  "skills_by_lane": {
+    "host-packaging": ["repo-a-host-admin-ops", "skill-common-sense-engineering"],
+    "skill-creation": ["skill-creator-openclaw", "skill-auditor", "skill-arbiter-lockdown-admission"]
+  },
+  "evidence_paths": [
+    "/tmp/usage-analysis.json",
+    "/tmp/usage-plan.json",
+    "/tmp/skill-cost-analysis.json",
+    "/tmp/skill-cost-policy.json",
+    "/tmp/cold-warm-analysis.json",
+    "/tmp/cold-warm-plan.json"
+  ],
+  "loopback_criteria": "re-route if host validation fails or audit blocks admission",
+  "stop_conditions": ["all lanes emit evidence", "blocked lane triggers loopback", "operator cancels"]
+}
+```
+
+If this contract is incomplete, chain selection is incomplete and must fail closed.
 
 ## Referenced Skills
 
@@ -58,12 +88,14 @@ Key skills this hub routes to (see each skill's SKILL.md for full details):
 
 ## Scope Boundary
 
-Use this skill only for request-to-chain routing. Do not use it to implement repository changes directly — delegate to the execution skills in the chain.
+Use this skill only for request-to-chain routing and loopback decisioning.
+
+Do not use this skill to implement repository changes directly.
 
 ## Loopback
 
-If any part of the chain is blocked or ambiguous:
+If any lane remains unresolved, blocked, or ambiguous:
 
-1. Capture blockers and current evidence from the stuck lane.
+1. Capture lane blockers and current evidence.
 2. Re-run routing through `$skill-hub` with updated constraints.
-3. Resume only when every lane has a concrete next action.
+3. Resume only when every lane has a deterministic next action.

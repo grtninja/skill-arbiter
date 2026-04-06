@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shockwave Operator Handoff"
+  short_description: "Protect startup-to-dashboard operator handoff, authority labels, and status continuity."
+  default_prompt: "Use $shockwave-operator-handoff when Shockwave dashboard changes affect startup proof, control-rail contract display, status strips, transcript continuity, or recovery from degraded states."

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -12,7 +13,7 @@ from urllib import error, request
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from skill_arbiter.paths import DEFAULT_AGENT_HOST, DEFAULT_AGENT_PORT
+from skill_arbiter.paths import DEFAULT_AGENT_HOST, DEFAULT_AGENT_PORT, windows_no_window_subprocess_kwargs
 
 APP_TITLE = "Skill Arbiter Security Console"
 APP_ID = "grtninja.SkillArbiterSecurityConsole"
@@ -35,6 +36,34 @@ def _console_free_python() -> str:
     if sibling.is_file():
         return str(sibling)
     return str(executable)
+
+
+def _desktop_root() -> Path:
+    return Path(__file__).resolve().parents[1] / "apps" / "nullclaw-desktop"
+
+
+def _electron_binary() -> Path:
+    return _desktop_root() / "node_modules" / "electron" / "dist" / "SkillArbiterSecurityConsole.exe"
+
+
+def _spawn_electron_hidden() -> int:
+    electron_binary = _electron_binary()
+    if not electron_binary.is_file():
+        return 2
+
+    env = dict(os.environ)
+    env.pop("ELECTRON_RUN_AS_NODE", None)
+
+    kwargs: dict[str, object] = {
+        "cwd": str(_desktop_root()),
+        "env": env,
+        "stdin": subprocess.DEVNULL,
+        "stdout": subprocess.DEVNULL,
+        "stderr": subprocess.DEVNULL,
+        "close_fds": True,
+    }
+    subprocess.Popen([str(electron_binary), "."], **windows_no_window_subprocess_kwargs(kwargs))
+    return 0
 
 
 def _health() -> dict[str, object] | None:
@@ -88,10 +117,16 @@ def _attach_or_start_agent(*_args: object) -> None:
     if _health():
         return
     script = Path(__file__).resolve().parent / "nullclaw_agent.py"
-    creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     subprocess.Popen(
         [_console_free_python(), str(script), "--host", DEFAULT_AGENT_HOST, "--port", str(DEFAULT_AGENT_PORT)],
-        creationflags=creationflags,
+        **windows_no_window_subprocess_kwargs(
+            {
+                "stdin": subprocess.DEVNULL,
+                "stdout": subprocess.DEVNULL,
+                "stderr": subprocess.DEVNULL,
+                "close_fds": True,
+            }
+        ),
     )
     for _ in range(12):
         if _health():
@@ -101,6 +136,9 @@ def _attach_or_start_agent(*_args: object) -> None:
 
 
 def main() -> int:
+    if "--spawn-electron-hidden" in sys.argv[1:]:
+        return _spawn_electron_hidden()
+
     try:
         import webview
     except ModuleNotFoundError as exc:
@@ -111,7 +149,7 @@ def main() -> int:
         )
         return 2
 
-    ui_path = Path(__file__).resolve().parents[1] / "apps" / "nullclaw-desktop" / "ui" / "index.html"
+    ui_path = _desktop_root() / "ui" / "index.html"
     if not ui_path.is_file():
         print(f"missing UI file: {ui_path}", file=sys.stderr)
         return 2

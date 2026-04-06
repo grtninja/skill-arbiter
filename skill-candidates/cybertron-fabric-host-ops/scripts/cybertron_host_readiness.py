@@ -23,7 +23,8 @@ class PortCheck:
 class HostReadinessReport:
     host: str
     port_checks: list[PortCheck]
-    lmstudio: str
+    public_model_plane: str
+    hosted_27b_lane: str
     meshgpt: str
     vrm_display: str
 
@@ -35,7 +36,7 @@ def parse_args() -> argparse.Namespace:
         "--ports",
         nargs="+",
         type=int,
-        default=[5985, 3389, 1234, 8892],
+        default=[5985, 3389, 9000, 2337, 8892],
         help="Ports to probe",
     )
     parser.add_argument("--timeout", type=float, default=2.0, help="Socket timeout seconds")
@@ -78,7 +79,8 @@ def main() -> int:
     args = parse_args()
     host = args.host
     checks = [PortCheck(port=port, state=tcp_check(host, port, args.timeout)) for port in args.ports]
-    lmstudio = http_check(f"http://{host}:1234/v1/models", args.timeout) if 1234 in args.ports else "unknown"
+    public_model_plane = http_check(f"http://{host}:9000/v1/models", args.timeout) if 9000 in args.ports else "unknown"
+    hosted_27b_lane = http_check(f"http://{host}:2337/v1/models", args.timeout) if 2337 in args.ports else "unknown"
     meshgpt = http_check(f"http://{host}:8892/health", args.timeout) if 8892 in args.ports else "unknown"
     if args.vrm_marker:
         vrm_marker = Path(args.vrm_marker).expanduser()
@@ -89,7 +91,8 @@ def main() -> int:
     report = HostReadinessReport(
         host=host,
         port_checks=checks,
-        lmstudio=lmstudio,
+        public_model_plane=public_model_plane,
+        hosted_27b_lane=hosted_27b_lane,
         meshgpt=meshgpt,
         vrm_display=vrm_display,
     )
@@ -102,11 +105,12 @@ def main() -> int:
     print(f"host={host}")
     for item in checks:
         print(f"port:{item.port}={item.state}")
-    print(f"lmstudio={lmstudio}")
+    print(f"public_model_plane={public_model_plane}")
+    print(f"hosted_27b_lane={hosted_27b_lane}")
     print(f"meshgpt={meshgpt}")
     print(f"vrm_display={vrm_display}")
     if args.require_ready:
-        required_ok = all(item.state == "open" for item in checks if item.port in {5985, 1234, 8892})
+        required_ok = all(item.state == "open" for item in checks if item.port in {5985, 9000, 2337, 8892})
         if args.vrm_marker:
             required_ok = required_ok and vrm_display == "ready"
         return 0 if required_ok else 1

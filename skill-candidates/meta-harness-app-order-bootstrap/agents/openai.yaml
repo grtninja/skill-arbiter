@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Harness App-Order Bootstrap"
+  short_description: "Bring-up sequencing, runtime registry, and health validation for multi-app local stacks."
+  default_prompt: "Use $meta-harness-app-order-bootstrap when startup order, runtime registry, launcher scripts, and cross-app health validation must be aligned under the local meta-harness."

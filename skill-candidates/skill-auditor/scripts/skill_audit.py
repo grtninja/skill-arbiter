@@ -11,6 +11,12 @@ import re
 import sys
 from typing import Any
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from skill_arbiter.meta_harness_policy import findings_for_skill
+
 STOPWORDS = {
     "the",
     "and",
@@ -30,8 +36,6 @@ STOPWORDS = {
     "skill",
     "that",
 }
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audit and classify skill candidates")
     parser.add_argument("--skills-root", default="skill-candidates", help="Skill candidates root")
@@ -307,7 +311,6 @@ def main() -> int:
                 code="high_overlap",
                 message=f"overlap with {peer!r} is high ({similarity:.3f}); tighten boundaries.",
             )
-
         arbiter_row = arbiter.get(skill)
         if args.require_arbiter_evidence and arbiter_row is None:
             add_finding(
@@ -334,6 +337,15 @@ def main() -> int:
                         "and max_rg<=3."
                     ),
                 )
+
+        for item in findings_for_skill(skills_root, skill):
+            add_finding(
+                findings,
+                skill=skill,
+                severity=item.severity,
+                code=item.code,
+                message=item.message,
+            )
 
     classifications.sort(key=lambda item: item["skill"])
     findings.sort(key=lambda item: (item["severity"], item["skill"], item["code"]))

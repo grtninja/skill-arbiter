@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shockwave Voice Command Governance"
+  short_description: "Keep Shockwave voice commands aligned with parser order and UI truth."
+  default_prompt: "Use $shockwave-voice-command-governance when Shockwave voice command grammar, parser order, source filtering, or touch-to-voice parity change together."

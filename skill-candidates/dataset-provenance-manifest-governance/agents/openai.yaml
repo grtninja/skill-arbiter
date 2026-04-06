@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dataset Provenance Manifest Governance"
+  short_description: "Keep dataset lineage and manifests aligned across local training lanes."
+  default_prompt: "Use $dataset-provenance-manifest-governance when teacher, enrichment, or derived training manifests change across Qwen and media workflows."

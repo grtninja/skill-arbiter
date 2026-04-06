@@ -673,10 +673,11 @@ class AgentServerTests(unittest.TestCase):
                                                                     accept_subject.return_value = mock.Mock(to_dict=lambda: {"action": "accept_review"})
                                                                     with mock.patch("skill_arbiter.agent_server.revoke_subject") as revoke_subject:
                                                                         revoke_subject.return_value = mock.Mock(to_dict=lambda: {"action": "revoke_accept_review"})
-                                                                        with request.urlopen(f"{base}/v1/health", timeout=3) as response:
-                                                                            self.assertEqual(response.headers.get("Cache-Control"), "no-store, max-age=0")
-                                                                            self.assertEqual(response.headers.get("Pragma"), "no-cache")
-                                                                            health = json.loads(response.read().decode("utf-8"))
+                                                                    with request.urlopen(f"{base}/v1/health", timeout=3) as response:
+                                                                        self.assertEqual(response.headers.get("Cache-Control"), "no-store, max-age=0")
+                                                                        self.assertEqual(response.headers.get("Pragma"), "no-cache")
+                                                                        health = json.loads(response.read().decode("utf-8"))
+                                                                    ready = json.loads(request.urlopen(f"{base}/v1/ready", timeout=3).read().decode("utf-8"))
                                                                     with request.urlopen(
                                                                         request.Request(
                                                                             f"{base}/v1/health",
@@ -787,6 +788,7 @@ class AgentServerTests(unittest.TestCase):
                 thread.join(timeout=2)
 
             self.assertEqual(health["status"], "ok")
+            self.assertEqual(ready["status"], "ok")
             self.assertEqual(about["application"], "Skill Arbiter Security Console")
             self.assertTrue(readiness["passed"])
             self.assertEqual(skill_game_status["level"], 4)
@@ -904,7 +906,7 @@ class AdvisorSelectionTests(unittest.TestCase):
         with mock.patch("skill_arbiter.llm_advisor.enabled", return_value=True):
             with mock.patch(
                 "skill_arbiter.llm_advisor._candidate_base_urls",
-                return_value=["http://127.0.0.1:9000/v1", "http://127.0.0.1:2244/v1"],
+                return_value=["http://127.0.0.1:9000/v1", "http://127.0.0.1:2337/v1"],
             ):
                 with mock.patch(
                     "skill_arbiter.llm_advisor._endpoint_reachable",
@@ -914,8 +916,33 @@ class AdvisorSelectionTests(unittest.TestCase):
                         "skill_arbiter.llm_advisor._fetch_models",
                         side_effect=[[], ["radeon-qwen3.5-4b-trained-eval"]],
                     ):
-                        self.assertEqual(advisor_base_url(), "http://127.0.0.1:2244/v1")
+                        import skill_arbiter.llm_advisor as advisor_mod
+
+                        advisor_mod._resolved_advisor_target.cache_clear()
+                        advisor_mod._cached_available_models.cache_clear()
+                        self.assertEqual(advisor_base_url(), "http://127.0.0.1:2337/v1")
                         self.assertEqual(available_models(refresh=True), ["radeon-qwen3.5-4b-trained-eval"])
+
+    def test_available_models_tolerates_connection_reset(self) -> None:
+        with mock.patch("skill_arbiter.llm_advisor.enabled", return_value=True):
+            with mock.patch(
+                "skill_arbiter.llm_advisor._candidate_base_urls",
+                return_value=["http://127.0.0.1:9000/v1"],
+            ):
+                with mock.patch(
+                    "skill_arbiter.llm_advisor._endpoint_reachable",
+                    return_value=True,
+                ):
+                    with mock.patch(
+                        "skill_arbiter.llm_advisor.request.urlopen",
+                        side_effect=ConnectionResetError(),
+                    ):
+                        import skill_arbiter.llm_advisor as advisor_mod
+
+                        advisor_mod._resolved_advisor_target.cache_clear()
+                        advisor_mod._cached_available_models.cache_clear()
+                        self.assertEqual(available_models(refresh=True), [])
+                        self.assertEqual(advisor_base_url(), "http://127.0.0.1:9000/v1")
 
 
 if __name__ == "__main__":

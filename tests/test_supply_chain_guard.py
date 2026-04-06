@@ -77,6 +77,17 @@ class SupplyChainGuardTests(unittest.TestCase):
             self.assertIn("untracked_python_script", codes)
             self.assertIn("vendored_python_binary", codes)
 
+    def test_git_untracked_scan_uses_no_window_subprocess_kwargs(self) -> None:
+        completed = subprocess.CompletedProcess(["git"], 0, "", "")
+        with mock.patch.object(self.guard, "windows_no_window_subprocess_kwargs", return_value={"creationflags": 0x08000000}) as kwargs_mock:
+            with mock.patch.object(self.guard.subprocess, "run", return_value=completed) as run_mock:
+                rows = self.guard._git_untracked_python_rows("G:/workspace/repo")
+
+        self.assertEqual(rows, ())
+        kwargs_mock.assert_called_once_with()
+        _, kwargs = run_mock.call_args
+        self.assertEqual(int(kwargs.get("creationflags") or 0), 0x08000000)
+
     def test_scan_skill_tree_ignores_non_binary_python_named_docs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

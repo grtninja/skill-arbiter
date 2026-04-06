@@ -1,0 +1,4 @@
+interface:
+  display_name: "Local Trace Evidence Correlation"
+  short_description: "Correlate telemetry and trace artifacts across local STARFRAME systems."
+  default_prompt: "Use $local-trace-evidence-correlation when local trace hops, decision telemetry, and emitted evidence need to line up across multiple repos."

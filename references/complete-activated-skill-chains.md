@@ -20,6 +20,16 @@
 9. `skill-arbiter-lockdown-admission`
 10. `skill-enforcer`
 
+## Quest framing
+
+Treat each substantial chain execution as a quest:
+
+1. request enters through `skill-hub`
+2. chain steps define the governed path
+3. checkpoints capture proof that the work is on track
+4. the quest only closes when there is a usable outcome, named deliverables, and evidence
+5. quest completion awards per-skill quest XP and cumulative agent XP
+
 ## Chain Workflows
 
 ### Apple/Mac Productivity Chain (`apple-mac-productivity`)

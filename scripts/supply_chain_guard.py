@@ -8,7 +8,13 @@ from functools import lru_cache
 from pathlib import Path
 import re
 import subprocess
+import sys
 from typing import Iterable
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from skill_arbiter.paths import windows_no_window_subprocess_kwargs
 
 MAX_READ_BYTES = 512 * 1024
 TEXT_SCAN_SUFFIXES = {
@@ -285,6 +291,7 @@ def _git_untracked_python_rows(git_root_text: str) -> tuple[str, ...]:
         capture_output=True,
         text=True,
         check=False,
+        **windows_no_window_subprocess_kwargs(),
     )
     if result.returncode != 0:
         return ()

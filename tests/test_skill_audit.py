@@ -27,7 +27,14 @@ def _load_module():
     return module
 
 
-def _write_skill(root: Path, name: str, description: str, body: str) -> None:
+def _write_skill(
+    root: Path,
+    name: str,
+    description: str,
+    body: str,
+    *,
+    extra_files: dict[str, str] | None = None,
+) -> None:
     folder = root / name
     (folder / "agents").mkdir(parents=True, exist_ok=True)
     (folder / "SKILL.md").write_text(
@@ -48,6 +55,10 @@ def _write_skill(root: Path, name: str, description: str, body: str) -> None:
         "interface:\n  display_name: demo\n  short_description: demo\n  default_prompt: demo\n",
         encoding="utf-8",
     )
+    for rel, text in (extra_files or {}).items():
+        path = folder / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
 
 
 class SkillAuditTests(unittest.TestCase):
@@ -156,6 +167,133 @@ class SkillAuditTests(unittest.TestCase):
             self.assertEqual(payload["low_count"], 0)
             self.assertEqual(payload["classifications"][0]["classification"], "upgrade")
             self.assertEqual(payload["classifications"][0]["nearest_peer"], "beta-skill")
+
+    def test_flags_legacy_repo_root_alias(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            root.mkdir()
+            _write_skill(
+                root,
+                "local-compute-usage",
+                "local",
+                '$env:REPO_B_CONTINUE_ALLOWED_ROOTS = "$env:USERPROFILE\\Documents\\GitHub\\<PRIVATE_REPO_B>"',
+            )
+            out_path = Path(tmp) / "audit.json"
+            argv = [
+                "skill_audit.py",
+                "--skills-root",
+                str(root),
+                "--include-skill",
+                "local-compute-usage",
+                "--json-out",
+                str(out_path),
+                "--format",
+                "json",
+            ]
+            with mock.patch.object(sys, "argv", argv):
+                rc = self.mod.main()
+
+            self.assertEqual(rc, 1)
+            payload = json.loads(out_path.read_text(encoding="utf-8"))
+            codes = {item["code"] for item in payload["findings"]}
+            self.assertIn("legacy_repo_root_alias", codes)
+
+    def test_flags_missing_shim_meta_harness_requirements(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            root.mkdir()
+            _write_skill(
+                root,
+                "shim-pc-control-brain-routing",
+                "shim",
+                "Keep port 9000 stable and research with sub-agents.",
+            )
+            out_path = Path(tmp) / "audit.json"
+            argv = [
+                "skill_audit.py",
+                "--skills-root",
+                str(root),
+                "--include-skill",
+                "shim-pc-control-brain-routing",
+                "--json-out",
+                str(out_path),
+                "--format",
+                "json",
+            ]
+            with mock.patch.object(sys, "argv", argv):
+                rc = self.mod.main()
+
+            self.assertEqual(rc, 1)
+            payload = json.loads(out_path.read_text(encoding="utf-8"))
+            codes = {item["code"] for item in payload["findings"]}
+            self.assertIn("shim_hosted_lane_missing", codes)
+            self.assertIn("shim_pc_control_local_agent_missing", codes)
+            self.assertIn("shim_canonical_root_missing", codes)
+
+    def test_flags_legacy_repo_root_and_non_authoritative_1234_references(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            root.mkdir()
+            _write_skill(
+                root,
+                "alpha-skill",
+                "alpha",
+                "Use the canonical repo root, not legacy aliases.",
+                extra_files={
+                    "notes.md": "Root: $env:USERPROFILE\\Documents\\GitHub\\<PRIVATE_REPO_B>\n",
+                    "scripts/check.py": 'BASE_URL = "http://127.0.0.1:1234/v1"\n',
+                },
+            )
+            out_path = Path(tmp) / "audit.json"
+            argv = [
+                "skill_audit.py",
+                "--skills-root",
+                str(root),
+                "--include-skill",
+                "alpha-skill",
+                "--json-out",
+                str(out_path),
+                "--format",
+                "json",
+            ]
+            with mock.patch.object(sys, "argv", argv):
+                rc = self.mod.main()
+
+            self.assertEqual(rc, 1)
+            payload = json.loads(out_path.read_text(encoding="utf-8"))
+            codes = {item["code"] for item in payload["findings"]}
+            self.assertIn("legacy_repo_root_alias", codes)
+            self.assertIn("non_authoritative_1234_authority", codes)
+
+    def test_flags_same_file_legacy_path_even_with_legacy_wording(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            root.mkdir()
+            _write_skill(
+                root,
+                "demo-skill",
+                "demo",
+                "This legacy migration note still says to use $env:USERPROFILE\\Documents\\GitHub\\demo until later.",
+            )
+            out_path = Path(tmp) / "audit.json"
+            argv = [
+                "skill_audit.py",
+                "--skills-root",
+                str(root),
+                "--include-skill",
+                "demo-skill",
+                "--json-out",
+                str(out_path),
+                "--format",
+                "json",
+            ]
+            with mock.patch.object(sys, "argv", argv):
+                rc = self.mod.main()
+
+            self.assertEqual(rc, 1)
+            payload = json.loads(out_path.read_text(encoding="utf-8"))
+            codes = {item["code"] for item in payload["findings"]}
+            self.assertIn("legacy_repo_root_alias", codes)
 
 
 if __name__ == "__main__":

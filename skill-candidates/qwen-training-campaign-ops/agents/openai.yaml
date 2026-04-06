@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qwen Training Campaign Ops"
+  short_description: "Own Qwen Training Workbench campaigns, queue semantics, and dependency-aware continuation."
+  default_prompt: "Use $qwen-training-campaign-ops when the 9041 worker, named campaigns, dependency-aware queueing, or continuation restart behavior need a coordinated pass."

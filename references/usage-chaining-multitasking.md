@@ -15,6 +15,7 @@ Use this sequence for non-trivial skill governance work:
 7. `skill-auditor`
 8. `skill-arbiter-lockdown-admission`
 9. `skill-enforcer`
+10. Record the result as a quest with checkpoints, deliverables, and evidence when the work produces a governed usable outcome
 
 ## OpenClaw / NullClaw cross-repo chain
 
@@ -54,6 +55,7 @@ Common lanes:
 2. source discovery and risk review
 3. docs and policy alignment
 4. app bring-up / operator verification
+5. quest closeout and evidence packaging
 
 Use `multitask-orchestrator` when available. If not, apply the same split/merge discipline manually.
 
@@ -74,6 +76,7 @@ Use `multitask-orchestrator` when available. If not, apply the same split/merge 
 - skill-auditor output
 - recent-work radar artifact
 - generated skill catalog refresh
+- quest closeout artifact when the work was executed as a quest
 
 ## Guardrails
 

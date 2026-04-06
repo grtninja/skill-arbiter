@@ -28,7 +28,7 @@ The desktop app is not a fully self-sufficient operator product yet.
 
 - Standalone desktop use still covers local inventory, baseline reconciliation, attribution, and mitigation.
 - The app is only fully meaningful when real work is being driven through Codex or GitHub Copilot instruction surfaces.
-- Without active Codex/Copilot-driven work, the interop view, collaboration lane, skill-game lane, and upgrade/consolidation recommendations become partial, stale, or much less useful.
+- Without active Codex/Copilot-driven work, the interop view, collaboration lane, skill-game lane, and upgrade/consolidation recommendations stay part of the harness but can become sparse, stale, or much less useful.
 - Do not describe the current app as a complete general-purpose skill-security console outside Codex/Copilot-driven workflows.
 
 ## OpenJarvis Wave 1 role
@@ -93,6 +93,7 @@ It may not:
   - operator-confirmed delete / kill
 - Audits itself with the same policy engine so the app does not become part of the problem
 - Records collaboration outcomes and recommends governed skill creation, upgrades, or consolidation from real agent work
+- Records quests as human-readable request-to-result paths with steps, checkpoints, deliverables, evidence, and cumulative agent progression
 
 ## Runtime model
 
@@ -102,12 +103,16 @@ It may not:
 - UI model: layered operator workflow with critical-first triage
 - Loopback API state responses are served `no-store` so the embedded desktop cannot silently reuse stale inventory, skill-game, or collaboration data
 - Full-value mode depends on active Codex or GitHub Copilot work feeding instruction-surface, collaboration, and skill-learning evidence
+- Quest mode treats substantial governed work as a request -> chain -> checkpoint -> outcome path; quest completion feeds both per-skill quest XP and cumulative agent XP so a higher-level agent is the result of repeated successful governed runs
 - Startup flow:
   1. app open
   2. agent attach/start
   3. self-checks
   4. inventory refresh
   5. operator actions enabled
+- Desktop launch acceptance is strict:
+  - no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open during startup
+  - public desktop launch surfaces must stay shell-free; PowerShell or `cmd` wrappers are developer helpers only
 - No external browser launch in the normal operator path
 
 ## Local advisor
@@ -118,6 +123,7 @@ runtime supervision.
 Defaults:
 
 - `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
+- `STARFRAME_HOSTED_LARGE_BASE_URL=http://127.0.0.1:2337/v1`
 - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
 - `NULLCLAW_AGENT_ENABLE_LLM=1`
 
@@ -127,6 +133,8 @@ Compatibility contract:
 
 - The advisor may use any loopback-hosted OpenAI-compatible coding-model surface.
 - Supported local hosts include LM Studio, MemryX shim lanes, and other local model services exposing `/v1/models` and `/v1/chat/completions`.
+- On the maintainer workstation, `http://127.0.0.1:9000/v1` is the public authoritative plane and `http://127.0.0.1:2337/v1` is the hosted 27B authoritative lane.
+- `http://127.0.0.1:1234/v1` remains a non-authoritative operator surface and should not be treated as the source of routing truth.
 - The runtime now probes multiple local loopback endpoints and follows the first live compatible lane instead of assuming one fixed model host forever.
 - No remote advisor host is allowed by default.
 
@@ -158,19 +166,28 @@ cd apps/nullclaw-desktop
 npm install
 ```
 
-Open the desktop app:
+Open the desktop app for developer/debug work:
 
 ```bash
 python scripts/nullclaw_desktop.py
 ```
 
-Open the desktop app through the managed Windows launcher:
+The Python entrypoint is not the accepted public desktop launch surface because it can still inherit a visible shell host.
+
+Open the desktop app through the accepted no-shell Windows launcher:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\start_security_console.ps1
+wscript.exe //B //Nologo .\scripts\launch_security_console.vbs
+```
+
+Developer helper from an already-open shell:
+
+```powershell
+.\scripts\start_security_console.ps1
 ```
 
 The managed launcher expects a repo-local Electron runtime under `apps/nullclaw-desktop/node_modules/electron`.
+Do not treat the PowerShell helper as a public desktop startup path; the accepted no-flash launch surfaces are the VBS launcher and the installed shortcuts.
 
 Install branded desktop and Start Menu shortcuts:
 
@@ -178,7 +195,7 @@ Install branded desktop and Start Menu shortcuts:
 powershell -ExecutionPolicy Bypass -File .\scripts\install_security_console_shortcut.ps1
 ```
 
-The installed shortcuts use a silent `wscript` launcher so the console does not bounce through visible PowerShell or `cmd` wrappers.
+The installed shortcuts use a silent `wscript` launcher so the console does not bounce through visible PowerShell or `cmd` wrappers, and startup acceptance is not met if an empty shell window flashes even briefly.
 
 Stop the desktop app and loopback agent cleanly:
 
@@ -243,6 +260,8 @@ This public repo is configured for a `local_only` GitHub Actions policy.
 The desktop UI talks to a local-only loopback API:
 
 - `GET /v1/health`
+- `GET /v1/quests/status`
+- `POST /v1/quests/record`
 - `GET /v1/about`
 - `POST /v1/self-checks/run`
 - `GET /v1/privacy/status`
@@ -255,6 +274,8 @@ The desktop UI talks to a local-only loopback API:
 - `POST /v1/mitigation/execute`
 - `GET /v1/collaboration/status`
 - `POST /v1/collaboration/record`
+- `GET /v1/skill-game/status`
+- `POST /v1/skill-game/record`
 - `GET /v1/public-readiness`
 - `POST /v1/public-readiness/run`
 - `GET /v1/agent-runtime/status`
@@ -282,7 +303,7 @@ The live inventory pipeline covers:
 What this does **not** mean:
 
 - the desktop alone can infer meaningful collaboration history without Codex/Copilot-driven work
-- the skill-game lane is useful without real governed agent work being recorded
+- the skill-game lane can stay present as part of the harness, but progression quality depends on real governed agent work being recorded
 - the interop surfaces prove much on their own beyond presence-level tracking unless Codex/Copilot workflows are actually active
 
 See:
@@ -299,7 +320,7 @@ See:
 The console now records governed collaboration outcomes from real agent work and turns repeatable
 patterns into actionable skill recommendations.
 
-- These lanes are intentionally dependent on real Codex or GitHub Copilot-driven work. Without that input, the app still opens and inventories locally, but this section is only partially useful.
+- These lanes are part of the harness in this app. Real Codex or GitHub Copilot-driven work improves their evidence quality; without that input, the app still opens and inventories locally but progression and recommendations become thinner.
 - collaboration events are stored in local-only state
 - trust-ledger and skill-game lanes receive the same outcome evidence
 - the skill-game now reports the original long-lived skill levels from `references/skill-progression.md`
@@ -459,7 +480,7 @@ python scripts/check_private_data_policy.py
 python scripts/check_secret_hygiene.py
 python scripts/check_public_release.py
 pytest -q
-python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_secret_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\secret_hygiene.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_secret_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\meta_harness_policy.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\secret_hygiene.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
 ```
 
 ## Repository layout

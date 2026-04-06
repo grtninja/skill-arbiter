@@ -13,6 +13,8 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Codex app, VS Code, and GitHub Copilot instruction-surface interoperability tracking
 - local Codex config and loopback LM Studio coding-model interoperability
 - loopback-hosted OpenAI-compatible coding-model interoperability across LM Studio, MemryX shim lanes, and other local model software
+- meta-harness authority semantics where `:9000` and `:2337` are authoritative model lanes and `:1234` is an operator surface only
+- explicit desktop startup acceptance where empty shell windows are a hard failure, including transient startup flash
 - active threat suppression for hostile skills and related automation surfaces
 - strict self-governance and public-shape publication controls
 - branded desktop launch surfaces, support/about metadata, and public-release readiness checks
@@ -24,7 +26,8 @@ This document is the canonical high-level scope for `skill-arbiter`.
 
 - The app has a valid standalone local lane for inventory, baseline reconciliation, attribution, and mitigation.
 - The app is only fully effective when the surrounding work is being driven by Codex app or GitHub Copilot instruction surfaces.
-- Collaboration learning, skill-game progression, and upgrade/consolidation recommendation lanes are intentionally downstream of real Codex/Copilot-driven work and should be described as partial otherwise.
+- Collaboration learning, skill-game progression, and upgrade/consolidation recommendation lanes are part of the harness in this app; real Codex/Copilot-driven work improves their evidence quality, but they are not legacy or out-of-scope systems.
+- Quest-grade execution tracking is in scope: substantial governed work should be representable as a human-readable request-to-result path with steps, checkpoints, deliverables, and evidence.
 - AI/agent-assisted output remains advisory and fallible; operator review is part of the scope, not an optional extra.
 
 ## Scope lanes
@@ -38,9 +41,11 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Public support/about surfacing without browser auto-launch
 - Cross-repo recent-work relevance for skill prioritization
 - Local loopback coding-model advisor integration for short coding-security guidance, with Qwen preference by default
+- Meta-harness authority alignment for `9000` public model plane, `2337` hosted large-model lane, and `1234` operator-only surfaces
 - SkillHub discovery-only intake, source reputation tracking, and bounded marketplace alignment
 - Bounded OpenJarvis-style governance roles for scheduling, critique, QC intake,
   archive stewardship, and guarded tuning
+- Quest runtime for chaining skills into usable outcomes and rolling per-skill quest XP into cumulative agent progression
 
 ## Out of scope
 

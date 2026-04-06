@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross-App Queue Backpressure Governance"
+  short_description: "Govern queue ownership and backpressure across STARFRAME apps."
+  default_prompt: "Use $cross-app-queue-backpressure-governance when queue ownership, retry rules, or heavy-lane mutual exclusion span multiple local apps."

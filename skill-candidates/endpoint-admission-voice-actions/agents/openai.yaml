@@ -1,0 +1,4 @@
+interface:
+  display_name: "Endpoint Admission Voice Actions"
+  short_description: "Gate voice endpoints by identity, role, and action limits."
+  default_prompt: "Use $endpoint-admission-voice-actions when Penny voice endpoints need admission metadata, action limits, or drift checks before backend tool use."

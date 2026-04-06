@@ -10,6 +10,8 @@ if __package__ in {None, ""}:
 from skill_arbiter.inventory import build_inventory_snapshot
 from skill_arbiter.paths import REPO_ROOT
 
+PUBLIC_CATALOG_ADVISOR_NOTE = "_Live local advisor note omitted from public-shape catalog._"
+
 
 def render_catalog(payload: dict[str, object]) -> str:
     skills = payload.get("skills", [])
@@ -41,7 +43,7 @@ def render_catalog(payload: dict[str, object]) -> str:
         "",
         "## Advisor Note",
         "",
-        payload.get("advisor_note") or "_No local advisor note returned._",
+        PUBLIC_CATALOG_ADVISOR_NOTE,
         "",
         "## Interop Surfaces",
         "",

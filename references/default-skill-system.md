@@ -16,7 +16,8 @@ This document contains the baseline chain and mandatory gates for `skill-arbiter
 10. Audit changed skills with `skill-auditor`.
 11. Run `skill-arbiter-lockdown-admission` where admission evidence is required.
 12. Run `skill-enforcer` for cross-repo policy alignment.
-13. Record workflow XP/level progress with `python scripts/skill_game.py ...`.
+13. Record the work as a quest when it is substantial enough to need a human-readable path from request to usable outcome.
+14. Record workflow XP/level progress with `python scripts/skill_game.py ...` or the quest runtime so cumulative skill progression rolls up into explicit agent progression.
 
 ## Binding mode and subagent policy
 
