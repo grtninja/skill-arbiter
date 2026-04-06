@@ -1,0 +1,4 @@
+interface:
+  display_name: "Voice Catalog Runtime Alignment"
+  short_description: "Keep voice-command catalogs, endpoint permissions, and runtime handlers in sync."
+  default_prompt: "Use $voice-catalog-runtime-alignment when documented voice commands, endpoint action allowances, and live runtime handlers may have drifted apart and need one coordinated reconciliation pass."

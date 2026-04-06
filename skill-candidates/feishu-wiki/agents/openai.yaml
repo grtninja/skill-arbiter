@@ -1,4 +1,4 @@
 interface:
   display_name: "Feishu Wiki"
-  short_description: "|"
-  default_prompt: "Use $feishu-wiki when the request matches this lane: |"
+  short_description: "Navigate Feishu Wiki spaces and nodes, then hand page content to feishu_doc."
+  default_prompt: "Use $feishu-wiki when the request matches this lane: Navigate Feishu Wiki spaces and nodes, create or move pages, rename nodes, and resolve wiki pages into backing Docx objects for feishu_doc edits."

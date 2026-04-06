@@ -41,6 +41,8 @@ Single tool `feishu_doc` with an `action` parameter for all Feishu Docx operatio
 - **Markdown tables not supported** in `write`/`append` — use `create_table` actions instead.
 - Always pass `owner_open_id` when creating documents so the user gets `full_access` (otherwise only the bot has access).
 - Image display size follows uploaded pixel dimensions — scale small images to 800px+ width before uploading.
+- For uploads, provide exactly one of `url` or `file_path`; do not send both.
+- `parent_block_id` and positional fields such as `index` are optional and should only be used when placement must be explicit.
 - `feishu_wiki` depends on this tool for reading/writing wiki page content.
 
 ## References

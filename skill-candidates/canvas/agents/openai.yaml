@@ -1,4 +1,4 @@
 interface:
   display_name: "Canvas"
-  short_description: "Imported third-party candidate skill: canvas."
-  default_prompt: "Use $canvas when the request matches this lane: Imported third-party candidate skill: canvas."
+  short_description: "Present, navigate, snapshot, and hide HTML content on connected OpenClaw nodes."
+  default_prompt: "Use $canvas when the request matches this lane: Present, navigate, snapshot, and hide HTML content on connected OpenClaw nodes via the canvas tool, especially when showing dashboards, demos, or debugging canvas URL routing."

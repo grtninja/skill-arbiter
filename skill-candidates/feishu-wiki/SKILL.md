@@ -1,89 +1,32 @@
 ---
 name: feishu-wiki
-description: "|"
+description: "Navigate and manage Feishu Wiki spaces and nodes via the feishu_wiki tool. Use when listing spaces, browsing wiki trees, creating or moving wiki pages, renaming nodes, or resolving a wiki node into the backing Docx object for feishu_doc edits."
 ---
 
 # Feishu Wiki Tool
 
-Single tool `feishu_wiki` for knowledge base operations.
+Single tool `feishu_wiki` for knowledge base operations across Feishu Wiki spaces and nodes.
 
-## Token Extraction
+## Workflow
 
-From URL `https://xxx.feishu.cn/wiki/ABC123def` → `token` = `ABC123def`
+1. Start with `spaces` or `nodes` to understand the current wiki structure.
+2. Use `get` on a wiki token when you need the backing `obj_token` and `obj_type`.
+3. Use `feishu_doc` for the page content itself once you have the resolved `obj_token`.
+4. Apply the smallest structural action needed in the wiki layer (`create`, `move`, `rename`).
+5. Re-query the node tree to verify the final location and title.
 
-## Actions
+From URL `https://xxx.feishu.cn/wiki/ABC123def` -> `token` = `ABC123def`
 
-### List Knowledge Spaces
+## Actions Summary
 
-```json
-{ "action": "spaces" }
-```
-
-Returns all accessible wiki spaces.
-
-### List Nodes
-
-```json
-{ "action": "nodes", "space_id": "7xxx" }
-```
-
-With parent:
-
-```json
-{ "action": "nodes", "space_id": "7xxx", "parent_node_token": "wikcnXXX" }
-```
-
-### Get Node Details
-
-```json
-{ "action": "get", "token": "ABC123def" }
-```
-
-Returns: `node_token`, `obj_token`, `obj_type`, etc. Use `obj_token` with `feishu_doc` to read/write the document.
-
-### Create Node
-
-```json
-{ "action": "create", "space_id": "7xxx", "title": "New Page" }
-```
-
-With type and parent:
-
-```json
-{
-  "action": "create",
-  "space_id": "7xxx",
-  "title": "Sheet",
-  "obj_type": "sheet",
-  "parent_node_token": "wikcnXXX"
-}
-```
-
-`obj_type`: `docx` (default), `sheet`, `bitable`, `mindnote`, `file`, `doc`, `slides`
-
-### Move Node
-
-```json
-{ "action": "move", "space_id": "7xxx", "node_token": "wikcnXXX" }
-```
-
-To different location:
-
-```json
-{
-  "action": "move",
-  "space_id": "7xxx",
-  "node_token": "wikcnXXX",
-  "target_space_id": "7yyy",
-  "target_parent_token": "wikcnYYY"
-}
-```
-
-### Rename Node
-
-```json
-{ "action": "rename", "space_id": "7xxx", "node_token": "wikcnXXX", "title": "New Title" }
-```
+| Action | Description |
+| ------ | ----------- |
+| `spaces` | List accessible wiki spaces |
+| `nodes` | List nodes in a space or under a parent node |
+| `get` | Resolve wiki node details including `obj_token` |
+| `create` | Create a wiki node or page |
+| `move` | Move a node within or across spaces |
+| `rename` | Rename an existing node |
 
 ## Wiki-Doc Workflow
 
@@ -92,6 +35,12 @@ To edit a wiki page:
 1. Get node: `{ "action": "get", "token": "wiki_token" }` → returns `obj_token`
 2. Read doc: `feishu_doc { "action": "read", "doc_token": "obj_token" }`
 3. Write doc: `feishu_doc { "action": "write", "doc_token": "obj_token", "content": "..." }`
+
+## Key Constraints
+
+- `feishu_wiki` manages the structure; `feishu_doc` manages wiki page content.
+- `obj_type` defaults to `docx`, but can also be `sheet`, `bitable`, `mindnote`, `file`, `doc`, or `slides`.
+- Cross-space moves should be verified carefully because both target space and parent location matter.
 
 ## Configuration
 

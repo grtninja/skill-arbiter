@@ -1,46 +1,26 @@
 ---
 name: feishu-perm
-description: "|"
+description: "Manage Feishu file and document permissions via the feishu_perm tool. Use when listing collaborators, granting access, revoking access, or checking whether a file, folder, wiki node, or document has the correct permission level."
 ---
 
 # Feishu Permission Tool
 
-Single tool `feishu_perm` for managing file/document permissions.
+Single tool `feishu_perm` for managing file and document permissions across supported Feishu object types.
 
-## Actions
+## Workflow
 
-### List Collaborators
+1. List current collaborators before changing permissions.
+2. Confirm the correct target `token` and object `type`.
+3. Apply the minimum permission change needed (`add` or `remove`).
+4. Re-list collaborators to verify the final permission state.
 
-```json
-{ "action": "list", "token": "ABC123", "type": "docx" }
-```
+## Actions Summary
 
-Returns: members with member_type, member_id, perm, name.
-
-### Add Collaborator
-
-```json
-{
-  "action": "add",
-  "token": "ABC123",
-  "type": "docx",
-  "member_type": "email",
-  "member_id": "user@example.com",
-  "perm": "edit"
-}
-```
-
-### Remove Collaborator
-
-```json
-{
-  "action": "remove",
-  "token": "ABC123",
-  "type": "docx",
-  "member_type": "email",
-  "member_id": "user@example.com"
-}
-```
+| Action | Description |
+| ------ | ----------- |
+| `list` | List collaborators and their current permissions |
+| `add` | Grant a permission level to a member |
+| `remove` | Revoke collaborator access |
 
 ## Token Types
 
@@ -73,6 +53,12 @@ Returns: members with member_type, member_id, perm, name.
 | `view`        | View only                            |
 | `edit`        | Can edit                             |
 | `full_access` | Full access (can manage permissions) |
+
+## Key Constraints
+
+- Permission changes are sensitive operations; keep this tool explicitly enabled and use the narrowest permission needed.
+- `type`, `member_type`, and `member_id` must all match the target object and principal format.
+- `full_access` can manage permissions and should be granted sparingly.
 
 ## Examples
 

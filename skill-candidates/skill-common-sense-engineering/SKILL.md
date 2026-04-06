@@ -36,7 +36,9 @@ Lightweight sanity layer for day-to-day coding work. Prevents avoidable mistakes
 
 ## Scope Boundary
 
-Use this skill only for common-sense engineering checks. Route unrelated work through `$skill-hub`.
+Use this skill only for common-sense engineering checks.
+
+Do not use this skill for unrelated lanes; route those through `$skill-hub` and the most specific matching skill.
 
 ## References
 

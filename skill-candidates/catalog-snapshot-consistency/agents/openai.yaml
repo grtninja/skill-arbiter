@@ -1,0 +1,4 @@
+interface:
+  display_name: "Catalog Snapshot Consistency"
+  short_description: "Keep generated catalogs and operator snapshots aligned with the real source of truth."
+  default_prompt: "Use $catalog-snapshot-consistency when generated catalogs, command matrices, or operator snapshots may have drifted from the authoritative runtime or source files."

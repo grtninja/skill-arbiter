@@ -1,4 +1,4 @@
 interface:
   display_name: "Feishu Perm"
-  short_description: "|"
-  default_prompt: "Use $feishu-perm when the request matches this lane: |"
+  short_description: "List, grant, and revoke Feishu file and document permissions."
+  default_prompt: "Use $feishu-perm when the request matches this lane: List, grant, and revoke Feishu file and document permissions for docs, folders, wiki nodes, and other supported object types."

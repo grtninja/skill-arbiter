@@ -9,8 +9,8 @@ Display HTML content on connected OpenClaw nodes via the canvas host server (por
 
 ## Workflow
 
-1. Place HTML files in the canvas root directory (default `~/clawd/canvas/`).
-2. Verify the canvas host is running:
+1. Place HTML files in the configured canvas root directory. `~/clawd/canvas/` is a common default, but verify the actual `canvasHost.root` on the target host before assuming it.
+2. Verify the canvas host is running on the target host:
    ```bash
    lsof -i :18793
    ```
@@ -28,7 +28,7 @@ Display HTML content on connected OpenClaw nodes via the canvas host server (por
    ```
    canvas action:present node:<node-id> target:<full-url>
    ```
-6. Verify content loaded — if white screen, check that the URL hostname matches the bind mode (not localhost when bound to Tailscale/LAN).
+6. Verify content loaded. If the canvas shows a white screen, check that the URL hostname matches the bind mode and the actual host surface you are targeting; do not assume `localhost` or a Unix-style path layout on every machine.
 
 ## Actions
 
@@ -43,6 +43,8 @@ Display HTML content on connected OpenClaw nodes via the canvas host server (por
 ## Configuration
 
 In `~/.openclaw/openclaw.json`, enable `canvasHost` with a root directory and optional `liveReload` (auto-refreshes connected canvases on file change). The `gateway.bind` setting (`loopback`, `lan`, `tailnet`, `auto`) controls which interface the server binds to and which hostname nodes receive.
+
+Treat the path and shell commands in this doc as OpenClaw-oriented examples, not a universal host contract.
 
 ## Debugging
 

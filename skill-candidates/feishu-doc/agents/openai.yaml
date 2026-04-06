@@ -1,4 +1,4 @@
 interface:
   display_name: "Feishu Doc"
-  short_description: "|"
-  default_prompt: "Use $feishu-doc when the request matches this lane: |"
+  short_description: "Read, write, append, and manage Feishu/Lark Docx documents and blocks."
+  default_prompt: "Use $feishu-doc when the request matches this lane: Read, write, append, and manage Feishu/Lark Docx documents, including structured blocks, tables, images, and file attachments."

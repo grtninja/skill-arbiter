@@ -1,4 +1,4 @@
 interface:
   display_name: "Lobster"
-  short_description: "Imported third-party candidate skill: lobster."
-  default_prompt: "Use $lobster when the request matches this lane: Imported third-party candidate skill: lobster."
+  short_description: "Execute deterministic multi-step workflows with approval checkpoints and resumable tokens."
+  default_prompt: "Use $lobster when the request matches this lane: Execute deterministic multi-step workflows with approval checkpoints, resumable tokens, and structured JSON output."

@@ -1,4 +1,4 @@
 interface:
   display_name: "Feishu Drive"
-  short_description: "|"
-  default_prompt: "Use $feishu-drive when the request matches this lane: |"
+  short_description: "Browse and manage Feishu Drive folders and files the bot can access."
+  default_prompt: "Use $feishu-drive when the request matches this lane: Browse and manage Feishu Drive folders and files, including listing folders, inspecting file metadata, creating folders, moving items, and deleting Drive content."
