@@ -9,9 +9,10 @@ Describe what changed and why.
 - [ ] `python scripts/generate_skill_catalog.py`
 - [ ] `python scripts/generate_skillhub_alignment.py`
 - [ ] `python scripts/check_private_data_policy.py`
+- [ ] `python scripts/check_external_review_hygiene.py`
 - [ ] `python scripts/check_public_release.py`
 - [ ] `pytest -q`
-- [ ] `python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py`
+- [ ] `python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_external_review_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/external_review_hygiene.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py`
 - [ ] Release metadata updated for release-impacting changes (`python scripts/prepare_release.py --part patch`)
 - [ ] Docs updated if behavior changed
 - [ ] `AGENTS.md`, `BOUNDARIES.md`, `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `SKILL.md` are aligned
@@ -25,6 +26,8 @@ Describe what changed and why.
 - [ ] Confirmed no private repo names, usernames, or absolute private paths entered repo-tracked files
 - [ ] Confirmed public support links are copy-only in the desktop UI and no browser-launch behavior was added
 - [ ] For source-risk changes: `references/OPENCLAW_NULLCLAW_THREAT_MATRIX_2026-03-11.md` and `references/third-party-skill-attribution.md` updated as needed
+- [ ] If touching `skill-candidates/**/SKILL.md` or adjacent references: reviewed trigger language, scope boundary, loopback/escalation/approval semantics, and example assumptions as behavior-governing surfaces
+- [ ] If this is an external-style skill-doc PR: confirmed no `.github/workflows` changes, no secret/config/package/runtime/script changes unless explicitly requested, and no generated-file edits without source-of-truth updates
 
 ## Risk Notes
 

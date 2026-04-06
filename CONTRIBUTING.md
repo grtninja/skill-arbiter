@@ -24,9 +24,10 @@ python scripts/nullclaw_agent.py --help
 python scripts/generate_skill_catalog.py
 python scripts/generate_skillhub_alignment.py
 python scripts/check_private_data_policy.py
+python scripts/check_external_review_hygiene.py
 python scripts/check_public_release.py
 pytest -q
-python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_external_review_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/external_review_hygiene.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py
 ```
 
 ## Desktop app flow
@@ -86,6 +87,7 @@ Required gates:
 ```bash
 python scripts/check_private_data_policy.py --staged
 python scripts/check_private_data_policy.py
+python scripts/check_external_review_hygiene.py
 python scripts/check_public_release.py
 ```
 
@@ -106,6 +108,18 @@ Before opening a PR:
    - public-release readiness changes
    - public-shape or maintainer-attribution changes
 7. Keep built-ins additive; do not disable upstream VS Code/Codex skills.
+
+For external contributor PRs and any PR touching skill-governing markdown:
+
+1. Treat `skill-candidates/**/SKILL.md` and adjacent references as behavior-governing surfaces, not passive docs.
+2. Do not add `.github/workflows` changes, package/runtime/config/script changes, or secret-bearing integrations unless explicitly requested by a maintainer.
+3. Do not edit generated artifacts unless the source-of-truth and regeneration path are updated in the same PR.
+4. Require human review for wording that changes:
+   - trigger or description language
+   - scope boundary or "do not use for"
+   - loopback, escalation, or approval semantics
+   - examples that introduce stronger host/runtime assumptions than the prose admits
+5. Keep vendor review tooling markers and remote workflow actions out of governed repo surfaces.
 
 ## Skills and sources
 

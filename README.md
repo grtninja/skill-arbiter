@@ -239,6 +239,12 @@ Run the secret hygiene gate:
 python scripts/check_secret_hygiene.py
 ```
 
+Run the external review hygiene gate:
+
+```bash
+python scripts/check_external_review_hygiene.py
+```
+
 Run the public-release gate:
 
 ```bash
@@ -254,6 +260,22 @@ This public repo is configured for a `local_only` GitHub Actions policy.
   policy changes first.
 - Workflow startup should rely on shell steps plus in-repo Python checks so the
   public branch still validates under restricted Actions settings.
+
+## Skill doc review policy
+
+`skill-candidates/**/SKILL.md` and their adjacent references are treated as
+behavior-governing surfaces.
+
+- Review them like prompt-policy or orchestration code, not passive prose.
+- Human review is required for changes to trigger language, scope boundaries,
+  loopback/escalation/approval semantics, and examples that imply runtime or
+  host assumptions.
+- External contributor PRs should not add workflow hooks, vendor review
+  integrations, or secret-bearing config changes unless explicitly requested by
+  a maintainer.
+- Repo-local automation enforces an external review hygiene gate over governed
+  surfaces to catch vendor-review markers and non-local workflow actions before
+  merge.
 
 ## Local API
 
@@ -477,10 +499,11 @@ python scripts/generate_skill_catalog.py
 python scripts/generate_skill_vetting_report.py
 python scripts/generate_skillhub_alignment.py
 python scripts/check_private_data_policy.py
+python scripts/check_external_review_hygiene.py
 python scripts/check_secret_hygiene.py
 python scripts/check_public_release.py
 pytest -q
-python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_secret_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\meta_harness_policy.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\secret_hygiene.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
+python -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_external_review_hygiene.py scripts/check_secret_hygiene.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/generate_skill_vetting_report.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py skill_arbiter\\about.py skill_arbiter\\agent_server.py skill_arbiter\\external_review_hygiene.py skill_arbiter\\inventory.py skill_arbiter\\llm_advisor.py skill_arbiter\\meta_harness_policy.py skill_arbiter\\mitigation.py skill_arbiter\\privacy_policy.py skill_arbiter\\public_readiness.py skill_arbiter\\secret_hygiene.py skill_arbiter\\self_governance.py skill_arbiter\\threat_catalog.py
 ```
 
 ## Repository layout

@@ -46,6 +46,11 @@ jobs:
           cd repo
           python3 scripts/check_secret_hygiene.py
 
+      - name: External review hygiene check
+        run: |
+          cd repo
+          python3 scripts/check_external_review_hygiene.py
+
       - name: Public release check
         run: |
           cd repo
@@ -59,6 +64,7 @@ jobs:
             scripts/prepare_release.py \
             scripts/check_release_hygiene.py \
             scripts/check_private_data_policy.py \
+            scripts/check_external_review_hygiene.py \
             scripts/check_public_release.py \
             scripts/check_secret_hygiene.py
 
