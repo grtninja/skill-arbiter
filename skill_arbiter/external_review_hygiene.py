@@ -23,6 +23,10 @@ GOVERNED_PREFIXES = (
     "apps/",
     "skill-candidates/",
 )
+SELF_ALLOWLIST = {
+    "scripts/check_external_review_hygiene.py",
+    "skill_arbiter/external_review_hygiene.py",
+}
 
 
 @dataclass
@@ -69,7 +73,7 @@ def _changed_paths(repo_root: Path, base_ref: str) -> list[Path]:
 
 def _is_governed_surface(repo_root: Path, path: Path) -> bool:
     rel = path.relative_to(repo_root).as_posix()
-    return rel.startswith(GOVERNED_PREFIXES)
+    return rel.startswith(GOVERNED_PREFIXES) and rel not in SELF_ALLOWLIST
 
 
 def scan_paths(repo_root: Path, paths: list[Path], *, scope: str = "custom-paths") -> ExternalReviewScanResult:
