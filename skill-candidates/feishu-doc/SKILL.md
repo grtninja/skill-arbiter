@@ -1,198 +1,52 @@
 ---
 name: feishu-doc
-description: "|"
+description: "Read, write, append, and manage Feishu/Lark documents via the feishu_doc tool. Use when creating, reading, or editing Feishu Docx documents, managing document blocks, creating tables, uploading images or file attachments, or extracting doc_token from Feishu URLs."
 ---
 
 # Feishu Document Tool
 
-Single tool `feishu_doc` with action parameter for all document operations, including table creation for Docx.
+Single tool `feishu_doc` with an `action` parameter for all Feishu Docx operations. Extract `doc_token` from URL: `https://xxx.feishu.cn/docx/ABC123def` -> token is `ABC123def`.
 
-## Token Extraction
+## Workflow
 
-From URL `https://xxx.feishu.cn/docx/ABC123def` → `doc_token` = `ABC123def`
+1. Extract `doc_token` from the Feishu document URL.
+2. Read the document to understand current content:
+   ```json
+   { "action": "read", "doc_token": "ABC123def" }
+   ```
+3. Check the `hint` field in the response — if present, structured content (tables, images) exists; use `list_blocks` to access it.
+4. Apply changes using the appropriate action (write, append, create, update_block, create_table, etc.).
+5. Verify the result by re-reading the document.
 
-## Actions
+## Actions Summary
 
-### Read Document
+| Action | Description |
+| ------ | ----------- |
+| `read` | Get title, plain text, block statistics |
+| `write` | Replace entire document with markdown |
+| `append` | Append markdown to end of document |
+| `create` | Create new document (always pass `owner_open_id`) |
+| `list_blocks` | Get full block data including tables and images |
+| `get_block` | Read a single block by ID |
+| `update_block` | Update text content of a block |
+| `delete_block` | Delete a block by ID |
+| `create_table` | Create a Docx table block |
+| `write_table_cells` | Write values to table cells |
+| `create_table_with_values` | Create table and fill cells in one step |
+| `upload_image` | Upload image from URL or local path |
+| `upload_file` | Upload file attachment from URL or local path |
 
-```json
-{ "action": "read", "doc_token": "ABC123def" }
-```
+## Key Constraints
 
-Returns: title, plain text content, block statistics. Check `hint` field - if present, structured content (tables, images) exists that requires `list_blocks`.
+- **Markdown tables not supported** in `write`/`append` — use `create_table` actions instead.
+- Always pass `owner_open_id` when creating documents so the user gets `full_access` (otherwise only the bot has access).
+- Image display size follows uploaded pixel dimensions — scale small images to 800px+ width before uploading.
+- `feishu_wiki` depends on this tool for reading/writing wiki page content.
 
-### Write Document (Replace All)
+## References
 
-```json
-{ "action": "write", "doc_token": "ABC123def", "content": "# Title\n\nMarkdown content..." }
-```
-
-Replaces entire document with markdown content. Supports: headings, lists, code blocks, quotes, links, images (`![](url)` auto-uploaded), bold/italic/strikethrough.
-
-**Limitation:** Markdown tables are NOT supported.
-
-### Append Content
-
-```json
-{ "action": "append", "doc_token": "ABC123def", "content": "Additional content" }
-```
-
-Appends markdown to end of document.
-
-### Create Document
-
-```json
-{ "action": "create", "title": "New Document", "owner_open_id": "ou_xxx" }
-```
-
-With folder:
-
-```json
-{
-  "action": "create",
-  "title": "New Document",
-  "folder_token": "fldcnXXX",
-  "owner_open_id": "ou_xxx"
-}
-```
-
-**Important:** Always pass `owner_open_id` with the requesting user's `open_id` (from inbound metadata `sender_id`) so the user automatically gets `full_access` permission on the created document. Without this, only the bot app has access.
-
-### List Blocks
-
-```json
-{ "action": "list_blocks", "doc_token": "ABC123def" }
-```
-
-Returns full block data including tables, images. Use this to read structured content.
-
-### Get Single Block
-
-```json
-{ "action": "get_block", "doc_token": "ABC123def", "block_id": "doxcnXXX" }
-```
-
-### Update Block Text
-
-```json
-{
-  "action": "update_block",
-  "doc_token": "ABC123def",
-  "block_id": "doxcnXXX",
-  "content": "New text"
-}
-```
-
-### Delete Block
-
-```json
-{ "action": "delete_block", "doc_token": "ABC123def", "block_id": "doxcnXXX" }
-```
-
-### Create Table (Docx Table Block)
-
-```json
-{
-  "action": "create_table",
-  "doc_token": "ABC123def",
-  "row_size": 2,
-  "column_size": 2,
-  "column_width": [200, 200]
-}
-```
-
-Optional: `parent_block_id` to insert under a specific block.
-
-### Write Table Cells
-
-```json
-{
-  "action": "write_table_cells",
-  "doc_token": "ABC123def",
-  "table_block_id": "doxcnTABLE",
-  "values": [
-    ["A1", "B1"],
-    ["A2", "B2"]
-  ]
-}
-```
-
-### Create Table With Values (One-step)
-
-```json
-{
-  "action": "create_table_with_values",
-  "doc_token": "ABC123def",
-  "row_size": 2,
-  "column_size": 2,
-  "column_width": [200, 200],
-  "values": [
-    ["A1", "B1"],
-    ["A2", "B2"]
-  ]
-}
-```
-
-Optional: `parent_block_id` to insert under a specific block.
-
-### Upload Image to Docx (from URL or local file)
-
-```json
-{
-  "action": "upload_image",
-  "doc_token": "ABC123def",
-  "url": "https://example.com/image.png"
-}
-```
-
-Or local path with position control:
-
-```json
-{
-  "action": "upload_image",
-  "doc_token": "ABC123def",
-  "file_path": "/tmp/image.png",
-  "parent_block_id": "doxcnParent",
-  "index": 5
-}
-```
-
-Optional `index` (0-based) inserts the image at a specific position among sibling blocks. Omit to append at end.
-
-**Note:** Image display size is determined by the uploaded image's pixel dimensions. For small images (e.g. 480x270 GIFs), scale to 800px+ width before uploading to ensure proper display.
-
-### Upload File Attachment to Docx (from URL or local file)
-
-```json
-{
-  "action": "upload_file",
-  "doc_token": "ABC123def",
-  "url": "https://example.com/report.pdf"
-}
-```
-
-Or local path:
-
-```json
-{
-  "action": "upload_file",
-  "doc_token": "ABC123def",
-  "file_path": "/tmp/report.pdf",
-  "filename": "Q1-report.pdf"
-}
-```
-
-Rules:
-
-- exactly one of `url` / `file_path`
-- optional `filename` override
-- optional `parent_block_id`
-
-## Reading Workflow
-
-1. Start with `action: "read"` - get plain text + statistics
-2. Check `block_types` in response for Table, Image, Code, etc.
-3. If structured content exists, use `action: "list_blocks"` for full data
+- `references/block-types.md` — complete block type table, editing guidelines, and common patterns.
+- See also: `references/action-examples.md` for full JSON examples of each action.
 
 ## Configuration
 
@@ -200,14 +54,10 @@ Rules:
 channels:
   feishu:
     tools:
-      doc: true # default: true
+      doc: true  # default: true
 ```
 
-**Note:** `feishu_wiki` depends on this tool - wiki page content is read/written via `feishu_doc`.
-
-## Permissions
-
-Required: `docx:document`, `docx:document:readonly`, `docx:document.block:convert`, `drive:drive`
+Required permissions: `docx:document`, `docx:document:readonly`, `docx:document.block:convert`, `drive:drive`.
 
 ## Guardrails
 
