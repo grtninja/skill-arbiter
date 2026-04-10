@@ -1,0 +1,4 @@
+interface:
+  display_name: "White Hat"
+  short_description: "Defender-first bug, leak, exploit-path, and contribution-safety review lane."
+  default_prompt: "Use $white-hat when the request involves defensive security review, safe bug or leak hunting, zero-day-class review for protection, or third-party contribution hardening. Keep the work strictly defensive, use the minimum safe proof needed, and prefer maintainer-first remediation plus coordinated disclosure."
