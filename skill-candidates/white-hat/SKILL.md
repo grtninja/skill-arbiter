@@ -13,7 +13,14 @@ Use this skill to keep technical work on the good-guy side: proactively look for
 
 - The user explicitly asks for a security sweep, white-hat review, leak hunt, exploit hunt for defense, zero-day-class review, or third-party contribution hardening.
 - The task touches auth, sessions, permissions, secrets, prompt/tool boundaries, model context handling, file/network exposure, build or update pipelines, parsers, or dependency execution.
+- The task touches `.github/workflows/**`, GitHub rulesets, CODEOWNERS, protected branches, `GITHUB_TOKEN` permissions, reusable workflows, or CI/CD secret handling.
 - You are preparing a contribution to a third-party repository and need to avoid shipping a latent vulnerability.
+
+## Best-Fit Companion Skills
+
+- `$security-best-practices` when the job needs secure-by-default implementation or code-review guidance.
+- `$security-threat-model` when trust boundaries, attacker capabilities, or abuse-path mapping materially affect the work.
+- `$security-ownership-map` when sensitive ownership gaps or disclosure routing matter.
 
 ## Hard Boundaries
 
@@ -38,6 +45,7 @@ Use this skill to keep technical work on the good-guy side: proactively look for
 
 - Look for bugs, crashes, unsafe defaults, privilege drift, injection paths, prompt/data leakage, secret exposure, broken authorization, insecure temp files, arbitrary file access, deserialization or parser risk, dependency/script execution risk, SSRF/RCE-style classes, and logging or telemetry leaks.
 - For model/tool systems, check prompt injection resistance, tool-boundary enforcement, output screening, and least-secret context.
+- If a tool-assisted sweep would materially improve confidence, use the safe shortlist in `references/tooling-and-sources.md` and keep third-party sources in discovery-only posture until they have been rewritten or admitted locally.
 
 ### 4. Verify safely
 
@@ -75,3 +83,4 @@ Use this skill to keep technical work on the good-guy side: proactively look for
 ## References
 
 - Anthropic-inspired defensive patterns and disclosure posture: `references/defender-patterns.md`
+- Safe external tooling and source shortlist: `references/tooling-and-sources.md`
