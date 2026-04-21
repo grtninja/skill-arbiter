@@ -97,7 +97,7 @@ Before opening a PR:
 
 1. Keep runtime, tests, docs, and generated references aligned.
 2. Run the validation block above.
-3. Regenerate `references/skill-catalog.md`.
+3. Regenerate `skill-catalog.md` and `references/skill-catalog.md`.
 4. Update scope docs and policy docs if behavior changed.
 5. Update release metadata for release-impacting changes.
 6. Include risk notes for:

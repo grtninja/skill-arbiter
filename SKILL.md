@@ -1,6 +1,8 @@
 ---
-name: skill-arbiter
-description: Run the local NullClaw host security app for skill governance, curated-source discovery, guarded threat suppression, and self-governance on Windows hosts.
+name: "skill-arbiter"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run the local NullClaw host security app for skill governance, curated-source discovery, guarded threat suppression, and self-governance on Windows hosts."
 ---
 
 # Skill Arbiter
@@ -45,11 +47,13 @@ Run the local loopback agent without the desktop shell:
 python scripts/nullclaw_agent.py
 ```
 
-Refresh the machine-generated catalog:
+Refresh the machine-generated catalogs:
 
 ```bash
 python scripts/generate_skill_catalog.py
 ```
+
+This refresh writes both the repo-owned discovery index at `skill-catalog.md` and the deeper governance inventory at `references/skill-catalog.md`.
 
 Run the public-shape gate:
 
@@ -107,6 +111,7 @@ Subagent policy:
 
 ## Related references
 
+- `skill-catalog.md`
 - `BOUNDARIES.md`
 - `SECURITY.md`
 - `references/skill-catalog.md`

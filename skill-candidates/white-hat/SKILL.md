@@ -1,5 +1,7 @@
 ---
-name: white-hat
+name: "white-hat"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Run a defender-first security sweep on code, configs, prompts, model/tooling surfaces, or third-party contribution lanes. Use when a request involves safe bug, leak, zero-day-class, exploit, or hack hunting for protection, when contributing to outside repositories and you want a focused security pass, or when touching auth, secrets, permissions, network exposure, prompt/tool boundaries, data flow, or update/build surfaces. This skill is defensive only and must never be used for weaponization or unauthorized access."
 ---
 
