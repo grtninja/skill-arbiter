@@ -16,6 +16,13 @@ This repo stays aligned to the public-safe governance baseline in
 `BOUNDARIES.md`, `docs/PROJECT_SCOPE.md`, `docs/SCOPE_TRACKER.md`, and the
 generated alignment references shipped in `references/`.
 
+## Discovery index
+
+Use [`skill-catalog.md`](skill-catalog.md) as the canonical repo-owned skill
+index for humans, mirrors, and crawlers. The generated
+[`references/skill-catalog.md`](references/skill-catalog.md) remains the deeper
+inventory and governance view.
+
 ## App preview
 
 Public-safe preview capture from an isolated browser session:

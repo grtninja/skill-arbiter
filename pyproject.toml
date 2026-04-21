@@ -1,6 +1,6 @@
 [project]
 name = "skill-arbiter"
-version = "0.2.24"
+version = "0.2.25"
 description = "Local NullClaw host security app for skill governance, threat suppression, and self-governance on Windows hosts."
 readme = "README.md"
 requires-python = ">=3.10"

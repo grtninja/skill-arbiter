@@ -20,6 +20,15 @@ All notable changes to this project are documented in this file.
 - split the desktop UI into explicit entry, runtime, DOM, polling, runtime-view, and inventory-view modules so the shell no longer depends on a single monolithic `app.js`
 - break inventory and collaboration runtime code into smaller helper modules so meta-harness policy, source/baseline attribution, and collaboration evidence handling stay modular and easier to validate
 
+## [0.2.25] - 2026-04-21
+
+### Changed
+
+- add a repo-owned `skill-catalog.md` discovery index alongside `references/skill-catalog.md`
+- add explicit `author` and `canonical_source` metadata to the repo root skill plus `repo-b-hardware-first` and `white-hat`
+- make the public skill-catalog generator fail closed on untracked-skill discovery and omit provenance/description when metadata is not explicitly declared
+- align README, CONTRIBUTING, and SKILL guidance with the root catalog output and add regression coverage for tracked discovery behavior
+
 ## [0.2.24] - 2026-04-01
 
 ### Fixed
@@ -624,4 +633,5 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
+
 
