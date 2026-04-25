@@ -1,6 +1,8 @@
 ---
-name: skill-dependency-fan-out-inspector
-description: Inspect skill-to-skill dependencies and detect fan-out, cycles, and N+1 invocation risk. Use when scaling skill stacks or diagnosing hidden cross-skill cost/latency amplification.
+name: "skill-dependency-fan-out-inspector"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Inspect skill-to-skill dependencies and detect fan-out, cycles, and N+1 invocation risk. Use when scaling skill stacks or diagnosing hidden cross-skill cost/latency amplification."
 ---
 
 # Skill Dependency Fan-Out Inspector

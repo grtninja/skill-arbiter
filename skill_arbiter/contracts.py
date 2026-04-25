@@ -15,6 +15,8 @@ class SkillRecord:
     source_type: str
     origin: str
     description: str
+    author: str
+    canonical_source: str
     local_presence: str
     version_or_commit: str
     drift_state: str

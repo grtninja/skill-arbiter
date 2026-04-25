@@ -1,5 +1,7 @@
 ---
-name: voice-call
+name: "voice-call"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Start voice calls via the OpenClaw voice-call plugin."
 ---
 

@@ -1,6 +1,8 @@
 ---
-name: skills-cross-repo-radar
-description: Detect recent cross-repo work and produce deterministic JSON evidence for skill curation and routing decisions. Use when workflows span multiple repos and you need a bounded view of recent commits, touched files, and policy/contract-sensitive changes.
+name: "skills-cross-repo-radar"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Detect recent cross-repo work and produce deterministic JSON evidence for skill curation and routing decisions. Use when workflows span multiple repos and you need a bounded view of recent commits, touched files, and policy/contract-sensitive changes."
 ---
 
 # Skills Cross-Repo Radar

@@ -19,6 +19,7 @@ SELF_GOVERNANCE_PATTERNS: tuple[tuple[str, str, str], ...] = (
     ),
     ("high", "vendored_python_binary", r"copy-item[^\n\r]+python(?:w)?\.exe|rename-item[^\n\r]+python(?:w)?\.exe"),
     ("high", "path_pollution", r"\bsetx\s+PATH\b|\$env:PATH\s*=|export\s+PATH="),
+    ("high", "ripgrep_invocation", r"(?m)^[ \t]*(?:[^|\n\r]*\|\s*)?rg(?:\.exe)?\s+-"),
 )
 SCAN_SUFFIXES = {".py", ".ps1", ".md", ".yaml", ".yml", ".json", ".toml"}
 SCAN_ROOTS = ("scripts", "skill_arbiter", "AGENTS.md", "README.md", "BOUNDARIES.md", "SECURITY.md", "CONTRIBUTING.md", "SKILL.md")

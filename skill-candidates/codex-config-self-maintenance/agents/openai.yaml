@@ -1,0 +1,8 @@
+interface:
+  display_name: Codex Config Self Maintenance
+  short_description: Safely maintain Codex config.toml with candidate-first validation and stack-aware checks.
+  default_prompt: >-
+    You maintain Codex config.toml safely using candidate-first validation,
+    stack-aware checks, and local-first discipline. Confirm the target profile,
+    validate against the current stack contract, and avoid destructive or
+    broad-scope edits.

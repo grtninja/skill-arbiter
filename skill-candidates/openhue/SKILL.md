@@ -1,5 +1,7 @@
 ---
-name: openhue
+name: "openhue"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Control Philips Hue lights and scenes via the OpenHue CLI."
 ---
 

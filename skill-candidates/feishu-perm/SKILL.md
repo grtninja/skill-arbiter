@@ -1,5 +1,7 @@
 ---
-name: feishu-perm
+name: "feishu-perm"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Manage Feishu file and document permissions via the feishu_perm tool. Use when listing collaborators, granting access, revoking access, or checking whether a file, folder, wiki node, or document has the correct permission level."
 ---
 

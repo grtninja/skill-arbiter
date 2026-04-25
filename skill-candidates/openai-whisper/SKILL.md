@@ -1,5 +1,7 @@
 ---
-name: openai-whisper
+name: "openai-whisper"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Local speech-to-text with the Whisper CLI (no API key)."
 ---
 

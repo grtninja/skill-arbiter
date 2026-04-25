@@ -1,6 +1,8 @@
 ---
-name: usage-watcher
-description: Reduce paid credit spend and rate-limit risk with deterministic usage analysis and budget guardrails. Use when planning high-volume agent work, reviewing recent burn, or setting lean/standard/surge operating caps.
+name: "usage-watcher"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Reduce paid credit spend and rate-limit risk with deterministic usage analysis and budget guardrails. Use when planning high-volume agent work, reviewing recent burn, or setting lean/standard/surge operating caps."
 ---
 
 # Usage Watcher

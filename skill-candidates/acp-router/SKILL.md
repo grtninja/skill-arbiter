@@ -1,6 +1,8 @@
 ---
-name: acp-router
-description: "Route plain-language requests for Pi, Claude Code, Codex, OpenCode, Gemini CLI, or ACP harness work into either OpenClaw ACP runtime sessions or direct acpx-driven sessions (\"telephone game\" flow). For coding-agent thread requests, read this skill first, then use only `sessions_spawn` for thread creation."
+name: "acp-router"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Route plain-language requests for Pi, Claude Code, Codex, OpenCode, Gemini CLI, or ACP harness work into either OpenClaw ACP runtime sessions or direct acpx-driven sessions (\\\"telephone game\\\" flow). For coding-agent thread requests, read this skill first, then use only `sessions_spawn` for thread creation."
 ---
 
 # ACP Harness Router

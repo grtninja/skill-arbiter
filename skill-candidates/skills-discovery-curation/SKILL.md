@@ -1,6 +1,8 @@
 ---
-name: skills-discovery-curation
-description: Discover, triage, and prioritize Codex skills for a repository or workspace. Use for one-time audits and recurring curation runs after cross-repo MX3/shim drift scans.
+name: "skills-discovery-curation"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Discover, triage, and prioritize Codex skills for a repository or workspace. Use for one-time audits and recurring curation runs after cross-repo MX3/shim drift scans."
 ---
 
 # Skills Discovery and Curation

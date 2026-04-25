@@ -1,5 +1,7 @@
 ---
-name: tmux
+name: "tmux"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output."
 ---
 

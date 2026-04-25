@@ -7,18 +7,29 @@ from .threat_catalog import describe_codes
 from supply_chain_guard import scan_skill_dir_content, scan_skill_tree, summarize_findings
 
 
-def _read_skill_description(skill_dir: Path) -> str:
+_FRONTMATTER_RE = re.compile(r"(?s)^---\n(.*?)\n---\n?")
+
+
+def _read_skill_frontmatter(skill_dir: Path) -> dict[str, str]:
     skill_md = skill_dir / "SKILL.md"
     if not skill_md.is_file():
-        return ""
+        return {}
     text = skill_md.read_text(encoding="utf-8", errors="ignore")
-    match = re.match(r"(?s)^---\n(.*?)\n---\n?", text)
+    match = _FRONTMATTER_RE.match(text)
     if not match:
-        return ""
-    for line in match.group(1).splitlines():
-        if line.startswith("description:"):
-            return line.split(":", 1)[1].strip().strip('"').strip("'")
-    return ""
+        return {}
+    metadata: dict[str, str] = {}
+    for raw_line in match.group(1).splitlines():
+        line = raw_line.strip()
+        if not line or ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        metadata[key.strip()] = value.strip().strip('"').strip("'")
+    return metadata
+
+
+def _read_skill_description(skill_dir: Path) -> str:
+    return _read_skill_frontmatter(skill_dir).get("description", "")
 
 
 def _risk_from_codes(summary: dict[str, object]) -> tuple[str, list[str]]:

@@ -141,7 +141,7 @@ def main() -> int:
 
     try:
         import webview
-    except ModuleNotFoundError as exc:
+    except ModuleNotFoundError:
         print(
             "pywebview is required for the embedded Skill Arbiter desktop UI. "
             "Install it with `python -m pip install pywebview`.",

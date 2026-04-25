@@ -9,7 +9,7 @@ from skill_arbiter.quest_runtime import record_payload, status_payload
 
 class QuestRuntimeTests(unittest.TestCase):
     def test_record_payload_requires_usable_outcome_for_success(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory():
             with self.assertRaises(ValueError):
                 record_payload(
                     inventory={"skills": []},

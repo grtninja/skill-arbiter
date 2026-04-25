@@ -1,6 +1,8 @@
 ---
-name: qwen-training-checkpoint-eval
-description: Evaluate saved Qwen training checkpoints against batch-aligned training samples and trained-adapter eval lanes. Use when inspecting checkpoint.eval.json, validating a saved batch adapter on the Radeon eval lane, or comparing baseline student behavior against a newly trained checkpoint before promotion.
+name: "qwen-training-checkpoint-eval"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Evaluate saved Qwen training checkpoints against batch-aligned training samples and trained-adapter eval lanes. Use when inspecting checkpoint.eval.json, validating a saved batch adapter on the Radeon eval lane, or comparing baseline student behavior against a newly trained checkpoint before promotion."
 ---
 
 # Qwen Training Checkpoint Eval

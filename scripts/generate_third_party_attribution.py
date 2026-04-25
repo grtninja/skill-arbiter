@@ -126,7 +126,8 @@ def build_attribution(intake: dict[str, object], skills_root: Path) -> dict[str,
         if source_root_path is not None:
             try:
                 rel = origin_path_abs.relative_to(source_root_path)
-                origin_path = f"{source.get('source_root', source_label)}/{str(rel).replace('\\', '/')}"
+                rel_text = str(rel).replace("\\", "/")
+                origin_path = f"{source.get('source_root', source_label)}/{rel_text}"
             except ValueError:
                 origin_path = f"{source.get('source_root', source_label)}/{origin_name}"
         rows.append(

@@ -1,6 +1,8 @@
 ---
-name: repo-a-coordinator-smoke
-description: Run and debug Repo A DDC node/coordinator smoke workflows. Use when changing coordinator endpoints, job fetch/submit flow, runtime registration, or backend dispatch paths that must be verified with local coordinator execution.
+name: "repo-a-coordinator-smoke"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run and debug Repo A DDC node/coordinator smoke workflows. Use when changing coordinator endpoints, job fetch/submit flow, runtime registration, or backend dispatch paths that must be verified with local coordinator execution."
 ---
 
 # Repo A DDC Coordinator Smoke

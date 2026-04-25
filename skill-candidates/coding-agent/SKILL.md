@@ -1,5 +1,7 @@
 ---
-name: coding-agent
+name: "coding-agent"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Delegate coding tasks to Codex, Claude Code, or Pi agents via background process for feature builds, PR reviews, large refactors, and iterative implementation. Avoid trivial edits, read-only tasks, ACP thread harness requests, or ~/clawd workspace. Claude Code uses --print --permission-mode bypassPermissions (no PTY). Codex/Pi/OpenCode require pty:true."
 ---
 

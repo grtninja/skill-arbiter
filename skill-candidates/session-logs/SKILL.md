@@ -1,5 +1,7 @@
 ---
-name: session-logs
+name: "session-logs"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Search and analyze your own session logs (older/parent conversations) using jq."
 ---
 
@@ -56,8 +58,8 @@ jq -r 'select(.message.role == "user") | .message.content[]? | select(.type == "
 
 ### Search for keyword in assistant responses
 
-```bash
-jq -r 'select(.message.role == "assistant") | .message.content[]? | select(.type == "text") | .text' <session>.jsonl | rg -i "keyword"
+```powershell
+jq -r 'select(.message.role == "assistant") | .message.content[]? | select(.type == "text") | .text' <session>.jsonl | Select-String -Pattern "keyword" -CaseSensitive:$false
 ```
 
 ### Get total cost for a session
@@ -96,8 +98,8 @@ jq -r '.message.content[]? | select(.type == "toolCall") | .name' <session>.json
 
 ### Search across ALL sessions for a phrase
 
-```bash
-rg -l "phrase" ~/.openclaw/agents/<agentId>/sessions/*.jsonl
+```powershell
+Select-String -Path "$HOME/.openclaw/agents/<agentId>/sessions/*.jsonl" -Pattern "phrase" -CaseSensitive:$false | Select-Object -ExpandProperty Path -Unique
 ```
 
 ## Tips
@@ -109,8 +111,8 @@ rg -l "phrase" ~/.openclaw/agents/<agentId>/sessions/*.jsonl
 
 ## Fast text-only hint (low noise)
 
-```bash
-jq -r 'select(.type=="message") | .message.content[]? | select(.type=="text") | .text' ~/.openclaw/agents/<agentId>/sessions/<id>.jsonl | rg 'keyword'
+```powershell
+jq -r 'select(.type=="message") | .message.content[]? | select(.type=="text") | .text' "$HOME/.openclaw/agents/<agentId>/sessions/<id>.jsonl" | Select-String -Pattern "keyword" -CaseSensitive:$false
 ```
 
 ## Guardrails

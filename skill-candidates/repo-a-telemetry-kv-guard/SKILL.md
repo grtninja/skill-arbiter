@@ -1,6 +1,8 @@
 ---
-name: repo-a-telemetry-kv-guard
-description: Protect Repo A DDC telemetry/privacy and encrypted KV pager contracts. Use when editing repo_c_trace adapters, Repo C policy gate logic, KV tiering/crypto code, or retention/privacy behavior tied to role acceptance.
+name: "repo-a-telemetry-kv-guard"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Protect Repo A DDC telemetry/privacy and encrypted KV pager contracts. Use when editing repo_c_trace adapters, Repo C policy gate logic, KV tiering/crypto code, or retention/privacy behavior tied to role acceptance."
 ---
 
 # Repo A DDC Telemetry and KV Guard

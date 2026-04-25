@@ -1,5 +1,7 @@
 ---
-name: apple-reminders
+name: "apple-reminders"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Manage Apple Reminders via remindctl CLI (list, add, edit, complete, delete). Supports lists, date filters, and JSON/plain output."
 ---
 

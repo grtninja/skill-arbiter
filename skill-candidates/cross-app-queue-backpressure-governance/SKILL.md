@@ -1,6 +1,8 @@
 ---
-name: cross-app-queue-backpressure-governance
-description: Govern queue ownership, backpressure, retry and cancel semantics, and mutual-exclusion behavior across STARFRAME local apps. Use when `9040`, `9041`, bridge queues, or operator queue surfaces change together.
+name: "cross-app-queue-backpressure-governance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Govern queue ownership, backpressure, retry and cancel semantics, and mutual-exclusion behavior across STARFRAME local apps. Use when `9040`, `9041`, bridge queues, or operator queue surfaces change together."
 ---
 
 # Cross-App Queue Backpressure Governance

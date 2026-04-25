@@ -1,6 +1,8 @@
 ---
-name: repo-b-mcp-comfy-bridge
-description: Canonical MCP adapter and Comfy bridge operations for <PRIVATE_REPO_B>. Use when enabling MCP, validating shim.comfy resources/tools, operating workflow/pipeline submissions, or running fail-closed Comfy diagnostics with optional AMUSE and CapCut contract checks.
+name: "repo-b-mcp-comfy-bridge"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Canonical MCP adapter and Comfy bridge operations for <PRIVATE_REPO_B>. Use when enabling MCP, validating shim.comfy resources/tools, operating workflow/pipeline submissions, or running fail-closed Comfy diagnostics with optional AMUSE and CapCut contract checks."
 ---
 
 # REPO_B Shim MCP Comfy Bridge

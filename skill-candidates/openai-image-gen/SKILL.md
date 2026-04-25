@@ -7,6 +7,13 @@ description: "Batch-generate images via OpenAI Images API. Random prompt sampler
 
 Generate a handful of “random but structured” prompts and render them via the OpenAI Images API.
 
+Current dated contract:
+
+- Verified from official OpenAI docs on 2026-04-24: `gpt-image-2` is the current default for this skill, with snapshot `gpt-image-2-2026-04-21`.
+- `gpt-image-2` supports flexible sizes but requires valid size constraints; the script validates those constraints before sending a request.
+- `gpt-image-2` does not support `background=transparent`; the script rejects that combination locally instead of burning a request.
+- Complex GPT Image prompts can take up to 2 minutes; use a timeout of at least 300 seconds in tool runners.
+
 ## Run
 
 Note: Image generation can take longer than common exec timeouts (for example 30 seconds).
@@ -20,10 +27,13 @@ open ~/Projects/tmp/openai-image-gen-*/index.html  # if ~/Projects/tmp exists; e
 Useful flags:
 
 ```bash
-# GPT image models with various options
-python3 {baseDir}/scripts/gen.py --count 16 --model gpt-image-1
+# GPT Image 2 current default
+python3 {baseDir}/scripts/gen.py --count 16 --model gpt-image-2
 python3 {baseDir}/scripts/gen.py --prompt "ultra-detailed studio photo of a lobster astronaut" --count 4
 python3 {baseDir}/scripts/gen.py --size 1536x1024 --quality high --out-dir ./out/images
+python3 {baseDir}/scripts/gen.py --model gpt-image-2 --output-format webp --output-compression 50
+
+# Older GPT image models, only when intentionally requested
 python3 {baseDir}/scripts/gen.py --model gpt-image-1.5 --background transparent --output-format webp
 
 # DALL-E 3 (note: count is automatically limited to 1)
@@ -40,7 +50,13 @@ Different models support different parameter values. The script automatically se
 
 ### Size
 
-- **GPT image models** (`gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`): `1024x1024`, `1536x1024` (landscape), `1024x1536` (portrait), or `auto`
+- **gpt-image-2**: `auto` or dimensions that satisfy current OpenAI constraints:
+  - each edge is a multiple of 16
+  - maximum edge is `3840px`
+  - long:short ratio is at most `3:1`
+  - total pixels are between `655,360` and `8,294,400`
+  - Default: `auto`
+- **Older GPT image models** (`gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`): `1024x1024`, `1536x1024` (landscape), `1024x1536` (portrait), or `auto`
   - Default: `1024x1024`
 - **dall-e-3**: `1024x1024`, `1792x1024`, or `1024x1792`
   - Default: `1024x1024`
@@ -49,7 +65,9 @@ Different models support different parameter values. The script automatically se
 
 ### Quality
 
-- **GPT image models**: `auto`, `high`, `medium`, or `low`
+- **gpt-image-2**: `auto`, `high`, `medium`, or `low`
+  - Default: `auto`
+- **Older GPT image models**: `auto`, `high`, `medium`, or `low`
   - Default: `high`
 - **dall-e-3**: `hd` or `standard`
   - Default: `standard`
@@ -60,8 +78,9 @@ Different models support different parameter values. The script automatically se
 
 - **dall-e-3** only supports generating 1 image at a time (`n=1`). The script automatically limits count to 1 when using this model.
 - **GPT image models** support additional parameters:
-  - `--background`: `transparent`, `opaque`, or `auto` (default)
+  - `--background`: `opaque` or `auto` for `gpt-image-2`; `transparent` is only valid for older GPT image models that support it
   - `--output-format`: `png` (default), `jpeg`, or `webp`
+  - `--output-compression`: `0`-`100`, for `jpeg` or `webp`
   - Note: `stream` and `moderation` are available via API but not yet implemented in this script
 - **dall-e-3** has a `--style` parameter: `vivid` (hyper-real, dramatic) or `natural` (more natural looking)
 

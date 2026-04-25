@@ -1,6 +1,8 @@
 ---
-name: blender-vrm-visible-fit
-description: Run a checkpointed, in-foreground Blender workflow for VRM clothing fit and rig transfer. Use when dress/shoe fitting must be reviewed live before export and destructive body edits are not acceptable.
+name: "blender-vrm-visible-fit"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run a checkpointed, in-foreground Blender workflow for VRM clothing fit and rig transfer. Use when dress/shoe fitting must be reviewed live before export and destructive body edits are not acceptable."
 ---
 
 # Blender VRM Visible Fit

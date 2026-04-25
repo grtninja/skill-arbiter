@@ -1,5 +1,7 @@
 ---
-name: bear-notes
+name: "bear-notes"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Create, search, and manage Bear notes via grizzly CLI."
 ---
 

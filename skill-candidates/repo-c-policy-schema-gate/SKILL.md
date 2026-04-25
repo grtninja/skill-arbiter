@@ -1,6 +1,8 @@
 ---
-name: repo-c-policy-schema-gate
-description: Validate Repo C policy files and schema contracts in <PRIVATE_REPO_C>. Use when editing policy manifests, schema files, policy validation CLI logic, or tests that rely on schema conformance.
+name: "repo-c-policy-schema-gate"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate Repo C policy files and schema contracts in <PRIVATE_REPO_C>. Use when editing policy manifests, schema files, policy validation CLI logic, or tests that rely on schema conformance."
 ---
 
 # Repo C Policy Schema Gate

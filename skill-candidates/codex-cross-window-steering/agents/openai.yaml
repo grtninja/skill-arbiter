@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Cross-Window Steering"
+  short_description: "Brief or redirect another live Codex window."
+  default_prompt: "Use $codex-cross-window-steering to create an evidence-backed packet for another VS Code Codex lane."

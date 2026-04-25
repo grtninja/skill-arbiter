@@ -50,6 +50,8 @@ def handle_get(module: ModuleType, state, path: str) -> tuple[HTTPStatus, dict]:
             "advisor_note": str(inventory.get("advisor_note") or ""),
             "stack_runtime": payload,
         }
+    if path == "/v1/process-policy/status":
+        return HTTPStatus.OK, {"host_id": state.host_id, **module.process_policy_status()}
     if path == "/v1/mitigation/cases":
         return HTTPStatus.OK, {"host_id": state.host_id, "cases": module.list_cases()}
     if path == "/v1/public-readiness":
@@ -164,6 +166,34 @@ def handle_post(module: ModuleType, state, path: str, payload: dict[str, object]
         if not subject:
             raise ValueError("subject is required")
         return HTTPStatus.OK, {"host_id": state.host_id, "case": module.plan_case(subject)}
+    if path == "/v1/process-policy/enforce":
+        return HTTPStatus.OK, {
+            "host_id": state.host_id,
+            **module.enforce_denied_processes(dry_run=bool(payload.get("dry_run"))),
+        }
+    if path == "/v1/process-policy/limit":
+        executable = str(payload.get("executable") or "").strip()
+        if not executable:
+            raise ValueError("executable is required")
+        result = module.set_executable_limit(
+            executable,
+            action=str(payload.get("action") or "kill_excess"),
+            max_instances=int(payload.get("max_instances") if payload.get("max_instances") is not None else 1),
+            max_age_seconds=int(payload.get("max_age_seconds") if payload.get("max_age_seconds") is not None else 45),
+            reason=str(payload.get("reason") or ""),
+            source="agent_http",
+        )
+        return HTTPStatus.OK, {"host_id": state.host_id, "policy": result}
+    if path == "/v1/process-policy/deny":
+        executable = str(payload.get("executable") or "").strip()
+        if not executable:
+            raise ValueError("executable is required")
+        result = module.deny_executable(
+            executable,
+            reason=str(payload.get("reason") or ""),
+            source="agent_http",
+        )
+        return HTTPStatus.OK, {"host_id": state.host_id, "policy": result}
     if path == "/v1/mitigation/execute":
         case_id = str(payload.get("case_id") or "").strip()
         action = str(payload.get("action") or "").strip()

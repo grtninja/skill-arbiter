@@ -1,6 +1,8 @@
 ---
-name: operator-language-humanizer
-description: Local-first operator language cleanup for prompts, run titles, queue notes, QC summaries, and user-visible output text across local app stacks. Use when tightening wording without changing meaning, policy, IDs, paths, flags, or system behavior. This skill is explicit opt-in and must never rewrite system prompts, personality files, or hidden instructions.
+name: "operator-language-humanizer"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Local-first operator language cleanup for prompts, run titles, queue notes, QC summaries, and user-visible output text across local app stacks. Use when tightening wording without changing meaning, policy, IDs, paths, flags, or system behavior. This skill is explicit opt-in and must never rewrite system prompts, personality files, or hidden instructions."
 ---
 
 # Operator Language Humanizer

@@ -8,7 +8,6 @@ import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 import subprocess
-import sys
 
 
 @dataclass

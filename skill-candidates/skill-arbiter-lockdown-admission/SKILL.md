@@ -1,6 +1,8 @@
 ---
-name: skill-arbiter-lockdown-admission
-description: Install and admit-test local skills with strict personal policy in the skill-arbiter repo. Use when adding or updating personal skills, requiring local-only sources, pre-admission artifact cleanup, immutable pinning, blacklist quarantine, and rg.exe churn evidence.
+name: "skill-arbiter-lockdown-admission"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Install and admit-test local skills with strict personal policy in the skill-arbiter repo. Use when adding or updating personal skills, requiring local-only sources, pre-admission artifact cleanup, immutable pinning, blacklist quarantine, and rg.exe churn evidence."
 ---
 
 # Skill Arbiter Lockdown Admission

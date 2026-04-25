@@ -1,6 +1,8 @@
 ---
-name: skill-cost-credit-governor
-description: Govern per-skill credit and token spend with deterministic warn/throttle/disable actions. Use when usage spikes, agent chatter, or budget overruns must be detected and contained.
+name: "skill-cost-credit-governor"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Govern per-skill credit and token spend with deterministic warn/throttle/disable actions. Use when usage spikes, agent chatter, or budget overruns must be detected and contained."
 ---
 
 # Skill Cost Credit Governor

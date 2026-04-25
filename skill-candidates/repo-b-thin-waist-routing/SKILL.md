@@ -1,6 +1,8 @@
 ---
-name: repo-b-thin-waist-routing
-description: Validate and troubleshoot thin-waist REST routing in <PRIVATE_REPO_B>. Use when changing /v1 models/chat/vision routes, async job queue endpoints, connector routing policy, or bind/exposure behavior.
+name: "repo-b-thin-waist-routing"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate and troubleshoot thin-waist REST routing in <PRIVATE_REPO_B>. Use when changing /v1 models/chat/vision routes, async job queue endpoints, connector routing policy, or bind/exposure behavior."
 ---
 
 # REPO_B Shim Thin-Waist Routing

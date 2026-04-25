@@ -63,6 +63,10 @@ def pick_prompts(count: int) -> list[str]:
     return prompts
 
 
+def is_gpt_image_2(model: str) -> bool:
+    return model == "gpt-image-2" or model.startswith("gpt-image-2-")
+
+
 def get_model_defaults(model: str) -> tuple[str, str]:
     """Return (default_size, default_quality) for the given model."""
     if model == "dall-e-2":
@@ -70,9 +74,68 @@ def get_model_defaults(model: str) -> tuple[str, str]:
         return ("1024x1024", "standard")
     elif model == "dall-e-3":
         return ("1024x1024", "standard")
+    elif is_gpt_image_2(model):
+        return ("auto", "auto")
     else:
-        # GPT image or future models
+        # Older GPT Image models keep the previous deterministic defaults.
         return ("1024x1024", "high")
+
+
+def validate_gpt_image_2_size(size: str) -> None:
+    if size == "auto":
+        return
+
+    match = re.fullmatch(r"(\d+)x(\d+)", size)
+    if not match:
+        raise ValueError("gpt-image-2 size must be 'auto' or '<width>x<height>'")
+
+    width = int(match.group(1))
+    height = int(match.group(2))
+    long_edge = max(width, height)
+    short_edge = min(width, height)
+    pixels = width * height
+
+    if width % 16 or height % 16:
+        raise ValueError("gpt-image-2 size edges must be multiples of 16")
+    if long_edge > 3840:
+        raise ValueError("gpt-image-2 size edge must be <= 3840px")
+    if long_edge / short_edge > 3:
+        raise ValueError("gpt-image-2 size ratio must not exceed 3:1")
+    if pixels < 655_360 or pixels > 8_294_400:
+        raise ValueError("gpt-image-2 total pixels must be between 655,360 and 8,294,400")
+
+
+def validate_model_options(
+    model: str,
+    size: str,
+    quality: str,
+    background: str,
+    output_format: str,
+    output_compression: int | None,
+    style: str,
+) -> None:
+    if is_gpt_image_2(model):
+        validate_gpt_image_2_size(size)
+        if background == "transparent":
+            raise ValueError("gpt-image-2 does not support background=transparent")
+        if quality not in {"auto", "low", "medium", "high"}:
+            raise ValueError("gpt-image-2 quality must be auto, low, medium, or high")
+
+    if output_format and output_format not in {"png", "jpeg", "webp"}:
+        raise ValueError("--output-format must be png, jpeg, or webp")
+    if output_compression is not None:
+        if output_format not in {"jpeg", "webp"}:
+            raise ValueError("--output-compression requires --output-format jpeg or webp")
+        if not 0 <= output_compression <= 100:
+            raise ValueError("--output-compression must be between 0 and 100")
+    if style and model != "dall-e-3":
+        raise ValueError("--style is only supported by dall-e-3")
+
+
+def output_file_ext(model: str, output_format: str) -> str:
+    if model.startswith("gpt-image") and output_format:
+        return output_format
+    return "png"
 
 
 def request_images(
@@ -83,7 +146,9 @@ def request_images(
     quality: str,
     background: str = "",
     output_format: str = "",
+    output_compression: int | None = None,
     style: str = "",
+    timeout: int = 300,
 ) -> dict:
     url = "https://api.openai.com/v1/images/generations"
     args = {
@@ -105,6 +170,8 @@ def request_images(
             args["background"] = background
         if output_format:
             args["output_format"] = output_format
+        if output_compression is not None:
+            args["output_compression"] = output_compression
 
     if model == "dall-e-3" and style:
         args["style"] = style
@@ -120,7 +187,7 @@ def request_images(
         data=body,
     )
     try:
-        with urllib.request.urlopen(req, timeout=300) as resp:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         payload = e.read().decode("utf-8", errors="replace")
@@ -165,12 +232,14 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Generate images via OpenAI Images API.")
     ap.add_argument("--prompt", help="Single prompt. If omitted, random prompts are generated.")
     ap.add_argument("--count", type=int, default=8, help="How many images to generate.")
-    ap.add_argument("--model", default="gpt-image-1", help="Image model id.")
+    ap.add_argument("--model", default="gpt-image-2", help="Image model id.")
     ap.add_argument("--size", default="", help="Image size (e.g. 1024x1024, 1536x1024). Defaults based on model if not specified.")
     ap.add_argument("--quality", default="", help="Image quality (e.g. high, standard). Defaults based on model if not specified.")
-    ap.add_argument("--background", default="", help="Background transparency (GPT models only): transparent, opaque, or auto.")
+    ap.add_argument("--background", default="", help="Background option for GPT models: opaque or auto for gpt-image-2; transparent only for older models that support it.")
     ap.add_argument("--output-format", default="", help="Output format (GPT models only): png, jpeg, or webp.")
+    ap.add_argument("--output-compression", type=int, help="JPEG/WebP compression level from 0 to 100 (GPT Image models only).")
     ap.add_argument("--style", default="", help="Image style (dall-e-3 only): vivid or natural.")
+    ap.add_argument("--timeout", type=int, default=300, help="HTTP timeout in seconds. GPT Image prompts can take up to 2 minutes.")
     ap.add_argument("--out-dir", default="", help="Output directory (default: ./tmp/openai-image-gen-<ts>).")
     args = ap.parse_args()
 
@@ -183,6 +252,19 @@ def main() -> int:
     default_size, default_quality = get_model_defaults(args.model)
     size = args.size or default_size
     quality = args.quality or default_quality
+    try:
+        validate_model_options(
+            args.model,
+            size,
+            quality,
+            args.background,
+            args.output_format,
+            args.output_compression,
+            args.style,
+        )
+    except ValueError as exc:
+        print(f"Invalid image generation options: {exc}", file=sys.stderr)
+        return 2
 
     count = args.count
     if args.model == "dall-e-3" and count > 1:
@@ -195,10 +277,7 @@ def main() -> int:
     prompts = [args.prompt] * count if args.prompt else pick_prompts(count)
 
     # Determine file extension based on output format
-    if args.model.startswith("gpt-image") and args.output_format:
-        file_ext = args.output_format
-    else:
-        file_ext = "png"
+    file_ext = output_file_ext(args.model, args.output_format)
 
     items: list[dict] = []
     for idx, prompt in enumerate(prompts, start=1):
@@ -211,7 +290,9 @@ def main() -> int:
             quality,
             args.background,
             args.output_format,
+            args.output_compression,
             args.style,
+            args.timeout,
         )
         data = res.get("data", [{}])[0]
         image_b64 = data.get("b64_json")

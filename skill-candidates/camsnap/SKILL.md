@@ -1,5 +1,7 @@
 ---
-name: camsnap
+name: "camsnap"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Capture frames or clips from RTSP/ONVIF cameras."
 ---
 

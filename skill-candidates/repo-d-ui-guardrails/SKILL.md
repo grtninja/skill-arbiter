@@ -1,6 +1,8 @@
 ---
-name: repo-d-ui-guardrails
-description: Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, startup acceptance, state persistence, no-download policy, local-only behavior, and no-CI constraints.
+name: "repo-d-ui-guardrails"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce <PRIVATE_REPO_D> AGENTS.md guardrails for UI/Electron work. Use when modifying apps/desktop, packages/ui, packages/engine, packages/services, or docs tied to deterministic visuals, startup acceptance, state persistence, no-download policy, local-only behavior, and no-CI constraints."
 ---
 
 # Repo D Sandbox UI Guardrails

@@ -1,6 +1,8 @@
 ---
-name: catalog-snapshot-consistency
-description: Keep generated catalogs, operator snapshots, and documented summaries aligned after workflow or command-surface changes. Use when visible command matrices, media/staging catalogs, or skill/status summaries drift from the runtime or generated source of truth.
+name: "catalog-snapshot-consistency"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Keep generated catalogs, operator snapshots, and documented summaries aligned after workflow or command-surface changes. Use when visible command matrices, media/staging catalogs, or skill/status summaries drift from the runtime or generated source of truth."
 ---
 
 # Catalog Snapshot Consistency

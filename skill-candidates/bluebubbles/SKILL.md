@@ -1,6 +1,8 @@
 ---
-name: bluebubbles
-description: "Use when you need to send or manage iMessages via BlueBubbles (recommended iMessage integration). Calls go through the generic message tool with channel=\"bluebubbles\"."
+name: "bluebubbles"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Use when you need to send or manage iMessages via BlueBubbles (recommended iMessage integration). Calls go through the generic message tool with channel=\\\"bluebubbles\\\"."
 ---
 
 # BlueBubbles Actions

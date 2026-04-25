@@ -1,5 +1,7 @@
 ---
-name: songsee
+name: "songsee"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Generate spectrograms and feature-panel visualizations from audio with the songsee CLI."
 ---
 

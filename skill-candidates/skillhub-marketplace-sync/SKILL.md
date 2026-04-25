@@ -1,6 +1,8 @@
 ---
-name: skillhub-marketplace-sync
-description: Curate SkillHub marketplace discovery into repo-owned alignment artifacts, source reputation, and bounded promotion decisions. Use when SkillHub query sets, shortlist coverage, source ledgers, or alignment-matrix generation must be refreshed without promoting third-party skills past discovery-only by accident.
+name: "skillhub-marketplace-sync"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Curate SkillHub marketplace discovery into repo-owned alignment artifacts, source reputation, and bounded promotion decisions. Use when SkillHub query sets, shortlist coverage, source ledgers, or alignment-matrix generation must be refreshed without promoting third-party skills past discovery-only by accident."
 ---
 
 # SkillHub Marketplace Sync

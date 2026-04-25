@@ -1,5 +1,7 @@
 ---
-name: sag
+name: "sag"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "ElevenLabs text-to-speech with mac-style say UX."
 ---
 

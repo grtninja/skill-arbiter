@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rollback Regression Triage"
+  short_description: "Find rollback-fixed bugs, culprit commits, and GitHub branch or PR or CI status"
+  default_prompt: "Use $rollback-regression-triage when a rollback or last-known-good restore needs commit-level culprit forensics, desired-vs-actual mismatch review, proof of whether the bad changes reached GitHub branches or main, and optional PR or CI evidence from the same suspect branch window."

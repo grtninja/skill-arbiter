@@ -1,5 +1,7 @@
 ---
-name: prose
+name: "prose"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "OpenProse VM skill pack. Activate on any `prose` command, .prose files, or OpenProse mentions; orchestrates multi-agent workflows."
 ---
 

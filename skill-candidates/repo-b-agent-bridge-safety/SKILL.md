@@ -1,6 +1,8 @@
 ---
-name: repo-b-agent-bridge-safety
-description: Operate and secure the Continue Agent Bridge in <PRIVATE_REPO_B>. Use when configuring bridge modes, validating /api/agent endpoints, enforcing controlled-write safety gates, or diagnosing bridge availability and permission failures.
+name: "repo-b-agent-bridge-safety"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate and secure the Continue Agent Bridge in <PRIVATE_REPO_B>. Use when configuring bridge modes, validating /api/agent endpoints, enforcing controlled-write safety gates, or diagnosing bridge availability and permission failures."
 ---
 
 # REPO_B Shim Agent Bridge Safety

@@ -1,5 +1,7 @@
 ---
-name: peekaboo
+name: "peekaboo"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Capture and automate macOS UI with the Peekaboo CLI."
 ---
 

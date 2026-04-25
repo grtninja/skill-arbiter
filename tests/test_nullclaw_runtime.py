@@ -24,6 +24,8 @@ def _write_skill(root: Path, name: str, description: str = "demo skill") -> Path
             [
                 "---",
                 f"name: {name}",
+                "author: grtninja",
+                "canonical_source: https://github.com/grtninja/skill-arbiter",
                 f"description: {description}",
                 "---",
                 "",
@@ -97,9 +99,12 @@ class InventorySnapshotTests(unittest.TestCase):
             self.assertEqual(rows["alpha"]["origin"], "openai_builtin")
             self.assertEqual(rows["alpha"]["ownership"], "official_builtin")
             self.assertEqual(rows["alpha"]["legitimacy_status"], "official_trusted")
+            self.assertEqual(rows["alpha"]["author"], "grtninja")
+            self.assertEqual(rows["alpha"]["canonical_source"], "https://github.com/grtninja/skill-arbiter")
             self.assertEqual(rows["beta"]["source_type"], "overlay_candidate")
             self.assertEqual(rows["beta"]["ownership"], "repo_owned_candidate")
             self.assertEqual(rows["beta"]["legitimacy_status"], "owned_trusted")
+            self.assertEqual(rows["beta"]["author"], "grtninja")
             self.assertIn("recent_work_relevant", rows["beta"]["notes"])
             self.assertEqual(rows["gamma"]["source_type"], "openai_builtin_baseline")
             self.assertEqual(rows["gamma"]["drift_state"], "missing_local_builtin")

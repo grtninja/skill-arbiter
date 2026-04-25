@@ -1,6 +1,8 @@
 ---
-name: repo-a-host-admin-ops
-description: Operate and validate <PRIVATE_REPO_A> admin-host desktop, client-host surfaces, and USB host-bundle workflows. Use when changing admin terminal UIs, host packaging/install scripts, startup acceptance, or USB-delivered host updates.
+name: "repo-a-host-admin-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate and validate <PRIVATE_REPO_A> admin-host desktop, client-host surfaces, and USB host-bundle workflows. Use when changing admin terminal UIs, host packaging/install scripts, startup acceptance, or USB-delivered host updates."
 ---
 
 # Repo A Host Admin Ops

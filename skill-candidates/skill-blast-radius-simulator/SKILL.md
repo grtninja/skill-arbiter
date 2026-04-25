@@ -1,6 +1,8 @@
 ---
-name: skill-blast-radius-simulator
-description: Simulate pre-install/pre-enable skill impact and require acknowledgement when risk exceeds thresholds. Use when admitting new skills or evaluating potentially risky updates.
+name: "skill-blast-radius-simulator"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Simulate pre-install/pre-enable skill impact and require acknowledgement when risk exceeds thresholds. Use when admitting new skills or evaluating potentially risky updates."
 ---
 
 # Skill Blast-Radius Simulator

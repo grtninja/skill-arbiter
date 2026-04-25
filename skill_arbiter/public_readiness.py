@@ -8,7 +8,7 @@ from pathlib import Path
 from .about import about_payload
 from .meta_harness_policy import scan_candidate_meta_harness
 from .paths import REPO_ROOT, host_id, public_readiness_cache_path, windows_no_window_subprocess_kwargs
-from .privacy_policy import scan_repo
+from .privacy_policy import path_excluded_from_public_export, scan_repo
 from .self_governance import run_self_governance_scan
 
 
@@ -21,6 +21,7 @@ REQUIRED_DOCS = [
     Path("CODE_OF_CONDUCT.md"),
     Path("CONTRIBUTING.md"),
     Path("SKILL.md"),
+    Path("skill-catalog.md"),
     Path("docs/PROJECT_SCOPE.md"),
     Path("docs/SCOPE_TRACKER.md"),
     Path("references/skill-vetting-report.md"),
@@ -34,26 +35,58 @@ REQUIRED_LAUNCH_SURFACES = [
 ]
 REQUIRED_DOC_SNIPPETS = {
     Path("AGENTS.md"): [
+        "G:\\GitHub",
+        "http://127.0.0.1:9000/v1",
         "http://127.0.0.1:2337/v1",
+        "Continue",
         "LM Studio",
+        "local-agent",
         "operator surface",
         "cmd.exe",
         "powershell.exe",
         "pwsh.exe",
     ],
-    Path("README.md"): [
+    Path("BOUNDARIES.md"): [
+        "G:\\GitHub",
+        "http://127.0.0.1:9000/v1",
         "http://127.0.0.1:2337/v1",
-        "LM Studio",
-        "operator surface",
-        "cmd.exe",
-        "powershell.exe",
-        "pwsh.exe",
+        "Continue-facing local-agent surfaces",
+        "No-stop doctrine",
+        "Minimum runtime law",
+        "reasoning visibility",
+        "patience runtime window",
+    ],
+    Path("INSTRUCTIONS.md"): [
+        "real local governance console",
+        "minimum runtime law",
+        "Continue-facing lanes",
+        "visible action-state parity",
+        "reasoning visibility",
+        "patience runtime window",
+    ],
+    Path("CONTRIBUTING.md"): [
+        "no-stop doctrine",
+        "minimum runtime law",
+        "visible action-state parity",
+        "browser-tool or headless fallback surfaces",
+        "reasoning visibility",
+        "patience runtime window",
+    ],
+    Path("skill_arbiter/collaboration_support.py"): [
+        "DEFAULT_TRUST_LEDGER",
+        "trust_ledger",
+        "ledger",
+        "trust ledger",
     ],
 }
 README_REQUIRED_SNIPPETS = [
     "## Public support",
     "## Public release readiness",
     "## Safety and abuse handling",
+    "## For humans",
+    "## For AI agents",
+    "## Local advisor",
+    "## Quick start",
     "https://github.com/grtninja/skill-arbiter",
     "https://www.patreon.com/cw/grtninja",
 ]
@@ -65,6 +98,47 @@ SHELL_WRAPPED_DESKTOP_LAUNCH_RE = re.compile(
     r"cmd(?:\.exe)?\s+/c[^\n\r]*start_security_console",
     re.IGNORECASE,
 )
+STALE_CONTINUE_BROWSER_HEADLESS_RE = re.compile(
+    r"Continue[^\n\r]{0,160}(browser tools?|browser-tool|headless default|headless fallback|browser fallback)|"
+    r"(browser tools?|browser-tool|headless default|headless fallback|browser fallback)[^\n\r]{0,160}Continue",
+    re.IGNORECASE,
+)
+STALE_NO_STOP_MIN_RUNTIME_RE = re.compile(
+    r"\b(no[- ]stop|minimum runtime)\b",
+    re.IGNORECASE,
+)
+STALE_SELF_DIAGNOSIS_RE = re.compile(
+    r"(stale session|degraded mode|waiting for a trigger|ask for a file path first)",
+    re.IGNORECASE,
+)
+RG_COMMAND_INVOCATION_RE = re.compile(
+    r"(?m)^[ \t]*(?:[^|\n\r]*\|\s*)?rg(?:\.exe)?\s+-",
+    re.IGNORECASE,
+)
+MANDATORY_SKILL_CHAIN = (
+    "skill-hub",
+    "request-loopback-resume",
+    "skill-common-sense-engineering",
+    "usage-watcher",
+    "skill-cost-credit-governor",
+    "skill-trust-ledger",
+)
+MANDATORY_CODEX_PARITY = (
+    "trusted folders",
+    "local-subagent",
+    "reasoning visibility",
+    "visible action-state parity",
+    "minimum runtime law",
+    "no-stop doctrine",
+)
+CODEX_CONFIG_SKILL_BUNDLE = (
+    "references/codex-config-self-maintenance.md",
+    "skill-candidates/codex-config-self-maintenance/SKILL.md",
+    "skill-candidates/codex-config-self-maintenance/references/config-contract.md",
+    "skill-candidates/codex-config-self-maintenance/references/manifest-evidence.md",
+    "skill-candidates/codex-config-self-maintenance/scripts/validate_candidate.py",
+)
+PRIVATE_PUBLISH_GUARD_TERMS_FILE = Path("skill_arbiter/private/publish_guard_terms.txt")
 PUBLIC_CATALOG_SAFE_ADVISOR_NOTE = "_Live local advisor note omitted from public-shape catalog._"
 PUBLISH_SURFACE_PREFIXES = ("skill_arbiter/", "scripts/", "skill-candidates/", "docs/", "references/", ".github/")
 PUBLISH_SURFACE_FILES = {
@@ -79,6 +153,7 @@ PUBLISH_SURFACE_FILES = {
     "CHANGELOG.md",
     "pyproject.toml",
 }
+PUBLIC_SHAPE_SCOPE_PREFIX_BLACKLIST = ("skill_arbiter/private/", "tests/private/")
 
 
 def _finding(
@@ -151,8 +226,8 @@ def _missing_required_doc_snippets(repo_root: Path) -> list[str]:
         path = repo_root / rel_path
         if not path.is_file():
             continue
-        text = path.read_text(encoding="utf-8", errors="ignore")
-        missing.extend(f"{rel_path}:{snippet}" for snippet in snippets if snippet not in text)
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        missing.extend(f"{rel_path}:{snippet}" for snippet in snippets if snippet.lower() not in text)
     return missing
 
 
@@ -181,9 +256,268 @@ def _untracked_publish_surface_files(repo_root: Path) -> list[str]:
         path = raw.strip().replace("\\", "/")
         if not path:
             continue
+        if path_excluded_from_public_export(repo_root, path):
+            continue
         if path in PUBLISH_SURFACE_FILES or path.startswith(PUBLISH_SURFACE_PREFIXES):
             hits.append(path)
     return sorted(set(hits))
+
+
+def _tracked_publish_surface_files(repo_root: Path) -> list[str]:
+    result = _run_git(repo_root, "ls-files")
+    if result.returncode != 0:
+        return []
+    tracked = [line.strip().replace("\\", "/") for line in result.stdout.splitlines() if line.strip()]
+    tracked = [path for path in tracked if path]
+    publish = []
+    for path in tracked:
+        if path_excluded_from_public_export(repo_root, path):
+            continue
+        if path in PUBLISH_SURFACE_FILES or any(path.startswith(prefix) for prefix in PUBLISH_SURFACE_PREFIXES):
+            if any(path.startswith(prefix) for prefix in PUBLIC_SHAPE_SCOPE_PREFIX_BLACKLIST):
+                continue
+            publish.append(path)
+    return sorted(set(publish))
+
+
+def _publish_surface_text_candidate(rel_path: str) -> bool:
+    suffix = Path(rel_path).suffix.lower()
+    return suffix in {".md", ".txt", ".yaml", ".yml", ".json", ".toml"}
+
+
+def _line_negates_browser_fallback(line: str) -> bool:
+    lowered = line.lower()
+    return bool(
+        re.search(r"\b(do not|don't|avoid|never|without)\b", lowered)
+        or re.search(r"\bnot\b.{0,60}\b(browser|headless)\b", lowered)
+        or re.search(r"\b(browser|headless)\b.{0,60}\bnot\b", lowered)
+    )
+
+
+def _line_affirms_browser_fallback(line: str) -> bool:
+    lowered = line.lower()
+    if _line_negates_browser_fallback(line):
+        return False
+    return any(
+        cue in lowered
+        for cue in (
+            "should use",
+            "must use",
+            "prefer ",
+            "default to",
+            "defaults to",
+            "browser tools first",
+            "headless fallback behavior",
+            "browser fallback behavior",
+            "headless default",
+        )
+    )
+
+
+def _load_private_publish_guard_terms(repo_root: Path) -> list[str]:
+    path = repo_root / PRIVATE_PUBLISH_GUARD_TERMS_FILE
+    if not path.is_file():
+        return []
+    terms: list[str] = []
+    for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        term = raw.strip()
+        if not term or term.startswith("#"):
+            continue
+        terms.append(term)
+    return terms
+
+
+def _scan_publish_surface_for_private_guard_terms(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    terms = _load_private_publish_guard_terms(repo_root)
+    if not terms:
+        return hits
+    compiled = [(term, re.compile(re.escape(term), re.IGNORECASE)) for term in terms]
+    for rel_path in _tracked_publish_surface_files(repo_root):
+        if not _publish_surface_text_candidate(rel_path):
+            continue
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        if not text:
+            continue
+        for line_num, line in enumerate(text.splitlines(), start=1):
+            for term, pattern in compiled:
+                if pattern.search(line):
+                    hits.append(f"{rel_path}:{term}:{line_num}")
+                    break
+    return hits
+
+
+def _scan_publish_surface_for_stale_continue_browser_headless(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in _tracked_publish_surface_files(repo_root):
+        if not _publish_surface_text_candidate(rel_path):
+            continue
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for line_num, line in enumerate(text.splitlines(), start=1):
+            if STALE_CONTINUE_BROWSER_HEADLESS_RE.search(line) and _line_affirms_browser_fallback(line):
+                hits.append(f"{rel_path}:{line_num}")
+    return hits
+
+
+def _scan_publish_surface_for_rg_commands(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in _tracked_publish_surface_files(repo_root):
+        if not rel_path.lower().endswith(".md"):
+            continue
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for line_num, line in enumerate(text.splitlines(), start=1):
+            if RG_COMMAND_INVOCATION_RE.search(line):
+                hits.append(f"{rel_path}:{line_num}")
+    return hits
+
+
+def _scan_for_no_stop_runtime_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("AGENTS.md", "INSTRUCTIONS.md", "BOUNDARIES.md", "CONTRIBUTING.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if "no-stop doctrine" not in text.lower() or "minimum runtime law" not in text.lower():
+            hits.append(rel_path)
+    return hits
+
+
+def _scan_for_debt_ledger_proof_contract(repo_root: Path) -> list[str]:
+    path = repo_root / "skill_arbiter" / "collaboration_support.py"
+    if not path.is_file():
+        return ["skill_arbiter/collaboration_support.py"]
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    missing = []
+    for needle in ("DEFAULT_TRUST_LEDGER", "trust_ledger", "ledger"):
+        if needle not in text:
+            missing.append(needle)
+    return missing
+
+
+def _scan_for_local_agent_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("AGENTS.md", "BOUNDARIES.md", "INSTRUCTIONS.md", "CONTRIBUTING.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            hits.append(rel_path)
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        if "local-agent" not in text or "visible action-state parity" not in text:
+            hits.append(rel_path)
+    return hits
+
+
+def _scan_for_reasoning_visibility_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("AGENTS.md", "BOUNDARIES.md", "INSTRUCTIONS.md", "CONTRIBUTING.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            hits.append(rel_path)
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        if "reasoning visibility" not in text or "patience runtime window" not in text:
+            hits.append(rel_path)
+    return hits
+
+
+def _scan_for_continue_copilot_browser_first_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("README.md", "BOUNDARIES.md", "INSTRUCTIONS.md", "CONTRIBUTING.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+        for line in lines:
+            if re.search(r"(Continue|Copilot)[^\n\r]{0,120}(browser tools?|browser-tool|headless fallback|headless default|browser fallback)", line, re.IGNORECASE):
+                if not _line_affirms_browser_fallback(line):
+                    continue
+                hits.append(rel_path)
+                break
+    return hits
+
+
+def _scan_for_stale_self_diagnosis_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("README.md", "BOUNDARIES.md", "INSTRUCTIONS.md", "CONTRIBUTING.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+        for line_num, line in enumerate(lines, start=1):
+            if re.search(r"(Continue|Copilot)[^\n\r]{0,120}(stale session|degraded mode|waiting for a trigger|ask for a file path first)", line, re.IGNORECASE):
+                hits.append(f"{rel_path}:{line_num}")
+    return hits
+
+
+def _scan_for_mandatory_skill_chain_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("BOUNDARIES.md", "INSTRUCTIONS.md", "CONTRIBUTING.md", "AGENTS.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            hits.append(rel_path)
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        missing = [skill for skill in MANDATORY_SKILL_CHAIN if skill not in text]
+        if missing:
+            hits.append(f"{rel_path}:{','.join(missing)}")
+    return hits
+
+
+def _scan_for_codex_parity_contract(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    for rel_path in ("BOUNDARIES.md", "INSTRUCTIONS.md", "CONTRIBUTING.md", "AGENTS.md"):
+        path = repo_root / rel_path
+        if not path.is_file():
+            hits.append(rel_path)
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        missing = [phrase for phrase in MANDATORY_CODEX_PARITY if phrase not in text]
+        if missing:
+            hits.append(f"{rel_path}:{','.join(missing)}")
+    return hits
+
+
+def _scan_for_codex_config_skill_bundle(repo_root: Path) -> list[str]:
+    hits: list[str] = []
+    required_terms = (
+        "candidate-first validation",
+        "trusted folders",
+        "local-subagent",
+        "required local-agent doctrine",
+        "<codex_config_path>",
+        "profiles.json",
+    )
+    bundle_text_parts: list[str] = []
+    for rel_path in CODEX_CONFIG_SKILL_BUNDLE:
+        path = repo_root / rel_path
+        if not path.is_file():
+            hits.append(rel_path)
+            continue
+        bundle_text_parts.append(path.read_text(encoding="utf-8", errors="ignore").lower())
+    bundle_text = "\n".join(bundle_text_parts)
+    missing = [term for term in required_terms if term not in bundle_text]
+    if missing:
+        hits.append(f"bundle_text:{','.join(missing)}")
+    return hits
 
 
 def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
@@ -251,6 +585,114 @@ def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
                 "core docs are missing required meta-harness or startup-acceptance snippets",
                 ", ".join(missing_doc_snippets[:12]),
                 "update the published docs so the meta-harness authority and no-empty-shell contract are explicit",
+            )
+        )
+
+    missing_no_stop_runtime_contract = _scan_for_no_stop_runtime_contract(repo_root)
+    if missing_no_stop_runtime_contract:
+        findings.append(
+            _finding(
+                "high",
+                "no_stop_minimum_runtime_contract_incomplete",
+                "core operator docs are missing no-stop or minimum-runtime doctrine",
+                ", ".join(missing_no_stop_runtime_contract),
+                "restore the no-stop doctrine and minimum runtime law wording in the operator docs",
+            )
+        )
+
+    missing_debt_ledger_proof_contract = _scan_for_debt_ledger_proof_contract(repo_root)
+    if missing_debt_ledger_proof_contract:
+        findings.append(
+            _finding(
+                "high",
+                "debt_ledger_proof_contract_incomplete",
+                "trust-ledger proof rule is missing from the collaboration support surface",
+                ", ".join(missing_debt_ledger_proof_contract),
+                "restore the trust-ledger proof rule and debt-ledger vocabulary in collaboration_support.py",
+            )
+        )
+
+    missing_local_agent_contract = _scan_for_local_agent_contract(repo_root)
+    if missing_local_agent_contract:
+        findings.append(
+            _finding(
+                "high",
+                "local_agent_contract_incomplete",
+                "operator docs are missing local-agent or visible-action-state wording",
+                ", ".join(missing_local_agent_contract),
+                "restore the local-agent and visible action-state parity wording in the operator docs",
+            )
+        )
+
+    missing_reasoning_visibility_contract = _scan_for_reasoning_visibility_contract(repo_root)
+    if missing_reasoning_visibility_contract:
+        findings.append(
+            _finding(
+                "high",
+                "reasoning_visibility_contract_incomplete",
+                "operator docs are missing reasoning-visibility or patience-runtime-window wording",
+                ", ".join(missing_reasoning_visibility_contract),
+                "restore the reasoning visibility and patience runtime window wording in the operator docs",
+            )
+        )
+
+    stale_browser_first_contract = _scan_for_continue_copilot_browser_first_contract(repo_root)
+    if stale_browser_first_contract:
+        findings.append(
+            _finding(
+                "high",
+                "continue_copilot_browser_first_contract",
+                "Continue or Copilot lanes still advertise browser-tool-first behavior",
+                ", ".join(stale_browser_first_contract),
+                "rewrite Continue and Copilot lane text so browser tools are not the first-class contract",
+            )
+        )
+
+    stale_self_diagnosis_contract = _scan_for_stale_self_diagnosis_contract(repo_root)
+    if stale_self_diagnosis_contract:
+        findings.append(
+            _finding(
+                "high",
+                "continue_copilot_stale_self_diagnosis_contract",
+                "Continue or Copilot lanes still advertise stale self-diagnosis wording",
+                ", ".join(stale_self_diagnosis_contract),
+                "rewrite the lane guidance so it does not tell the operator to wait, downgrade, or ask for a path first",
+            )
+        )
+
+    mandatory_skill_chain_contract = _scan_for_mandatory_skill_chain_contract(repo_root)
+    if mandatory_skill_chain_contract:
+        findings.append(
+            _finding(
+                "high",
+                "mandatory_skill_chain_contract_incomplete",
+                "operator docs are missing one or more mandatory skill-arbiter chain references",
+                ", ".join(mandatory_skill_chain_contract),
+                "restore the mandatory local-agent skill chain language across operator docs and guidance",
+            )
+        )
+
+    codex_parity_contract = _scan_for_codex_parity_contract(repo_root)
+    if codex_parity_contract:
+        findings.append(
+            _finding(
+                "high",
+                "codex_parity_contract_incomplete",
+                "operator docs are missing Codex config parity wording for local-agent workflows",
+                ", ".join(codex_parity_contract),
+                "restore trusted folders, local-subagent state, reasoning visibility, and local-agent doctrine wording in the operator docs",
+            )
+        )
+
+    codex_skill_bundle_contract = _scan_for_codex_config_skill_bundle(repo_root)
+    if codex_skill_bundle_contract:
+        findings.append(
+            _finding(
+                "high",
+                "codex_config_skill_bundle_incomplete",
+                "codex-config-self-maintenance skill bundle is missing required contract or evidence text",
+                ", ".join(codex_skill_bundle_contract),
+                "restore candidate-first validation, trusted folders, local-subagent state, and config-path evidence in the skill bundle",
             )
         )
 
@@ -412,6 +854,42 @@ def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
                 "publish-surface files are still untracked in git",
                 ", ".join(untracked_publish_surface[:12]),
                 "track or remove untracked source/docs files before publishing so clean checkouts match the audited repo state",
+            )
+        )
+
+    stale_browser_headless_hits = _scan_publish_surface_for_stale_continue_browser_headless(repo_root)
+    if stale_browser_headless_hits:
+        findings.append(
+            _finding(
+                "high",
+                "stale_continue_browser_headless",
+                "public-shape artifacts still advertise Continue browser/headless fallback wording",
+                ", ".join(stale_browser_headless_hits[:12]),
+                "remove stale Continue browser-tool or headless-fallback wording from publishable docs and code",
+            )
+        )
+
+    rg_command_hits = _scan_publish_surface_for_rg_commands(repo_root)
+    if rg_command_hits:
+        findings.append(
+            _finding(
+                "high",
+                "ripgrep_publish_guidance",
+                "publish-surface artifacts still instruct using rg or rg.exe",
+                ", ".join(rg_command_hits[:12]),
+                "replace ripgrep command examples with PowerShell Select-String or Get-ChildItem guidance before publishing",
+            )
+        )
+
+    private_guard_term_hits = _scan_publish_surface_for_private_guard_terms(repo_root)
+    if private_guard_term_hits:
+        findings.append(
+            _finding(
+                "critical",
+                "public_shape_private_guard_term",
+                "public-shape artifacts contain sealed private-vocabulary terms",
+                ", ".join(private_guard_term_hits[:12]),
+                "move the sealed private vocabulary back into private-only surfaces before publishing",
             )
         )
 

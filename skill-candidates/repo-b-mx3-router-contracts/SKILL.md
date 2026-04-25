@@ -1,6 +1,8 @@
 ---
-name: repo-b-mx3-router-contracts
-description: Validate MX3 shim model-router, ORT provider, and runtime packaging contracts. Use when changing route-mode derivation, router environment mapping, capability metadata, inference routing responses, exact ORT provider builds, or Electron/embedded-Node ABI ownership.
+name: "repo-b-mx3-router-contracts"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate MX3 shim model-router, ORT provider, and runtime packaging contracts. Use when changing route-mode derivation, router environment mapping, capability metadata, inference routing responses, exact ORT provider builds, or Electron/embedded-Node ABI ownership."
 ---
 
 # Repo B MX3 Router Contracts

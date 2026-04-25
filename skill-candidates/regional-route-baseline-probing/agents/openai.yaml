@@ -1,0 +1,4 @@
+interface:
+  display_name: "Regional Route Baseline Probing"
+  short_description: "Measure router-side and workstation-side regional pathing before claiming a route or DNS win."
+  default_prompt: "Use $regional-route-baseline-probing when the request matches this lane: compare physical distance versus wire path from Eddie's Provincetown/Cape Comcast uplink using MIT, Providence, OpenAI, Cloudflare, and anycast DNS baselines to separate local handoff issues from upstream or CDN detours, and to classify whether IPv6 is truly usable or only partially present."

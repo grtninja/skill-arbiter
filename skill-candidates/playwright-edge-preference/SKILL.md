@@ -1,6 +1,8 @@
 ---
-name: playwright-edge-preference
-description: Run Playwright browser automation with Microsoft Edge as the default channel. Use when users request Edge-specific validation, screenshots, or parity checks while keeping deterministic low-churn automation flow.
+name: "playwright-edge-preference"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run Playwright browser automation with Microsoft Edge as the default channel. Use when users request Edge-specific validation, screenshots, or parity checks while keeping deterministic low-churn automation flow."
 ---
 
 # Playwright Edge Preference

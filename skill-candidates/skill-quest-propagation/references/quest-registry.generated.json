@@ -1,0 +1,686 @@
+{
+  "generated_at": "2026-04-22T02:28:35Z",
+  "sources": {
+    "reports_root": "<PRIVATE_META_HARNESS>\\reports",
+    "workstreams_root": "%USERPROFILE%\\.codex\\workstreams"
+  },
+  "summary": {
+    "total_entries": 11,
+    "workstream_states": 9,
+    "quest_reports": 1,
+    "resume_contracts": 1,
+    "next_quest_notes": 16,
+    "nonempty_next_quest_notes": 2,
+    "blank_next_quest_notes": 14,
+    "skipped_json_files": 17
+  },
+  "entries": [
+    {
+      "entry_id": "penny-image-workflow-quest-20260421",
+      "kind": "workstream_state",
+      "title": "Lock in the Penny native still-image workflow and generate the next curated batch",
+      "status": "in_progress",
+      "updated_at": "2026-04-22T02:27:13.215186Z",
+      "created_at": "2026-04-22T02:16:52.132417Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\penny-image-workflow-quest-20260421.json",
+      "tags": [
+        "penny",
+        "image"
+      ],
+      "next_actions": [
+        "native image batch: Generate the next hot Penny batch with curated cyberpunk outfit references, the accepted native keepers, and Starfield or Neon styling; save candidates into <USER_DATA_ROOT>\\Pictures\\Penny\\Cyberpunk Penny\\2026-04-21\\Hot Batch",
+        "local review and refinement: Review keepers locally with big-brain vision before any Media Workbench intake or clip generation",
+        "media workbench handoff: Only hand a still into Media Workbench after a reviewed keeper is accepted"
+      ],
+      "artifacts": [
+        "<SKILL_ARBITER_REPO>\\skill-candidates\\skill-quest-propagation\\references\\quest-registry.generated.json",
+        "<SKILL_ARBITER_REPO>\\skill-candidates\\skill-quest-propagation\\references\\quest-registry.generated.md",
+        "<USER_DATA_ROOT>\\Pictures\\Penny\\Codex Native Keepers\\2026-04-21\\ig_01145775fa5f244f0169e80bbe768c8190941471de0ee0fa47.png",
+        "<USER_DATA_ROOT>\\Pictures\\Penny\\Codex Native Keepers\\2026-04-21\\ig_01145775fa5f244f0169e80d93a6708190a54b9335f76c4257.png",
+        "<USER_DATA_ROOT>\\Pictures\\Penny\\Cyberpunk Penny\\2026-04-21\\penny-cyberpunk-codex-20260421-2043-upscaled-2x.png",
+        "<USER_DATA_ROOT>\\Pictures\\Penny\\Cyberpunk Penny\\2026-04-21\\Neon\\penny-neon-starfield-codex-20260421-2054-upscaled-2x.png"
+      ],
+      "lane_status_counts": {
+        "completed": 1,
+        "in_progress": 1,
+        "pending": 2
+      },
+      "lanes": [
+        {
+          "name": "reference curation",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 6
+        },
+        {
+          "name": "native image batch",
+          "status": "in_progress",
+          "next_step": "Generate the next hot Penny batch with curated cyberpunk outfit references, the accepted native keepers, and Starfield or Neon styling; save candidates into <USER_DATA_ROOT>\\Pictures\\Penny\\Cyberpunk Penny\\2026-04-21\\Hot Batch",
+          "artifact_count": 6
+        },
+        {
+          "name": "local review and refinement",
+          "status": "pending",
+          "next_step": "Review keepers locally with big-brain vision before any Media Workbench intake or clip generation",
+          "artifact_count": 6
+        },
+        {
+          "name": "media workbench handoff",
+          "status": "pending",
+          "next_step": "Only hand a still into Media Workbench after a reviewed keeper is accepted",
+          "artifact_count": 6
+        }
+      ]
+    },
+    {
+      "entry_id": "mx3_vrm_megaquest_chain",
+      "kind": "workstream_state",
+      "title": "Stabilize MX3 shim and VRM Sandbox, land validated fixes, and keep operator surfaces healthy",
+      "status": "unknown",
+      "updated_at": "2026-04-19T17:41:02Z",
+      "created_at": null,
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\mx3_vrm_megaquest_chain.json",
+      "tags": [
+        "vrm",
+        "mx3",
+        "shim",
+        "megaquest"
+      ],
+      "next_actions": [],
+      "artifacts": [],
+      "lane_status_counts": {},
+      "lanes": []
+    },
+    {
+      "entry_id": "mx3_vrm_megaquest_resume",
+      "kind": "workstream_state",
+      "title": "Stabilize MX3 shim and VRM Sandbox, land validated fixes, and keep operator surfaces healthy",
+      "status": "in_progress",
+      "updated_at": "2026-04-19T17:41:02.844578Z",
+      "created_at": "2026-04-19T14:45:15.465059Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\mx3_vrm_megaquest_resume.json",
+      "tags": [
+        "vrm",
+        "mx3",
+        "shim",
+        "megaquest"
+      ],
+      "next_actions": [
+        "pr-push-merge: update docs, queue review-coder/degraded evidence, then open and merge the current memryx and VRM private PRs"
+      ],
+      "artifacts": [
+        "<PRIVATE_REPO_B>\\.mx3_cache\\dual_llm\\hetero_vulkan.log",
+        "<PRIVATE_REPO_B>\\.mx3_cache\\dual_llm\\radeon_embed.log",
+        "%USERPROFILE%\\.codex\\workstreams\\usage-analysis.json",
+        "%USERPROFILE%\\.codex\\workstreams\\usage-plan.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-cost-analysis.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-cost-policy.json",
+        "%USERPROFILE%\\.codex\\workstreams\\cold-warm-analysis.json",
+        "%USERPROFILE%\\.codex\\workstreams\\cold-warm-plan.json"
+      ],
+      "lane_status_counts": {
+        "completed": 1,
+        "pending": 3,
+        "in_progress": 1
+      },
+      "lanes": [
+        {
+          "name": "mx3-stack-health",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 2
+        },
+        {
+          "name": "mx3-ui-runtime",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "vrm-runtime",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "vrm-ui-modularization",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "pr-push-merge",
+          "status": "in_progress",
+          "next_step": "update docs, queue review-coder/degraded evidence, then open and merge the current memryx and VRM private PRs",
+          "artifact_count": 8
+        }
+      ]
+    },
+    {
+      "entry_id": "mega_quest_resume_contract_20260419",
+      "kind": "resume_contract",
+      "title": "VRM Sandbox and memryx shim mega-quest backlog reduction",
+      "status": "resume_ready",
+      "updated_at": "2026-04-19T09:37:42Z",
+      "created_at": null,
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\mega_quest_resume_contract_20260419.json",
+      "tags": [
+        "vrm",
+        "shim"
+      ],
+      "next_actions": [
+        "stale-process-and-worker-sweep",
+        "vrm-ui-and-runtime-modularization"
+      ],
+      "artifacts": [
+        "%USERPROFILE%\\.codex\\workstreams\\mega_quest_vrm_shim_20260418.json"
+      ],
+      "lane_status_counts": {},
+      "lanes": []
+    },
+    {
+      "entry_id": "mega_quest_vrm_shim_20260418",
+      "kind": "workstream_state",
+      "title": "VRM Sandbox and memryx shim mega-quest backlog reduction",
+      "status": "in_progress",
+      "updated_at": "2026-04-19T03:50:21.724798Z",
+      "created_at": "2026-04-18T22:31:53.731190Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\mega_quest_vrm_shim_20260418.json",
+      "tags": [
+        "vrm",
+        "shim"
+      ],
+      "next_actions": [
+        "shim-runtime-repair: keep hardening bridge health truth and no-CPU-fallback restart probes while VRM workers finish their slices",
+        "vrm-chat-tts-touch: integrate playback and touch dialogue hardening into live VRM Sandbox tree without trampling existing diffs"
+      ],
+      "artifacts": [
+        "<PRIVATE_REPO_D>\\packages\\ui\\src\\ui\\App.tsx",
+        "<PRIVATE_REPO_D>\\packages\\ui\\src\\ui\\chatQueueDrainCoordinator.ts",
+        "<PRIVATE_REPO_D>\\packages\\ui\\src\\ui\\chatQueueDrainCoordinator.test.ts",
+        "<PRIVATE_REPO_B>\\tools\\restart_local_apps.py",
+        "<PRIVATE_REPO_B>\\tests\\test_restart_local_apps.py"
+      ],
+      "lane_status_counts": {
+        "in_progress": 1,
+        "pending": 3,
+        "completed": 1
+      },
+      "lanes": [
+        {
+          "name": "shim-runtime-repair",
+          "status": "in_progress",
+          "next_step": "keep hardening bridge health truth and no-CPU-fallback restart probes while VRM workers finish their slices",
+          "artifact_count": 5
+        },
+        {
+          "name": "vrm-animation-runtime",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "vrm-chat-tts-touch",
+          "status": "completed",
+          "next_step": "integrate playback and touch dialogue hardening into live VRM Sandbox tree without trampling existing diffs",
+          "artifact_count": 5
+        },
+        {
+          "name": "app-modularization-ui",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "backlog-reconciliation",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        }
+      ]
+    },
+    {
+      "entry_id": "vrm-sandbox-mega-quest",
+      "kind": "workstream_state",
+      "title": "VRM Sandbox mega-quest",
+      "status": "in_progress",
+      "updated_at": "2026-04-18T21:26:19.203811Z",
+      "created_at": "2026-04-18T21:15:35.510337Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\vrm-sandbox-mega-quest.json",
+      "tags": [
+        "vrm"
+      ],
+      "next_actions": [
+        "ui-compaction: Build and verify compact sidebar/chat shell plus shim-sidecar resolver updates",
+        "pose-hardening: Rebuild after model-probe and shim-autodetect hardening, then verify fresh logs",
+        "runtime-relaunch: Relaunch packaged VRM Sandbox and verify live runtime health plus visible compact shell"
+      ],
+      "artifacts": [],
+      "lane_status_counts": {
+        "in_progress": 3,
+        "pending": 1
+      },
+      "lanes": [
+        {
+          "name": "ui-compaction",
+          "status": "in_progress",
+          "next_step": "Build and verify compact sidebar/chat shell plus shim-sidecar resolver updates",
+          "artifact_count": 0
+        },
+        {
+          "name": "pose-hardening",
+          "status": "in_progress",
+          "next_step": "Rebuild after model-probe and shim-autodetect hardening, then verify fresh logs",
+          "artifact_count": 0
+        },
+        {
+          "name": "runtime-relaunch",
+          "status": "in_progress",
+          "next_step": "Relaunch packaged VRM Sandbox and verify live runtime health plus visible compact shell",
+          "artifact_count": 0
+        },
+        {
+          "name": "cross-repo-alignment",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        }
+      ]
+    },
+    {
+      "entry_id": "mx3-shim-lmstudio-quest-resume",
+      "kind": "workstream_state",
+      "title": "stabilize memryx shim and lm studio hosted model handling",
+      "status": "in_progress",
+      "updated_at": "2026-04-18T15:46:11.529816Z",
+      "created_at": "2026-04-18T15:46:11.434908Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\mx3-shim-lmstudio-quest-resume.json",
+      "tags": [
+        "mx3",
+        "shim"
+      ],
+      "next_actions": [
+        "launcher contract: align visible desktop launcher and restart helpers to the working packaged-python import path"
+      ],
+      "artifacts": [
+        "%USERPROFILE%\\.codex\\workstreams\\stale-process-culprit-map-SOUNDWAVE3-20260418-114557-post-compaction-mx3-shim-lane.json"
+      ],
+      "lane_status_counts": {
+        "completed": 1,
+        "in_progress": 1,
+        "pending": 2
+      },
+      "lanes": [
+        {
+          "name": "live evidence",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 1
+        },
+        {
+          "name": "launcher contract",
+          "status": "in_progress",
+          "next_step": "align visible desktop launcher and restart helpers to the working packaged-python import path",
+          "artifact_count": 1
+        },
+        {
+          "name": "lmstudio cache contract",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 1
+        },
+        {
+          "name": "validation and operator surfaces",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 1
+        }
+      ]
+    },
+    {
+      "entry_id": "skill-quest-audit-20260417",
+      "kind": "workstream_state",
+      "title": "Week-long Codex chat + skill arbiter audit with outstanding-work ledger and system upgrades",
+      "status": "in_progress",
+      "updated_at": "2026-04-17T12:24:00.000000Z",
+      "created_at": "2026-04-17T11:40:30.243225Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-20260417.json",
+      "tags": [
+        "skill",
+        "audit"
+      ],
+      "next_actions": [
+        "validation: Verify codex-local MCP path alignment, keep/suspect process state, and publish the merged audit findings."
+      ],
+      "artifacts": [
+        "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-usage-analysis-20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-skill-cost-policy-20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-cold-warm-plan-20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-session-inventory-lite-20260410-20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-outstanding-ledger-20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\cybertron_unc_share_diagnosis_20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-systems-gap-analysis-20260417.json",
+        "%USERPROFILE%\\.codex\\workstreams\\stale-process-culprit-map-SOUNDWAVE3-20260417-skill-quest.json",
+        "%USERPROFILE%\\AppData\\Roaming\\Code\\User\\mcp.json",
+        "%USERPROFILE%\\AppData\\Roaming\\Code\\User\\profiles\\35cd246c\\mcp.json",
+        "<PRIVATE_META_HARNESS>\\config\\vscode_surface\\user\\mcp.json",
+        "<PRIVATE_META_HARNESS>\\config\\vscode_surface\\profiles\\STARFRAME\\mcp.json",
+        "<PRIVATE_META_HARNESS>\\reports\\2026-04-17\\skill-quest-audit-2026-04-17.md"
+      ],
+      "lane_status_counts": {
+        "completed": 5,
+        "in_progress": 1
+      },
+      "lanes": [
+        {
+          "name": "guardrails",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 3
+        },
+        {
+          "name": "session-inventory",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 1
+        },
+        {
+          "name": "outstanding-ledger",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 2
+        },
+        {
+          "name": "systems-audit",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 2
+        },
+        {
+          "name": "upgrades",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 4
+        },
+        {
+          "name": "validation",
+          "status": "in_progress",
+          "next_step": "Verify codex-local MCP path alignment, keep/suspect process state, and publish the merged audit findings.",
+          "artifact_count": 1
+        }
+      ]
+    },
+    {
+      "entry_id": "skill-quest-audit-20260417.init",
+      "kind": "workstream_state",
+      "title": "Week-long Codex chat + skill arbiter audit with outstanding-work ledger and system upgrades",
+      "status": "pending",
+      "updated_at": "2026-04-17T11:40:30.243593Z",
+      "created_at": "2026-04-17T11:40:30.243225Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-20260417.init.json",
+      "tags": [
+        "skill",
+        "audit"
+      ],
+      "next_actions": [],
+      "artifacts": [],
+      "lane_status_counts": {
+        "pending": 6
+      },
+      "lanes": [
+        {
+          "name": "guardrails",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "session-inventory",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "outstanding-ledger",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "systems-audit",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "upgrades",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "next_step": "",
+          "artifact_count": 0
+        }
+      ]
+    },
+    {
+      "entry_id": "skill-quest-dry-run-20260411",
+      "kind": "quest_report",
+      "title": "36-Hour Skill Arbiter Audit",
+      "status": "success",
+      "updated_at": "2026-04-11T05:34:33.514416Z",
+      "created_at": null,
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\skill-quest-dry-run-20260411.json",
+      "tags": [
+        "skill",
+        "audit"
+      ],
+      "next_actions": [],
+      "artifacts": [
+        "skill-chain-audit-20260411.json",
+        "skill-chain-lean-pack-20260411.json",
+        "stale-process-culprit-map-SOUNDWAVE3-20260411-013219-skill-arbiter-audit.json",
+        "usage-analysis-20260411-skill-audit.json",
+        "quest_runtime.py",
+        "agent_routes.py"
+      ],
+      "lane_status_counts": {},
+      "lanes": []
+    },
+    {
+      "entry_id": "skill-quest-stack-propagation-2026-04-08",
+      "kind": "workstream_state",
+      "title": "Propagate skill quest inheritance and push-readiness across private repos and local agent surfaces",
+      "status": "in_progress",
+      "updated_at": "2026-04-09T02:39:57.271746Z",
+      "created_at": "2026-04-09T02:32:38.082265Z",
+      "source_path": "%USERPROFILE%\\.codex\\workstreams\\skill-quest-stack-propagation-2026-04-08.json",
+      "tags": [
+        "skill"
+      ],
+      "next_actions": [
+        "local agent surfaces: Thread quest contract into remaining live local configs and continuity artifacts",
+        "consolidated reporting: Fold remaining PR review/CI blockers and connector-review drift into the master ledger, then keep reducing private-repo blockers"
+      ],
+      "artifacts": [
+        "<PRIVATE_REPO_A>\\app\\local_agent_runtime_surfaces.py",
+        "<PRIVATE_GITHUB_ROOT>\\continue-meta-harness-private\\manifests\\local_agent_skill_catalog.yaml",
+        "<SKILL_ARBITER_REPO>\\references\\audits\\skill-quest-audit-2026-04-08.json",
+        "%USERPROFILE%\\.codex\\workstreams\\private-repo-push-readiness-2026-04-08.json",
+        "%USERPROFILE%\\.codex\\workstreams\\private-repo-push-readiness-2026-04-08.md"
+      ],
+      "lane_status_counts": {
+        "completed": 4,
+        "in_progress": 1
+      },
+      "lanes": [
+        {
+          "name": "local agent surfaces",
+          "status": "completed",
+          "next_step": "Thread quest contract into remaining live local configs and continuity artifacts",
+          "artifact_count": 5
+        },
+        {
+          "name": "pc control and continue repo propagation",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 5
+        },
+        {
+          "name": "private repo docs and scope alignment",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 5
+        },
+        {
+          "name": "skill-arbiter audit and curation",
+          "status": "completed",
+          "next_step": "",
+          "artifact_count": 5
+        },
+        {
+          "name": "consolidated reporting",
+          "status": "in_progress",
+          "next_step": "Fold remaining PR review/CI blockers and connector-review drift into the master ledger, then keep reducing private-repo blockers",
+          "artifact_count": 5
+        }
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "note_date": "2026-04-21",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-21\\next_quest.md",
+      "updated_at": "2026-04-22T02:28:12Z",
+      "is_blank": false,
+      "preview": "## Active Quest Lock in the Penny native still-image workflow and generate the next curated batch. ## Current Lane"
+    },
+    {
+      "note_date": "2026-04-20",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-20\\next_quest.md",
+      "updated_at": "2026-04-20T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-19",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-19\\next_quest.md",
+      "updated_at": "2026-04-19T06:05:16Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-18",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-18\\next_quest.md",
+      "updated_at": "2026-04-18T06:05:18Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-17",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-17\\next_quest.md",
+      "updated_at": "2026-04-17T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-16",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-16\\next_quest.md",
+      "updated_at": "2026-04-16T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-15",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-15\\next_quest.md",
+      "updated_at": "2026-04-15T06:05:16Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-14",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-14\\next_quest.md",
+      "updated_at": "2026-04-14T06:05:16Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-13",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-13\\next_quest.md",
+      "updated_at": "2026-04-13T06:05:16Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-12",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-12\\next_quest.md",
+      "updated_at": "2026-04-13T01:19:43Z",
+      "is_blank": false,
+      "preview": "Use [third_party_weekly_white_hat_protocol.md](g:\\GitHub\\_MetaHarness\\reports\\2026-04-12\\third_party_weekly_white_hat_protocol.md) as the weekly scouting source of truth. Use [third_party_skill_chain_2026-04-12.md](g:\\GitHub\\_MetaHarness\\reports\\2026-04-12\\third_party_skill_chain_2026-04-12.md) as the current skill/chain recommendation for this lane. Use [third_party_target_board_correlated_2026-04-12.md](g:\\GitHub\\_MetaHarness\\reports\\2026-04-12\\third_party_target_board_correlated_2026-04-12.md) as the current ledger-correlated shortlist."
+    },
+    {
+      "note_date": "2026-04-11",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-11\\next_quest.md",
+      "updated_at": "2026-04-11T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-10",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-10\\next_quest.md",
+      "updated_at": "2026-04-10T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-09",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-09\\next_quest.md",
+      "updated_at": "2026-04-09T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-08",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-08\\next_quest.md",
+      "updated_at": "2026-04-08T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-07",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-07\\next_quest.md",
+      "updated_at": "2026-04-07T06:05:17Z",
+      "is_blank": true,
+      "preview": ""
+    },
+    {
+      "note_date": "2026-04-06",
+      "source_path": "<PRIVATE_META_HARNESS>\\reports\\2026-04-06\\next_quest.md",
+      "updated_at": "2026-04-06T16:46:48Z",
+      "is_blank": true,
+      "preview": ""
+    }
+  ],
+  "skipped_json": [
+    "%USERPROFILE%\\.codex\\workstreams\\mx3-shim-lmstudio-quest-resume.latest.json",
+    "%USERPROFILE%\\.codex\\workstreams\\pc-control-local-agent-lmstudio-diagnosis-request.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-20260417.resume.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-cold-warm-analysis-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-cold-warm-plan-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-outstanding-ledger-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-session-inventory-lite-20260410-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-skill-cost-analysis-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-skill-cost-policy-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-systems-gap-analysis-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-usage-analysis-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-usage-input-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-audit-usage-plan-20260417.json",
+    "%USERPROFILE%\\.codex\\workstreams\\skill-quest-propagation-artifact-scan-20260421.json",
+    "%USERPROFILE%\\.codex\\workstreams\\stale-process-culprit-map-SOUNDWAVE3-20260417-skill-quest.json",
+    "%USERPROFILE%\\.codex\\workstreams\\stale-process-culprit-map-SOUNDWAVE3-20260418-112926-vrm-quest.json",
+    "%USERPROFILE%\\.codex\\workstreams\\stale-process-culprit-map-SOUNDWAVE3-20260418-113008-vrm-quest.json"
+  ]
+}

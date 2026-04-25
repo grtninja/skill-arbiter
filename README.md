@@ -10,6 +10,14 @@ It started as an `rg.exe` churn moderator. It now acts as a capability firewall 
 
 Local skill governance and threat suppression console with guarded operator actions, source legitimacy tracking, and operator-confirmed remediation.
 
+## For humans
+
+Use this repository as the public-shape Skill Arbiter project: a defensive local-host console for reviewing skills, process policy, release readiness, and operator-mediated remediation. Keep private workstation paths, raw host evidence, and sealed local stack details out of repo-tracked artifacts.
+
+## For AI agents
+
+Use the repo-owned validation gates before claiming readiness. Applicable local skills remain mandatory, the local-agent contract stays visible in work summaries, and private repo work must end through a PR that is pushed, merged into `main`, synced locally, and left clean.
+
 ## Shared Governance Baseline
 
 This repo stays aligned to the public-safe governance baseline in

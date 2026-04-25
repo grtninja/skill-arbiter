@@ -1,6 +1,8 @@
 ---
-name: shockwave-dashboard-ops
-description: Operate and debug the Shockwave dashboard/router lane when shim-first model routing, startup contracts, tool-bridge behavior, and operator handoff must stay aligned. Use when recent dashboard work touches startup verification, bridge services, authority metadata, or router-facing docs.
+name: "shockwave-dashboard-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate and debug the Shockwave dashboard/router lane when shim-first model routing, startup contracts, tool-bridge behavior, and operator handoff must stay aligned. Use when recent dashboard work touches startup verification, bridge services, authority metadata, or router-facing docs."
 ---
 
 # Shockwave Dashboard Ops

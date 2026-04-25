@@ -1,6 +1,8 @@
 ---
-name: repo-d-mass-index-ops
-description: Run UI-and-packaging mass-index operations for <PRIVATE_REPO_D> workspace trees. Use when scanning renderer components, Electron startup files, workspace packages, and packaging scripts while aggressively excluding generated build artifacts.
+name: "repo-d-mass-index-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run UI-and-packaging mass-index operations for <PRIVATE_REPO_D> workspace trees. Use when scanning renderer components, Electron startup files, workspace packages, and packaging scripts while aggressively excluding generated build artifacts."
 ---
 
 # REPO_D Mass Index Ops

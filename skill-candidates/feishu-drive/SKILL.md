@@ -1,5 +1,7 @@
 ---
-name: feishu-drive
+name: "feishu-drive"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Browse and manage Feishu Drive folders and files via the feishu_drive tool. Use when listing shared folders, inspecting file metadata, creating folders, moving files, or deleting Drive items the bot can access."
 ---
 

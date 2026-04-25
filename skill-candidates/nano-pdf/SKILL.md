@@ -1,5 +1,7 @@
 ---
-name: nano-pdf
+name: "nano-pdf"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Edit PDFs with natural-language instructions using the nano-pdf CLI."
 ---
 

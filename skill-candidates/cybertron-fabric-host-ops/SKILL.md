@@ -1,6 +1,8 @@
 ---
-name: cybertron-fabric-host-ops
-description: Audit Cybertron remote-host readiness, repo parity, WinRM auth-state, MeshGPT host-terminal bootstrap, canonical model-matrix validation, Starframe/Cybertron offload checks, and VRM display readiness.
+name: "cybertron-fabric-host-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Audit Cybertron remote-host readiness, repo parity, WinRM auth-state, MeshGPT host-terminal bootstrap, canonical model-matrix validation, Starframe/Cybertron offload checks, and VRM display readiness."
 ---
 
 # Cybertron Fabric Host Ops

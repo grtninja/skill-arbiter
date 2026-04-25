@@ -1,5 +1,7 @@
 ---
-name: openai-whisper-api
+name: "openai-whisper-api"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Transcribe audio via OpenAI Audio Transcriptions API (Whisper)."
 ---
 

@@ -9,7 +9,7 @@ from .contracts import AuditEvent, MitigationCase, MitigationStep, PolicyDecisio
 from .inventory import build_inventory_snapshot, load_cached_inventory
 from .paths import DEFAULT_CANDIDATES_ROOT, DEFAULT_SKILLS_ROOT, host_id, mitigation_cases_root, quarantine_artifacts_root
 from .quarantine import apply_quarantine, confirm_delete_skill
-from .threat_catalog import ALWAYS_BLOCK_CODES, HOSTILE_CODES, describe_codes
+from .threat_catalog import ALWAYS_BLOCK_CODES, describe_codes
 
 
 STRIP_CODES = {

@@ -1,6 +1,8 @@
 ---
-name: meta-harness-app-order-bootstrap
-description: Orchestrate app-first, registry-aware bring-up and health validation for local multi-app meta-harness stacks. Use when startup order, runtime registry, launcher scripts, control-center bring-up, or cross-app health checks change together.
+name: "meta-harness-app-order-bootstrap"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Orchestrate app-first, registry-aware bring-up and health validation for local multi-app meta-harness stacks. Use when startup order, runtime registry, launcher scripts, control-center bring-up, or cross-app health checks change together."
 ---
 
 # Meta-Harness App-Order Bootstrap

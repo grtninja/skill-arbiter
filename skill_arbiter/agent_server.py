@@ -5,32 +5,11 @@ import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
 
-from .about import about_payload
-from .accepted_risk import accept_subject, revoke_subject
-from .agent_http import _json_response, _origin_allowed, _requested_origin, _resolve_allowed_origin, _write_cors_headers
+from .agent_http import _json_response, _origin_allowed, _write_cors_headers
 from .agent_routes import handle_get, handle_post
 from .agent_state import NullClawStateBase
-from .audit_log import append_audit_event, read_audit_events
-from .collaboration import (
-    read_collaboration_events,
-    record_payload as record_collaboration_payload,
-    status_payload as collaboration_status_payload,
-)
-from .contracts import AuditEvent, IncidentRecord, PolicyDecision
-from .inventory import build_inventory_snapshot, load_cached_inventory
-from .llm_advisor import advisor_base_url, advisor_model, advisor_status, enabled as advisor_enabled
-from .mitigation import execute_case_action, list_cases, plan_case, reconcile_cases
-from .paths import DEFAULT_AGENT_HOST, DEFAULT_AGENT_PORT, DEFAULT_CANDIDATES_ROOT, DEFAULT_SKILLS_ROOT, REPO_ROOT, collaboration_log_path, host_id, inventory_cache_path, quest_log_path, self_check_cache_path
-from .privacy_policy import scan_repo
-from .public_readiness import load_cached_public_readiness, run_public_readiness_scan
-from .quest_runtime import record_payload as record_quest_payload, status_payload as quest_status_payload
-from .quarantine import apply_quarantine, confirm_delete_skill, confirm_kill_process, release_quarantine
-from .self_governance import run_self_governance_scan
-from .skill_game_runtime import record_payload as record_skill_game_payload, status_payload as skill_game_status_payload
-from .stack_runtime import load_poll_profile, stack_runtime_snapshot
-from supply_chain_guard import scan_skill_dir_content, scan_skill_tree, summarize_findings
+from .paths import DEFAULT_AGENT_HOST, DEFAULT_AGENT_PORT
 
 
 class NullClawState(NullClawStateBase):

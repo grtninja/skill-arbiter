@@ -20,6 +20,20 @@ All notable changes to this project are documented in this file.
 - split the desktop UI into explicit entry, runtime, DOM, polling, runtime-view, and inventory-view modules so the shell no longer depends on a single monolithic `app.js`
 - break inventory and collaboration runtime code into smaller helper modules so meta-harness policy, source/baseline attribution, and collaboration evidence handling stay modular and easier to validate
 
+## [0.2.26] - 2026-04-25
+
+### Added
+
+- Add the SQLite-backed process policy database and Windows process-policy guard for enforcing bounded `rg` / `rg.exe` usage.
+- Add loopback process-policy API routes plus a logon scheduled-task installer so Skill Arbiter can supervise process churn after Windows starts.
+- Add sanitized candidate skill bundles and the public Codex config self-maintenance reference needed for the current skill catalog state.
+
+### Changed
+
+- Surface process-policy state in runtime supervision snapshots and route subprocess launches through the policy database.
+- Record the private-repo delivery rule in repo governance docs: branch, PR, push, merge to `main`, sync, and leave no dirty lane diffs.
+- Align public-readiness doctrine for local-agent parity, no-stop/minimum-runtime governance, and the required skill chain.
+
 ## [0.2.25] - 2026-04-21
 
 ### Changed
@@ -633,5 +647,3 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
-
-

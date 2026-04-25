@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from skill_arbiter.stack_accounting import fetch_stack_accounting
+from skill_arbiter.stack_accounting import fetch_stack_accounting  # noqa: E402
 
 
 DEFAULT_ALLOWED_HOSTS = {"127.0.0.1", "localhost", "::1"}

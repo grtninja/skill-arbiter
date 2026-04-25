@@ -1,6 +1,8 @@
 ---
-name: repo-c-boundary-governance
-description: Keep <PRIVATE_REPO_C> changes aligned with BOUNDARIES.md and AGENTS.md governance. Use when modifying trust-layer architecture, cross-repo interfaces, packaging docs, or any change that could blur cognitive vs hardware execution boundaries.
+name: "repo-c-boundary-governance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Keep <PRIVATE_REPO_C> changes aligned with BOUNDARIES.md and AGENTS.md governance. Use when modifying trust-layer architecture, cross-repo interfaces, packaging docs, or any change that could blur cognitive vs hardware execution boundaries."
 ---
 
 # Repo C Boundary Governance
@@ -26,8 +28,9 @@ Do not use this skill for:
 
 ## Quick Governance Checks
 
-```bash
-rg -n "BOUNDARIES.md|REPO_B_SIDECAR_URL|Windows-SDK|fail-closed|trust-layer" -S README.md AGENTS.md docs src repo-c repo_c_trace ranking_engine
+```powershell
+$paths = @('README.md','AGENTS.md','docs','src','repo-c','repo_c_trace','ranking_engine')
+Get-ChildItem -Path $paths -Recurse -File | Select-String -Pattern "BOUNDARIES\.md|REPO_B_SIDECAR_URL|Windows-SDK|fail-closed|trust-layer" -CaseSensitive:$false
 ruff check .
 pytest -q
 ```

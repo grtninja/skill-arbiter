@@ -1,5 +1,7 @@
 ---
-name: notion
+name: "notion"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Notion API for creating and managing pages, databases, and blocks."
 ---
 

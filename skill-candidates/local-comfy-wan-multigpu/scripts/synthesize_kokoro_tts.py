@@ -2,7 +2,6 @@
 import argparse
 import io
 import json
-import math
 import wave
 from pathlib import Path
 

@@ -1,6 +1,8 @@
 ---
-name: repo-c-mass-index-ops
-description: Run shard-first mass-index operations for <PRIVATE_REPO_C> governance lanes. Use when scanning policy schemas, ranking/trace contracts, and trust-layer boundaries in very large trees where scope partitioning is required.
+name: "repo-c-mass-index-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run shard-first mass-index operations for <PRIVATE_REPO_C> governance lanes. Use when scanning policy schemas, ranking/trace contracts, and trust-layer boundaries in very large trees where scope partitioning is required."
 ---
 
 # REPO_C Mass Index Ops

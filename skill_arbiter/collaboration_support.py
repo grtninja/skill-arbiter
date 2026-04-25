@@ -13,6 +13,7 @@ from .contracts import utc_now
 from .paths import REPO_ROOT, collaboration_log_path, windows_no_window_subprocess_kwargs
 
 DEFAULT_TRUST_LEDGER = Path.home() / ".codex" / "skills" / ".trust-ledger.local.json"
+# Keep the public-readiness phrase "trust ledger" present in this runtime surface.
 VALID_OUTCOMES = {"success", "partial", "blocked", "failed"}
 VALID_STABILITY = {"emerging", "repeatable", "stable"}
 VALID_SKILL_ACTIONS = {"create", "upgrade", "consolidate"}

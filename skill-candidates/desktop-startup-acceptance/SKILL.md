@@ -1,6 +1,8 @@
 ---
-name: desktop-startup-acceptance
-description: Enforce explicit desktop startup acceptance across local app repos. Use when normalizing Windows app launchers, stale-window cleanup, frontend/backend coupling, state restore, shortcut ownership, or machine-specific app rosters.
+name: "desktop-startup-acceptance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce explicit desktop startup acceptance across local app repos. Use when normalizing Windows app launchers, stale-window cleanup, frontend/backend coupling, state restore, shortcut ownership, or machine-specific app rosters."
 ---
 
 # Desktop Startup Acceptance

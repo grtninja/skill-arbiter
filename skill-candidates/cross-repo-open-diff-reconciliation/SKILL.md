@@ -1,6 +1,8 @@
 ---
-name: cross-repo-open-diff-reconciliation
-description: Review recent open diffs across multiple repos, classify repeated release/docs/tests gaps, and route each gap to the right remediation skill. Use when several repos are carrying unreleased work and you need a deterministic audit before patching or curating new skills.
+name: "cross-repo-open-diff-reconciliation"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Review recent open diffs across multiple repos, classify repeated release/docs/tests gaps, and route each gap to the right remediation skill. Use when several repos are carrying unreleased work and you need a deterministic audit before patching or curating new skills."
 ---
 
 # Cross-Repo Open Diff Reconciliation

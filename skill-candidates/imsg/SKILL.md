@@ -1,5 +1,7 @@
 ---
-name: imsg
+name: "imsg"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "iMessage/SMS CLI for listing chats, history, and sending messages via Messages.app."
 ---
 

@@ -108,6 +108,15 @@ Before opening a PR:
    - public-release readiness changes
    - public-shape or maintainer-attribution changes
 7. Keep built-ins additive; do not disable upstream VS Code/Codex skills.
+8. Any public PR must pass Eddie's safety and security checks before merge.
+
+Local-agent PR doctrine:
+
+- No-stop doctrine and minimum runtime law are binding for substantial repair lanes; completion requires user-visible validation, not only a backend check.
+- Preserve visible action-state parity, reasoning visibility, trusted folders, and local-subagent evidence in PR notes when Codex, Continue, or Copilot-facing behavior is touched.
+- Continue and Copilot must not be described as browser-tool or headless fallback surfaces for governed local-agent work.
+- The patience runtime window applies to slow or recovered lanes; keep validation moving and record degraded evidence explicitly.
+- Required local-agent doctrine includes `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.
 
 For external contributor PRs and any PR touching skill-governing markdown:
 

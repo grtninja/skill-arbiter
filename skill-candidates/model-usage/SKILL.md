@@ -1,6 +1,8 @@
 ---
-name: model-usage
-description: Summarize per-model usage cost from local CodexBar cost JSON. Use when you need current-model or all-model cost breakdowns for Codex or Claude usage.
+name: "model-usage"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Summarize per-model usage cost from local CodexBar cost JSON. Use when you need current-model or all-model cost breakdowns for Codex or Claude usage."
 ---
 
 # Model Usage

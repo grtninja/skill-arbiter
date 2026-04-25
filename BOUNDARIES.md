@@ -50,6 +50,17 @@
 - The desktop app must open before the local agent starts or attaches.
 - Health checks must remain lightweight and must not trigger heavy inventory or scan work on cold start.
 
+## Meta-Harness Boundary
+
+- Canonical local repo root references use `G:\GitHub`; legacy aliases are drift to normalize.
+- Authoritative local advisor planes are `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` when the maintainer workstation is the active host.
+- Continue-facing local-agent surfaces must remain visible operator lanes with explicit action state.
+- No-stop doctrine: criticism, correction, crash recovery, and context repair continue the active lane unless the operator explicitly ends it.
+- Minimum runtime law: substantial local-agent repair work must keep moving through concrete validation before completion framing.
+- Keep reasoning visibility, visible action-state parity, trusted folders, and local-subagent evidence aligned across Codex, Continue, and Copilot-facing docs.
+- The patience runtime window applies when a local-agent lane is slow, degraded, or recovering from interruption; report the blocker and next action without substituting browser-tool or headless fallback surfaces for the governed lane.
+- Mandatory skill-chain references for governed work include `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.
+
 ## Publication Boundary
 
 - Repo-tracked artifacts are public-shape only.

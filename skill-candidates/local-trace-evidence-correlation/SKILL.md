@@ -1,6 +1,8 @@
 ---
-name: local-trace-evidence-correlation
-description: Correlate local decision telemetry, trace recording, and emitted evidence across STARFRAME services. Use when arbiter, media, dashboard, or embodiment traces need to line up as one operator-readable storyline.
+name: "local-trace-evidence-correlation"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Correlate local decision telemetry, trace recording, and emitted evidence across STARFRAME services. Use when arbiter, media, dashboard, or embodiment traces need to line up as one operator-readable storyline."
 ---
 
 # Local Trace Evidence Correlation

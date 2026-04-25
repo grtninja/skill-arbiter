@@ -1,5 +1,7 @@
 ---
-name: discord
+name: "discord"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Discord ops via the message tool (channel=discord)."
 ---
 

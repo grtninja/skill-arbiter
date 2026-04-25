@@ -1,5 +1,7 @@
 ---
-name: wacli
+name: "wacli"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats)."
 ---
 

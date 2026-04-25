@@ -1,5 +1,7 @@
 ---
-name: nano-banana-pro
+name: "nano-banana-pro"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Generate or edit images via Gemini 3 Pro Image (Nano Banana Pro)."
 ---
 

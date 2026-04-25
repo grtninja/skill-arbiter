@@ -1,5 +1,7 @@
 ---
-name: spotify-player
+name: "spotify-player"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Terminal Spotify playback/search via spogo (preferred) or spotify_player."
 ---
 

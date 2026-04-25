@@ -1,6 +1,8 @@
 ---
-name: skill-installer-plus
-description: Run local-first skill installation with lockdown admission and a learning recommendation loop. Use when adding/updating skills so installs are evidence-gated and future install choices improve from prior outcomes.
+name: "skill-installer-plus"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run local-first skill installation with lockdown admission and a learning recommendation loop. Use when adding/updating skills so installs are evidence-gated and future install choices improve from prior outcomes."
 ---
 
 # Skill Installer Plus

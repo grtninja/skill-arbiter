@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quest Propagation"
+  short_description: "Keep governed quests registry-backed, resume-safe, and mirrored across handoff notes"
+  default_prompt: "Use $skill-quest-propagation to harvest prior quest history into the registry, create or update a governed quest, keep the workstream state deterministic, mirror the next action into the active next-quest handoff, and verify the relevant branch and skill aliases expose the workflow lane."

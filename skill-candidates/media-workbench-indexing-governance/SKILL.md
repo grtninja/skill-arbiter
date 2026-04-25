@@ -1,6 +1,8 @@
 ---
-name: media-workbench-indexing-governance
-description: Govern Media Workbench indexing posture across metadata-only baselines, opt-in content-derived indexing, local manifest storage, and operator-facing index summaries. Use when indexing tools, manifests, catalog DBs, or media-root governance change together.
+name: "media-workbench-indexing-governance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Govern Media Workbench indexing posture across metadata-only baselines, opt-in content-derived indexing, local manifest storage, and operator-facing index summaries. Use when indexing tools, manifests, catalog DBs, or media-root governance change together."
 ---
 
 # Media Workbench Indexing Governance

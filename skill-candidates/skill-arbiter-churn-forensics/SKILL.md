@@ -1,6 +1,8 @@
 ---
-name: skill-arbiter-churn-forensics
-description: Investigate rg.exe churn and quarantine decisions in skill-arbiter runs. Use when a skill causes CPU spikes, unexpected scans, blacklist actions, or when arbitration thresholds need evidence-backed tuning.
+name: "skill-arbiter-churn-forensics"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Investigate rg.exe churn and quarantine decisions in skill-arbiter runs. Use when a skill causes CPU spikes, unexpected scans, blacklist actions, or when arbitration thresholds need evidence-backed tuning."
 ---
 
 # Skill Arbiter Churn Forensics

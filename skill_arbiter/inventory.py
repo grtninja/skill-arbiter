@@ -6,9 +6,7 @@ from . import inventory_baselines as _baselines
 from . import inventory_builder as _builder
 from . import inventory_evaluation as _evaluation
 from . import inventory_policy as _policy
-from .interop import scan_interop_sources
-from .llm_advisor import request_local_advice
-from .paths import DEFAULT_CANDIDATES_ROOT, DEFAULT_SKILLS_ROOT, REPO_ROOT, host_id, inventory_cache_path
+from .paths import REPO_ROOT, host_id
 
 
 _safe_load_radar_payload = _baselines._safe_load_radar_payload
@@ -17,6 +15,7 @@ _extract_tokens_from_subject = _baselines._extract_tokens_from_subject
 _candidate_names_from_radar = _baselines._candidate_names_from_radar
 _candidate_names = _baselines._candidate_names
 
+_read_skill_frontmatter = _evaluation._read_skill_frontmatter
 _read_skill_description = _evaluation._read_skill_description
 _risk_from_codes = _evaluation._risk_from_codes
 _evaluate_skill_dir = _evaluation._evaluate_skill_dir

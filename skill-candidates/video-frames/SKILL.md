@@ -1,6 +1,8 @@
 ---
-name: video-frames
-description: Extract frames and short clips from local video files with ffmpeg. Use when you need quick visual checkpoints without opening a full editor.
+name: "video-frames"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Extract frames and short clips from local video files with ffmpeg. Use when you need quick visual checkpoints without opening a full editor."
 ---
 
 # Video Frames

@@ -1,6 +1,8 @@
 ---
-name: docs-alignment-lock
-description: Keep repository policy docs aligned and privacy-safe before PRs. Use when changing workflow/policy text across AGENTS.md, README.md, CONTRIBUTING.md, SKILL.md, PR templates, or skill candidate docs.
+name: "docs-alignment-lock"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Keep repository policy docs aligned and privacy-safe before PRs. Use when changing workflow/policy text across AGENTS.md, README.md, CONTRIBUTING.md, SKILL.md, PR templates, or skill candidate docs."
 ---
 
 # Docs Alignment Lock

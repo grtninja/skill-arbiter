@@ -1,5 +1,7 @@
 ---
-name: gog
+name: "gog"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs."
 ---
 

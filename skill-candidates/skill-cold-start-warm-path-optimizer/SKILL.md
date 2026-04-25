@@ -1,6 +1,8 @@
 ---
-name: skill-cold-start-warm-path-optimizer
-description: Measure first-run versus warm-run skill performance and generate prewarm/auto-invoke policy plans. Use when cold starts inflate latency or trigger retry storms.
+name: "skill-cold-start-warm-path-optimizer"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Measure first-run versus warm-run skill performance and generate prewarm/auto-invoke policy plans. Use when cold starts inflate latency or trigger retry storms."
 ---
 
 # Skill Cold-Start Warm-Path Optimizer

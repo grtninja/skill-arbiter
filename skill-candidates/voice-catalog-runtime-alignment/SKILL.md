@@ -1,6 +1,8 @@
 ---
-name: voice-catalog-runtime-alignment
-description: Align documented voice-command catalogs, endpoint action allowances, and live runtime handlers so operator-visible voice surfaces match what the stack can actually execute. Use when voice command docs, parser matrices, endpoint permissions, or runtime action routing drift apart.
+name: "voice-catalog-runtime-alignment"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Align documented voice-command catalogs, endpoint action allowances, and live runtime handlers so operator-visible voice surfaces match what the stack can actually execute. Use when voice command docs, parser matrices, endpoint permissions, or runtime action routing drift apart."
 ---
 
 # Voice Catalog Runtime Alignment

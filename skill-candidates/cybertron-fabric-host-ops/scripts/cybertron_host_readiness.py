@@ -8,7 +8,6 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 import socket
-import sys
 from urllib.error import URLError
 from urllib.request import urlopen
 

@@ -1,0 +1,1 @@
+Related ecosystem evidence: the same `<bug class>` shows up in `<repo>#<issue/pr>`, `<repo>#<issue/pr>`, and `<repo>#<issue/pr>`. This target applies that same fix pattern to the equivalent surface here.

@@ -1,6 +1,8 @@
 ---
-name: avatarcore-bridge-event-queue
-description: Operate AvatarCore bridge sessions, heartbeats, engine-event queues, and directive drains as one contract. Use when Unreal bridge lifecycle and queue semantics change together.
+name: "avatarcore-bridge-event-queue"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate AvatarCore bridge sessions, heartbeats, engine-event queues, and directive drains as one contract. Use when Unreal bridge lifecycle and queue semantics change together."
 ---
 
 # AvatarCore Bridge Event Queue

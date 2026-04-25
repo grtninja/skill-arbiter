@@ -1,6 +1,8 @@
 ---
-name: request-loopback-resume
-description: Resume previously requested work deterministically after interruptions. Use when context switches, AFK gaps, or multi-lane pauses require checkpointed state, explicit next actions, and fail-closed resume validation.
+name: "request-loopback-resume"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Resume previously requested work deterministically after interruptions. Use when context switches, AFK gaps, or multi-lane pauses require checkpointed state, explicit next actions, and fail-closed resume validation."
 ---
 
 # Request Loopback Resume

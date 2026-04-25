@@ -5,115 +5,52 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 
 ## Summary
 
-- Generated: `2026-03-27T23:20:57.131696Z`
+- Generated: `2026-04-25T13:03:56.112636Z`
 - Host ID: `<LOCAL_HOST_ID>`
-- Installed skills tracked: `166`
-- Official trusted: `39`
-- Owned trusted: `78`
-- Third-party trusted: `39`
-- Third-party watch: `10`
+- Installed skills tracked: `69`
+- Official trusted: `5`
+- Owned trusted: `45`
+- Third-party trusted: `0`
+- Third-party watch: `0`
 - Active incidents: `0`
 
 ## Installed Skill Matrix
 
 | Skill | Origin | Ownership | Legitimacy | Risk | Action | Sync State |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1password` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `apple-notes` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `apple-reminders` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `aspnet-core` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `bear-notes` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `blender-vrm-visible-fit` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `blogwatcher` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `blucli` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `bluebubbles` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `camsnap` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `canvas` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `chatgpt-apps` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `cloudflare-deploy` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
+| `afk-mode-orchestrator` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `code-gap-sweeping` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `cybertron-fabric-host-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `desktop-startup-acceptance` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `develop-web-game` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `diffs` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `discord` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `doc` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
+| `codex-activity-bar-restore` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
+| `codex-cross-window-steering` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
+| `codex-degraded-recovery` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
+| `codex-windows-first-wsl-export` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `docs-alignment-lock` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `eightctl` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `feishu-doc` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `feishu-drive` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `feishu-perm` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `feishu-wiki` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `figma` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `figma-implement-design` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `frontend-skill` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `gemini` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `gh-address-comments` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `gh-fix-ci` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `gh-issues` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `gifgrep` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `github` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `gog` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `goplaces` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `healthcheck` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `heterogeneous-stack-validation` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `himalaya` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `imagegen` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `imsg` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `jupyter-notebook` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `linear` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `lobster` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `local-comfy-wan-multigpu` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
+| `imagegen` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
+| `imagegen-recovery-recall` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `local-compute-usage` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `mcporter` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `media-workbench-desktop-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `model-usage` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
+| `memryx-official-hardware-check` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `multitask-orchestrator` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `nano-banana-pro` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `nano-pdf` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `netlify-deploy` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `notion` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `notion-knowledge-capture` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `notion-meeting-intelligence` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `notion-research-documentation` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `notion-spec-to-implementation` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `obsidian` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `openai-docs` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
+| `mx3-dfp-build-and-probe` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
+| `mx3-dfp-runtime-routing` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `openai-docs` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `openai-image-gen` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `openai-whisper` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `openai-whisper-api` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `openhue` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `operator-language-humanizer` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `ordercli` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `pdf` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `peekaboo` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `playwright` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `playwright-edge-preference` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
-| `playwright-interactive` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
+| `pennygpt-triple-app-launch-diagnostics` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
+| `planning-execution-orchestrator` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `playwright-safe` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `plugin-creator` | `vscode_codex_system_baseline_addition` | `baseline_addition` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
-| `prose` | `third_party_openclaw-ext` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `qwen-training-checkpoint-eval` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `qwen-training-desktop-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `qwen-training-workbench-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `render-deploy` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
+| `plugin-creator` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
 | `repo-a-coordinator-smoke` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `repo-a-host-admin-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-a-policy-selftest-gate` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-a-telemetry-kv-guard` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-agent-bridge-safety` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `repo-b-avatarcore-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-comfy-amuse-capcut-pipeline` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-control-center-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
+| `repo-b-control-center-ui-overhaul` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `repo-b-hardware-first` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-local-bridge-orchestrator` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-local-comfy-orchestrator` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-mass-index-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-mcp-comfy-bridge` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `repo-b-mx3-router-contracts` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-preflight-doc-sync` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `repo-b-starframe-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
+| `repo-b-startup-lockdown` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `repo-b-thin-waist-routing` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-b-wsl-hybrid-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-c-boundary-governance` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
@@ -126,76 +63,31 @@ It aligns the live installed Codex skills directory with the Skill Arbiter inven
 | `repo-d-local-packaging` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-d-mass-index-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `repo-d-setup-diagnostics` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
+| `repo-d-startup-lockdown` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `repo-d-ui-guardrails` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `request-loopback-resume` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
+| `ruff-c-root-safety` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `safe-mass-index-core` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `sag` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `screenshot` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `security-best-practices` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `security-ownership-map` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `security-threat-model` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `sentry` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `session-logs` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `sherpa-onnx-tts` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
+| `skill-arbiter` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `skill-arbiter-churn-forensics` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-arbiter-lockdown-admission` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-arbiter-release-ops` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skill-auditor` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-blast-radius-simulator` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-cold-start-warm-path-optimizer` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skill-common-sense-engineering` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-cost-credit-governor` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-creator` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `skill-creator-openclaw` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-dependency-fan-out-inspector` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skill-enforcer` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skill-hub` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-installer` | `openai_builtin_system` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
 | `skill-installer-plus` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skill-openclaw-nullclaw-integration` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skill-trust-ledger` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skills-consolidation-architect` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skills-cross-repo-radar` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
 | `skills-discovery-curation` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `skills-third-party-intake` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
-| `slack` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
-| `slides` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `songsee` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `sonoscli` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `sora` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `speech` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `spotify-player` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `spreadsheet` | `openai_builtin` | `official_builtin` | `official_trusted` | `low` | `keep` | `aligned_official` |
-| `summarize` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `things-mac` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `tmux` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `transcribe` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `trello` | `third_party_openclaw` | `third_party_imported` | `third_party_watch` | `monitor` | `keep` | `watchlisted_keep` |
+| `starframe-desktop-restart-lock` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
+| `starframe-recovery-bringup-queue` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 | `usage-watcher` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `usb-export-reconcile` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `vercel-deploy` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `video-frames` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `voice-call` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `vrm-material-lighting-debug` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
-| `vrm-roundtrip-ci-gate` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `vroid-template-asset-sync` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `low` | `keep` | `aligned_owned` |
-| `vroid-vrma-photobooth-pipeline` | `overlay_candidate_installed` | `repo_owned` | `owned_trusted` | `trusted` | `keep` | `aligned_owned` |
-| `wacli` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `weather` | `third_party_openclaw` | `third_party_imported` | `third_party_trusted` | `monitor` | `keep` | `cataloged_keep` |
-| `winui-app` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
-| `yeet` | `openai_builtin` | `official_builtin` | `official_trusted` | `trusted` | `keep` | `aligned_official` |
+| `user-input-accountability-ledger` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
+| `windows-path-bridge-sentinel` | `overlay_or_local` | `local_unowned` | `manual_review` | `medium` | `review` | `manual_attention` |
 
 ## Watchlisted Keep Rows
 
-| Skill | Origin | Action | Reason |
-| --- | --- | --- | --- |
-| `1password` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `bluebubbles` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `discord` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `gh-issues` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `himalaya` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `imsg` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `nano-banana-pro` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `prose` | `third_party_openclaw-ext` | `keep` | Installed third-party skill from openclaw-ext remains watchlisted until a trusted local replacement exists. |
-| `slack` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
-| `trello` | `third_party_openclaw` | `keep` | Installed third-party skill from openclaw remains watchlisted until a trusted local replacement exists. |
+_None._

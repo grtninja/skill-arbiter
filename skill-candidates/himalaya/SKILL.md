@@ -1,5 +1,7 @@
 ---
-name: himalaya
+name: "himalaya"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language)."
 ---
 

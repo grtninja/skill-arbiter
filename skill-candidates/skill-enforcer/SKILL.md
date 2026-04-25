@@ -1,6 +1,8 @@
 ---
-name: skill-enforcer
-description: Enforce cross-repo policy and boundary alignment before completion. Use when a request touches multiple repositories, shared contracts, or policy docs that must stay synchronized.
+name: "skill-enforcer"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce cross-repo policy and boundary alignment before completion. Use when a request touches multiple repositories, shared contracts, or policy docs that must stay synchronized."
 ---
 
 # Skill Enforcer
@@ -33,8 +35,8 @@ python3 scripts/check_release_hygiene.py
 
 For cross-repo policy references:
 
-```bash
-rg -n "AGENTS.md|BOUNDARIES.md|SCOPE_TRACKER|HEARTBEAT.md|preflight" -S .
+```powershell
+Get-ChildItem -Recurse -File . | Select-String -Pattern "AGENTS\.md|BOUNDARIES\.md|SCOPE_TRACKER|HEARTBEAT\.md|preflight" -CaseSensitive:$false
 ```
 
 ## Scope Boundary

@@ -156,12 +156,14 @@ def _local_supervision_snapshot(
     model_list = module.available_models(refresh=refresh)
     qwen_models = [model for model in model_list if "qwen" in model.lower() or "huihui" in model.lower()]
     selected_model = module.advisor_model(refresh=refresh)
+    process_policy = module.process_policy_status()
     findings = [
         f"vscode_windows={vscode_windows if module._codex_watch_enabled() else 'disabled'}",
         f"codex_processes={codex_processes if module._codex_watch_enabled() else 'disabled'}",
         f"active_tasks={len(active_tasks)}",
         f"qwen_models={len(qwen_models)}",
         f"advisor_model={selected_model}",
+        f"process_policy={process_policy.get('integrity', 'unknown')}",
     ]
     supervisor_note = ""
     if include_advisor_note:
@@ -192,6 +194,12 @@ def _local_supervision_snapshot(
             "available_models": model_list[:24],
             "qwen_models": qwen_models[:16],
             "note": supervisor_note,
+        },
+        "process_policy": {
+            "database": process_policy.get("database"),
+            "integrity": process_policy.get("integrity"),
+            "policies": process_policy.get("policies", []),
+            "denied_process_counts": process_policy.get("denied_process_counts", {}),
         },
     }
     module._LOCAL_SUPERVISION_CACHE["payload"] = copy.deepcopy(payload)

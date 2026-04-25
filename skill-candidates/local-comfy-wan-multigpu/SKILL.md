@@ -1,6 +1,8 @@
 ---
-name: local-comfy-wan-multigpu
-description: Operate local-only ComfyUI Wan image-to-video workflows with MultiGPU placement, quality-first source staging, long-clip validation, and Explorer-based export handoff. Use when Codex needs to turn private local stills into local video artifacts without browser-only UX, while avoiding destructive crops, stray console windows, and GPU contention with chat models.
+name: "local-comfy-wan-multigpu"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate local-only ComfyUI Wan image-to-video workflows with MultiGPU placement, quality-first source staging, long-clip validation, and Explorer-based export handoff. Use when Codex needs to turn private local stills into local video artifacts without browser-only UX, while avoiding destructive crops, stray console windows, and GPU contention with chat models."
 ---
 
 # Local Comfy Wan MultiGPU

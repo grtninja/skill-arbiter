@@ -1,6 +1,8 @@
 ---
-name: qwen-training-campaign-ops
-description: Operate the Qwen Training Workbench campaign lane across `9041` worker queue ownership, named campaign catalogs, dependency-aware job expansion, and restart-safe continuation semantics. Use when campaign configs, worker APIs, or continuation scheduling change together.
+name: "qwen-training-campaign-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate the Qwen Training Workbench campaign lane across `9041` worker queue ownership, named campaign catalogs, dependency-aware job expansion, and restart-safe continuation semantics. Use when campaign configs, worker APIs, or continuation scheduling change together."
 ---
 
 # Qwen Training Campaign Ops

@@ -1,6 +1,8 @@
 ---
-name: dataset-provenance-manifest-governance
-description: Keep local training dataset provenance, merged outputs, and manifest truth aligned across dataset-building repos. Use when teacher distillation, enrichment exports, or study manifests change together.
+name: "dataset-provenance-manifest-governance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Keep local training dataset provenance, merged outputs, and manifest truth aligned across dataset-building repos. Use when teacher distillation, enrichment exports, or study manifests change together."
 ---
 
 # Dataset Provenance Manifest Governance

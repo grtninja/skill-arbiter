@@ -1,6 +1,8 @@
 ---
-name: repo-b-comfy-amuse-capcut-pipeline
-description: Operate profile-driven ComfyUI pipelines with optional AMUSE enhancement and CapCut export guidance in <PRIVATE_REPO_B>. Use when validating /api/comfy/pipelines/*, /api/amuse/*, or CapCut handoff metadata.
+name: "repo-b-comfy-amuse-capcut-pipeline"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate profile-driven ComfyUI pipelines with optional AMUSE enhancement and CapCut export guidance in <PRIVATE_REPO_B>. Use when validating /api/comfy/pipelines/*, /api/amuse/*, or CapCut handoff metadata."
 ---
 
 # REPO_B Comfy AMUSE CapCut Pipeline

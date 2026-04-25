@@ -1,6 +1,8 @@
 ---
-name: safe-mass-index-core
-description: Build and query bounded metadata-only repository indexes without rg process churn. Use when working in very large repos and you need deterministic file discovery by path, extension, language, scope, or freshness.
+name: "safe-mass-index-core"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Build and query bounded metadata-only repository indexes without rg process churn. Use when working in very large repos and you need deterministic file discovery by path, extension, language, scope, or freshness."
 ---
 
 # Safe Mass Index Core

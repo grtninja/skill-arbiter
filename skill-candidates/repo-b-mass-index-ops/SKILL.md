@@ -1,6 +1,8 @@
 ---
-name: repo-b-mass-index-ops
-description: Run fast non-sharded mass-index operations for <PRIVATE_REPO_B> service lanes. Use when triaging bridge wiring, thin-waist routes, control-center connectors, and runtime helper scripts where quick endpoint-path discovery is required.
+name: "repo-b-mass-index-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run fast non-sharded mass-index operations for <PRIVATE_REPO_B> service lanes. Use when triaging bridge wiring, thin-waist routes, control-center connectors, and runtime helper scripts where quick endpoint-path discovery is required."
 ---
 
 # REPO_B Mass Index Ops

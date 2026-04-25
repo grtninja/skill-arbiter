@@ -1,5 +1,7 @@
 ---
-name: lobster
+name: "lobster"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Execute multi-step workflows with approval checkpoints via the Lobster pipeline engine. Use when the user wants repeatable automations (email triage, PR monitoring, scheduled syncs), when actions need human approval before executing (send, post, delete), or when multiple tool calls should run as one deterministic pipeline operation."
 ---
 

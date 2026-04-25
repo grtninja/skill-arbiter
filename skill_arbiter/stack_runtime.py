@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+# Several imported names below are intentionally exposed as module attributes
+# for split runtime helper modules that receive this module object at runtime.
+# ruff: noqa: F401
 import copy
 import ipaddress
 import json
@@ -15,6 +18,7 @@ from urllib.request import Request, urlopen
 
 from .llm_advisor import advisor_model, available_models, request_local_advice
 from .paths import windows_no_window_subprocess_kwargs
+from .process_policy_db import status as process_policy_status
 from .stack_runtime_common import _first_dict, _first_int, _first_str, _pick_dict, _pick_str, _sanitize_path_hint
 from .stack_runtime_processes import (
     _codex_rows as _codex_rows_impl,

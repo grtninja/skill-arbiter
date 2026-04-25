@@ -1,6 +1,8 @@
 ---
-name: repo-c-persona-registry-maintenance
-description: Maintain persona pack discovery and manifest-driven stack loading in <PRIVATE_REPO_C>. Use when adding/updating persona packs, editing manifest.persona.json files, or changing registry loader behavior in repo_c/persona_registry.py.
+name: "repo-c-persona-registry-maintenance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Maintain persona pack discovery and manifest-driven stack loading in <PRIVATE_REPO_C>. Use when adding/updating persona packs, editing manifest.persona.json files, or changing registry loader behavior in repo_c/persona_registry.py."
 ---
 
 # Repo C Persona Registry Maintenance

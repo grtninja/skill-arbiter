@@ -18,6 +18,27 @@ Use this skill to keep technical work on the good-guy side: proactively look for
 - The task touches `.github/workflows/**`, GitHub rulesets, CODEOWNERS, protected branches, `GITHUB_TOKEN` permissions, reusable workflows, or CI/CD secret handling.
 - You are preparing a contribution to a third-party repository and need to avoid shipping a latent vulnerability.
 
+## Quest-Grade Third-Party Lane
+
+When the job is third-party bug hunting or contribution hardening, route through the smallest deterministic chain instead of improvising the whole flow each time.
+
+Recommended chain:
+
+`$skill-hub` -> `$request-loopback-resume` -> `$third-party-pr-radar` -> `$white-hat` -> `$github` -> `$skill-common-sense-engineering` -> `$skill-enforcer`
+
+Add follow-on skills only when the lane actually needs them:
+
+- `$gh-address-comments` for current-head PR review feedback
+- `$gh-fix-ci` for active GitHub Actions failures on the current head
+
+Minimum checkpoints for that lane:
+
+- open issues and open PRs rechecked so the patch does not duplicate live work
+- current head SHA captured before reacting to CI or bot feedback
+- repo-native validation lanes mapped before running local proof
+- smallest safe proof captured for any confirmed issue
+- post-edit white-hat recheck completed before submission or PR follow-up
+
 ## Best-Fit Companion Skills
 
 - `$security-best-practices` when the job needs secure-by-default implementation or code-review guidance.
@@ -55,11 +76,38 @@ Use this skill to keep technical work on the good-guy side: proactively look for
 - Prefer existing tests, targeted new tests, mock data, local-only repros, static inspection, and bounded smokes over broad exploit trials.
 - Stop and escalate if confirmation would risk user data, uptime, or cross an authorization boundary.
 
+### 4a. Use the repo's CI as a validation map
+
+- Do not treat every third-party lane as `run everything`.
+- Capture the current head SHA and classify the CI state before acting:
+  - `current red`: the failing check is attached to the current head
+  - `stale red`: the badge or notification points at an older head or a later rerun on the current head passed
+  - `pending`: the lane is still deciding and should not be overfit yet
+- Derive the narrowest local proof from the target repo's own workflow and script structure.
+- Prefer repo-native change routing when it exists:
+  - changed-scope or docs-only detectors
+  - changed-extension or changed-package matrices
+  - dedicated protocol, contracts, gateway, or workflow-hardening lanes
+- Keep the rerun aligned to the ownership surface:
+  - workflow or supply-chain changes: actionlint, secret scan, workflow audit, explicit permissions checks
+  - type/lint failures: the repo's main `check` or equivalent gate
+  - build smoke failures: the repo's narrow build/smoke lane, not its full test matrix
+  - protocol/contracts failures: only the protocol/contracts commands
+  - extension-specific failures: rerun only the changed extension lane and any paired core tests
+  - gateway/watch harness failures: rerun only the harness if the touched surface actually owns it
+- OpenClaw is a good reference pattern here:
+  - `check` maps to `pnpm check` plus `pnpm build:strict-smoke`
+  - `checks-fast-contracts-protocol` maps to `pnpm test:contracts` plus `pnpm protocol:check`
+  - `checks-node-extensions-shard-*` should drive extension-targeted validation, not a blind whole-repo retest
+  - `gateway-watch-regression` is a dedicated harness lane and should stay isolated
+- If the red is stale, do not churn code just to satisfy an outdated badge. Harvest the lane structure anyway and keep it as the validation map for the next live head.
+
 ### 5. Remediate and document
 
 - Fix or reduce risk with durable changes, not cosmetic notes.
 - Clearly distinguish confirmed findings, likely risks, and unverified concerns.
 - For third-party lanes, prepare a maintainer-friendly summary with impact, affected surface, safe repro notes, and mitigation or a candidate patch.
+- Record the current head SHA, the validation lanes used, and whether any red CI was stale or live.
 
 ### 6. Final pass
 

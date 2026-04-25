@@ -1,6 +1,8 @@
 ---
-name: repo-b-control-center-ops
-description: Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, canonical desktop startup/restart behavior, shortcut ownership, or window lifecycle/state ownership.
+name: "repo-b-control-center-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate and debug <PRIVATE_REPO_B> Control Center and thin-waist service surfaces. Use when working on connector routing, Lighthouse checks, MCP/Agent Bridge endpoints, pose bridge, canonical desktop startup/restart behavior, shortcut ownership, or window lifecycle/state ownership."
 ---
 
 # REPO_B Shim Control Center Ops

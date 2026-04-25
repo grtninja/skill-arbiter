@@ -1,6 +1,8 @@
 ---
-name: usb-export-reconcile
-description: Review and reconcile USB-delivered repo exports as Git-like sources. Use when a USB drive carries a repo clone or host bundle that must be compared, reviewed, backed up, and only then applied.
+name: "usb-export-reconcile"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Review and reconcile USB-delivered repo exports as Git-like sources. Use when a USB drive carries a repo clone or host bundle that must be compared, reviewed, backed up, and only then applied."
 ---
 
 # USB Export Reconcile

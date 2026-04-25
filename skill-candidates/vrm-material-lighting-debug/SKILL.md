@@ -1,6 +1,8 @@
 ---
-name: vrm-material-lighting-debug
-description: Diagnose and fix a desktop VRM app's avatar lighting and MToon material failures when a VRM looks washed out, has bright edges, shows inverted-looking cloth shadows, or shades clothing differently from skin and legs. Use when you need to inspect the live .vrm, separate scene-light problems from material problems, patch the correct layer, and verify with a rebuilt packaged app.
+name: "vrm-material-lighting-debug"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Diagnose and fix a desktop VRM app's avatar lighting and MToon material failures when a VRM looks washed out, has bright edges, shows inverted-looking cloth shadows, or shades clothing differently from skin and legs. Use when you need to inspect the live .vrm, separate scene-light problems from material problems, patch the correct layer, and verify with a rebuilt packaged app."
 ---
 
 # VRM Material Lighting Debug

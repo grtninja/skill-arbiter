@@ -21,8 +21,8 @@ fake_quick_validate.validate_skill = lambda _path: (True, "Skill is valid!")
 original_quick_validate = sys.modules.get("quick_validate")
 sys.modules["quick_validate"] = fake_quick_validate
 
-import package_skill as package_skill_module
-from package_skill import package_skill
+import package_skill as package_skill_module  # noqa: E402
+from package_skill import package_skill  # noqa: E402
 
 if original_quick_validate is not None:
     sys.modules["quick_validate"] = original_quick_validate

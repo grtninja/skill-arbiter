@@ -1,6 +1,8 @@
 ---
-name: vroid-vrma-photobooth-pipeline
-description: Extract VRoid Studio Photo Booth animation clips from a local AssetRipper Unity export and batch-convert them into valid .vrma files via Unity + UniVRM. Use when direct AssetBundle loading fails due Unity version/build-target mismatch.
+name: "vroid-vrma-photobooth-pipeline"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Extract VRoid Studio Photo Booth animation clips from a local AssetRipper Unity export and batch-convert them into valid .vrma files via Unity + UniVRM. Use when direct AssetBundle loading fails due Unity version/build-target mismatch."
 ---
 
 # VRoid VRMA Photo Booth Pipeline

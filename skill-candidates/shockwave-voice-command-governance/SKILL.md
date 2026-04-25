@@ -1,6 +1,8 @@
 ---
-name: shockwave-voice-command-governance
-description: Maintain Shockwave voice-command parity across parser order, source-aware filtering, touch-surface analogs, and missing driving-command gaps. Use when voice command behavior and dashboard controls drift together.
+name: "shockwave-voice-command-governance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Maintain Shockwave voice-command parity across parser order, source-aware filtering, touch-surface analogs, and missing driving-command gaps. Use when voice command behavior and dashboard controls drift together."
 ---
 
 # Shockwave Voice Command Governance

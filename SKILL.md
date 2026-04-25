@@ -108,6 +108,7 @@ Subagent policy:
 - Do not auto-install from unvetted third-party sources.
 - Do not publish raw host evidence into repo-tracked files.
 - Do not disable built-in VS Code/Codex skills to make overlays work.
+- Do not leave private repo work dirty: use a branch, keep a PR open while work is active, push and merge the lane into `main`, sync local `main`, and verify a clean worktree before completion.
 
 ## Related references
 

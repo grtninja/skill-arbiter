@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image Batch Curation"
+  short_description: "Native still batching with dual review, refinement, and RealESRGAN upscale"
+  default_prompt: "Use $media-image-batch-curation for a still-image workflow that starts with local reference curation, uses native Codex or OpenAI image generation for batches, presents the results locally, requires both Codex review and local vision review, turns that into refinement guidance, and only after the refinement pass runs a deterministic local RealESRGAN x2 or x4 upscale before any Media Workbench handoff."

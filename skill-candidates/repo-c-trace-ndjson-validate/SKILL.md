@@ -1,6 +1,8 @@
 ---
-name: repo-c-trace-ndjson-validate
-description: Validate Repo C/repo_c_trace NDJSON packet integrity in <PRIVATE_REPO_C>. Use when changing trace packet fields, guardian reroute behavior, or validation tooling that checks packet monotonicity and required envelope keys.
+name: "repo-c-trace-ndjson-validate"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate Repo C/repo_c_trace NDJSON packet integrity in <PRIVATE_REPO_C>. Use when changing trace packet fields, guardian reroute behavior, or validation tooling that checks packet monotonicity and required envelope keys."
 ---
 
 # Repo C Trace NDJSON Validate

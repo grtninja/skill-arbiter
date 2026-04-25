@@ -1,5 +1,7 @@
 ---
-name: canvas
+name: "canvas"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Present, navigate, snapshot, and hide HTML content on connected OpenClaw nodes (Mac, iOS, Android) via the canvas tool. Use when displaying games, visualizations, dashboards, or interactive demos on remote node canvas views, or when debugging canvas URL routing across loopback, LAN, and Tailscale bind modes."
 ---
 

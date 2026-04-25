@@ -1,5 +1,7 @@
 ---
-name: diffs
+name: "diffs"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Use the diffs tool to produce real, shareable diffs (viewer URL, file artifact, or both) instead of manual edit summaries."
 ---
 

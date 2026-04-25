@@ -1,6 +1,8 @@
 ---
-name: local-compute-usage
-description: Enforce local-first Codex execution through VS Code workspace and connected local apps/services/hardware, with MemryX shim priority and fail-closed remote-host checks.
+name: "local-compute-usage"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce local-first Codex execution through VS Code workspace and connected local apps/services/hardware, with MemryX shim priority and fail-closed remote-host checks."
 ---
 
 # Local Compute Usage

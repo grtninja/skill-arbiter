@@ -1,0 +1,4 @@
+interface:
+  display_name: "MSI Static WAN Router Ops"
+  short_description: "Operate Eddie's MSI router safely against the Comcast static handoff without resets or WAN drift."
+  default_prompt: "Use $msi-static-wan-router-ops when the request matches this lane: diagnose or tune Eddie's MSI router on the intentional Comcast static-IP handoff at 10.0.0.1, including router-side diagnostics, safe DNS and LAN DHCP DNS changes, dual-stack IPv4 and IPv6 verification or repair, QoE mode changes, and rollback-first verification without resetting the router."

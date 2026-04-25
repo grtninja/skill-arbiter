@@ -1,5 +1,7 @@
 ---
-name: skill-creator-openclaw
+name: "skill-creator-openclaw"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets."
 ---
 

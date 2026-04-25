@@ -1,0 +1,4 @@
+interface:
+  display_name: "Third-Party PR Radar"
+  short_description: "Rank and correlate weekly public white-hat PR targets"
+  default_prompt: "Use $third-party-pr-radar when the request is to rank third-party white-hat PR candidates, correlate them to the live contribution ledger, assign success/threat scores, or build compact cross-repo evidence blocks before handing off to the public PR execution chain."

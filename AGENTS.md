@@ -100,6 +100,7 @@ When policy or workflow changes, update the affected docs in the same change:
 - `CONTRIBUTING.md`
 - `SECURITY.md`
 - `SKILL.md`
+- `skill-catalog.md`
 - `.github/pull_request_template.md`
 - `docs/PROJECT_SCOPE.md`
 - `docs/SCOPE_TRACKER.md`
@@ -127,6 +128,8 @@ New Skill Unlocked: <SkillName>
 ## Skill-Arbiter Workflow (Binding)
 
 - Skill-arbiter discipline is explicit in this repo: do not take a skill-less turn when an applicable local skill exists.
+- Private repo delivery is a hard rule: every Codex change lane must start on a branch, open a PR while work is active, push all repo diffs for that lane, merge back to `main`, sync local `main`, and leave the repo with no uncommitted lane diffs.
+- Dirty private repos are not an acceptable stopping point. If a lane inherits an already-dirty worktree, either package the whole current diff into the active PR or record an explicit operator-owned exclusion before claiming completion.
 - Route substantial work through `skill-hub` first and state the selected skill order in the work summary.
 - For local hardware-, desktop-, or service-backed work, use `local-compute-usage` early and fail closed if the required local lane is unavailable.
 - For high-volume, long-running, or agent-heavy work, use `usage-watcher` to choose a bounded operating mode and keep local churn under control.
@@ -138,3 +141,14 @@ New Skill Unlocked: <SkillName>
 - Fast mode is not permitted as an automatic escalation path in this repo's governed subagent workflow.
 - Substantial governed work should be framed and recorded as quests so each request has a human-readable chain, checkpoints, and a usable end-state, with cumulative agent progression rising from repeated quest completion.
 - If the user explicitly names skills, use all named skills in that turn.
+
+## Meta-Harness Parity Contract
+
+- Canonical workstation repo root references use `G:\GitHub`; legacy aliases must be normalized before reporting or acting on repo paths.
+- Continue and GitHub Copilot are local-agent continuity surfaces for this project, not browser-first fallbacks.
+- LM Studio may appear as a compatible local model host, but authoritative local advisor routing remains explicit and visible.
+- Keep every user-visible operator surface honest: backend health is not enough if the operator cannot use the UI or lane.
+- Local-agent work must preserve visible action-state parity, reasoning visibility, trusted folders, and local-subagent evidence in summaries and PR notes.
+- The no-stop doctrine and minimum runtime law are repository governance terms: do not convert active guidance into a premature wrap-up.
+- The patience runtime window applies to long or resumed local-agent work; report evidence quality while continuing concrete repair.
+- The mandatory skill chain for ambiguous, resumed, cross-repo, high-volume, or policy-sensitive work includes `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.

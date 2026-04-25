@@ -1,6 +1,8 @@
 ---
-name: repo-b-avatarcore-ops
-description: Run and validate <PRIVATE_REPO_B> AvatarCore proxy, provider routing, and Unreal bridge lifecycle surfaces.
+name: "repo-b-avatarcore-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run and validate <PRIVATE_REPO_B> AvatarCore proxy, provider routing, and Unreal bridge lifecycle surfaces."
 ---
 
 # Repo B AvatarCore Operations

@@ -1,6 +1,8 @@
 ---
-name: heterogeneous-stack-validation
-description: Validate a mixed local-plus-remote AI stack with privacy-safe evidence, endpoint health checks, inference smokes, and repo lockstep gates. Use when a request spans multiple local services, remote hosts, and heterogeneous inference lanes that must be tested end to end without launching restricted avatar endpoints.
+name: "heterogeneous-stack-validation"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate a mixed local-plus-remote AI stack with privacy-safe evidence, endpoint health checks, inference smokes, and repo lockstep gates. Use when a request spans multiple local services, remote hosts, and heterogeneous inference lanes that must be tested end to end without launching restricted avatar endpoints."
 ---
 
 # Heterogeneous Stack Validation

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Dated Version Tracking"
+  short_description: "Timestamp version and context assumptions"
+  default_prompt: "Use $dated-version-tracking to log and verify the dated assumptions behind this request."
+
+policy:
+  allow_implicit_invocation: true

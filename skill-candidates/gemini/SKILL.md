@@ -1,5 +1,7 @@
 ---
-name: gemini
+name: "gemini"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Gemini CLI for one-shot Q&A, summaries, and generation."
 ---
 

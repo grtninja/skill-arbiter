@@ -1,6 +1,8 @@
 ---
-name: repo-b-preflight-doc-sync
-description: Enforce <PRIVATE_REPO_B> preflight gates and documentation lockstep. Use before PRs to run required validation profiles and keep README.md, docs/PROJECT_SCOPE.md, and docs/SCOPE_TRACKER.md synchronized with shipped behavior.
+name: "repo-b-preflight-doc-sync"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce <PRIVATE_REPO_B> preflight gates and documentation lockstep. Use before PRs to run required validation profiles and keep README.md, docs/PROJECT_SCOPE.md, and docs/SCOPE_TRACKER.md synchronized with shipped behavior."
 ---
 
 # REPO_B Shim Preflight and Doc Sync

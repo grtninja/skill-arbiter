@@ -1,6 +1,8 @@
 ---
-name: qwen-training-desktop-ops
-description: Operate the local Qwen Training Workbench desktop shell and its `9041` worker as one restart-safe local contract. Use when fixing or validating the Electron shell, launcher path, local dashboard load, queue or campaign controls, job visibility, or desktop startup acceptance for the private training app.
+name: "qwen-training-desktop-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate the local Qwen Training Workbench desktop shell and its `9041` worker as one restart-safe local contract. Use when fixing or validating the Electron shell, launcher path, local dashboard load, queue or campaign controls, job visibility, or desktop startup acceptance for the private training app."
 ---
 
 # Qwen Training Desktop Ops

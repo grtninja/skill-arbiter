@@ -1,6 +1,8 @@
 ---
-name: repo-a-policy-selftest-gate
-description: Enforce Repo A DDC policy and acceptance gates before PRs. Use when changing policy files, node runtime behavior, guardrail-sensitive config, or validation tooling that must satisfy AGENTS.md acceptance commands.
+name: "repo-a-policy-selftest-gate"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce Repo A DDC policy and acceptance gates before PRs. Use when changing policy files, node runtime behavior, guardrail-sensitive config, or validation tooling that must satisfy AGENTS.md acceptance commands."
 ---
 
 # Repo A DDC Policy and Selftest Gate

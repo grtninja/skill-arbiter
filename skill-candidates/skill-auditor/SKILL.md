@@ -1,6 +1,8 @@
 ---
-name: skill-auditor
-description: Audit skill candidates and classify each changed skill as unique or upgrade with severity findings. Use when creating/updating skills, preparing admission evidence, or producing audit JSON for skill-game scoring.
+name: "skill-auditor"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Audit skill candidates and classify each changed skill as unique or upgrade with severity findings. Use when creating/updating skills, preparing admission evidence, or producing audit JSON for skill-game scoring."
 ---
 
 # Skill Auditor

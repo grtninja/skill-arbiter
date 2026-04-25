@@ -1,5 +1,7 @@
 ---
-name: obsidian
+name: "obsidian"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Work with Obsidian vaults (plain Markdown notes) and automate via obsidian-cli."
 ---
 

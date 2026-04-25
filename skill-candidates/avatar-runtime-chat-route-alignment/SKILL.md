@@ -1,6 +1,8 @@
 ---
-name: avatar-runtime-chat-route-alignment
-description: Align desktop autonomy, speech fallback, live research, and chat-route runtime behavior across avatar-facing local apps after model-plane or harness shifts. Use when runtime handoff and UI behavior change together.
+name: "avatar-runtime-chat-route-alignment"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Align desktop autonomy, speech fallback, live research, and chat-route runtime behavior across avatar-facing local apps after model-plane or harness shifts. Use when runtime handoff and UI behavior change together."
 ---
 
 # Avatar Runtime Chat-Route Alignment

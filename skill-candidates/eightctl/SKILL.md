@@ -1,5 +1,7 @@
 ---
-name: eightctl
+name: "eightctl"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Control Eight Sleep pods (status, temperature, alarms, schedules)."
 ---
 

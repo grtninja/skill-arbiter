@@ -1,5 +1,7 @@
 ---
-name: feishu-wiki
+name: "feishu-wiki"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Navigate and manage Feishu Wiki spaces and nodes via the feishu_wiki tool. Use when listing spaces, browsing wiki trees, creating or moving wiki pages, renaming nodes, or resolving a wiki node into the backing Docx object for feishu_doc edits."
 ---
 

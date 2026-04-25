@@ -1,6 +1,8 @@
 ---
-name: avatarcore-desktop-acceptance
-description: Enforce AvatarCore workstation desktop-launch acceptance when frontend/backend launcher ownership, stale-window cleanup, and health proof must be explicit. Use when backend-only startup is being mistaken for app readiness or when a combined launcher is being introduced or repaired.
+name: "avatarcore-desktop-acceptance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce AvatarCore workstation desktop-launch acceptance when frontend/backend launcher ownership, stale-window cleanup, and health proof must be explicit. Use when backend-only startup is being mistaken for app readiness or when a combined launcher is being introduced or repaired."
 ---
 
 # AvatarCore Desktop Acceptance

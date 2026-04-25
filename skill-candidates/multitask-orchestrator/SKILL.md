@@ -1,5 +1,7 @@
 ---
-name: multitask-orchestrator
+name: "multitask-orchestrator"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Split multi-lane requests into deterministic parallel workstreams and merge them with explicit evidence checks. Use when a request has 2+ independent objectives that can run concurrently."
 ---
 

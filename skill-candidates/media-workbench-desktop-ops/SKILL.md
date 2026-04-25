@@ -1,6 +1,8 @@
 ---
-name: media-workbench-desktop-ops
-description: Operate the STARFRAME Media Workbench desktop app and its local 9040 worker as one restart-safe local contract. Use when fixing or validating the Electron shell, source staging flow, prompt-head automation, queue submission, live telemetry, output preview, or desktop startup acceptance for the private media app.
+name: "media-workbench-desktop-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate the STARFRAME Media Workbench desktop app and its local 9040 worker as one restart-safe local contract. Use when fixing or validating the Electron shell, source staging flow, prompt-head automation, queue submission, live telemetry, output preview, or desktop startup acceptance for the private media app."
 ---
 
 # Media Workbench Desktop Ops

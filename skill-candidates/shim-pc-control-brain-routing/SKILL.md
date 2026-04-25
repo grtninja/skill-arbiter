@@ -1,6 +1,8 @@
 ---
-name: shim-pc-control-brain-routing
-description: Enforce one-brain routing across VRM Sandbox, PC Control, and MemryX shim with shim-first public endpoint authority on port 9000. Use when VRM chat/control behavior must be governed by PC Control without changing the public model-plane endpoint.
+name: "shim-pc-control-brain-routing"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Enforce one-brain routing across VRM Sandbox, PC Control, and MemryX shim with shim-first public endpoint authority on port 9000. Use when VRM chat/control behavior must be governed by PC Control without changing the public model-plane endpoint."
 ---
 
 # Shim PC Control Brain Routing

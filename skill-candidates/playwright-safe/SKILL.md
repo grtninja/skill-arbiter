@@ -1,6 +1,8 @@
 ---
-name: playwright-safe
-description: Run browser automation with Playwright using a no-assets, low-churn workflow. Use when you need navigation, form actions, extraction, or screenshots without installing icon/image assets that can trigger repeated rg.exe scans.
+name: "playwright-safe"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run browser automation with Playwright using a no-assets, low-churn workflow. Use when you need navigation, form actions, extraction, or screenshots without installing icon/image assets that can trigger repeated rg.exe scans."
 ---
 
 # Playwright Safe

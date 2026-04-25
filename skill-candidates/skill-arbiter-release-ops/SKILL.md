@@ -1,6 +1,8 @@
 ---
-name: skill-arbiter-release-ops
-description: Run release bump and PR release-hygiene workflow in skill-arbiter. Use when changes are release-impacting and require synchronized pyproject version, changelog entry, and CI release gate compliance.
+name: "skill-arbiter-release-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run release bump and PR release-hygiene workflow in skill-arbiter. Use when changes are release-impacting and require synchronized pyproject version, changelog entry, and CI release gate compliance."
 ---
 
 # Skill Arbiter Release Ops

@@ -44,10 +44,13 @@ const ELECTRON_LOG = path.join(os.tmpdir(), 'skill-arbiter-electron.log');
 const AGENT_SCRIPT = path.resolve(ROOT, 'scripts', 'nullclaw_agent.py');
 const BACKEND_STDOUT_LOG = path.join(os.tmpdir(), 'skill-arbiter-backend.stdout.log');
 const BACKEND_STDERR_LOG = path.join(os.tmpdir(), 'skill-arbiter-backend.stderr.log');
+const BACKEND_WATCHDOG_MS = Number.parseInt(process.env.SKILL_ARBITER_BACKEND_WATCHDOG_MS || '10000', 10);
 
 let mainWindow = null;
 let revealTimer = null;
 let ownedBackend = null;
+let backendWatchdog = null;
+let backendWatchdogBusy = false;
 
 function appendElectronLog(message) {
   const line = `[${new Date().toISOString()}] ${message}\n`;
@@ -139,6 +142,40 @@ async function ensureBackend() {
     return;
   }
   throw new Error('Skill Arbiter backend unavailable after pinned startup.');
+}
+
+function startBackendWatchdog() {
+  if (!Number.isFinite(BACKEND_WATCHDOG_MS) || BACKEND_WATCHDOG_MS <= 0) {
+    appendElectronLog('backend watchdog disabled');
+    return;
+  }
+  if (backendWatchdog) {
+    return;
+  }
+  appendElectronLog(`starting backend watchdog every ${BACKEND_WATCHDOG_MS}ms`);
+  backendWatchdog = setInterval(() => {
+    if (backendWatchdogBusy) {
+      return;
+    }
+    backendWatchdogBusy = true;
+    void isBackendHealthy()
+      .then((healthy) => {
+        if (healthy) {
+          return;
+        }
+        appendElectronLog('backend watchdog detected unhealthy backend; attempting restart');
+        return ensureBackend().then(() => {
+          appendElectronLog('backend watchdog restart succeeded');
+        });
+      })
+      .catch((error) => {
+        appendElectronLog(`backend watchdog error: ${error?.message || String(error)}`);
+      })
+      .finally(() => {
+        backendWatchdogBusy = false;
+      });
+  }, BACKEND_WATCHDOG_MS);
+  backendWatchdog.unref?.();
 }
 
 function resolvePythonwPath() {
@@ -280,6 +317,7 @@ async function main() {
   void ensureBackend()
     .then(() => {
       appendElectronLog('backend ensured');
+      startBackendWatchdog();
     })
     .catch((error) => {
       process.stderr.write(`[${APP_TITLE}] ${error.message}\n`);
@@ -309,6 +347,14 @@ app.on('window-all-closed', () => {
 
 app.on('will-quit', () => {
   appendElectronLog('will-quit');
+  if (backendWatchdog) {
+    try {
+      clearInterval(backendWatchdog);
+    } catch {
+      // best effort
+    }
+    backendWatchdog = null;
+  }
   if (ownedBackend && !ownedBackend.killed) {
     try {
       process.kill(ownedBackend.pid);

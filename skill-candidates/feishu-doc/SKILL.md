@@ -1,5 +1,7 @@
 ---
-name: feishu-doc
+name: "feishu-doc"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Read, write, append, and manage Feishu/Lark documents via the feishu_doc tool. Use when creating, reading, or editing Feishu Docx documents, managing document blocks, creating tables, uploading images or file attachments, or extracting doc_token from Feishu URLs."
 ---
 

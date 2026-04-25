@@ -18,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from skill_arbiter.stack_accounting import fetch_stack_accounting
+from skill_arbiter.stack_accounting import fetch_stack_accounting  # noqa: E402
 
 DATE_FORMATS = (
     "%Y-%m-%dT%H:%M:%S.%f%z",

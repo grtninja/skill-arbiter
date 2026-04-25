@@ -1,5 +1,7 @@
 ---
-name: blucli
+name: "blucli"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "BluOS CLI (blu) for discovery, playback, grouping, and volume."
 ---
 

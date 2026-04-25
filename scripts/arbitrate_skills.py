@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Iterable
 
 from supply_chain_guard import scan_skill_dir_content, scan_skill_tree, summarize_findings
+from skill_arbiter.process_policy_db import enforce_subprocess_policy
 
 DEFAULT_SKILLS_HOME = Path.home() / ".codex" / "skills"
 CURATED_PATH = Path("skills/.curated")
@@ -49,6 +50,7 @@ class ArbitrationResult:
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a subprocess command and return completed process."""
 
+    enforce_subprocess_policy(cmd)
     return subprocess.run(cmd, check=check, capture_output=True, text=True)
 
 

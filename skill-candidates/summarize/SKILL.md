@@ -1,5 +1,7 @@
 ---
-name: summarize
+name: "summarize"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Summarize or extract text/transcripts from URLs, podcasts, and local files (great fallback for “transcribe this YouTube/video”)."
 ---
 

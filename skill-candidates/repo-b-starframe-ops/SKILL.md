@@ -1,6 +1,8 @@
 ---
-name: repo-b-starframe-ops
-description: Validate <PRIVATE_REPO_B> STARFRAME API, AvatarCore proxy, persona registry, heartbeat contract, and degraded-mode guardrails.
+name: "repo-b-starframe-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate <PRIVATE_REPO_B> STARFRAME API, AvatarCore proxy, persona registry, heartbeat contract, and degraded-mode guardrails."
 ---
 
 # Repo B STARFRAME Ops

@@ -1,5 +1,7 @@
 ---
-name: gifgrep
+name: "gifgrep"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Search GIF providers with CLI/TUI, download results, and extract stills/sheets."
 ---
 

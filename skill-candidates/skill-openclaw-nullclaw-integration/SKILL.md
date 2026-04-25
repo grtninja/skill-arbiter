@@ -1,6 +1,8 @@
 ---
-name: skill-openclaw-nullclaw-integration
-description: Reconcile OpenClaw and NullClaw upstream changes into router-aware MeshGPT, MX3 shim, and AvatarCore lanes with privacy-safe attribution, release-provenance gating, and deterministic test gates.
+name: "skill-openclaw-nullclaw-integration"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Reconcile OpenClaw and NullClaw upstream changes into router-aware MeshGPT, MX3 shim, and AvatarCore lanes with privacy-safe attribution, release-provenance gating, and deterministic test gates."
 ---
 
 # Skill OpenClaw NullClaw Integration
@@ -38,8 +40,9 @@ python skill-candidates/skills-third-party-intake/scripts/third_party_skill_inta
 
 Focused integration scan:
 
-```bash
-rg -n "router|routing|provider|channel|meshrelay|gateway|agent" <THIRD_PARTY_CLONES>/openclaw <THIRD_PARTY_CLONES>/nullclaw
+```powershell
+$paths = @('<THIRD_PARTY_CLONES>/openclaw','<THIRD_PARTY_CLONES>/nullclaw')
+Get-ChildItem -Path $paths -Recurse -File | Select-String -Pattern "router|routing|provider|channel|meshrelay|gateway|agent" -CaseSensitive:$false
 ```
 
 ## Guardrails

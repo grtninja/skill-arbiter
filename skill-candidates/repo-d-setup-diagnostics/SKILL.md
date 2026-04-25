@@ -1,6 +1,8 @@
 ---
-name: repo-d-setup-diagnostics
-description: Diagnose <PRIVATE_REPO_D> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, overlay/background behavior, startup acceptance, or audio-baseline drift.
+name: "repo-d-setup-diagnostics"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Diagnose <PRIVATE_REPO_D> setup wizard and runtime state issues. Use when debugging LM Studio/Kokoro/Lovense setup paths, renderer hydration, profile persistence, overlay/background behavior, startup acceptance, or audio-baseline drift."
 ---
 
 # Repo D Sandbox Setup Diagnostics

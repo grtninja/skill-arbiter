@@ -1,6 +1,8 @@
 ---
-name: qwen-training-dataset-factory
-description: Build, enrich, distill, and validate local training datasets for the Qwen Training Workbench. Use when dataset export, weighted-study assembly, label distillation, workstation-mode enforcement, or training-input validation change together.
+name: "qwen-training-dataset-factory"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Build, enrich, distill, and validate local training datasets for the Qwen Training Workbench. Use when dataset export, weighted-study assembly, label distillation, workstation-mode enforcement, or training-input validation change together."
 ---
 
 # Qwen Training Dataset Factory

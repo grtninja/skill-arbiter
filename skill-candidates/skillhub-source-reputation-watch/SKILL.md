@@ -1,6 +1,8 @@
 ---
-name: skillhub-source-reputation-watch
-description: Watch SkillHub source reputation over time by tracking fetch failures, review posture, security metadata, and promotion blockers across marketplace sources. Use when the repo needs a bounded reputation ledger instead of a one-shot snapshot.
+name: "skillhub-source-reputation-watch"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Watch SkillHub source reputation over time by tracking fetch failures, review posture, security metadata, and promotion blockers across marketplace sources. Use when the repo needs a bounded reputation ledger instead of a one-shot snapshot."
 ---
 
 # SkillHub Source Reputation Watch

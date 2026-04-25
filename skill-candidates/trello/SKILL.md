@@ -1,5 +1,7 @@
 ---
-name: trello
+name: "trello"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Manage Trello boards, lists, and cards via the Trello REST API."
 ---
 

@@ -1,6 +1,8 @@
 ---
-name: repo-c-ranking-contracts
-description: Maintain ranking engine behavior and schema compatibility in <PRIVATE_REPO_C>. Use when modifying scoring weights, ranking/multiplier logic, report serialization, or `ranking_report` schema contracts consumed by downstream systems.
+name: "repo-c-ranking-contracts"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Maintain ranking engine behavior and schema compatibility in <PRIVATE_REPO_C>. Use when modifying scoring weights, ranking/multiplier logic, report serialization, or `ranking_report` schema contracts consumed by downstream systems."
 ---
 
 # Repo C Ranking Engine Contracts

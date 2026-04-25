@@ -1,6 +1,8 @@
 ---
-name: media-staging-prompthead-ops
-description: Operate Media Workbench source staging, prompt-head generation order, lane assignment, and resume-safe draft continuity as one workflow surface. Use when staging, previews, or generation-order logic change together.
+name: "media-staging-prompthead-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate Media Workbench source staging, prompt-head generation order, lane assignment, and resume-safe draft continuity as one workflow surface. Use when staging, previews, or generation-order logic change together."
 ---
 
 # Media Staging Prompthead Ops

@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(ROOT / "scripts"))
 
-from supply_chain_guard import scan_skill_dir_content, scan_skill_tree
+from supply_chain_guard import scan_skill_dir_content, scan_skill_tree  # noqa: E402
 
 DESTRUCTIVE_PATTERNS = (
     r"\bgit\s+reset\s+--hard\b",

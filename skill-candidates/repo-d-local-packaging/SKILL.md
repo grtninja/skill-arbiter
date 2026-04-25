@@ -1,6 +1,8 @@
 ---
-name: repo-d-local-packaging
-description: Run Windows-local packaging and release validation for <PRIVATE_REPO_D>. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows.
+name: "repo-d-local-packaging"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run Windows-local packaging and release validation for <PRIVATE_REPO_D>. Use when building distributables, fixing packaging regressions, or validating installer/portable outputs without introducing CI workflows."
 ---
 
 # Repo D Sandbox Local Packaging

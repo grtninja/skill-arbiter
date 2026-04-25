@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from skill_arbiter.meta_harness_policy import findings_for_skill
+from skill_arbiter.meta_harness_policy import findings_for_skill  # noqa: E402
 
 STOPWORDS = {
     "the",

@@ -1,6 +1,8 @@
 ---
-name: endpoint-admission-voice-actions
-description: Admit Penny voice endpoints with explicit identity, role, and action limits before they can issue backend actions. Use when edge voice devices, endpoint profiles, or voice-initiated tool permissions change.
+name: "endpoint-admission-voice-actions"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Admit Penny voice endpoints with explicit identity, role, and action limits before they can issue backend actions. Use when edge voice devices, endpoint profiles, or voice-initiated tool permissions change."
 ---
 
 # Endpoint Admission Voice Actions

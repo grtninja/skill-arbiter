@@ -1,5 +1,7 @@
 ---
-name: 1password
+name: "1password"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, performing sign-in (single account or multiple accounts), or reading/injecting/running secrets via op."
 ---
 

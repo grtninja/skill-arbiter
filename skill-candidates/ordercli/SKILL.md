@@ -1,5 +1,7 @@
 ---
-name: ordercli
+name: "ordercli"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Foodora-only CLI for checking past orders and active order status (Deliveroo WIP)."
 ---
 

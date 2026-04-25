@@ -1,6 +1,8 @@
 ---
-name: distributed-voice-plane-governance
-description: Govern the local-first Penny speech plane across ASR, TTS, endpoint voice behavior, and backend action routing. Use when Shockwave, AvatarCore, VRM Sandbox, or control-plane voice contracts shift together.
+name: "distributed-voice-plane-governance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Govern the local-first Penny speech plane across ASR, TTS, endpoint voice behavior, and backend action routing. Use when Shockwave, AvatarCore, VRM Sandbox, or control-plane voice contracts shift together."
 ---
 
 # Distributed Voice Plane Governance

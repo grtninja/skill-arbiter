@@ -1,6 +1,8 @@
 ---
-name: vrm-sandbox-startup-acceptance
-description: Validate and repair VRM Sandbox startup acceptance with shim-first local model authority, frontend/backend bring-up, and avatar-runtime launch proof. Use when launch behavior, chat handoff, voice fallback, or runtime bridge acceptance must be verified end to end.
+name: "vrm-sandbox-startup-acceptance"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Validate and repair VRM Sandbox startup acceptance with shim-first local model authority, frontend/backend bring-up, and avatar-runtime launch proof. Use when launch behavior, chat handoff, voice fallback, or runtime bridge acceptance must be verified end to end."
 ---
 
 # VRM Sandbox Startup Acceptance

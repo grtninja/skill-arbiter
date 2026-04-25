@@ -3,7 +3,15 @@
 import tempfile
 from pathlib import Path
 
-from gen import write_gallery
+import pytest
+
+from gen import (
+    get_model_defaults,
+    output_file_ext,
+    validate_gpt_image_2_size,
+    validate_model_options,
+    write_gallery,
+)
 
 
 def test_write_gallery_escapes_prompt_xss():
@@ -48,3 +56,42 @@ def test_write_gallery_normal_output():
         assert 'src="001-lobster.png"' in html
         assert "002-nook.png" in html
 
+
+def test_gpt_image_2_defaults_to_auto_size_and_quality():
+    assert get_model_defaults("gpt-image-2") == ("auto", "auto")
+    assert get_model_defaults("gpt-image-2-2026-04-21") == ("auto", "auto")
+
+
+def test_gpt_image_2_rejects_transparent_background():
+    with pytest.raises(ValueError, match="transparent"):
+        validate_model_options(
+            "gpt-image-2",
+            "1024x1024",
+            "high",
+            "transparent",
+            "",
+            None,
+            "",
+        )
+
+
+def test_gpt_image_2_accepts_current_size_constraints():
+    validate_gpt_image_2_size("auto")
+    validate_gpt_image_2_size("2048x1152")
+
+
+def test_gpt_image_2_rejects_invalid_size_constraints():
+    with pytest.raises(ValueError, match="multiples of 16"):
+        validate_gpt_image_2_size("1025x1024")
+    with pytest.raises(ValueError, match="3:1"):
+        validate_gpt_image_2_size("3840x1024")
+
+
+def test_output_compression_requires_jpeg_or_webp():
+    with pytest.raises(ValueError, match="requires"):
+        validate_model_options("gpt-image-2", "auto", "auto", "", "png", 50, "")
+
+
+def test_gpt_image_output_extension_follows_requested_format():
+    assert output_file_ext("gpt-image-2", "webp") == "webp"
+    assert output_file_ext("dall-e-3", "webp") == "png"

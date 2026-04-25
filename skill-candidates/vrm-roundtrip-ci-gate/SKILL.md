@@ -1,6 +1,8 @@
 ---
-name: vrm-roundtrip-ci-gate
-description: Gate VRM importer/exporter changes using Blender, UniVRM, and VRM4U round-trip metrics. Use when PRs can affect bones, expressions, materials, or animation fidelity.
+name: "vrm-roundtrip-ci-gate"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Gate VRM importer/exporter changes using Blender, UniVRM, and VRM4U round-trip metrics. Use when PRs can affect bones, expressions, materials, or animation fidelity."
 ---
 
 # VRM Roundtrip CI Gate

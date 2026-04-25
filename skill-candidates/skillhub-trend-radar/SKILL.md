@@ -1,6 +1,8 @@
 ---
-name: skillhub-trend-radar
-description: Track SkillHub trend and topic drift, maintain a bounded rewrite watchlist, and surface emerging gaps worth turning into repo-owned skills. Use when the marketplace query set shows new families or when the current shortlist has gone stale.
+name: "skillhub-trend-radar"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Track SkillHub trend and topic drift, maintain a bounded rewrite watchlist, and surface emerging gaps worth turning into repo-owned skills. Use when the marketplace query set shows new families or when the current shortlist has gone stale."
 ---
 
 # SkillHub Trend Radar

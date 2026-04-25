@@ -1,6 +1,8 @@
 ---
-name: shockwave-operator-handoff
-description: Preserve Shockwave operator handoff across startup, control-rail contract display, chat/status surfaces, and voice/manual recovery behavior. Use when dashboard changes affect how the operator sees mode, authority, services, playback, or degraded-state transitions.
+name: "shockwave-operator-handoff"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Preserve Shockwave operator handoff across startup, control-rail contract display, chat/status surfaces, and voice/manual recovery behavior. Use when dashboard changes affect how the operator sees mode, authority, services, playback, or degraded-state transitions."
 ---
 
 # Shockwave Operator Handoff

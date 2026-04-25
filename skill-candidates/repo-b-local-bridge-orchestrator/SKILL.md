@@ -1,6 +1,8 @@
 ---
-name: repo-b-local-bridge-orchestrator
-description: Run credit-first local Agent Bridge orchestration in <PRIVATE_REPO_B> with strict read-only validation, bounded indexing, and fail-closed guidance hints. Excludes MCP Comfy diagnostics.
+name: "repo-b-local-bridge-orchestrator"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Run credit-first local Agent Bridge orchestration in <PRIVATE_REPO_B> with strict read-only validation, bounded indexing, and fail-closed guidance hints. Excludes MCP Comfy diagnostics."
 ---
 
 # REPO_B Local Bridge Orchestrator

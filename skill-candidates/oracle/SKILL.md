@@ -1,5 +1,7 @@
 ---
-name: oracle
+name: "oracle"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Best practices for using the oracle CLI (prompt + file bundling, engines, sessions, and file attachment patterns)."
 ---
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
 
 from .llm_advisor import advisor_base_url, advisor_model, advisor_status, available_models, enabled as advisor_enabled
 from .paths import REPO_ROOT

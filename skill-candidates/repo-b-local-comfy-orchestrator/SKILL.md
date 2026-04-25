@@ -1,6 +1,8 @@
 ---
-name: repo-b-local-comfy-orchestrator
-description: Compatibility wrapper for legacy local Comfy orchestration requests in <PRIVATE_REPO_B>. Route new MCP/Comfy operations to repo-b-mcp-comfy-bridge.
+name: "repo-b-local-comfy-orchestrator"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Compatibility wrapper for legacy local Comfy orchestration requests in <PRIVATE_REPO_B>. Route new MCP/Comfy operations to repo-b-mcp-comfy-bridge."
 ---
 
 # REPO_B Local Comfy Orchestrator (Legacy Wrapper)

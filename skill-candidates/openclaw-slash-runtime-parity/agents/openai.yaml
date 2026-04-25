@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenClaw Slash Runtime Parity"
+  short_description: "Probe slash-command chat, RAG, and TTS outcomes with 5-minute patience."
+  default_prompt: "Use $openclaw-slash-runtime-parity to validate /status, /tasks, /help, and /tts command turns on the live VRM runtime and return command-level evidence for reply, RAG, and TTS completion."

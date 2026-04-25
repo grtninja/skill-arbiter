@@ -1,6 +1,8 @@
 ---
-name: skill-trust-ledger
-description: Keep a local reliability ledger for skills using recorded outcomes and arbiter evidence. Use when deciding whether to trust, restrict, or block skills over time.
+name: "skill-trust-ledger"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Keep a local reliability ledger for skills using recorded outcomes and arbiter evidence. Use when deciding whether to trust, restrict, or block skills over time."
 ---
 
 # Skill Trust Ledger

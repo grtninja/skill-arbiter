@@ -1,0 +1,3 @@
+display_name: Agentic Necromancy
+short_description: Revive old unfinished work while repairing timeouts, CPU churn, stale loops, and cross-agent coordination.
+default_prompt: Revive old or stalled tasks through compact steering packets, use GPT-5.5 by default for revived threads, apply bounded probes and culprit maps, patch repeat timeout causes, coordinate with active agents, audit new capabilities, and resume the main work without mixing machine contexts.

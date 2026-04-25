@@ -1,6 +1,8 @@
 ---
-name: skills-third-party-intake
-description: Vet third-party skill catalogs with deterministic security and quality scoring before arbiter admission. Use when mining external repos (for example openclaw/nullclaw) for safe candidate imports.
+name: "skills-third-party-intake"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Vet third-party skill catalogs with deterministic security and quality scoring before arbiter admission. Use when mining external repos (for example openclaw/nullclaw) for safe candidate imports."
 ---
 
 # Skills Third-Party Intake

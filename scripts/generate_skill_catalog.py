@@ -2,14 +2,18 @@
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
-import re
 
 if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parents[0]
+    sys.path.insert(0, str(script_dir))
+    sys.path.insert(0, str(repo_root))
 
+from generate_vscode_codex_skill_matrix import render_matrix as render_vscode_matrix
 from skill_arbiter.inventory import build_inventory_snapshot
 from skill_arbiter.paths import REPO_ROOT
 
@@ -192,8 +196,11 @@ def render_catalog(payload: dict[str, object]) -> str:
     lines.extend(
         [
             "",
-        "## Current Sources",
-        "",
+            "## Current Sources",
+            "",
+            "Source-level `recommended_action` values describe intake posture for whole upstream/source buckets.",
+            "They do not override the legitimacy state already assigned to installed skills in the matrix below.",
+            "",
         "| Source | Type | Origin | Version | Presence | Risk | Action |",
         "| --- | --- | --- | --- | --- | --- | --- |",
         ]
@@ -218,14 +225,17 @@ def render_catalog(payload: dict[str, object]) -> str:
             "",
             "## Current Skill Matrix",
             "",
-            "| Skill | Source Type | Ownership | Legitimacy | Presence | Drift | Risk | Action |",
-            "| --- | --- | --- | --- | --- | --- | --- | --- |",
+            "| Skill | Source Type | Ownership | Legitimacy | Presence | Drift | Risk | Action | Author | Canonical Source |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
         ]
     )
     for row in skills:
+        render_row = dict(row)
+        render_row["author"] = _md_cell(row.get("author"))
+        render_row["canonical_source"] = _md_cell(row.get("canonical_source"))
         lines.append(
-            "| `{name}` | `{source_type}` | `{ownership}` | `{legitimacy_status}` | `{local_presence}` | `{drift_state}` | `{risk_class}` | `{recommended_action}` |".format(
-                **row
+            "| `{name}` | `{source_type}` | `{ownership}` | `{legitimacy_status}` | `{local_presence}` | `{drift_state}` | `{risk_class}` | `{recommended_action}` | {author} | {canonical_source} |".format(
+                **render_row
             )
         )
     if incidents:
@@ -245,15 +255,17 @@ def render_catalog(payload: dict[str, object]) -> str:
 
 def main() -> int:
     payload = build_inventory_snapshot()
+    output = render_catalog(payload)
     generated_at = os.environ.get("SKILL_CATALOG_GENERATED_AT") or str(payload.get("generated_at", ""))
-    (REPO_ROOT / "skill-catalog.md").write_text(
-        render_repo_catalog(repo_root=REPO_ROOT, generated_at=generated_at),
-        encoding="utf-8",
-    )
-    (REPO_ROOT / "references" / "skill-catalog.md").write_text(
-        render_catalog(payload),
-        encoding="utf-8",
-    )
+    repo_catalog_output = render_repo_catalog(repo_root=REPO_ROOT, generated_at=generated_at)
+    references_root = REPO_ROOT / "references"
+    repo_catalog_target = REPO_ROOT / "skill-catalog.md"
+    catalog_target = references_root / "skill-catalog.md"
+    matrix_target = references_root / "vscode-codex-skill-update-matrix.md"
+    repo_catalog_target.write_text(repo_catalog_output, encoding="utf-8")
+    catalog_target.write_text(output, encoding="utf-8")
+    # Keep both inventory-facing views in lockstep so repo-owned docs do not drift.
+    matrix_target.write_text(render_vscode_matrix(payload), encoding="utf-8")
     return 0
 
 

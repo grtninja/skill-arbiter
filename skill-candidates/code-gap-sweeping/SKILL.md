@@ -1,6 +1,8 @@
 ---
-name: code-gap-sweeping
-description: Sweep one or more local repositories for implementation gaps and produce deterministic, evidence-backed remediation lanes. Use when you need cross-repo detection of missing tests, docs lockstep drift, risky TODO/FIXME additions, and release-hygiene misses.
+name: "code-gap-sweeping"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Sweep one or more local repositories for implementation gaps and produce deterministic, evidence-backed remediation lanes. Use when you need cross-repo detection of missing tests, docs lockstep drift, risky TODO/FIXME additions, and release-hygiene misses."
 ---
 
 # Code Gap Sweeping

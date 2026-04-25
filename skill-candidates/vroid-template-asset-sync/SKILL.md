@@ -1,6 +1,8 @@
 ---
-name: vroid-template-asset-sync
-description: Discover and normalize VRoid/AvatarMaker clothing templates and texture assets into a deterministic manifest for Blender and Unity lanes. Use when template paths are inconsistent or assets were saved manually.
+name: "vroid-template-asset-sync"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Discover and normalize VRoid/AvatarMaker clothing templates and texture assets into a deterministic manifest for Blender and Unity lanes. Use when template paths are inconsistent or assets were saved manually."
 ---
 
 # VRoid Template Asset Sync

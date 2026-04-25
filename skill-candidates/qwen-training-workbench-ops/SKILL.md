@@ -1,6 +1,8 @@
 ---
-name: qwen-training-workbench-ops
-description: Operate the local teacher-student Qwen training workbench for long-running dataset-factory, staggered continuation batches, and training-agent supervision. Use when advancing or monitoring the private Huihui-to-Qwen3.5-4B pipeline, switching workstation modes, checking batch artifacts, or resuming overnight local training without media-workbench contention.
+name: "qwen-training-workbench-ops"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Operate the local teacher-student Qwen training workbench for long-running dataset-factory, staggered continuation batches, and training-agent supervision. Use when advancing or monitoring the private Huihui-to-Qwen3.5-4B pipeline, switching workstation modes, checking batch artifacts, or resuming overnight local training without media-workbench contention."
 ---
 
 # Qwen Training Workbench Ops

@@ -1,6 +1,8 @@
 ---
-name: meta-harness-four-app-alignment
-description: Align the four core local app surfaces under the shared meta-harness contract. Use when PC Control, shim/control-center, STARFRAME app, and avatar-runtime defaults or docs drift on model authority, canonical repo root, continuity, or endpoint expectations and one coordinated pass must repair them together.
+name: "meta-harness-four-app-alignment"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
+description: "Align the four core local app surfaces under the shared meta-harness contract. Use when PC Control, shim/control-center, STARFRAME app, and avatar-runtime defaults or docs drift on model authority, canonical repo root, continuity, or endpoint expectations and one coordinated pass must repair them together."
 ---
 
 # Meta-Harness Four-App Alignment

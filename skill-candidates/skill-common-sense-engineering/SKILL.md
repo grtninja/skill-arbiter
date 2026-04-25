@@ -1,5 +1,7 @@
 ---
-name: skill-common-sense-engineering
+name: "skill-common-sense-engineering"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Apply practical sanity checks before and after coding work to prevent avoidable mistakes. Use when verifying dependency surfaces, cleaning generated artifacts, checking privacy policy compliance, auditing artifact hygiene, or ensuring multi-skill chain guardrail evidence is present before claiming readiness."
 ---
 

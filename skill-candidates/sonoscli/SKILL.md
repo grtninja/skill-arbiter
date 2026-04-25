@@ -1,5 +1,7 @@
 ---
-name: sonoscli
+name: "sonoscli"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Control Sonos speakers (discover/status/play/volume/group)."
 ---
 

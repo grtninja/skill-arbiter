@@ -1,5 +1,7 @@
 ---
-name: sherpa-onnx-tts
+name: "sherpa-onnx-tts"
+author: "grtninja"
+canonical_source: "https://github.com/grtninja/skill-arbiter"
 description: "Local text-to-speech via sherpa-onnx (offline, no cloud)"
 ---
 

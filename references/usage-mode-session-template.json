@@ -20,7 +20,7 @@
   "rollback_count": 0,
   "manual_intervention_count": 0,
   "provider": "openai",
-  "model": "gpt-5.4",
+  "model": "gpt-5.5",
   "route_target": "cloud_primary",
   "latency_ms": 0.0,
   "lane_health": "good",

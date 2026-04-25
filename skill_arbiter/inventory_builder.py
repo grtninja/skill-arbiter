@@ -8,6 +8,15 @@ from types import ModuleType
 from .contracts import IncidentRecord, SkillRecord, SourceRecord
 
 
+def _skill_metadata(module: ModuleType, skill_dir: Path) -> dict[str, str]:
+    metadata = module._read_skill_frontmatter(skill_dir)
+    return {
+        "description": str(metadata.get("description") or ""),
+        "author": str(metadata.get("author") or ""),
+        "canonical_source": str(metadata.get("canonical_source") or ""),
+    }
+
+
 def _build_installed_rows(
     module: ModuleType,
     *,
@@ -59,7 +68,7 @@ def _build_installed_rows(
                         name=system_entry.name,
                         source_type="installed_system",
                         origin=system_origin,
-                        description=module._read_skill_description(system_entry),
+                        **_skill_metadata(module, system_entry),
                         local_presence="installed",
                         version_or_commit=str(openai_baseline.get("sha") or ""),
                         drift_state=drift_state,
@@ -156,7 +165,7 @@ def _build_installed_rows(
                 name=entry.name,
                 source_type="installed_skill",
                 origin=origin,
-                description=module._read_skill_description(entry),
+                **_skill_metadata(module, entry),
                 local_presence="installed",
                 version_or_commit=str(openai_baseline.get("sha") or ""),
                 drift_state=drift_state,
@@ -193,6 +202,8 @@ def _append_missing_builtins(
                 source_type="openai_builtin_baseline",
                 origin="openai_builtin",
                 description="",
+                author="",
+                canonical_source="",
                 local_presence="missing",
                 version_or_commit=str(openai_baseline.get("sha") or ""),
                 drift_state="missing_local_builtin",
@@ -257,7 +268,7 @@ def _append_candidate_rows(
                 name=name,
                 source_type="overlay_candidate",
                 origin="skill_candidates",
-                description=module._read_skill_description(skill_dir),
+                **_skill_metadata(module, skill_dir),
                 local_presence="candidate_only",
                 version_or_commit="",
                 drift_state="missing_overlay_install",
