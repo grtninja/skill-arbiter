@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -119,3 +120,36 @@ def test_cross_repo_radar_disables_hook_and_filter_configs(monkeypatch: pytest.M
     assert isinstance(env, dict)
     assert env["GIT_OPTIONAL_LOCKS"] == "0"
     assert env["GIT_TERMINAL_PROMPT"] == "0"
+
+
+def test_mass_index_rejects_symlink_repo_root(tmp_path: Path) -> None:
+    script = REPO_ROOT / "skill-candidates" / "safe-mass-index-core" / "scripts" / "index_build.py"
+    real_repo = tmp_path / "repo"
+    real_repo.mkdir()
+    (real_repo / "README.md").write_text("demo\n", encoding="utf-8")
+    link_repo = tmp_path / "repo-link"
+    try:
+        link_repo.symlink_to(real_repo, target_is_directory=True)
+    except OSError as exc:  # pragma: no cover - Windows developer hosts may require symlink privilege.
+        pytest.skip(f"symlink creation unavailable: {exc}")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            "--repo-root",
+            str(link_repo),
+            "--index-dir",
+            str(tmp_path / "index"),
+            "--max-files-per-run",
+            "10",
+            "--max-seconds",
+            "5",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 2
+    assert "repo root cannot be a symlink" in result.stderr

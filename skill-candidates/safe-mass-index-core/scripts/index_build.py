@@ -377,14 +377,16 @@ def main() -> int:
         print("error: --max-read-bytes must be >= 0", file=sys.stderr)
         return 2
 
-    repo_root = Path(args.repo_root).expanduser().resolve()
+    repo_root_input = Path(args.repo_root).expanduser()
+    if repo_root_input.is_symlink():
+        print(f"error: repo root cannot be a symlink: {repo_root_input}", file=sys.stderr)
+        return 2
+    repo_root = repo_root_input.resolve()
     if not repo_root.is_dir():
         print(f"error: repo root not found: {repo_root}", file=sys.stderr)
         return 2
 
     try:
-        if repo_root.is_symlink():
-            raise ValueError(f"repo root cannot be a symlink: {repo_root}")
         index_dir = require_contained_artifact_path(repo_root, normalize_index_dir(repo_root, args.index_dir), "--index-dir")
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)

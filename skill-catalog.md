@@ -5,7 +5,7 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 
 ## Catalog Summary
 
-- Generated: `2026-05-15T22:32:36.881766Z`
+- Generated: `2026-05-15T22:48:07.909000Z`
 - Total repo skills: `159`
 - Repo-root skills: `1`
 - Candidate skills: `158`
