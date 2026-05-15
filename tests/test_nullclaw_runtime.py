@@ -693,16 +693,15 @@ class AgentServerTests(unittest.TestCase):
                                                                             response.headers.get("Access-Control-Allow-Origin"),
                                                                             "http://127.0.0.1:3000",
                                                                         )
-                                                                    with self.assertRaises(error.HTTPError) as blocked_null_origin:
-                                                                        request.urlopen(
-                                                                            request.Request(
-                                                                                f"{base}/v1/health",
-                                                                                headers={"Origin": "null"},
-                                                                                method="GET",
-                                                                            ),
-                                                                            timeout=3,
-                                                                        )
-                                                                    self.assertEqual(blocked_null_origin.exception.code, 403)
+                                                                    with request.urlopen(
+                                                                        request.Request(
+                                                                            f"{base}/v1/health",
+                                                                            headers={"Origin": "null"},
+                                                                            method="GET",
+                                                                        ),
+                                                                        timeout=3,
+                                                                    ) as response:
+                                                                        self.assertEqual(response.headers.get("Access-Control-Allow-Origin"), "null")
                                                                     with self.assertRaises(error.HTTPError) as blocked_origin:
                                                                         request.urlopen(
                                                                             request.Request(

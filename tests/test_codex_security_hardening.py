@@ -29,10 +29,10 @@ def _patch_quarantine_state(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     monkeypatch.setattr(quarantine, "host_id", lambda: "test-host")
 
 
-def test_cors_rejects_null_origin_and_avoids_wildcard() -> None:
-    assert _resolve_allowed_origin("null") == ""
+def test_cors_allows_file_origin_desktop_without_wildcard() -> None:
+    assert _resolve_allowed_origin("null") == "null"
     assert _origin_allowed(_HeaderProbe()) is True
-    assert _origin_allowed(_HeaderProbe("null")) is False
+    assert _origin_allowed(_HeaderProbe("null")) is True
     assert _origin_allowed(_HeaderProbe("https://example.com")) is False
 
     no_origin = _HeaderProbe()
@@ -40,6 +40,11 @@ def test_cors_rejects_null_origin_and_avoids_wildcard() -> None:
     assert ("Access-Control-Allow-Origin", "*") not in no_origin.sent
     assert not any(key == "Access-Control-Allow-Origin" for key, _value in no_origin.sent)
     assert not any(key == "Access-Control-Allow-Private-Network" for key, _value in no_origin.sent)
+
+    file_origin = _HeaderProbe("null")
+    _write_cors_headers(file_origin)
+    assert ("Access-Control-Allow-Origin", "null") in file_origin.sent
+    assert ("Access-Control-Allow-Origin", "*") not in file_origin.sent
 
     loopback = _HeaderProbe("http://127.0.0.1:3000")
     _write_cors_headers(loopback)

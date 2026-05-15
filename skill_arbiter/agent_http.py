@@ -16,6 +16,8 @@ def _resolve_allowed_origin(origin: str) -> str:
     requested = str(origin or "").strip()
     if not requested:
         return ""
+    if requested == "null":
+        return "null"
     parsed = urlparse(requested)
     host = str(parsed.hostname or "").strip().lower()
     if parsed.scheme in {"http", "https"} and host in _LOOPBACK_ORIGIN_HOSTS:
