@@ -26,6 +26,24 @@ def _load_module():
     return module
 
 
+def _load_repo_family_module():
+    repo_root = Path(__file__).resolve().parents[1]
+    script_path = (
+        repo_root
+        / "skill-candidates"
+        / "code-gap-sweeping"
+        / "scripts"
+        / "repo_family_pipeline.py"
+    )
+    spec = importlib.util.spec_from_file_location("repo_family_pipeline", script_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"failed to load module at {script_path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 class CodeGapSweepTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -43,6 +61,27 @@ class CodeGapSweepTests(unittest.TestCase):
             name, path = self.mod.parse_repo_pair(f"demo={repo}")
             self.assertEqual(name, "demo")
             self.assertEqual(path, repo.resolve())
+
+    def test_repo_family_pipeline_rejects_shell_unsafe_repo_names(self) -> None:
+        mod = _load_repo_family_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            repo.mkdir()
+            (repo / ".git").mkdir()
+            with self.assertRaises(ValueError):
+                mod.parse_repo_pair(f"demo;touch-pwned={repo}")
+            with self.assertRaises(ValueError):
+                mod.parse_family_pair("demo$(touch pwned)=generic")
+
+    def test_repo_family_pipeline_rejects_shell_unsafe_discovered_repo_names(self) -> None:
+        mod = _load_repo_family_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            unsafe = root / "demo;touch-pwned"
+            unsafe.mkdir()
+            (unsafe / ".git").mkdir()
+            with self.assertRaises(ValueError):
+                mod.discover_repos_under_root(root)
 
     def test_discover_repos_under_root_finds_immediate_git_children(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

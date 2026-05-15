@@ -93,6 +93,9 @@ python scripts/check_public_release.py
 
 ## Pull requests
 
+Contributors must preserve the no-stop doctrine and minimum runtime law, keep Continue local-agent lanes on visible action-state parity, and maintain reasoning visibility for agent-authored changes. Trusted folders, local-subagent state, and patience runtime window contracts must not be removed from governance docs. Use the mandatory skill chain (`skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`) for governed Codex/agent work when applicable.
+
+
 Before opening a PR:
 
 1. Keep runtime, tests, docs, and generated references aligned.

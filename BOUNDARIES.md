@@ -41,6 +41,11 @@
 
 ## Safety Boundary
 
+- No-stop doctrine and minimum runtime law apply to governed repo work until the requested lane has real validation evidence.
+- Continue-facing local-agent surfaces keep visible action-state parity and reasoning visibility for operator review.
+- Trusted folders, local-subagent state, and patience runtime window contracts are required public-shape governance terms.
+
+
 - Skill installs and upgrades are executable trust boundaries, not passive content.
 - Default posture is fail-closed.
 - Known-bad supply-chain signatures may be auto-blocked immediately.

@@ -8,6 +8,19 @@ from pathlib import Path
 from .contracts import PrivacyFinding
 from .paths import windows_no_window_subprocess_kwargs
 
+EXPORT_EXCLUDE_FILE = Path("public/export-exclude.txt")
+PRIVATE_SURFACE_PREFIXES = ("skill_arbiter/private/", "tests/private/")
+REDACTED_SNIPPET = "[redacted for privacy]"
+
+SEALED_PRIVATE_TEXT_PATTERNS = (
+    re.compile(r"\bTOP_SECRET_LOCAL_ONLY\s*=\s*True\b"),
+    re.compile(r"\bPRIVATE_EXTENSION_KIND\s*="),
+    re.compile(r"\bskill_arbiter\.private\b"),
+    re.compile(r"\bnaughty_mode\b", re.IGNORECASE),
+    re.compile(r"\bMaidPersonaContract\b"),
+    re.compile(r"\bNaughtyModeContract\b"),
+)
+
 USER_PATH_PATTERNS = (
     re.compile(r"/home/[A-Za-z0-9._-]+/"),
     re.compile(r"/Users/[A-Za-z0-9._ -]+/"),
@@ -37,6 +50,14 @@ class PrivacyScanResult:
     passed: bool
     findings: list[PrivacyFinding]
     scope: str
+
+
+def _redacted_finding(path: str, line: int, col: int, kind: str) -> PrivacyFinding:
+    return PrivacyFinding(path=path, line=line, col=col, kind=kind, snippet=REDACTED_SNIPPET)
+
+
+def _is_private_surface(rel_path: str) -> bool:
+    return rel_path.startswith(PRIVATE_SURFACE_PREFIXES)
 
 
 def _run_git(repo_root: Path, args: list[str]) -> str:
@@ -80,30 +101,24 @@ def is_binary(path: Path) -> bool:
 def scan_text(repo_root: Path, path: Path, text: str) -> list[PrivacyFinding]:
     findings: list[PrivacyFinding] = []
     rel_path = path.relative_to(repo_root).as_posix()
+    if _is_private_surface(rel_path):
+        findings.append(_redacted_finding(rel_path, 1, 1, "local-only-private-surface"))
     for line_num, line in enumerate(text.splitlines(), start=1):
-        for pattern in USER_PATH_PATTERNS:
+        for pattern in SEALED_PRIVATE_TEXT_PATTERNS:
             match = pattern.search(line)
             if match:
                 findings.append(
-                    PrivacyFinding(
-                        path=rel_path,
-                        line=line_num,
-                        col=match.start() + 1,
-                        kind="user-absolute-path",
-                        snippet=match.group(0),
-                    )
+                    _redacted_finding(rel_path, line_num, match.start() + 1, "local-only-private-surface")
                 )
+        for pattern in USER_PATH_PATTERNS:
+            match = pattern.search(line)
+            if match:
+                findings.append(_redacted_finding(rel_path, line_num, match.start() + 1, "user-absolute-path"))
         for pattern in SENSITIVE_TOKEN_PATTERNS:
             match = pattern.search(line)
             if match:
                 findings.append(
-                    PrivacyFinding(
-                        path=rel_path,
-                        line=line_num,
-                        col=match.start() + 1,
-                        kind="private-repo-identifier",
-                        snippet=match.group(0),
-                    )
+                    _redacted_finding(rel_path, line_num, match.start() + 1, "private-repo-identifier")
                 )
         if rel_path.startswith("skill-candidates/") and path.name in {"SKILL.md", "openai.yaml"}:
             root_match = ROOT_HINT_RE.search(line)
@@ -111,12 +126,8 @@ def scan_text(repo_root: Path, path: Path, text: str) -> list[PrivacyFinding]:
                 target = root_match.group(1).strip()
                 if not (target.startswith("<") or target.startswith("/path/") or target.startswith("$")):
                     findings.append(
-                        PrivacyFinding(
-                            path=rel_path,
-                            line=line_num,
-                            col=root_match.start(1) + 1,
-                            kind="repo-placeholder-required",
-                            snippet=target,
+                        _redacted_finding(
+                            rel_path, line_num, root_match.start(1) + 1, "repo-placeholder-required"
                         )
                     )
             if line.startswith("description:") and " in " in line and "<" not in line:
@@ -126,12 +137,11 @@ def scan_text(repo_root: Path, path: Path, text: str) -> list[PrivacyFinding]:
                     token = token_match.group(0)
                     if token != "skill-arbiter":
                         findings.append(
-                            PrivacyFinding(
-                                path=rel_path,
-                                line=line_num,
-                                col=token_match.start() + line.find(suffix) + 1,
-                                kind="repo-placeholder-required",
-                                snippet=token,
+                            _redacted_finding(
+                                rel_path,
+                                line_num,
+                                token_match.start() + line.find(suffix) + 1,
+                                "repo-placeholder-required",
                             )
                         )
     return findings

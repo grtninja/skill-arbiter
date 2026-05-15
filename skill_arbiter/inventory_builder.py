@@ -93,9 +93,6 @@ def _build_installed_rows(
             origin = "openai_builtin"
             third_party_source_label = ""
             intake_recommendation = ""
-        elif entry.name in vscode_baseline_additions:
-            third_party_source_label = ""
-            intake_recommendation = ""
         elif third_party_source_label:
             origin = f"third_party_{third_party_source_label}"
             notes.extend(

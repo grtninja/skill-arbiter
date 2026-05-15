@@ -13,6 +13,7 @@ import sys
 from typing import Any
 
 REPO_PAIR_RE = re.compile(r"^([^=]+)=(.+)$")
+REPO_NAME_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 ALLOWED_FAMILIES = {"repo_a", "repo_b", "repo_c", "repo_d", "generic"}
 
@@ -128,6 +129,8 @@ def parse_repo_pair(raw: str) -> tuple[str, Path]:
     path = Path(match.group(2).strip()).expanduser().resolve()
     if not name:
         raise ValueError("repo name cannot be empty")
+    if not REPO_NAME_RE.fullmatch(name):
+        raise ValueError(f"unsafe repo name: {name!r}; use letters, digits, dot, underscore, or hyphen only")
     if not path.is_dir():
         raise ValueError(f"repo path not found: {path}")
     if not (path / ".git").exists():
@@ -141,6 +144,10 @@ def parse_family_pair(raw: str) -> tuple[str, str]:
         raise ValueError(f"invalid --family value: {raw!r}; expected name=family")
     name = match.group(1).strip()
     family = match.group(2).strip().lower()
+    if not name:
+        raise ValueError("repo name cannot be empty")
+    if not REPO_NAME_RE.fullmatch(name):
+        raise ValueError(f"unsafe repo name: {name!r}; use letters, digits, dot, underscore, or hyphen only")
     if family not in ALLOWED_FAMILIES:
         allowed = ", ".join(sorted(ALLOWED_FAMILIES))
         raise ValueError(f"invalid family {family!r}; expected one of: {allowed}")
@@ -155,6 +162,8 @@ def discover_repos_under_root(root: Path) -> list[tuple[str, Path]]:
         if not child.is_dir() or child.name.startswith("."):
             continue
         if (child / ".git").exists():
+            if not REPO_NAME_RE.fullmatch(child.name):
+                raise ValueError(f"unsafe discovered repo name: {child.name!r}; use letters, digits, dot, underscore, or hyphen only")
             repos.append((child.name, child.resolve()))
     return repos
 

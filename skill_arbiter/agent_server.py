@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+# ruff: noqa: F401
+
 import json
 import sys
 from http import HTTPStatus
@@ -22,7 +24,18 @@ from .contracts import AuditEvent, IncidentRecord, PolicyDecision
 from .inventory import build_inventory_snapshot, load_cached_inventory
 from .llm_advisor import advisor_base_url, advisor_model, advisor_status, enabled as advisor_enabled
 from .mitigation import execute_case_action, list_cases, plan_case, reconcile_cases
-from .paths import DEFAULT_AGENT_HOST, DEFAULT_AGENT_PORT, DEFAULT_CANDIDATES_ROOT, DEFAULT_SKILLS_ROOT, REPO_ROOT, collaboration_log_path, host_id, inventory_cache_path, quest_log_path, self_check_cache_path
+from .paths import (
+    DEFAULT_AGENT_HOST,
+    DEFAULT_AGENT_PORT,
+    DEFAULT_CANDIDATES_ROOT,
+    DEFAULT_SKILLS_ROOT,
+    REPO_ROOT,
+    collaboration_log_path,
+    host_id,
+    inventory_cache_path,
+    quest_log_path,
+    self_check_cache_path,
+)
 from .privacy_policy import scan_repo
 from .public_readiness import load_cached_public_readiness, run_public_readiness_scan
 from .quest_runtime import record_payload as record_quest_payload, status_payload as quest_status_payload
