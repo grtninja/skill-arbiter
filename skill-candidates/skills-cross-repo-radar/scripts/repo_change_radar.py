@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -37,6 +38,16 @@ SKILL_HINTS = (
     "agent",
 )
 
+SAFE_GIT_CONFIG = (
+    "core.hooksPath=",
+    "core.fsmonitor=false",
+    "core.untrackedCache=false",
+    "diff.external=",
+    "filter.lfs.clean=",
+    "filter.lfs.smudge=",
+    "filter.lfs.process=",
+)
+
 
 def _now_iso() -> str:
     return datetime.now(tz=timezone.utc).isoformat()
@@ -44,11 +55,19 @@ def _now_iso() -> str:
 
 def _run_git(repo_path: Path, args: list[str]) -> tuple[int, str]:
     try:
+        env = os.environ.copy()
+        env.update(
+            {
+                "GIT_OPTIONAL_LOCKS": "0",
+                "GIT_TERMINAL_PROMPT": "0",
+            }
+        )
         proc = subprocess.run(
-            ["git", "-C", str(repo_path), *args],
+            ["git", "-C", str(repo_path), *sum((["-c", item] for item in SAFE_GIT_CONFIG), []), *args],
             capture_output=True,
             text=True,
             check=False,
+            env=env,
         )
     except Exception as exc:  # noqa: BLE001
         return 1, str(exc)
@@ -298,4 +317,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

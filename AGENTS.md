@@ -126,6 +126,12 @@ New Skill Unlocked: <SkillName>
 
 ## Skill-Arbiter Workflow (Binding)
 
+- Public Codex parity contract: trusted folders, local-subagent state, reasoning visibility, and patience runtime window semantics must stay visible in repo governance.
+- No-stop doctrine and minimum runtime law apply to governed repo work so agents do not stop after partial validation.
+- Continue local-agent surfaces keep visible action-state parity; browser-first or headless fallback paths are not the primary contract.
+- Mandatory skill chain for governed work includes `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.
+
+
 - Skill-arbiter discipline is explicit in this repo: do not take a skill-less turn when an applicable local skill exists.
 - Route substantial work through `skill-hub` first and state the selected skill order in the work summary.
 - For local hardware-, desktop-, or service-backed work, use `local-compute-usage` early and fail closed if the required local lane is unavailable.

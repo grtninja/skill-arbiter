@@ -201,6 +201,35 @@ def normalize_index_dir(repo_root: Path, index_dir: str) -> Path:
     return (repo_root / candidate).resolve()
 
 
+def require_contained_artifact_path(repo_root: Path, path: Path, label: str) -> Path:
+    """Return a resolved artifact path only when it stays under repo_root and avoids symlink pivots."""
+
+    resolved_repo = repo_root.resolve()
+    resolved_path = path.expanduser().resolve(strict=False)
+    try:
+        resolved_path.relative_to(resolved_repo)
+    except ValueError as exc:
+        raise ValueError(f"{label} must stay inside repo root: {resolved_path}") from exc
+
+    probe = resolved_path
+    existing: list[Path] = []
+    while probe != resolved_repo:
+        if probe.exists():
+            existing.append(probe)
+        parent = probe.parent
+        if parent == probe:
+            break
+        probe = parent
+    existing.append(resolved_repo)
+    for item in existing:
+        try:
+            if item.is_symlink():
+                raise ValueError(f"{label} cannot pass through symlinked artifact path: {item}")
+        except OSError as exc:
+            raise ValueError(f"{label} path cannot be validated: {item}") from exc
+    return resolved_path
+
+
 def normalize_excludes(index_dir: Path, excludes: list[str]) -> set[str]:
     values = {name.strip() for name in DEFAULT_EXCLUDES}
     values.update({item.strip() for item in excludes if item.strip()})
@@ -353,7 +382,13 @@ def main() -> int:
         print(f"error: repo root not found: {repo_root}", file=sys.stderr)
         return 2
 
-    index_dir = normalize_index_dir(repo_root, args.index_dir)
+    try:
+        if repo_root.is_symlink():
+            raise ValueError(f"repo root cannot be a symlink: {repo_root}")
+        index_dir = require_contained_artifact_path(repo_root, normalize_index_dir(repo_root, args.index_dir), "--index-dir")
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     state_path = index_dir / "state.json"
     manifest_path = index_dir / "manifest.json"
     run_path = index_dir / "run.json"
@@ -580,9 +615,16 @@ def main() -> int:
     write_json(run_path, run_report)
 
     if args.json_out:
-        out_path = Path(args.json_out).expanduser()
-        if not out_path.is_absolute():
-            out_path = (repo_root / out_path).resolve()
+        raw_out_path = Path(args.json_out).expanduser()
+        if raw_out_path.is_absolute():
+            out_path = raw_out_path
+        else:
+            out_path = repo_root / raw_out_path
+        try:
+            out_path = require_contained_artifact_path(repo_root, out_path, "--json-out")
+        except ValueError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 2
         write_json(out_path, run_report)
 
     print(

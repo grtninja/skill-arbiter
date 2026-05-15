@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import signal
 import shutil
 from pathlib import Path
@@ -9,6 +10,47 @@ from pathlib import Path
 from .audit_log import append_audit_event
 from .contracts import AuditEvent, PolicyDecision
 from .paths import DEFAULT_SKILLS_ROOT, host_id, quarantine_artifacts_root, quarantine_state_path
+
+
+_SKILL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$")
+
+
+def _validate_skill_name(skill_name: str) -> str:
+    name = str(skill_name or "").strip()
+    if not name:
+        raise ValueError("skill_name is required")
+    if name in {".", ".."} or "/" in name or "\\" in name or os.path.isabs(name):
+        raise ValueError("skill_name must be a single safe directory name")
+    if not _SKILL_NAME_RE.fullmatch(name):
+        raise ValueError("skill_name contains unsupported characters")
+    return name
+
+
+def _resolved_root(root: Path) -> Path:
+    root.mkdir(parents=True, exist_ok=True)
+    return root.resolve()
+
+
+def _contained_child(root: Path, skill_name: str, *, must_exist: bool = False) -> Path:
+    name = _validate_skill_name(skill_name)
+    resolved_root = _resolved_root(root)
+    child = resolved_root / name
+    if must_exist and not child.exists():
+        raise FileNotFoundError(f"skill not found: {name}")
+    resolved_child = child.resolve(strict=False)
+    if resolved_child != resolved_root and resolved_root not in resolved_child.parents:
+        raise ValueError("skill path escaped the expected root")
+    return child
+
+
+def _reject_symlink_tree(root: Path) -> None:
+    if root.is_symlink():
+        raise ValueError("refusing destructive operation on symlinked skill path")
+    if not root.exists():
+        return
+    for child in root.rglob("*"):
+        if child.is_symlink():
+            raise ValueError("refusing destructive operation on skill tree containing symlinks")
 
 
 def _load_state() -> dict[str, object]:
@@ -25,13 +67,14 @@ def _save_state(payload: dict[str, object]) -> None:
 
 
 def apply_quarantine(skill_name: str, skills_root: Path | None = None) -> PolicyDecision:
+    skill_name = _validate_skill_name(skill_name)
     root = skills_root or DEFAULT_SKILLS_ROOT
     blacklist = root / ".blacklist.local"
-    live_skill_dir = root / skill_name
     quarantine_root = quarantine_artifacts_root() / "skills"
-    quarantine_root.mkdir(parents=True, exist_ok=True)
-    quarantined_skill_dir = quarantine_root / skill_name
-    root.mkdir(parents=True, exist_ok=True)
+    live_skill_dir = _contained_child(root, skill_name)
+    quarantined_skill_dir = _contained_child(quarantine_root, skill_name)
+    _reject_symlink_tree(live_skill_dir)
+    _reject_symlink_tree(quarantined_skill_dir)
     names = set()
     if blacklist.is_file():
         names = {line.strip() for line in blacklist.read_text(encoding="utf-8").splitlines() if line.strip()}
@@ -85,11 +128,14 @@ def apply_quarantine(skill_name: str, skills_root: Path | None = None) -> Policy
 
 
 def release_quarantine(skill_name: str, skills_root: Path | None = None) -> PolicyDecision:
+    skill_name = _validate_skill_name(skill_name)
     root = skills_root or DEFAULT_SKILLS_ROOT
     blacklist = root / ".blacklist.local"
-    live_skill_dir = root / skill_name
     quarantine_root = quarantine_artifacts_root() / "skills"
-    quarantined_skill_dir = quarantine_root / skill_name
+    live_skill_dir = _contained_child(root, skill_name)
+    quarantined_skill_dir = _contained_child(quarantine_root, skill_name)
+    _reject_symlink_tree(live_skill_dir)
+    _reject_symlink_tree(quarantined_skill_dir)
     if blacklist.is_file():
         names = [line.strip() for line in blacklist.read_text(encoding="utf-8").splitlines() if line.strip()]
         kept = [name for name in names if name != skill_name]
@@ -139,15 +185,12 @@ def release_quarantine(skill_name: str, skills_root: Path | None = None) -> Poli
 
 
 def confirm_delete_skill(skill_name: str, skills_root: Path | None = None) -> PolicyDecision:
+    skill_name = _validate_skill_name(skill_name)
     root = skills_root or DEFAULT_SKILLS_ROOT
-    target = root / skill_name
+    target = _contained_child(root, skill_name)
     if target.is_dir():
-        for child in sorted(target.rglob("*"), reverse=True):
-            if child.is_file():
-                child.unlink()
-            elif child.is_dir():
-                child.rmdir()
-        target.rmdir()
+        _reject_symlink_tree(target)
+        shutil.rmtree(target)
     decision = PolicyDecision(
         subject=skill_name,
         action="delete_skill",

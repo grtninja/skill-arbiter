@@ -204,7 +204,7 @@ class InventorySnapshotTests(unittest.TestCase):
         self.assertEqual(row["legitimacy_status"], "owned_trusted")
         self.assertEqual(row["recommended_action"], "keep")
 
-    def test_vscode_baseline_addition_wins_over_third_party_attribution(self) -> None:
+    def test_rejected_third_party_attribution_overrides_vscode_baseline_addition(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             skills_root = root / "skills"
@@ -247,11 +247,14 @@ class InventorySnapshotTests(unittest.TestCase):
                                                         payload = build_inventory_snapshot(skills_root=skills_root, candidate_root=candidate_root)
 
         row = next(item for item in payload["skills"] if item["name"] == "canvas")
-        self.assertEqual(row["origin"], "vscode_codex_baseline_addition")
-        self.assertEqual(row["ownership"], "baseline_addition")
-        self.assertEqual(row["legitimacy_status"], "owned_trusted")
-        self.assertEqual(row["risk_class"], "low")
-        self.assertEqual(payload["incident_count"], 0)
+        self.assertEqual(row["origin"], "third_party_openclaw")
+        self.assertEqual(row["ownership"], "third_party_imported")
+        self.assertEqual(row["legitimacy_status"], "blocked_hostile")
+        self.assertEqual(row["risk_class"], "critical")
+        self.assertEqual(row["recommended_action"], "quarantine")
+        self.assertIn("vscode_codex_baseline_addition", row["notes"])
+        self.assertIn("third_party_intake:reject", row["notes"])
+        self.assertEqual(payload["incident_count"], 1)
 
     def test_third_party_attribution_keeps_imported_skill_trusted_but_provenance_tracked(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -690,15 +693,16 @@ class AgentServerTests(unittest.TestCase):
                                                                             response.headers.get("Access-Control-Allow-Origin"),
                                                                             "http://127.0.0.1:3000",
                                                                         )
-                                                                    with request.urlopen(
-                                                                        request.Request(
-                                                                            f"{base}/v1/health",
-                                                                            headers={"Origin": "null"},
-                                                                            method="GET",
-                                                                        ),
-                                                                        timeout=3,
-                                                                    ) as response:
-                                                                        self.assertEqual(response.headers.get("Access-Control-Allow-Origin"), "null")
+                                                                    with self.assertRaises(error.HTTPError) as blocked_null_origin:
+                                                                        request.urlopen(
+                                                                            request.Request(
+                                                                                f"{base}/v1/health",
+                                                                                headers={"Origin": "null"},
+                                                                                method="GET",
+                                                                            ),
+                                                                            timeout=3,
+                                                                        )
+                                                                    self.assertEqual(blocked_null_origin.exception.code, 403)
                                                                     with self.assertRaises(error.HTTPError) as blocked_origin:
                                                                         request.urlopen(
                                                                             request.Request(

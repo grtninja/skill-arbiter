@@ -20,6 +20,21 @@ All notable changes to this project are documented in this file.
 - split the desktop UI into explicit entry, runtime, DOM, polling, runtime-view, and inventory-view modules so the shell no longer depends on a single monolithic `app.js`
 - break inventory and collaboration runtime code into smaller helper modules so meta-harness policy, source/baseline attribution, and collaboration evidence handling stay modular and easier to validate
 
+## [0.2.26] - 2026-05-15
+
+### Changed
+
+- Harden repo-family, mass-index, and cross-repo radar helpers against unsafe repo names, artifact path escapes, symlink pivots, and inherited Git execution hooks.
+- Tighten loopback CORS, advisor inventory, privacy, quarantine, and public-release safeguards with regression coverage for Codex Security hardening surfaces.
+- Add public skill catalog metadata (#4)
+- Add repository code owners
+- Level up white-hat for GitHub and supply-chain hardening
+- Add white-hat skill and refresh catalog
+- Fix external review hygiene self-scan
+- Harden external skill review hygiene
+- Refresh SkillHub alignment ledgers
+- Reconcile repo-owned candidate skills into Codex
+
 ## [0.2.25] - 2026-04-21
 
 ### Changed
@@ -633,5 +648,3 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
-
-

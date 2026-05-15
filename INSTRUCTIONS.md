@@ -20,6 +20,12 @@
 
 ## Guardrails
 
+- No-stop doctrine and minimum runtime law apply to governed implementation and validation passes.
+- Continue-facing local-agent lanes keep visible action-state parity and reasoning visibility.
+- Trusted folders, local-subagent state, and patience runtime window contracts remain required in public-shape governance.
+- Use `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger` for governed Codex/agent work when applicable.
+
+
 - No cross-repo lane violations.
 - No secret leakage in docs or logs.
 - No unmanaged live actions without explicit audit context.

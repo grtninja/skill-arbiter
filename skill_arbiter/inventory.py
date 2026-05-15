@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+# ruff: noqa: F401
+
 import sys
 
 from . import inventory_baselines as _baselines
