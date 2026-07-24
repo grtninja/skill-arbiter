@@ -30,7 +30,7 @@ This index preserves one canonical route per observed failure class. It is evide
 
 ## Evidence
 
-- [Redacted repeated-compaction chronology](codex_compaction_loop_redacted.svg)
+- [Redacted repeated-compaction chronology](https://github.com/grtninja/skill-arbiter/blob/f4e41ea7db5ddf8562767d74c6cf2e088223e3c9/docs/incidents/openai-codex/2026-07-23/codex_compaction_loop_redacted.svg)
 - [Evidence manifest and hashes](codex_compaction_loop_evidence.md)
 - [Incident reporting and bounty triage SOP](../../INCIDENT_REPORTING_AND_BOUNTY_SOP.md)
 
