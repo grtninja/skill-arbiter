@@ -1,68 +1,90 @@
-# BOUNDARIES.md
+# Skill Arbiter — Affirmative Boundaries
 
-## Scope
+## Product Scope
 
-`skill-arbiter` is a Windows-first NullClaw host security app for local skill governance, curated-source discovery, guarded threat suppression, and self-governance.
+Skill Arbiter is the public-shape Windows-first NullClaw host-security and skill
+governance product for local skills, plugins, tools, curated third-party sources,
+capability evidence, lifecycle policy, privacy validation, and public-safe
+operator workflows.
 
-## Allowed Lane
+## Admitted Governance Lane
 
-- Host-local skill governance for installed skills, built-ins, `.system` skills, overlay candidates, and curated third-party sources.
-- Curated-source verification, baseline drift detection, upgrade/reconcile checks, and recent-work prioritization.
-- Detection of stale or untracked Python, vendored Python launchers, browser auto-launch abuse, hidden-process launch, typosquats, fake installers, persistence hooks, and hostile tool/resource fan-out.
-- Guarded quarantine, disable, and admission decisions for skills and related artifacts.
-- Operator-mediated destructive response:
-  - process kill
-  - installed-skill deletion
-  - remediation confirmation
-- Self-governance over this repo, its generated artifacts, and its release flow so the app cannot become the threat it is meant to stop.
-- Local desktop operator surface plus loopback-only agent API.
-- Codex app, VS Code, and GitHub Copilot instruction-surface inventory and drift tracking.
-- Loopback-only advisor support for any LM Studio-loaded coding model, with local Qwen preference by default.
-- Copy-only public support and security metadata inside the desktop app. The app may surface public URLs but must not auto-open browsers.
+Skill Arbiter may:
 
-## Forbidden Lane
+- inventory and govern installed, built-in, `.system`, overlay, candidate, and curated third-party skills;
+- verify sources, hashes, metadata, provenance, compatibility, and current capability state;
+- detect interpreter, launcher, browser, hidden-process, typosquat, installer, persistence, and tool-fan-out risks;
+- produce operator-visible quarantine, admission, mitigation, and remediation decisions;
+- govern its own generated artifacts, privacy gates, release flow, and catalogs;
+- expose a visible desktop operator surface and loopback-only agent API;
+- inspect Codex, Continue, VS Code, Copilot, and other agent instruction surfaces through public-safe contracts;
+- consume an operator-selected loopback coding and security model;
+- display public support and security metadata inside the desktop application;
+- coordinate with private runtime repositories through placeholders and typed public interfaces.
 
-- Direct ownership of runtime inference scheduling, persona execution, or hardware dispatch in STARFRAME/MX3/VRM runtime repos.
-- Acting as a general autonomous app orchestrator outside declared host-security flows.
-- Silent remote execution, remote bind/listen behavior, or arbitrary browser-driven control flows.
-- Secret ingestion into repo-tracked files, public export of host-specific evidence, or publication of usernames/absolute private paths.
-- Silent scheduled-task creation, PATH pollution, vendored runtime drops, or undeclared long-running background workers.
+## Ownership Separation
 
-## Cross-Repo Boundary
+Runtime inference scheduling, persona execution, memory authority, hardware
+dispatch, model placement, distributed orchestration, and product-specific
+application behavior remain with their owning runtime repositories. Skill
+Arbiter governs skills and capabilities, evaluates evidence, and presents
+operator decisions through typed interfaces.
 
-- This repo may inspect, inventory, and score skill-related behavior across repos and hosts through documented checks and curated references.
-- This repo may quarantine or deny skill/tool surfaces that target:
-  - `<PRIVATE_REPO_A>`
-  - `<PRIVATE_REPO_B>`
-  - `<PRIVATE_REPO_C>`
-  - `<PRIVATE_REPO_D>`
-  - `<PRIVATE_REPO_E>`
-- This repo must not become the source of truth for runtime execution semantics inside those repos. Runtime repos remain authoritative for their own execution behavior.
+## Desktop And Agent Boundary
 
-## Safety Boundary
+- Open the visible desktop application before attaching or starting the local arbitration agent.
+- Use the accepted no-shell launcher and keep terminal helpers as explicit development and diagnostic tools.
+- Keep browser launch, scheduled tasks, PATH changes, worker installation, and runtime placement inside visible operator actions with durable receipts.
+- Keep health checks lightweight, cached, and separate from complete inventory and scan work.
+- Preserve current action state, reasoning visibility, trusted folders, local-subagent state, and resident continuity for operator review.
 
-- No-stop doctrine and minimum runtime law apply to governed repo work until the requested lane has real validation evidence.
-- Continue-facing local-agent surfaces keep visible action-state parity and reasoning visibility for operator review.
-- Trusted folders, local-subagent state, and patience runtime window contracts are required public-shape governance terms.
+## Model And Provider Boundary
 
+- Use `http://127.0.0.1:1234/v1` as the canonical direct local model plane.
+- Use `http://127.0.0.1:1234/v1/native` as an optional selected native-adapter path.
+- Use `http://127.0.0.1:2337/v1` as an optional explicitly selected hosted lane.
+- Use `http://127.0.0.1:9000` for MX3 device, DFP, perception, telemetry, and compatibility capabilities.
+- Bind model selection to operator intent, current inventory, capability fit, and measured evidence.
+- Keep public guidance host-agnostic and compatible with admitted loopback OpenAI-compatible providers.
 
-- Skill installs and upgrades are executable trust boundaries, not passive content.
-- Default posture is fail-closed.
-- Known-bad supply-chain signatures may be auto-blocked immediately.
-- Quarantine may be automatic in `guarded_auto` mode.
-- Case handling may progress through preserve-evidence, quarantine, strip, request/rebuild or blacklist/remove, vector/source audit, documentation, and rescan, provided destructive steps remain operator-confirmed where required.
-- Destructive cleanup always requires operator confirmation.
-- The desktop app must open before the local agent starts or attaches.
-- Health checks must remain lightweight and must not trigger heavy inventory or scan work on cold start.
+## Skill And Plugin Boundary
 
-## Publication Boundary
+- Treat installation and upgrade as executable trust operations.
+- Preserve built-in and `.system` skills as upstream evidence.
+- Reconcile local overlays additively through exact source hashes, namespace and frontmatter parity, complete-tree preservation, and operator-visible admission.
+- Separate metadata compatibility from execution authority.
+- Keep shared skills, plugins, services, and workers under canonical ownership with logical leases and measured capacity.
+- Repair canonical resources before expanding or replacing them.
 
-- Repo-tracked artifacts are public-shape only.
-- Machine-generated docs and JSON must use placeholders for private repo names, usernames, and host-specific absolute paths.
-- Raw local evidence, audit traces, destructive-action records, and host-specific details stay in ignored local state only.
+## Security And Response Boundary
 
-## Maximum Effort Policy
+- Auto-block known-bad supply-chain signatures with durable evidence.
+- Use guarded quarantine where the selected operator mode admits it.
+- Progress case handling through evidence preservation, quarantine, stripping, rebuild or removal, source audit, documentation, and rescan.
+- Bind destructive cleanup to explicit operator confirmation, exact target identity, bounded scope, rollback information, and terminal receipt.
+- Keep white-hat contribution work maintainer-safe through overlap review, current evidence, private candidate development, coordinated disclosure, and public-safe remediation.
 
-- Boundary rules do not justify under-fixing dependents.
-- Minimal-diff behavior is forbidden.
-- Cross-boundary changes must update all affected runtime, governance, validation, and documentation surfaces together.
+## Privacy And Publication Boundary
+
+- Keep repository-tracked content public-safe and use placeholders for private repositories, users, paths, hosts, profiles, and evidence.
+- Keep raw local evidence, audit traces, credentials, destructive-action records, personal context, and host-specific details in ignored local state or the owning private repository.
+- Run privacy, release, history, generated-catalog, and placeholder checks against the exact candidate before publication.
+- Publish only the public-shape code, documentation, schemas, and metadata admitted by the release contract.
+
+## Cross-Repository Boundary
+
+Skill Arbiter may inspect and score skill-related behavior through documented
+public contracts. Each runtime repository remains authoritative for its own
+execution semantics, application lifecycle, hardware behavior, and product
+acceptance. Cross-boundary corrections synchronize every materially affected
+interface, validator, test, document, generated artifact, and operator-evidence
+surface while preserving ownership.
+
+## Affirmative Completion Boundary
+
+Apply high effort and thorough reasoning. Complete the full authorized objective
+across the affected dependency graph. Preserve privacy, public-shape integrity,
+authority, lifecycle ownership, operator review, and exact provenance. Reserve
+completion for synchronized current surfaces, exact-head verification,
+successful requested operator acceptance, and a precise continuation path for
+every concrete external dependency.
