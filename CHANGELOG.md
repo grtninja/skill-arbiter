@@ -20,6 +20,14 @@ All notable changes to this project are documented in this file.
 - split the desktop UI into explicit entry, runtime, DOM, polling, runtime-view, and inventory-view modules so the shell no longer depends on a single monolithic `app.js`
 - break inventory and collaboration runtime code into smaller helper modules so meta-harness policy, source/baseline attribution, and collaboration evidence handling stay modular and easier to validate
 
+## [0.2.27] - 2026-08-28
+
+### Changed
+
+- align public model-plane guidance and readiness validation with the authoritative `:9000` and explicitly selected `:2337` lanes while keeping LM Studio `:1234` operator-only
+- replace PowerShell-incompatible wildcard Python compilation guidance with bounded file enumeration and preserve complete task-chain wording in governed skill guidance
+
+
 ## [0.2.26] - 2026-05-15
 
 ### Changed

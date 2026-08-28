@@ -50,6 +50,26 @@ REQUIRED_DOC_SNIPPETS = {
         "pwsh.exe",
     ],
 }
+MODEL_ROUTE_REQUIRED_SNIPPETS = {
+    Path("AGENTS.md"): (
+        "http://127.0.0.1:9000/v1",
+        "http://127.0.0.1:2337/v1",
+        "http://127.0.0.1:1234/v1",
+        "non-authoritative",
+    ),
+    Path("BOUNDARIES.md"): (
+        "http://127.0.0.1:9000/v1",
+        "http://127.0.0.1:2337/v1",
+        "http://127.0.0.1:1234/v1",
+        "non-authoritative",
+    ),
+    Path("INSTRUCTIONS.md"): (
+        "http://127.0.0.1:9000/v1",
+        "http://127.0.0.1:2337/v1",
+        "http://127.0.0.1:1234/v1",
+        "non-authoritative",
+    ),
+}
 README_REQUIRED_SNIPPETS = [
     "## Public support",
     "## Public release readiness",
@@ -179,6 +199,17 @@ def _unsanitized_host_id_hits(repo_root: Path) -> list[str]:
 def _missing_required_doc_snippets(repo_root: Path) -> list[str]:
     missing: list[str] = []
     for rel_path, snippets in REQUIRED_DOC_SNIPPETS.items():
+        path = repo_root / rel_path
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        missing.extend(f"{rel_path}:{snippet}" for snippet in snippets if snippet not in text)
+    return missing
+
+
+def _missing_model_route_snippets(repo_root: Path) -> list[str]:
+    missing: list[str] = []
+    for rel_path, snippets in MODEL_ROUTE_REQUIRED_SNIPPETS.items():
         path = repo_root / rel_path
         if not path.is_file():
             continue
@@ -554,6 +585,36 @@ def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
                 "core docs are missing required meta-harness or startup-acceptance snippets",
                 ", ".join(missing_doc_snippets[:12]),
                 "update the published docs so the meta-harness authority and no-empty-shell contract are explicit",
+            )
+        )
+
+    missing_model_route_snippets = _missing_model_route_snippets(repo_root)
+    if strict_contract_enabled and missing_model_route_snippets:
+        findings.append(
+            _finding(
+                "high",
+                "model_route_contract_incomplete",
+                "core docs are missing the current model-plane authority contract",
+                ", ".join(missing_model_route_snippets[:12]),
+                "document the :9000 and explicitly selected :2337 authority lanes and keep LM Studio :1234 operator-only",
+            )
+        )
+
+    conflicting_model_route = _tracked_policy_text_contains(
+        repo_root,
+        re.compile(
+            r"(?:1234/v1[^,.;\n\r]*(?:canonical|(?<!non-)\bauthoritative\b)|(?:canonical|(?<!non-)\bauthoritative\b)[^,.;\n\r]*1234/v1)",
+            re.IGNORECASE,
+        ),
+    )
+    if conflicting_model_route:
+        findings.append(
+            _finding(
+                "high",
+                "model_route_authority_conflict",
+                "public policy text treats LM Studio :1234 as model authority",
+                ", ".join(conflicting_model_route[:12]),
+                "keep :9000 and explicitly selected :2337 authoritative and describe :1234 as operator-only",
             )
         )
 

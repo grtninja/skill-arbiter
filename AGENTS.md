@@ -1,146 +1,120 @@
-# AGENTS.md
+# Skill Arbiter — Affirmative Agent Contract
 
-Repository rules for `skill-arbiter`.
+## Product Role
 
-## 1) Core policy
+Skill Arbiter is the public-shape Windows-first NullClaw host-security and skill
+governance application. It ships a visible desktop console, a loopback-only
+arbitration agent, skill and plugin admission, curated-source review, lifecycle
+evidence, privacy validation, and public-safe operator documentation.
 
-- Treat this repository as public-shape only.
-- `skill-arbiter` is now a live NullClaw host security app, not a passive `rg.exe` moderator.
-- The shipped product is a local desktop UI plus a loopback-only Python arbitration agent.
-- Startup order is mandatory:
-  - app open
-  - agent attach/start
-  - self-checks
-  - inventory refresh
-  - operator actions enabled
-- Desktop launch acceptance is strict:
-  - no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open during startup
-  - transient empty-shell flash during startup counts as a failed launch, not a cosmetic issue
-  - PowerShell or `cmd` wrapper commands are developer helper paths only, not accepted public desktop launch surfaces
-  - canonical no-shell launch surfaces are `scripts/launch_security_console.vbs` and installed shortcuts targeting `wscript.exe`
-- Do not launch external browsers as part of normal app behavior.
-- Do not silently create scheduled tasks, PATH mutations, hidden workers, or vendored runtime drops.
+## High-Effort Completion Contract
 
-Required placeholders:
+- Apply high effort and thorough reasoning from task intake through implementation, verification, documentation, packaging, release preparation, and operator-visible acceptance.
+- Optimize for complete, coherent, maintainable delivery across every task-relevant skill, plugin, tool, worker, service, test, registry, generated catalog, document, and integration contract.
+- Continue productive work until the requested deliverable is complete or a concrete external dependency is proven with current evidence and an exact continuation path.
+- State required behavior directly and affirmatively. Skills, prompts, profiles, model instructions, agent contracts, quest text, and operator guidance name high effort, thorough work, complete delivery, durable verification, and visible acceptance.
+- Preserve privacy, provenance, exact lifecycle ownership, operator review, and public-shape compatibility throughout the work.
 
-- Repo names: `<PRIVATE_REPO_A>`, `<PRIVATE_REPO_B>`, `<PRIVATE_REPO_C>`, `<PRIVATE_REPO_D>`, `<PRIVATE_REPO_E>`
-- Skills root: `$CODEX_HOME/skills`
-- User paths: `$env:USERPROFILE\\...`
-- External local roots: `<external-candidate-root>`
-- Canonical STARFRAME repo root on this workstation: `G:\\GitHub`
-- Authoritative model planes for meta-harness work: `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1`
-- Non-authoritative operator surface: `http://127.0.0.1:1234/v1`
+## Public-Shape And Privacy Contract
 
-## 2) Hard privacy lock
+- Keep repository-tracked material public-safe and host-agnostic.
+- Use placeholders such as `<PRIVATE_REPO_A>`, `<external-candidate-root>`, `<HOST_PROFILE_ID>`, `$CODEX_HOME/skills`, and `$env:USERPROFILE\...` for private topology and paths.
+- Keep credentials, raw local evidence, usernames, private absolute paths, personal context, destructive-action records, and private governance in ignored local state or the owning private repository.
+- Run privacy and release gates before commit, pull request, or release:
 
-These must pass before commit or release:
-
-```bash
-./scripts/install_local_hooks.sh
-python3 scripts/check_private_data_policy.py --staged
-python3 scripts/check_private_data_policy.py
+```powershell
+python scripts/check_private_data_policy.py --staged
+python scripts/check_private_data_policy.py
+python scripts/check_public_release.py
 ```
 
-If the gate fails, stop and remove the leak before proceeding.
+## NullClaw Desktop Contract
 
-## 3) Release workflow
+Canonical startup sequence:
 
-For release-impacting changes:
+1. open the visible desktop application;
+2. attach or start the exact owned loopback agent;
+3. complete self-checks;
+4. refresh inventory and policy state;
+5. enable admitted operator actions;
+6. maintain current heartbeat and lifecycle evidence.
 
-```bash
-python3 scripts/prepare_release.py --part patch
-```
+- Use `scripts/launch_security_console.vbs` and installed shortcuts targeting `wscript.exe` as the public no-shell launch surfaces.
+- Keep terminal helpers available for development and diagnosis with explicit ownership and bounded lifecycle.
+- Bind browser launch, scheduled-task creation, PATH changes, worker installation, and runtime placement to visible operator actions and durable receipts.
+- No-empty-shell acceptance means no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open during a release-ready launch.
+- Keep terminal and background processes intentional, identity-bound, renewable, bounded, and joined.
 
-Then update `CHANGELOG.md` so it matches shipped behavior.
+## Model And Advisor Contract
 
-## 4) Validation checklist
+- Use an operator-selected loopback OpenAI-compatible coding and security model.
+- Treat `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Treat `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane when explicitly selected.
+- Treat `http://127.0.0.1:1234/v1` as a non-authoritative LM Studio operator surface only.
+- Treat `http://127.0.0.1:9000` as the MX3 device, DFP, perception, telemetry, and compatibility service boundary.
+- Bind model selection to operator intent, current inventory, capability fit, and measured evidence.
+- Keep public provider policy compatible with any admitted loopback OpenAI-compatible model host.
 
-Run from repo root:
+## Complete Skill Workflow
 
-```bash
-python3 scripts/arbitrate_skills.py --help
-python3 scripts/nullclaw_agent.py --help
-python3 scripts/generate_skill_catalog.py
-python3 scripts/check_private_data_policy.py
-python3 scripts/check_public_release.py
-pytest -q
-python3 -m py_compile scripts/arbitrate_skills.py scripts/check_private_data_policy.py scripts/check_public_release.py scripts/generate_skill_catalog.py scripts/nullclaw_agent.py scripts/nullclaw_desktop.py scripts/prepare_release.py scripts/check_release_hygiene.py skill_arbiter/about.py skill_arbiter/meta_harness_policy.py skill_arbiter/public_readiness.py skill_arbiter/self_governance.py
-```
+- Preserve trusted folders, local-subagent state, reasoning visibility, and the patience runtime window as operator-visible continuity contracts.
+- Discover every task-relevant first-party skill before implementation.
+- Read each selected `SKILL.md`, declare execution order, and complete its full workflow.
+- Use the governed baseline chain when applicable: `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.
+- Use `local-compute-usage` for local hardware, desktop, model, and service lanes.
+- Use `multitask-orchestrator` for genuinely independent parallel lanes with explicit integration criteria.
+- Use bounded subagents while preserving one named owner, task lease, deadline, privacy boundary, and evidence lineage.
+- Use every skill the operator explicitly names.
 
-## 5) Skill authoring and governance rules
+## Skill Authoring And Governance
 
-- Keep candidate skills concise and move detailed guidance into `references/`.
-- Use the same policy engine for third-party skills and for this repo's self-governance.
-- Do not auto-install from unvetted third-party sources.
-- Keep built-in VS Code/Codex skills as upstream baseline.
-- Reconcile overlay candidates additively; do not disable built-ins to make overlays work.
-- Every new or changed skill must remain attributable and privacy-safe.
-
-## 6) Local advisor requirement
-
-- The app must use a dedicated local coding-security LLM.
-- Default lane is a fast local Qwen-compatible model exposed through an OpenAI-compatible endpoint.
-- Defaults:
-  - `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
-  - `STARFRAME_HOSTED_LARGE_BASE_URL=http://127.0.0.1:2337/v1`
-  - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
-- Candidate skills that encode workstation model authority must treat `:9000` and `:2337` as authoritative, and `:1234` only as a non-authoritative operator surface.
-- Candidate skills that encode local repo paths must normalize legacy `Documents\\GitHub` aliases to `G:\\GitHub`.
-- Do not point the advisor at remote hosts by default.
-- Keep the public repo host-agnostic: the advisor must work with any loopback-hosted OpenAI-compatible coding-model surface, including LM Studio, MemryX shim lanes, and other local model software.
-- Do not hard-code one private workstation topology into repo-tracked docs unless it is expressed as a placeholder or compatibility example.
-
-## 7) Documentation lockstep
-
-When policy or workflow changes, update the affected docs in the same change:
-
-- `AGENTS.md`
-- `BOUNDARIES.md`
-- `README.md`
-- `CONTRIBUTING.md`
-- `SECURITY.md`
-- `SKILL.md`
-- `.github/pull_request_template.md`
-- `docs/PROJECT_SCOPE.md`
-- `docs/SCOPE_TRACKER.md`
-- `references/skill-catalog.md`
-- `references/usage-chaining-multitasking.md`
-- `references/vscode-skill-handling.md`
-- `references/skill-progression.md`
-- `references/default-skill-system.md`
-
-## 8) Skill level-up declaration
-
-When a skill is created or materially improved, include:
+- Keep each `SKILL.md` concise and place detailed methods, schemas, examples, and evidence in `references/`.
+- Use the same policy engine for candidate review and repository self-governance.
+- Preserve built-in and `.system` skills as upstream evidence and reconcile local overlays additively.
+- Keep every new or changed skill attributable, privacy-safe, testable, capability-specific, and compatible with current tools.
+- Include the progression declaration for each created or materially improved skill:
 
 ```text
 New Skill Unlocked: <SkillName>
 <SkillName> Leveled up to <LevelNumber>
 ```
 
-## 9) Maximum effort policy
+## Thorough Validation
 
-- Minimal-diff behavior is forbidden.
-- Synchronize runtime, docs, tests, release metadata, and generated references together.
-- The task is not complete until related governance and dependent repo-facing surfaces are updated.
+Run the complete task-relevant set:
 
-## Skill-Arbiter Workflow (Binding)
+```powershell
+python scripts/arbitrate_skills.py --help
+python scripts/nullclaw_agent.py --help
+python scripts/generate_skill_catalog.py
+python scripts/check_private_data_policy.py
+python scripts/check_public_release.py
+pytest -q
+$compileFiles = @(
+    Get-ChildItem -Path scripts,skill_arbiter -Recurse -File -Filter '*.py' |
+        Where-Object { $_.FullName -notmatch '[\\\\/](?:__pycache__|\\.venv)(?:[\\\\/]|$)' } |
+        ForEach-Object { $_.FullName }
+)
+python -m py_compile @compileFiles
+git diff --check
+```
 
-- Public Codex parity contract: trusted folders, local-subagent state, reasoning visibility, and patience runtime window semantics must stay visible in repo governance.
-- No-stop doctrine and minimum runtime law apply to governed repo work so agents do not stop after partial validation.
-- Continue local-agent surfaces keep visible action-state parity; browser-first or headless fallback paths are not the primary contract.
-- Mandatory skill chain for governed work includes `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.
+Add focused regressions for each repaired privacy, authority, lifecycle,
+capability, export, and generated-artifact boundary. Pair synthetic process tests
+with authorized real Windows lifecycle and desktop acceptance where applicable.
 
+## Documentation Lockstep
 
-- Skill-arbiter discipline is explicit in this repo: do not take a skill-less turn when an applicable local skill exists.
-- Route substantial work through `skill-hub` first and state the selected skill order in the work summary.
-- For local hardware-, desktop-, or service-backed work, use `local-compute-usage` early and fail closed if the required local lane is unavailable.
-- For high-volume, long-running, or agent-heavy work, use `usage-watcher` to choose a bounded operating mode and keep local churn under control.
-- When the task has 2 or more independent lanes, use `multitask-orchestrator` and keep merge criteria explicit.
-- Use bounded subagents only for sidecar analysis or truly parallel independent lanes; do not leave idle agents open and do not delegate away local ownership.
-- The user's selected operating mode is authoritative. Recommendations from `usage-watcher` or `skill-cost-credit-governor` may inform the lane plan, but they must not silently override operator intent.
-- Healthy local OpenClaw-compatible subagents are the preferred lane for quick bounded tasks.
-- Cloud subagents must default to lower-reasoning, low-cost sidecar work, preserving premium reasoning budget for the main lane.
-- Fast mode is not permitted as an automatic escalation path in this repo's governed subagent workflow.
-- Substantial governed work should be framed and recorded as quests so each request has a human-readable chain, checkpoints, and a usable end-state, with cumulative agent progression rising from repeated quest completion.
-- If the user explicitly names skills, use all named skills in that turn.
+Update every materially affected source and generated surface in the same exact
+head, including `AGENTS.md`, `INSTRUCTIONS.md`, `BOUNDARIES.md`, `README.md`,
+`CONTRIBUTING.md`, `SECURITY.md`, `SKILL.md`, the pull-request template, project
+scope, scope tracker, capability documentation, catalogs, aliases, overlays, and
+release metadata.
+
+## Affirmative Definition Of Done
+
+Work is complete when the root cause is repaired, every materially affected
+skill and product surface is synchronized, current exact-head verification is
+captured, privacy and release gates pass, lifecycle ownership is proven, the
+requested visible workflow succeeds, and every concrete external dependency has
+a precise continuation path.

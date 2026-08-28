@@ -18,7 +18,7 @@ Recommended defaults:
 
 ## Golden path
 
-1. Pick a tight file set (fewest files that still contain the truth).
+1. Select every file needed to establish the requested truth, including related contracts, dependents, tests, governance, and acceptance surfaces; exclude only irrelevant or unauthorized payload.
 2. Preview payload + token spend (`--dry-run` + `--files-report`).
 3. Use browser mode for the usual GPT‑5.2 Pro workflow; use API only when you explicitly want it.
 4. If the run detaches/timeouts: reattach to the stored session (don’t re-run).

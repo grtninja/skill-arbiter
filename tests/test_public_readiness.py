@@ -98,6 +98,22 @@ class PublicReadinessTests(unittest.TestCase):
             self.assertFalse(payload["passed"])
             self.assertIn("tracked_runtime_dir", codes)
 
+    def test_public_readiness_flags_model_route_authority_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._init_repo(root)
+            self._populate_core_files(root)
+            _write(root / "AGENTS.md", "Hosted lane: http://127.0.0.1:2337/v1\nLM Studio is an operator surface.\n1234/v1 is canonical authority.\n")
+            _write(root / "INSTRUCTIONS.md", "1234/v1 is canonical authority.\n")
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
+
+            payload = run_public_readiness_scan(root)
+            codes = {item["code"] for item in payload["findings"]}
+
+            self.assertFalse(payload["passed"])
+            self.assertIn("model_route_contract_incomplete", codes)
+            self.assertIn("model_route_authority_conflict", codes)
+
     def test_public_readiness_flags_shell_wrapped_launch_docs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
