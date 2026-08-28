@@ -1,6 +1,6 @@
 ---
 name: shim-pc-control-brain-routing
-description: Enforce one-brain routing across VRM Sandbox, PC Control, and MemryX shim with shim-first public endpoint authority on port 9000. Use when VRM chat/control behavior must be governed by PC Control without changing the public model-plane endpoint.
+description: Enforce one-brain routing across VRM Sandbox, PC Control, and MemryX shim with direct LM Studio model authority and typed MX3 support. Use when VRM chat/control behavior must be governed by PC Control without changing endpoint roles.
 ---
 
 # Shim PC Control Brain Routing
@@ -9,16 +9,16 @@ Use this skill when the operator wants:
 
 - all apps to share one brain lane
 - VRM Sandbox to act through PC Control governance
-- MemryX shim to remain the public endpoint authority on `http://127.0.0.1:9000`
+- Direct LM Studio `http://127.0.0.1:1234/v1` remains the model authority; MemryX `http://127.0.0.1:9000` remains typed non-model support.
 
 ## Non-Negotiable Contract
 
-1. Public model-plane endpoint stays `9000`.
+1. Direct model-plane endpoint stays LM Studio `1234`; MX3 `9000` is support-only.
 2. Do not introduce a new public default port for chat routing.
 3. Do not switch workstation mode/profile unless explicitly requested.
 4. Normalize repo roots to `G:\GitHub`; treat legacy `Documents\GitHub` paths only as aliases to report and correct.
 5. Treat the hosted 27B lane on `http://127.0.0.1:2337/v1` as authoritative alongside the shim public plane.
-6. Treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface when it is present.
+6. Treat `http://127.0.0.1:1234/v1` as the direct model authority; select `:2337/v1` explicitly for hosted execution and never route model traffic to `:9000`.
 7. Do research before edits:
    - PC Control local-agent or status-surface evidence first
    - bounded sub-agents for repo evidence only after first-party evidence is captured
@@ -55,13 +55,13 @@ Invoke-RestMethod http://127.0.0.1:5175/runtime/health
 
 ## Implementation Rules
 
-1. Keep VRM Sandbox pointed at shim public lane (`9000`) unless operator explicitly overrides.
+1. Keep VRM support/status calls on MX3 support lane (`9000`) and model calls on direct LM Studio (`1234`) unless the operator explicitly selects hosted `:2337`.
 2. Route behavior changes behind the shim contract (connector/policy/adapter), not by changing operator-facing endpoints.
 3. Keep model authority shim-first:
    - manual loading is owned by shim/control center
    - consumer apps read routed state; they do not self-select alternate brains
 4. Verify post-change behavior with real calls, not UI-only assumptions.
-5. Do not let LM Studio `:1234` or other legacy direct ports become the authority source in docs, scripts, or validation examples.
+5. Do not let MX3 `:9000` or other support ports become the model authority source in docs, scripts, or validation examples.
 
 ## Required Evidence
 
@@ -90,4 +90,4 @@ If evidence is incomplete or contradictory:
 
 1. stop implementation edits
 2. rerun sub-agent + PC Control evidence pass
-3. resume only after the `9000` public-lane contract is re-confirmed
+3. resume only after the direct `:1234` model-authority and `:9000` support-only contracts are re-confirmed

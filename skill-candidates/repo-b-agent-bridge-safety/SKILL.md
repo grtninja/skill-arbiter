@@ -42,8 +42,8 @@ $env:REPO_B_CONTINUE_APPLY_ENABLED = "0"
 
 Model-plane note:
 
-- Treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative.
-- Treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface when debugging connector drift.
+- Treat direct LM Studio `http://127.0.0.1:1234/v1` as authoritative and select `http://127.0.0.1:2337/v1` only as an explicit hosted alternative.
+- Treat `http://127.0.0.1:9000` only as the non-model MX3 device/DFP/telemetry/RAG/support service boundary.
 
 ## API Checks
 

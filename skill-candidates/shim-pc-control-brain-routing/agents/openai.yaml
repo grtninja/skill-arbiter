@@ -1,4 +1,4 @@
 interface:
   display_name: "Shim + PC Control Brain Routing"
-  short_description: "Enforce one-brain shim-first routing on port 9000"
-  default_prompt: "Use $shim-pc-control-brain-routing to capture PC Control local-agent or status-surface evidence first, keep port 9000 as the public lane, treat :2337 as the hosted authoritative lane, and align VRM Sandbox + PC Control + MemryX shim without endpoint drift."
+short_description: "Enforce one-brain routing with direct LM Studio authority"
+default_prompt: "Use $shim-pc-control-brain-routing to capture PC Control local-agent or status-surface evidence first, keep direct LM Studio :1234 as model authority, treat :2337 as an explicitly selected hosted lane, keep :9000 as MX3 support only, and align VRM Sandbox + PC Control + MemryX shim without endpoint drift."

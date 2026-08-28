@@ -13,8 +13,11 @@ LEGACY_REPO_ROOT_CONTEXT_ALLOW_RE = re.compile(
     r"Documents\\GitHub[^\n\r]{0,160}(?:alias|normalize|G:\\GitHub)",
     re.IGNORECASE,
 )
-NON_AUTHORITATIVE_1234_RE = re.compile(r"http://127\.0\.0\.1:1234(?:/[^\s`\"']*)?", re.IGNORECASE)
-NON_AUTHORITATIVE_ALLOW_RE = re.compile(r"non-authoritative|operator surface", re.IGNORECASE)
+AUTHORITATIVE_9000_RE = re.compile(
+    r"(?:9000(?:/v1)?[^,.;\n\r]*(?:canonical|(?<!non[- ])\bauthoritative\b)|"
+    r"(?:canonical|(?<!non[- ])\bauthoritative\b)[^,.;\n\r]*9000(?:/v1)?)",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -97,9 +100,9 @@ REQUIRED_PATTERNS: tuple[RequiredPattern, ...] = (
     RequiredPattern(
         relative_path="heterogeneous-stack-validation/SKILL.md",
         severity="medium",
-        code="lmstudio_operator_surface_missing",
-        pattern=r"(LM Studio|1234).*(non-authoritative|operator surface)|(non-authoritative|operator surface).*(LM Studio|1234)",
-        message="Heterogeneous Stack Validation must describe LM Studio :1234 as a non-authoritative operator surface when mentioned.",
+        code="lmstudio_authority_missing",
+        pattern=r"127\.0\.0\.1:1234.*(?:direct|authoritative)|(?:direct|authoritative).*127\.0\.0\.1:1234",
+        message="Heterogeneous Stack Validation must identify direct LM Studio :1234 as the authoritative model plane.",
     ),
     RequiredPattern(
         relative_path="shim-pc-control-brain-routing/SKILL.md",
@@ -127,7 +130,7 @@ REQUIRED_PATTERNS: tuple[RequiredPattern, ...] = (
         severity="medium",
         code="wsl_hosted_lane_missing",
         pattern=r"127\.0\.0\.1:2337",
-        message="REPO_B WSL Hybrid Ops must validate the hosted 27B lane at :2337 instead of relying on LM Studio :1234.",
+        message="REPO_B WSL Hybrid Ops must validate the hosted 27B lane at :2337 as an explicit alternative to direct LM Studio :1234.",
     ),
 )
 
@@ -183,8 +186,8 @@ def scan_candidate_meta_harness(skills_root: Path) -> list[MetaHarnessFinding]:
                     )
                 )
 
-        if NON_AUTHORITATIVE_1234_RE.search(text) and not NON_AUTHORITATIVE_ALLOW_RE.search(text):
-            row = (skill, relative_path, "non_authoritative_1234_authority")
+        if AUTHORITATIVE_9000_RE.search(text):
+            row = (skill, relative_path, "authoritative_9000_model_route")
             if row not in seen:
                 seen.add(row)
                 findings.append(
@@ -192,8 +195,8 @@ def scan_candidate_meta_harness(skills_root: Path) -> list[MetaHarnessFinding]:
                         skill=skill,
                         path=relative_path,
                         severity="high",
-                        code="non_authoritative_1234_authority",
-                        message="LM Studio :1234 is referenced as an authority surface without non-authoritative/operator-surface framing.",
+                        code="authoritative_9000_model_route",
+                        message="MX3 :9000 is referenced as an authoritative model route; direct LM Studio :1234 is the model authority and :9000 is support-only.",
                     )
                 )
 

@@ -17,13 +17,13 @@ Use this skill when one pass must align the four core local app surfaces as a si
 1. Route the work through `$skill-hub`.
 2. Capture first-party evidence before edits:
    - PC Control local-agent or status-surface evidence
-   - authoritative model-lane health on `:9000` and `:2337`
+- direct LM Studio model-lane health on `:1234` and explicitly selected hosted model-lane health on `:2337`; `:9000` is support-only
    - avatar runtime health if it is expected to be live
 3. Normalize the active contract:
    - canonical repo root is `G:\GitHub`
-   - `http://127.0.0.1:9000/v1` is the public authoritative lane
-   - `http://127.0.0.1:2337/v1` is the hosted large-model authoritative lane
-   - `http://127.0.0.1:1234/v1` and LM Studio loaded-models surfaces are non-authoritative operator surfaces only
+- `http://127.0.0.1:1234/v1` is the direct LM Studio authoritative lane
+- `http://127.0.0.1:2337/v1` is the hosted large-model authoritative lane
+- `http://127.0.0.1:9000` is the non-model MX3 device/DFP/telemetry/RAG/support boundary
 4. Review open diffs and contract/docs drift across the four surfaces before patching.
 5. Repair the smallest authoritative layer first:
    - governance/control contracts

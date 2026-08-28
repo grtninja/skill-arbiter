@@ -48,10 +48,10 @@ Canonical startup sequence:
 ## Model And Advisor Contract
 
 - Use an operator-selected loopback OpenAI-compatible coding and security model.
-- Treat `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Treat `http://127.0.0.1:1234/v1` as the direct LM Studio authoritative model plane.
 - Treat `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane when explicitly selected.
-- Treat `http://127.0.0.1:1234/v1` as a non-authoritative LM Studio operator surface only.
-- Treat `http://127.0.0.1:9000` as the MX3 device, DFP, perception, telemetry, and compatibility service boundary.
+- Treat `http://127.0.0.1:9000` as the non-model MX3 device, DFP, perception, telemetry, RAG, and compatibility support boundary.
+- LM Studio's loaded-models panel is an operator surface for observing the direct model authority, not a substitute route.
 - Bind model selection to operator intent, current inventory, capability fit, and measured evidence.
 - Keep public provider policy compatible with any admitted loopback OpenAI-compatible model host.
 

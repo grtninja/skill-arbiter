@@ -42,10 +42,9 @@ operator decisions through typed interfaces.
 
 ## Model And Provider Boundary
 
-- Use `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Use `http://127.0.0.1:1234/v1` as the direct LM Studio authoritative model plane.
 - Use `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane when explicitly selected.
-- Use `http://127.0.0.1:1234/v1` only as a non-authoritative LM Studio operator surface.
-- Use `http://127.0.0.1:9000` for MX3 device, DFP, perception, telemetry, and compatibility capabilities.
+- Use `http://127.0.0.1:9000` only for non-model MX3 device, DFP, perception, telemetry, RAG, and compatibility capabilities.
 - Bind model selection to operator intent, current inventory, capability fit, and measured evidence.
 - Keep public guidance host-agnostic and compatible with admitted loopback OpenAI-compatible providers.
 

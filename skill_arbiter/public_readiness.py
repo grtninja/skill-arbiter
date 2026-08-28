@@ -52,22 +52,22 @@ REQUIRED_DOC_SNIPPETS = {
 }
 MODEL_ROUTE_REQUIRED_SNIPPETS = {
     Path("AGENTS.md"): (
-        "http://127.0.0.1:9000/v1",
-        "http://127.0.0.1:2337/v1",
         "http://127.0.0.1:1234/v1",
-        "non-authoritative",
+        "http://127.0.0.1:2337/v1",
+        "http://127.0.0.1:9000",
+        "support",
     ),
     Path("BOUNDARIES.md"): (
-        "http://127.0.0.1:9000/v1",
-        "http://127.0.0.1:2337/v1",
         "http://127.0.0.1:1234/v1",
-        "non-authoritative",
+        "http://127.0.0.1:2337/v1",
+        "http://127.0.0.1:9000",
+        "support",
     ),
     Path("INSTRUCTIONS.md"): (
-        "http://127.0.0.1:9000/v1",
-        "http://127.0.0.1:2337/v1",
         "http://127.0.0.1:1234/v1",
-        "non-authoritative",
+        "http://127.0.0.1:2337/v1",
+        "http://127.0.0.1:9000",
+        "support",
     ),
 }
 README_REQUIRED_SNIPPETS = [
@@ -596,14 +596,14 @@ def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
                 "model_route_contract_incomplete",
                 "core docs are missing the current model-plane authority contract",
                 ", ".join(missing_model_route_snippets[:12]),
-                "document the :9000 and explicitly selected :2337 authority lanes and keep LM Studio :1234 operator-only",
+                "document direct LM Studio :1234 authority, explicitly selected :2337, and MX3 :9000 support-only",
             )
         )
 
     conflicting_model_route = _tracked_policy_text_contains(
         repo_root,
         re.compile(
-            r"(?:1234/v1[^,.;\n\r]*(?:canonical|(?<!non-)\bauthoritative\b)|(?:canonical|(?<!non-)\bauthoritative\b)[^,.;\n\r]*1234/v1)",
+            r"(?:9000(?:/v1)?[^,.;\n\r]*(?:canonical|(?<!non-)\bauthoritative\b)|(?:canonical|(?<!non-)\bauthoritative\b)[^,.;\n\r]*9000(?:/v1)?)",
             re.IGNORECASE,
         ),
     )
@@ -612,9 +612,9 @@ def run_public_readiness_scan(repo_root: Path = REPO_ROOT) -> dict[str, object]:
             _finding(
                 "high",
                 "model_route_authority_conflict",
-                "public policy text treats LM Studio :1234 as model authority",
+                "public policy text treats MX3 :9000 as model authority",
                 ", ".join(conflicting_model_route[:12]),
-                "keep :9000 and explicitly selected :2337 authoritative and describe :1234 as operator-only",
+                "keep direct LM Studio :1234 authoritative, require explicit :2337 selection, and describe :9000 as support-only",
             )
         )
 

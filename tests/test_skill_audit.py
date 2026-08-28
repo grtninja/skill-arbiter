@@ -230,7 +230,7 @@ class SkillAuditTests(unittest.TestCase):
             self.assertIn("shim_pc_control_local_agent_missing", codes)
             self.assertIn("shim_canonical_root_missing", codes)
 
-    def test_flags_legacy_repo_root_and_non_authoritative_1234_references(self) -> None:
+    def test_flags_legacy_repo_root_and_authoritative_9000_references(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "skills"
             root.mkdir()
@@ -241,7 +241,7 @@ class SkillAuditTests(unittest.TestCase):
                 "Use the canonical repo root, not legacy aliases.",
                 extra_files={
                     "notes.md": "Root: $env:USERPROFILE\\Documents\\GitHub\\<PRIVATE_REPO_B>\n",
-                    "scripts/check.py": 'BASE_URL = "http://127.0.0.1:1234/v1"\n',
+                    "scripts/check.py": 'BASE_URL = "http://127.0.0.1:9000/v1"  # canonical authority\n',
                 },
             )
             out_path = Path(tmp) / "audit.json"
@@ -263,7 +263,7 @@ class SkillAuditTests(unittest.TestCase):
             payload = json.loads(out_path.read_text(encoding="utf-8"))
             codes = {item["code"] for item in payload["findings"]}
             self.assertIn("legacy_repo_root_alias", codes)
-            self.assertIn("non_authoritative_1234_authority", codes)
+            self.assertIn("authoritative_9000_model_route", codes)
 
     def test_flags_same_file_legacy_path_even_with_legacy_wording(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

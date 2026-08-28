@@ -30,9 +30,9 @@ Route elsewhere when:
    - health and readiness gates
 2. Read the active launcher and registry surfaces before editing.
 3. Confirm the authoritative local model lanes:
-   - `http://127.0.0.1:9000/v1`
-   - `http://127.0.0.1:2337/v1`
-   - treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface
+   - direct LM Studio `http://127.0.0.1:1234/v1`
+   - explicitly selected hosted `http://127.0.0.1:2337/v1`
+   - keep MX3 `:9000` non-model support-only
 4. Patch sequencing, registry, or health contracts without introducing alternate public endpoints.
 5. Validate the real bring-up flow in order:
    - launcher starts cleanly

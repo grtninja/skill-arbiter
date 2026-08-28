@@ -25,9 +25,9 @@
 
 ## Model And Advisor Routing
 
-- Keep `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Keep `http://127.0.0.1:1234/v1` as the direct LM Studio authoritative model plane.
 - Use `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane only when explicitly selected by the operator and current runtime evidence.
-- Keep `http://127.0.0.1:1234/v1` as a non-authoritative LM Studio operator surface; do not use it as routing truth or as the release-readiness gate.
+- Keep `http://127.0.0.1:9000` limited to non-model MX3 device, DFP, perception, telemetry, RAG, and compatibility support; never use it as model routing truth or fallback.
 - Keep model selection bound to operator intent, current inventory, capability fit, and measured evidence.
 
 ## Affirmative Guardrails

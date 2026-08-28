@@ -30,8 +30,8 @@ Use this skill for repo-D-specific startup acceptance and launch preflight.
 
 ## Guardrails
 
-- Treat `:9000` and `:2337` as authoritative.
-- Treat `:1234` only as an operator surface when present.
+- Treat direct LM Studio `:1234` as authoritative, with `:2337` as an explicitly selected hosted alternative.
+- Treat `:9000` only as the non-model MX3 device/DFP/telemetry/RAG/support surface.
 - Do not claim launch success from backend health alone.
 - Do not accept a startup path that flashes an empty shell window.
 
