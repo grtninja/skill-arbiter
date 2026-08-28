@@ -5,9 +5,9 @@ Use this reference when the four core local app surfaces must be aligned togethe
 ## Authority Rules
 
 - `G:\GitHub` is the canonical active repo root.
-- `http://127.0.0.1:9000/v1` is the public authoritative model plane.
+- `http://127.0.0.1:1234/v1` is the direct LM Studio authoritative model plane.
 - `http://127.0.0.1:2337/v1` is the hosted large-model authoritative lane.
-- `http://127.0.0.1:1234/v1` and the LM Studio loaded-models panel are non-authoritative operator surfaces only.
+- `http://127.0.0.1:9000` and its service endpoints are non-model MX3 device/DFP/telemetry/RAG/support only.
 
 ## Surface Order
 
@@ -29,7 +29,7 @@ Repair and validate in this order:
 ## Common Failure Patterns
 
 - path drift back to legacy `Documents\GitHub` aliases instead of canonical `G:\GitHub`
-- `:1234` treated as authority instead of a non-authoritative operator surface
+- `:9000` treated as model authority instead of a non-model support boundary
 - STARFRAME app defaults patched without shim or PC Control truth
 - avatar runtime marked healthy from UI state instead of explicit health evidence
 - cross-repo doc updates landing only in one control repo

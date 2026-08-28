@@ -60,7 +60,7 @@ $env:REPO_B_CONTINUE_ALLOWED_ROOTS = "G:\GitHub\<PRIVATE_REPO_B>"
 3. Prefer local scripts, local MCP adapters, local service endpoints, and local hardware probes over cloud-hosted alternatives.
 4. Treat hostname drift or hardware-check failure as a policy violation and stop before mutation steps.
 5. If the stack publishes positive displacement preview or healthy TPK, use that as evidence for stronger local-first routing rather than an optional hint.
-6. Treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as the authoritative model lanes; treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface.
+6. Treat direct LM Studio `http://127.0.0.1:1234/v1` as the authoritative model lane, `http://127.0.0.1:2337/v1` as an explicitly selected hosted alternative, and `http://127.0.0.1:9000` only as non-model MX3 support.
 
 ## Scope Boundary
 

@@ -87,13 +87,13 @@ python scripts/check_public_release.py
 Default local advisor configuration:
 
 ```bash
-$env:NULLCLAW_AGENT_BASE_URL="http://127.0.0.1:9000/v1"
+$env:NULLCLAW_AGENT_BASE_URL="http://127.0.0.1:1234/v1"
 $env:NULLCLAW_AGENT_MODEL="radeon-qwen3.5-4b"
 $env:NULLCLAW_AGENT_ENABLE_LLM="1"
 ```
 
 The advisor must remain local-only by default. The shared app-agent lane is `radeon-qwen3.5-4b`; Hui Hui stays reserved for avatar-specialized endpoints.
-Treat `http://127.0.0.1:9000/v1` as the public authoritative model plane, `http://127.0.0.1:2337/v1` as the hosted large-model lane, and `http://127.0.0.1:1234/v1` as a non-authoritative operator surface only.
+Treat direct LM Studio `http://127.0.0.1:1234/v1` as the authoritative model plane, `http://127.0.0.1:2337/v1` as an explicitly selected hosted large-model lane, and `http://127.0.0.1:9000` as non-model MX3 device/DFP/telemetry/RAG/support only.
 
 Subagent policy:
 

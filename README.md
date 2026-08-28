@@ -129,7 +129,7 @@ runtime supervision.
 
 Defaults:
 
-- `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:9000/v1`
+- `NULLCLAW_AGENT_BASE_URL=http://127.0.0.1:1234/v1`
 - `STARFRAME_HOSTED_LARGE_BASE_URL=http://127.0.0.1:2337/v1`
 - `NULLCLAW_AGENT_MODEL=radeon-qwen3.5-4b`
 - `NULLCLAW_AGENT_ENABLE_LLM=1`
@@ -140,8 +140,9 @@ Compatibility contract:
 
 - The advisor may use any loopback-hosted OpenAI-compatible coding-model surface.
 - Supported local hosts include LM Studio, MemryX shim lanes, and other local model services exposing `/v1/models` and `/v1/chat/completions`.
-- On the maintainer workstation, `http://127.0.0.1:9000/v1` is the public authoritative plane and `http://127.0.0.1:2337/v1` is the hosted 27B authoritative lane.
-- `http://127.0.0.1:1234/v1` remains a non-authoritative operator surface and should not be treated as the source of routing truth.
+- On the maintainer workstation, direct LM Studio `http://127.0.0.1:1234/v1` is the authoritative model plane and `http://127.0.0.1:2337/v1` is the hosted 27B authoritative lane only when explicitly selected.
+- `http://127.0.0.1:9000` is the non-model MX3 device/DFP/telemetry/RAG/support boundary and is never a model route or fallback.
+- The LM Studio loaded-models panel remains an operator surface for observing the direct model authority.
 - The runtime now probes multiple local loopback endpoints and follows the first live compatible lane instead of assuming one fixed model host forever.
 - No remote advisor host is allowed by default.
 

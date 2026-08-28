@@ -12,8 +12,8 @@ Use this skill as the entry router for skill chaining.
 1. Parse request scope (repositories, domains, risk level, and deliverables).
 2. For meta-harness or large-system work, capture the current local authority contract first:
    - treat `G:\GitHub` as the canonical repo root on the maintainer workstation
-   - treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative model lanes
-   - treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface
+- treat direct LM Studio `http://127.0.0.1:1234/v1` as the authoritative model lane
+- treat `http://127.0.0.1:2337/v1` as an explicitly selected hosted alternative and `http://127.0.0.1:9000` as non-model MX3 support only
 3. Select the complete non-redundant chain that covers the request, its dependent surfaces, and every acceptance gate; remove only redundant routing.
 4. Order the chain as: routing -> guardrails -> execution -> release/policy gates.
 5. Emit or capture the chain output contract before execution begins.

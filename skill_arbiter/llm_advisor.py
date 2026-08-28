@@ -24,10 +24,15 @@ def _local_only(url_text: str) -> bool:
     return hostname in {"127.0.0.1", "localhost", "::1"}
 
 
+def _model_route_allowed(url_text: str) -> bool:
+    parsed = parse.urlparse(url_text)
+    return _local_only(url_text) and parsed.port in {1234, 2337} and parsed.path.rstrip("/") == "/v1"
+
+
 def _default_base_url() -> str:
     return os.environ.get(
         "NULLCLAW_AGENT_BASE_URL",
-        os.environ.get("STARFRAME_SHARED_AGENT_BASE_URL", "http://127.0.0.1:9000/v1"),
+        os.environ.get("STARFRAME_SHARED_AGENT_BASE_URL", "http://127.0.0.1:1234/v1"),
     ).rstrip("/")
 
 
@@ -57,13 +62,13 @@ def _candidate_base_urls() -> list[str]:
         os.environ.get("LMSTUDIO_BASE_URL", "").rstrip("/"),
     ]
     fallbacks = [
-        "http://127.0.0.1:9000/v1",
+        "http://127.0.0.1:1234/v1",
         "http://127.0.0.1:2337/v1",
     ]
     ordered: list[str] = []
     for item in [*configured, *fallbacks]:
         text = str(item or "").strip().rstrip("/")
-        if not text or not _local_only(text) or text in ordered:
+        if not text or not _model_route_allowed(text) or text in ordered:
             continue
         ordered.append(text)
     return ordered

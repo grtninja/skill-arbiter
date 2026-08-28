@@ -13,8 +13,8 @@ Use this skill to build a practical skill portfolio for a repo.
 2. Capture the current meta-harness authority contract for the curation pass:
    - PC Control evidence/status surfaces first
    - canonical repo root `G:\GitHub` on the maintainer workstation
-   - authoritative model lanes `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1`
-   - `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface
+- direct LM Studio authoritative model lane `http://127.0.0.1:1234/v1`
+- `http://127.0.0.1:2337/v1` only when explicitly selected; `http://127.0.0.1:9000` is non-model MX3 support only
 3. Inventory available skills and currently installed skills.
 4. If maintaining multiple repos, run `$skills-cross-repo-radar` first.
 5. When the ask is about recent Codex work, inspect recent local workstreams/continuity artifacts as evidence in addition to git history.
@@ -28,7 +28,7 @@ Use this skill to build a practical skill portfolio for a repo.
 13. Require arbiter evidence status `pass` before admitting candidates.
 14. Propose a minimal prioritized skill set (core first, optional second) with usage guardrail status.
 15. Provide admission plan using local `skill-arbiter` lockdown flow.
-16. For meta-harness or whole-PC curation, normalize repo paths to `G:\GitHub`, capture PC Control status/evidence first, and treat `http://127.0.0.1:9000/v1` plus `http://127.0.0.1:2337/v1` as the authoritative model lanes.
+16. For meta-harness or whole-PC curation, normalize repo paths to `G:\GitHub`, capture PC Control status/evidence first, and treat direct LM Studio `http://127.0.0.1:1234/v1` as model authority, selecting `http://127.0.0.1:2337/v1` explicitly and keeping `:9000` support-only.
 
 ## Discovery Commands
 

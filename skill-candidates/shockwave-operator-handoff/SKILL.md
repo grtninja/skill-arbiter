@@ -11,9 +11,9 @@ Use this skill when Project Shockwave changes affect the operator-facing handoff
 
 1. Read the target repo `AGENTS.md`, README, and startup contract first.
 2. Confirm the repo-owned visible dashboard path still matches the startup wrapper and shim-first authority model:
-   - `:9000` public plane
+- `:9000` MX3 non-model support plane
    - `:2337` hosted large-model lane
-   - `:1234` non-authoritative operator surface only
+- direct LM Studio `:1234` model authority
 3. Inspect the operator handoff surfaces together:
    - startup verification script and test
    - control rail contract block

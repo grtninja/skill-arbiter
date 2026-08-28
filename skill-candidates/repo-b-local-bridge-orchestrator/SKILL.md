@@ -81,8 +81,8 @@ python3 "$CODEX_HOME/skills/usage-watcher/scripts/usage_guard.py" plan \
 
 Authority reminder:
 
-- Treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative model lanes.
-- Treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface.
+- Treat direct LM Studio `http://127.0.0.1:1234/v1` as the authoritative model lane and select `http://127.0.0.1:2337/v1` only as an explicit hosted alternative.
+- Treat `http://127.0.0.1:9000` only as non-model MX3 device/DFP/telemetry/RAG/support.
 
 ## References
 

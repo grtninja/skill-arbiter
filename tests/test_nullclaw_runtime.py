@@ -878,6 +878,27 @@ class MitigationTests(unittest.TestCase):
 
 
 class AdvisorSelectionTests(unittest.TestCase):
+    def test_default_model_base_url_is_direct_lmstudio(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            from skill_arbiter.llm_advisor import _candidate_base_urls, _default_base_url
+
+            self.assertEqual(_default_base_url(), "http://127.0.0.1:1234/v1")
+            candidates = _candidate_base_urls()
+            self.assertEqual(candidates[:2], ["http://127.0.0.1:1234/v1", "http://127.0.0.1:2337/v1"])
+            self.assertNotIn("http://127.0.0.1:9000/v1", candidates)
+
+    def test_service_plane_override_is_not_admitted_as_model_route(self) -> None:
+        with mock.patch.dict(
+            os.environ,
+            {"NULLCLAW_AGENT_BASE_URL": "http://127.0.0.1:9000/v1", "STARFRAME_SHARED_AGENT_BASE_URL": ""},
+            clear=True,
+        ):
+            from skill_arbiter.llm_advisor import _candidate_base_urls
+
+            candidates = _candidate_base_urls()
+            self.assertNotIn("http://127.0.0.1:9000/v1", candidates)
+            self.assertEqual(set(candidates[:2]), {"http://127.0.0.1:1234/v1", "http://127.0.0.1:2337/v1"})
+
     def test_default_prefers_shared_qwen_lane(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             with mock.patch("skill_arbiter.llm_advisor.available_models", return_value=[]):
@@ -899,7 +920,7 @@ class AdvisorSelectionTests(unittest.TestCase):
 
         with mock.patch("skill_arbiter.llm_advisor.enabled", return_value=True):
             with mock.patch("skill_arbiter.llm_advisor._local_only", return_value=True):
-                with mock.patch("skill_arbiter.llm_advisor._default_base_url", return_value="http://127.0.0.1:9000/v1"):
+                with mock.patch("skill_arbiter.llm_advisor._default_base_url", return_value="http://127.0.0.1:1234/v1"):
                     with mock.patch("skill_arbiter.llm_advisor._default_model", return_value="auto"):
                         with mock.patch("skill_arbiter.llm_advisor.request.urlopen", return_value=response):
                             with mock.patch("skill_arbiter.llm_advisor._cached_available_models", return_value=("phi-4-mini", "qwen2.5-coder-7b-instruct", "deepseek-coder-lite")):
@@ -909,7 +930,7 @@ class AdvisorSelectionTests(unittest.TestCase):
         with mock.patch("skill_arbiter.llm_advisor.enabled", return_value=True):
             with mock.patch(
                 "skill_arbiter.llm_advisor._candidate_base_urls",
-                return_value=["http://127.0.0.1:9000/v1", "http://127.0.0.1:2337/v1"],
+                return_value=["http://127.0.0.1:1234/v1", "http://127.0.0.1:2337/v1"],
             ):
                 with mock.patch(
                     "skill_arbiter.llm_advisor._endpoint_reachable",
@@ -930,7 +951,7 @@ class AdvisorSelectionTests(unittest.TestCase):
         with mock.patch("skill_arbiter.llm_advisor.enabled", return_value=True):
             with mock.patch(
                 "skill_arbiter.llm_advisor._candidate_base_urls",
-                return_value=["http://127.0.0.1:9000/v1"],
+                return_value=["http://127.0.0.1:1234/v1"],
             ):
                 with mock.patch(
                     "skill_arbiter.llm_advisor._endpoint_reachable",
@@ -945,7 +966,7 @@ class AdvisorSelectionTests(unittest.TestCase):
                         advisor_mod._resolved_advisor_target.cache_clear()
                         advisor_mod._cached_available_models.cache_clear()
                         self.assertEqual(available_models(refresh=True), [])
-                        self.assertEqual(advisor_base_url(), "http://127.0.0.1:9000/v1")
+                        self.assertEqual(advisor_base_url(), "http://127.0.0.1:1234/v1")
 
 
 if __name__ == "__main__":

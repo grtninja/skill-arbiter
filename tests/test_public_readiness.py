@@ -103,8 +103,8 @@ class PublicReadinessTests(unittest.TestCase):
             root = Path(tmp)
             self._init_repo(root)
             self._populate_core_files(root)
-            _write(root / "AGENTS.md", "Hosted lane: http://127.0.0.1:2337/v1\nLM Studio is an operator surface.\n1234/v1 is canonical authority.\n")
-            _write(root / "INSTRUCTIONS.md", "1234/v1 is canonical authority.\n")
+            _write(root / "AGENTS.md", "Direct LM Studio: http://127.0.0.1:1234/v1. Hosted lane: http://127.0.0.1:2337/v1.\n9000/v1 is canonical authority.\n")
+            _write(root / "INSTRUCTIONS.md", "9000/v1 is canonical authority.\n")
             subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
 
             payload = run_public_readiness_scan(root)

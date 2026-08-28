@@ -39,8 +39,8 @@ python skill-candidates/cybertron-fabric-host-ops/scripts/cybertron_fabric_host_
 
 Model-plane note:
 
-- Treat `:9000` and `:2337` as authoritative model lanes.
-- Treat `:1234` only as a non-authoritative operator surface if it is inspected at all.
+- Treat direct LM Studio `:1234` as the authoritative model lane and `:2337` as an explicitly selected hosted alternative.
+- Treat `:9000` only as the non-model MX3 device/DFP/telemetry/RAG/support boundary.
 
 ## Guardrails
 

@@ -20,11 +20,19 @@ All notable changes to this project are documented in this file.
 - split the desktop UI into explicit entry, runtime, DOM, polling, runtime-view, and inventory-view modules so the shell no longer depends on a single monolithic `app.js`
 - break inventory and collaboration runtime code into smaller helper modules so meta-harness policy, source/baseline attribution, and collaboration evidence handling stay modular and easier to validate
 
+## [0.2.28] - 2026-08-28
+
+### Fixed
+
+- restore direct LM Studio `:1234/v1` as the model authority after the merged public route guidance regression
+- keep MX3 `:9000` limited to non-model device, DFP, telemetry, RAG, and compatibility support
+- update advisor defaults, meta-harness auditing, public-readiness checks, candidate skills, and regression tests in lockstep
+
 ## [0.2.27] - 2026-08-28
 
 ### Changed
 
-- align public model-plane guidance and readiness validation with the authoritative `:9000` and explicitly selected `:2337` lanes while keeping LM Studio `:1234` operator-only
+- historical route guidance correction: the prior `:9000`/`:2337` authority wording is superseded; direct LM Studio `:1234` is the model authority, `:2337` is explicit hosted selection, and `:9000` is support-only
 - replace PowerShell-incompatible wildcard Python compilation guidance with bounded file enumeration and preserve complete task-chain wording in governed skill guidance
 
 
@@ -58,14 +66,14 @@ All notable changes to this project are documented in this file.
 
 - make public-release readiness fail on untracked publish-surface files so clean checkouts match the audited repo state
 - make release-hygiene inspect open working-tree and untracked release-impacting changes instead of only committed diff against merge-base
-- tighten meta-harness candidate auditing for canonical `G:\GitHub` roots, authoritative `:9000/:2337` model lanes, and `:1234` operator-surface-only wording
+- tighten meta-harness candidate auditing for canonical `G:\GitHub` roots, direct `:1234` model authority, explicit `:2337` hosted selection, and non-model `:9000` support-only wording
 - lock the public desktop launch contract to shell-free `wscript`/VBS surfaces and treat empty `cmd.exe`/`powershell.exe`/`pwsh.exe` startup flash as a failure
 
 ### Changed
 
 - add `skill_arbiter/meta_harness_policy.py` and wire it into public-readiness plus candidate-skill audit flows
 - align README, AGENTS, CONTRIBUTING, SKILL, scope docs, and PR checklist around the meta-harness rollout, the no-empty-shell startup rule, and the skill-game being part of the app harness
-- update meta-harness-sensitive candidate skills for canonical root, PC Control-first evidence, hosted `:2337` lane authority, and LM Studio `:1234` operator-only guidance
+- update meta-harness-sensitive candidate skills for canonical root, PC Control-first evidence, hosted `:2337` lane authority, direct LM Studio `:1234` model authority, and non-model `:9000` support guidance
 - refresh generated skill catalog and SkillHub alignment artifacts after the curation and publication pass
 ## [0.2.23] - 2026-03-27
 

@@ -20,7 +20,7 @@ Use this skill when one workflow must reconcile:
    - `skill-arbiter`
    - the approved private workstation control repos listed in the active machine roster
    - the approved private inference and bridge repos listed in the active machine roster
-   - the authoritative model lanes on `127.0.0.1:9000` and `127.0.0.1:2337`
+- the direct LM Studio authoritative model lane on `127.0.0.1:1234` and the explicitly selected hosted lane on `127.0.0.1:2337`; `:9000` is non-model MX3 support only
 3. Probe remote host runtime contracts and record exact failures.
 4. Run real inference smokes on every lane that is meant to be live.
 5. Reconcile docs and open-diff reports with the observed runtime truth.
@@ -44,7 +44,7 @@ Use this skill when one workflow must reconcile:
 - Keep host-specific secrets, usernames, and absolute paths out of repo-tracked docs.
 - Prefer loopback and LAN-local validation over cloud checks.
 - Fail closed on missing health or inference contracts; do not call a lane healthy because a parent app window exists.
-- Treat `http://127.0.0.1:1234/v1` and the LM Studio loaded-models panel as non-authoritative operator surfaces when present.
+- Treat `http://127.0.0.1:1234/v1` and its LM Studio loaded-models panel as the direct authoritative model surface when present; select `:2337/v1` explicitly for the hosted alternative and never use `:9000` for model traffic.
 
 ## Canonical Lanes
 

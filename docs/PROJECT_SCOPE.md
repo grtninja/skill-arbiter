@@ -13,7 +13,7 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Codex app, VS Code, and GitHub Copilot instruction-surface interoperability tracking
 - local Codex config and loopback LM Studio coding-model interoperability
 - loopback-hosted OpenAI-compatible coding-model interoperability across LM Studio, MemryX shim lanes, and other local model software
-- meta-harness authority semantics where `:9000` and `:2337` are authoritative model lanes and `:1234` is an operator surface only
+- meta-harness authority semantics where direct LM Studio `:1234` is the model authority, `:2337` is explicit hosted authority, and `:9000` is non-model MX3 support only
 - explicit desktop startup acceptance where empty shell windows are a hard failure, including transient startup flash
 - active threat suppression for hostile skills and related automation surfaces
 - strict self-governance and public-shape publication controls
@@ -41,7 +41,7 @@ This document is the canonical high-level scope for `skill-arbiter`.
 - Public support/about surfacing without browser auto-launch
 - Cross-repo recent-work relevance for skill prioritization
 - Local loopback coding-model advisor integration for short coding-security guidance, with Qwen preference by default
-- Meta-harness authority alignment for `9000` public model plane, `2337` hosted large-model lane, and `1234` operator-only surfaces
+- Meta-harness authority alignment for direct `1234` LM Studio model authority, explicitly selected `2337` hosted lane, and `9000` non-model support-only boundary
 - SkillHub discovery-only intake, source reputation tracking, and bounded marketplace alignment
 - Bounded OpenJarvis-style governance roles for scheduling, critique, QC intake,
   archive stewardship, and guarded tuning
