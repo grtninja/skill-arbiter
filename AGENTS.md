@@ -42,20 +42,22 @@ Canonical startup sequence:
 - Use `scripts/launch_security_console.vbs` and installed shortcuts targeting `wscript.exe` as the public no-shell launch surfaces.
 - Keep terminal helpers available for development and diagnosis with explicit ownership and bounded lifecycle.
 - Bind browser launch, scheduled-task creation, PATH changes, worker installation, and runtime placement to visible operator actions and durable receipts.
+- No-empty-shell acceptance means no empty `cmd.exe`, `powershell.exe`, or `pwsh.exe` windows may flash or remain open during a release-ready launch.
 - Keep terminal and background processes intentional, identity-bound, renewable, bounded, and joined.
 
 ## Model And Advisor Contract
 
 - Use an operator-selected loopback OpenAI-compatible coding and security model.
-- Treat `http://127.0.0.1:1234/v1` as the canonical direct local model plane.
-- Treat `http://127.0.0.1:1234/v1/native` as an optional selected native-adapter path.
-- Treat `http://127.0.0.1:2337/v1` as an optional explicitly selected hosted lane.
-- Treat `http://127.0.0.1:9000` as an MX3 device, DFP, perception, telemetry, and compatibility service.
+- Treat `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Treat `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane when explicitly selected.
+- Treat `http://127.0.0.1:1234/v1` as a non-authoritative LM Studio operator surface only.
+- Treat `http://127.0.0.1:9000` as the MX3 device, DFP, perception, telemetry, and compatibility service boundary.
 - Bind model selection to operator intent, current inventory, capability fit, and measured evidence.
 - Keep public provider policy compatible with any admitted loopback OpenAI-compatible model host.
 
 ## Complete Skill Workflow
 
+- Preserve trusted folders, local-subagent state, reasoning visibility, and the patience runtime window as operator-visible continuity contracts.
 - Discover every task-relevant first-party skill before implementation.
 - Read each selected `SKILL.md`, declare execution order, and complete its full workflow.
 - Use the governed baseline chain when applicable: `skill-hub`, `request-loopback-resume`, `skill-common-sense-engineering`, `usage-watcher`, `skill-cost-credit-governor`, and `skill-trust-ledger`.
@@ -88,7 +90,12 @@ python scripts/generate_skill_catalog.py
 python scripts/check_private_data_policy.py
 python scripts/check_public_release.py
 pytest -q
-python -m py_compile scripts/*.py skill_arbiter/*.py
+$compileFiles = @(
+    Get-ChildItem -Path scripts,skill_arbiter -Recurse -File -Filter '*.py' |
+        Where-Object { $_.FullName -notmatch '[\\\\/](?:__pycache__|\\.venv)(?:[\\\\/]|$)' } |
+        ForEach-Object { $_.FullName }
+)
+python -m py_compile @compileFiles
 git diff --check
 ```
 

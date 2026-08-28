@@ -15,11 +15,20 @@
 
 ## Product Truth
 
+- Apply the no-stop doctrine and minimum runtime law across the authorized objective; keep capable local resources active before remote or paid fallback.
 - Present the desktop application as a real local governance and security console whose strongest value comes from current local-agent continuity, skill inventory, exact lifecycle evidence, and operator review.
 - Describe standalone inventory, mitigation, collaboration, skill progression, recommendation, and continuity lanes according to current exact-head capability evidence.
 - Keep capable local resources, local subagents, and local hardware active throughout the objective and restore context after interruption.
 - Keep Continue-facing action capabilities and visible state aligned with runtime truth.
+- Preserve local-agent visible action-state parity and reasoning visibility for operator review.
 - State that Codex, Copilot, local models, and every AI worker benefit from operator review and deterministic validation.
+
+## Model And Advisor Routing
+
+- Keep `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Use `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane only when explicitly selected by the operator and current runtime evidence.
+- Keep `http://127.0.0.1:1234/v1` as a non-authoritative LM Studio operator surface; do not use it as routing truth or as the release-readiness gate.
+- Keep model selection bound to operator intent, current inventory, capability fit, and measured evidence.
 
 ## Affirmative Guardrails
 

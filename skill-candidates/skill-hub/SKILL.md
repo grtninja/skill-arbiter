@@ -1,6 +1,6 @@
 ---
 name: skill-hub
-description: Route user requests into the smallest deterministic skill chain. Use when work spans multiple domains or repositories, when lane selection is ambiguous, or when you need ordered skill handoff and loopback criteria before execution.
+description: Route user requests into the complete non-redundant skill chain required by the objective and its acceptance gates. Use when work spans multiple domains or repositories, when lane selection is ambiguous, or when you need ordered skill handoff and loopback criteria before execution.
 ---
 
 # Skill Hub
@@ -14,7 +14,7 @@ Use this skill as the entry router for skill chaining.
    - treat `G:\GitHub` as the canonical repo root on the maintainer workstation
    - treat `http://127.0.0.1:9000/v1` and `http://127.0.0.1:2337/v1` as authoritative model lanes
    - treat `http://127.0.0.1:1234/v1` only as a non-authoritative operator surface
-3. Select skills from the routing matrix below and keep the chain to the minimum set that fully covers the request.
+3. Select the complete non-redundant chain that covers the request, its dependent surfaces, and every acceptance gate; remove only redundant routing.
 4. Order the chain as: routing -> guardrails -> execution -> release/policy gates.
 5. Emit or capture the chain output contract before execution begins.
 6. Add loopback criteria for unresolved lanes before execution starts.

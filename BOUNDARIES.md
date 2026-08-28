@@ -32,17 +32,19 @@ operator decisions through typed interfaces.
 
 ## Desktop And Agent Boundary
 
+- Apply the no-stop doctrine: keep the authorized objective active until the requested outcome is verified or the operator explicitly stops it.
+- Apply the minimum runtime law: keep capable local resources, local subagents, and local hardware in the loop before remote or paid fallback.
 - Open the visible desktop application before attaching or starting the local arbitration agent.
 - Use the accepted no-shell launcher and keep terminal helpers as explicit development and diagnostic tools.
 - Keep browser launch, scheduled tasks, PATH changes, worker installation, and runtime placement inside visible operator actions with durable receipts.
 - Keep health checks lightweight, cached, and separate from complete inventory and scan work.
-- Preserve current action state, reasoning visibility, trusted folders, local-subagent state, and resident continuity for operator review.
+- Preserve current action state, reasoning visibility, trusted folders, local-subagent state, local-agent visible action-state parity, and resident continuity for operator review.
 
 ## Model And Provider Boundary
 
-- Use `http://127.0.0.1:1234/v1` as the canonical direct local model plane.
-- Use `http://127.0.0.1:1234/v1/native` as an optional selected native-adapter path.
-- Use `http://127.0.0.1:2337/v1` as an optional explicitly selected hosted lane.
+- Use `http://127.0.0.1:9000/v1` as the public authoritative model plane.
+- Use `http://127.0.0.1:2337/v1` as the hosted large-model authoritative lane when explicitly selected.
+- Use `http://127.0.0.1:1234/v1` only as a non-authoritative LM Studio operator surface.
 - Use `http://127.0.0.1:9000` for MX3 device, DFP, perception, telemetry, and compatibility capabilities.
 - Bind model selection to operator intent, current inventory, capability fit, and measured evidence.
 - Keep public guidance host-agnostic and compatible with admitted loopback OpenAI-compatible providers.
