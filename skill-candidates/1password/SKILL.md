@@ -1,51 +1,92 @@
 ---
 name: 1password
-description: "Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, performing sign-in (single account or multiple accounts), or reading/injecting/running secrets via op."
+description: Use the 1Password desktop app, browser integration, and CLI on Windows to authenticate authorized provider sessions such as Bugcrowd without exposing passwords, TOTP codes, recovery material, tokens, or browser sessions to the model, logs, repositories, shell history, or clipboard.
 ---
 
-# 1Password CLI
+# 1Password Credential Broker
 
-Follow the official CLI get-started steps. Don't guess install commands.
+1Password is the authoritative secret store for Forgekeeper Studios. Use this
+skill automatically whenever an authorized workflow needs an existing login,
+MFA/TOTP value, recovery factor, API credential, or exact-origin browser
+session. Eddie must not have to retrieve or paste credentials manually.
 
-## References
+## Windows-first authority
 
-- `references/get-started.md` (install + app integration + sign-in flow)
-- `references/cli-examples.md` (real `op` examples)
+- Windows PowerShell and the installed 1Password desktop application are the
+  canonical local surfaces.
+- A Linux, WSL, or `tmux` session is not required for ordinary Windows use.
+- Prefer the 1Password browser extension or **Open & Fill** for interactive web
+  login because the model never needs to receive the credential value.
+- Use `op` only when a CLI-bound workflow genuinely requires it. Verify
+  `op --version`, desktop integration, and an unlocked app before proceeding.
+- Follow current official 1Password CLI guidance rather than guessing install
+  or sign-in commands.
 
-## Workflow
+## Authorized provider-login workflow
 
-1. Check OS + shell.
-2. Verify CLI present: `op --version`.
-3. Confirm desktop app integration is enabled (per get-started) and the app is unlocked.
-4. REQUIRED: create a fresh tmux session for all `op` commands (no direct `op` calls outside tmux).
-5. Sign in / authorize inside tmux: `op signin` (expect app prompt).
-6. Verify access inside tmux: `op whoami` (must succeed before any secret read).
-7. If multiple accounts: use `--account` or `OP_ACCOUNT`.
+1. Verify the requested provider, exact HTTPS origin, account purpose, and
+   current operator authorization.
+2. Locate the matching 1Password item by non-secret metadata only: title,
+   website/domain, vault label, and account label. Do not read or print secret
+   fields merely to prove the item exists.
+3. Navigate to the exact provider origin in the visible authorized browser.
+4. Trigger 1Password browser autofill or **Open & Fill**. Do not copy or type the
+   raw password through model context, logs, shell history, repository files,
+   screenshots, or the system clipboard.
+5. Complete MFA through the stored 1Password TOTP/autofill or the enrolled
+   security-key/biometric method. Never expose the one-time code to the model.
+6. If Windows Hello, biometric presence, a hardware key, or an unlock prompt is
+   required, preserve the page and ask only for that bounded physical approval.
+7. Verify successful sign-in from non-secret provider UI state: provider origin,
+   account/profile label, program access, and timestamp.
+8. Record a redacted authentication receipt containing only machine/task,
+   provider origin, account-label hash or opaque item reference, method used,
+   timestamp, and success/failure reason.
+9. Credential authorization and report-submission authorization are separate.
+   Signing in may prepare the report; the exact payload/evidence approval still
+   governs the final external submission.
 
-## REQUIRED tmux session (T-Max)
+## Bugcrowd route
 
-The shell tool uses a fresh TTY per command. To avoid re-prompts and failures, always run `op` inside a dedicated tmux session with a fresh socket/session name.
+For an authorized Bugcrowd researcher workflow:
 
-Example (see `tmux` skill for socket conventions, do not reuse old session names):
+- select the existing Bugcrowd login item stored in 1Password;
+- use the exact Bugcrowd HTTPS sign-in page and 1Password autofill;
+- complete mandatory Bugcrowd MFA through the enrolled 1Password TOTP,
+  biometric/security-key, or other configured factor;
+- verify the intended researcher profile and access to the exact OpenAI Security
+  or OpenAI Safety engagement before filling a report;
+- never create a replacement Bugcrowd account merely because the existing item
+  was not immediately found;
+- never expose Bugcrowd credentials, session cookies, MFA codes, recovery codes,
+  or authenticated page storage to ChatGPT/Codex output.
 
-```bash
-SOCKET_DIR="${OPENCLAW_TMUX_SOCKET_DIR:-${CLAWDBOT_TMUX_SOCKET_DIR:-${TMPDIR:-/tmp}/openclaw-tmux-sockets}}"
-mkdir -p "$SOCKET_DIR"
-SOCKET="$SOCKET_DIR/openclaw-op.sock"
-SESSION="op-auth-$(date +%Y%m%d-%H%M%S)"
+## CLI-bound secret use
 
-tmux -S "$SOCKET" new -d -s "$SESSION" -n shell
-tmux -S "$SOCKET" send-keys -t "$SESSION":0.0 -- "op signin --account my.1password.com" Enter
-tmux -S "$SOCKET" send-keys -t "$SESSION":0.0 -- "op whoami" Enter
-tmux -S "$SOCKET" send-keys -t "$SESSION":0.0 -- "op vault list" Enter
-tmux -S "$SOCKET" capture-pane -p -J -t "$SESSION":0.0 -S -200
-tmux -S "$SOCKET" kill-session -t "$SESSION"
-```
+When a non-browser tool genuinely needs a stored secret:
 
-## Guardrails
+- prefer `op run`, `op inject`, secret references, or a narrow 1Password shell
+  plugin so the secret exists only in the authorized child process;
+- scope access to the exact account, vault, item, field, command, and lifetime;
+- do not use `op item get --reveal` for convenience;
+- do not write resolved `.env`, config, token, cookie, or credential files;
+- do not echo environment variables or enable verbose tracing around secrets;
+- destroy any short-lived process environment when the command exits.
 
-- Never paste secrets into logs, chat, or code.
-- Prefer `op run` / `op inject` over writing secrets to disk.
-- If sign-in without app integration is needed, use `op account add`.
-- If a command returns "account is not signed in", re-run `op signin` inside tmux and authorize in the app.
-- Do not run `op` outside tmux; stop and ask if tmux is unavailable.
+## Failure behavior
+
+Fail closed and preserve the workflow state when:
+
+- the vault is locked;
+- desktop integration is unavailable;
+- the exact provider origin is ambiguous or mismatched;
+- more than one plausible login item exists and identity cannot be resolved from
+  non-secret metadata;
+- MFA requires unavailable physical presence;
+- the authenticated account or engagement cannot be verified;
+- a tool would expose raw secret material to the model, logs, clipboard, files,
+  screenshots, or repository history.
+
+Report the precise blocker without reporting the secret. Never classify a
+locked or unavailable vault as permission to abandon the disclosure case or ask
+Eddie to paste credentials into chat.
