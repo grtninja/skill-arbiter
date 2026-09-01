@@ -1,4 +1,11 @@
 interface:
-  display_name: "1password"
-  short_description: "Set up and use 1Password CLI (op). Use when installing the CLI, enabling de..."
-  default_prompt: "Use $1password when the request matches this lane: Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-..."
+  display_name: "1Password Credential Broker"
+  short_description: "Authenticate authorized provider sessions without exposing secrets."
+  default_prompt: >-
+    Automatically use 1Password desktop/browser integration or narrowly scoped
+    CLI secret references on Windows when an authorized workflow needs an
+    existing login such as Bugcrowd. Keep passwords, TOTP codes, recovery
+    material, tokens, cookies, and raw secret fields out of model context,
+    logs, files, screenshots, shell history, and clipboard.
+policy:
+  allow_implicit_invocation: true
