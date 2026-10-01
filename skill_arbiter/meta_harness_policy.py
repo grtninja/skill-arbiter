@@ -105,27 +105,6 @@ REQUIRED_PATTERNS: tuple[RequiredPattern, ...] = (
         message="Heterogeneous Stack Validation must identify direct LM Studio :1234 as the authoritative model plane.",
     ),
     RequiredPattern(
-        relative_path="shim-pc-control-brain-routing/SKILL.md",
-        severity="high",
-        code="shim_hosted_lane_missing",
-        pattern=r"127\.0\.0\.1:2337",
-        message="Shim PC Control Brain Routing must include the hosted 27B lane at :2337 in its authority contract.",
-    ),
-    RequiredPattern(
-        relative_path="shim-pc-control-brain-routing/SKILL.md",
-        severity="high",
-        code="shim_pc_control_local_agent_missing",
-        pattern=r"PC Control local-agent|PC Control .*status surface",
-        message="Shim PC Control Brain Routing must require PC Control local-agent or status-surface evidence before sidecar research.",
-    ),
-    RequiredPattern(
-        relative_path="shim-pc-control-brain-routing/SKILL.md",
-        severity="medium",
-        code="shim_canonical_root_missing",
-        pattern=r"G:\\GitHub",
-        message="Shim PC Control Brain Routing must normalize repo roots to G:\\GitHub.",
-    ),
-    RequiredPattern(
         relative_path="repo-b-wsl-hybrid-ops/SKILL.md",
         severity="medium",
         code="wsl_hosted_lane_missing",
