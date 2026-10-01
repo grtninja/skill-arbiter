@@ -5,10 +5,10 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 
 ## Catalog Summary
 
-- Generated: `2026-05-15T22:48:07.909000Z`
-- Total repo skills: `159`
+- Generated: `2026-10-01T19:58:38.060858Z`
+- Total repo skills: `145`
 - Repo-root skills: `1`
-- Candidate skills: `158`
+- Candidate skills: `144`
 
 ## Discovery Notes
 
@@ -40,17 +40,13 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 | `clawhub` | `skill_candidate` | - | - | - | `skill-candidates/clawhub/SKILL.md` |
 | `code-gap-sweeping` | `skill_candidate` | - | - | - | `skill-candidates/code-gap-sweeping/SKILL.md` |
 | `coding-agent` | `skill_candidate` | - | - | - | `skill-candidates/coding-agent/SKILL.md` |
-| `cross-app-queue-backpressure-governance` | `skill_candidate` | - | - | - | `skill-candidates/cross-app-queue-backpressure-governance/SKILL.md` |
 | `cross-repo-open-diff-reconciliation` | `skill_candidate` | - | - | - | `skill-candidates/cross-repo-open-diff-reconciliation/SKILL.md` |
-| `cybertron-fabric-host-ops` | `skill_candidate` | - | - | - | `skill-candidates/cybertron-fabric-host-ops/SKILL.md` |
 | `dataset-provenance-manifest-governance` | `skill_candidate` | - | - | - | `skill-candidates/dataset-provenance-manifest-governance/SKILL.md` |
 | `desktop-startup-acceptance` | `skill_candidate` | - | - | - | `skill-candidates/desktop-startup-acceptance/SKILL.md` |
 | `diffs` | `skill_candidate` | - | - | - | `skill-candidates/diffs/SKILL.md` |
 | `discord` | `skill_candidate` | - | - | - | `skill-candidates/discord/SKILL.md` |
-| `distributed-voice-plane-governance` | `skill_candidate` | - | - | - | `skill-candidates/distributed-voice-plane-governance/SKILL.md` |
 | `docs-alignment-lock` | `skill_candidate` | - | - | - | `skill-candidates/docs-alignment-lock/SKILL.md` |
 | `eightctl` | `skill_candidate` | - | - | - | `skill-candidates/eightctl/SKILL.md` |
-| `endpoint-admission-voice-actions` | `skill_candidate` | - | - | - | `skill-candidates/endpoint-admission-voice-actions/SKILL.md` |
 | `feishu-doc` | `skill_candidate` | - | - | - | `skill-candidates/feishu-doc/SKILL.md` |
 | `feishu-drive` | `skill_candidate` | - | - | - | `skill-candidates/feishu-drive/SKILL.md` |
 | `feishu-perm` | `skill_candidate` | - | - | - | `skill-candidates/feishu-perm/SKILL.md` |
@@ -74,8 +70,6 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 | `media-workbench-desktop-ops` | `skill_candidate` | - | - | - | `skill-candidates/media-workbench-desktop-ops/SKILL.md` |
 | `media-workbench-indexing-governance` | `skill_candidate` | - | - | - | `skill-candidates/media-workbench-indexing-governance/SKILL.md` |
 | `media-workbench-worker-contracts` | `skill_candidate` | - | - | - | `skill-candidates/media-workbench-worker-contracts/SKILL.md` |
-| `meta-harness-app-order-bootstrap` | `skill_candidate` | - | - | - | `skill-candidates/meta-harness-app-order-bootstrap/SKILL.md` |
-| `meta-harness-four-app-alignment` | `skill_candidate` | - | - | - | `skill-candidates/meta-harness-four-app-alignment/SKILL.md` |
 | `model-usage` | `skill_candidate` | - | - | - | `skill-candidates/model-usage/SKILL.md` |
 | `multitask-orchestrator` | `skill_candidate` | - | - | - | `skill-candidates/multitask-orchestrator/SKILL.md` |
 | `nano-banana-pro` | `skill_candidate` | - | - | - | `skill-candidates/nano-banana-pro/SKILL.md` |
@@ -105,15 +99,12 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 | `repo-b-agent-bridge-safety` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-agent-bridge-safety/SKILL.md` |
 | `repo-b-avatarcore-ops` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-avatarcore-ops/SKILL.md` |
 | `repo-b-comfy-amuse-capcut-pipeline` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-comfy-amuse-capcut-pipeline/SKILL.md` |
-| `repo-b-control-center-ops` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-control-center-ops/SKILL.md` |
-| `repo-b-hardware-first` | `skill_candidate` | Enforce hardware-first diagnosis and fixes in <PRIVATE_REPO_B>. Use for runtime probe, telemetry, inference, and integration failures where strict real-hardware behavior, no new stubs, deterministic diagnostics, and no unrequested driver/runtime mutation are required. | grtninja | https://github.com/grtninja/skill-arbiter | `skill-candidates/repo-b-hardware-first/SKILL.md` |
 | `repo-b-local-bridge-orchestrator` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-local-bridge-orchestrator/SKILL.md` |
 | `repo-b-local-comfy-orchestrator` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-local-comfy-orchestrator/SKILL.md` |
 | `repo-b-mass-index-ops` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-mass-index-ops/SKILL.md` |
 | `repo-b-mcp-comfy-bridge` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-mcp-comfy-bridge/SKILL.md` |
 | `repo-b-mx3-router-contracts` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-mx3-router-contracts/SKILL.md` |
 | `repo-b-preflight-doc-sync` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-preflight-doc-sync/SKILL.md` |
-| `repo-b-starframe-ops` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-starframe-ops/SKILL.md` |
 | `repo-b-thin-waist-routing` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-thin-waist-routing/SKILL.md` |
 | `repo-b-wsl-hybrid-ops` | `skill_candidate` | - | - | - | `skill-candidates/repo-b-wsl-hybrid-ops/SKILL.md` |
 | `repo-c-boundary-governance` | `skill_candidate` | - | - | - | `skill-candidates/repo-c-boundary-governance/SKILL.md` |
@@ -132,10 +123,6 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 | `sag` | `skill_candidate` | - | - | - | `skill-candidates/sag/SKILL.md` |
 | `session-logs` | `skill_candidate` | - | - | - | `skill-candidates/session-logs/SKILL.md` |
 | `sherpa-onnx-tts` | `skill_candidate` | - | - | - | `skill-candidates/sherpa-onnx-tts/SKILL.md` |
-| `shim-pc-control-brain-routing` | `skill_candidate` | - | - | - | `skill-candidates/shim-pc-control-brain-routing/SKILL.md` |
-| `shockwave-dashboard-ops` | `skill_candidate` | - | - | - | `skill-candidates/shockwave-dashboard-ops/SKILL.md` |
-| `shockwave-operator-handoff` | `skill_candidate` | - | - | - | `skill-candidates/shockwave-operator-handoff/SKILL.md` |
-| `shockwave-voice-command-governance` | `skill_candidate` | - | - | - | `skill-candidates/shockwave-voice-command-governance/SKILL.md` |
 | `skill-arbiter-churn-forensics` | `skill_candidate` | - | - | - | `skill-candidates/skill-arbiter-churn-forensics/SKILL.md` |
 | `skill-arbiter-lockdown-admission` | `skill_candidate` | - | - | - | `skill-candidates/skill-arbiter-lockdown-admission/SKILL.md` |
 | `skill-arbiter-release-ops` | `skill_candidate` | - | - | - | `skill-candidates/skill-arbiter-release-ops/SKILL.md` |
@@ -178,5 +165,4 @@ Use this page as the stable discovery surface for humans, mirrors, and crawlers.
 | `vroid-vrma-photobooth-pipeline` | `skill_candidate` | - | - | - | `skill-candidates/vroid-vrma-photobooth-pipeline/SKILL.md` |
 | `wacli` | `skill_candidate` | - | - | - | `skill-candidates/wacli/SKILL.md` |
 | `weather` | `skill_candidate` | - | - | - | `skill-candidates/weather/SKILL.md` |
-| `white-hat` | `skill_candidate` | Run a defender-first security sweep on code, configs, prompts, model/tooling surfaces, or third-party contribution lanes. Use when a request involves safe bug, leak, zero-day-class, exploit, or hack hunting for protection, when contributing to outside repositories and you want a focused security pass, or when touching auth, secrets, permissions, network exposure, prompt/tool boundaries, data flow, or update/build surfaces. This skill is defensive only and must never be used for weaponization or unauthorized access. | grtninja | https://github.com/grtninja/skill-arbiter | `skill-candidates/white-hat/SKILL.md` |
 | `xurl` | `skill_candidate` | - | - | - | `skill-candidates/xurl/SKILL.md` |

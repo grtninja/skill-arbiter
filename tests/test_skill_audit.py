@@ -198,38 +198,6 @@ class SkillAuditTests(unittest.TestCase):
             codes = {item["code"] for item in payload["findings"]}
             self.assertIn("legacy_repo_root_alias", codes)
 
-    def test_flags_missing_shim_meta_harness_requirements(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp) / "skills"
-            root.mkdir()
-            _write_skill(
-                root,
-                "shim-pc-control-brain-routing",
-                "shim",
-                "Keep port 9000 stable and research with sub-agents.",
-            )
-            out_path = Path(tmp) / "audit.json"
-            argv = [
-                "skill_audit.py",
-                "--skills-root",
-                str(root),
-                "--include-skill",
-                "shim-pc-control-brain-routing",
-                "--json-out",
-                str(out_path),
-                "--format",
-                "json",
-            ]
-            with mock.patch.object(sys, "argv", argv):
-                rc = self.mod.main()
-
-            self.assertEqual(rc, 1)
-            payload = json.loads(out_path.read_text(encoding="utf-8"))
-            codes = {item["code"] for item in payload["findings"]}
-            self.assertIn("shim_hosted_lane_missing", codes)
-            self.assertIn("shim_pc_control_local_agent_missing", codes)
-            self.assertIn("shim_canonical_root_missing", codes)
-
     def test_flags_legacy_repo_root_and_authoritative_9000_references(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "skills"

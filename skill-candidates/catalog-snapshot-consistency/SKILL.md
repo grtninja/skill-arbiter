@@ -38,7 +38,6 @@ Use this skill when a repo has both generated/operator-facing snapshots and a ru
 - `$docs-alignment-lock`
 - `$skill-common-sense-engineering`
 - `$media-staging-prompthead-ops`
-- `$shockwave-voice-command-governance`
 
 ## Scope Boundary
 

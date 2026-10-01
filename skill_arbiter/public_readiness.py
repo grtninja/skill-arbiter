@@ -260,8 +260,22 @@ def _tracked_text_files(repo_root: Path) -> list[Path]:
         path = repo_root / rel
         if not path.is_file():
             continue
-        if path.suffix.lower() not in {".md", ".py", ".txt", ".yaml", ".yml", ".toml", ".json"}:
+        try:
+            with open(path, "rb") as handle:
+                chunk = handle.read(8192)
+        except OSError:
             continue
+        if b"\x00" in chunk:
+            # Possible UTF-16 text (the platform norm for PowerShell in a
+            # Windows-first repo) or genuinely binary. Try UTF-16 decode
+            # before giving up so a leak in a UTF-16 file is still caught.
+            try:
+                raw = path.read_bytes()
+                raw.decode("utf-16")
+            except (OSError, UnicodeError):
+                # Binary file (image, font, compiled artifact, ...) - not a
+                # textual publish surface.
+                continue
         paths.append(path)
     return paths
 
@@ -273,13 +287,101 @@ def _read_optional(repo_root: Path, rel_path: Path | str) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
 
 
+def _read_text_lenient(path: Path) -> str:
+    """Read a tracked text file, tolerating UTF-16 (PowerShell norm on Windows).
+
+    UTF-8 first; if the bytes are not valid UTF-8, try UTF-16 before falling
+    back to lossy UTF-8. Ensures a leak in a UTF-16 file is still scanned
+    as text rather than silently skipped or mis-decoded. (Muse)
+    """
+    try:
+        raw = path.read_bytes()
+    except OSError:
+        raise
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        pass
+    try:
+        return raw.decode("utf-16")
+    except UnicodeError:
+        return raw.decode("utf-8", errors="ignore")
+
+
 def _contract_text(repo_root: Path) -> str:
     return "\n".join(_read_optional(repo_root, path) for path in CONTRACT_DOCS).lower()
 
 
+# Public-safe fallback guard vocabulary. The private repo extends this list from
+# skill_arbiter/private/publish_guard_terms.txt (private-only, never published).
+# These built-in terms are deliberately generic: they name shapes of private
+# data (Windows profile paths, personal-mail domains, credential markers),
+# never actual private skill names, hostnames, or personal identifiers, so the
+# list itself is safe to ship in the public mirror. (Muse)
+PUBLIC_SAFE_GUARD_TERMS = (
+    "c:\\users\\",
+    "c:/users/",
+    "hotmail.com",
+    "begin rsa private key",
+    "begin openssh private key",
+    "aws_secret_access_key",
+)
+
+
+# Files that define guard vocabulary. Only their declaration lines are exempt
+# from the guard-term scan; the rest of each file is still scanned so a real
+# leak added elsewhere (for example in a test fixture) is caught. (Muse)
+GUARD_DEFINITION_FILES = (
+    "skill_arbiter/public_readiness.py",
+    "tests/test_public_readiness.py",
+)
+
+# Assignment targets whose tuple bodies declare guard vocabulary. A line that
+# opens one of these assignments starts a declaration block; the block runs
+# through its closing paren. Everything else in a definition file is scanned.
+GUARD_DECLARATION_TARGETS = (
+    "PUBLIC_SAFE_GUARD_TERMS",
+    "GUARD_DEFINITION_FILES",
+    "GUARD_DECLARATION_TARGETS",
+)
+
+
+def _mask_guard_declarations(rel: str, text: str) -> str:
+    """Remove vocabulary-declaration lines so the guard never flags its own definitions."""
+    if rel not in GUARD_DEFINITION_FILES:
+        return text
+    kept: list[str] = []
+    skipping = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not skipping:
+            opened = any(
+                stripped.startswith(target.lower()) and "=" in stripped.split(")")[0]
+                for target in GUARD_DECLARATION_TARGETS
+            )
+            if opened:
+                skipping = True
+                continue
+        else:
+            if stripped in (")", "),"):
+                skipping = False
+            continue
+        if "guard-vocabulary-ok" in stripped:
+            # Explicitly marked vocabulary reference (e.g. a test asserting
+            # the built-in list contains a shape). Not a leak.
+            continue
+        kept.append(line)
+    return "\n".join(kept)
+
+
 def _publish_guard_terms(repo_root: Path) -> list[str]:
+    # The public-safe built-in list always applies: these are generic shapes
+    # of private data, never actual private identifiers. (Muse)
+    terms = list(PUBLIC_SAFE_GUARD_TERMS)
+    # Private repo: the authoritative private-only term list extends it.
     text = _read_optional(repo_root, Path("skill_arbiter/private/publish_guard_terms.txt"))
-    return [line.strip().lower() for line in text.splitlines() if line.strip()]
+    terms.extend(line.strip().lower() for line in text.splitlines() if line.strip())
+    return sorted(set(terms))
 
 
 def _public_shape_guard_term_hits(repo_root: Path) -> list[str]:
@@ -292,9 +394,10 @@ def _public_shape_guard_term_hits(repo_root: Path) -> list[str]:
         if rel.startswith(PRIVATE_SURFACE_PREFIXES):
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore").lower()
+            text = _read_text_lenient(path).lower()
         except OSError:
             continue
+        text = _mask_guard_declarations(rel, text)
         for term in terms:
             if term and term in text:
                 hits.append(f"{rel}:{term}")
@@ -308,7 +411,7 @@ def _tracked_text_contains(repo_root: Path, pattern: re.Pattern[str]) -> list[st
         if rel.startswith(PRIVATE_SURFACE_PREFIXES):
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore")
+            text = _read_text_lenient(path)
         except OSError:
             continue
         if pattern.search(text):
@@ -326,7 +429,7 @@ def _tracked_policy_text_contains(repo_root: Path, pattern: re.Pattern[str]) -> 
         if not (rel in policy_roots or any(rel.startswith(root) for root in policy_roots if root.endswith("/"))):
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore")
+            text = _read_text_lenient(path)
         except OSError:
             continue
         if pattern.search(text):

@@ -20,6 +20,16 @@ All notable changes to this project are documented in this file.
 - split the desktop UI into explicit entry, runtime, DOM, polling, runtime-view, and inventory-view modules so the shell no longer depends on a single monolithic `app.js`
 - break inventory and collaboration runtime code into smaller helper modules so meta-harness policy, source/baseline attribution, and collaboration evidence handling stay modular and easier to validate
 
+## [0.2.29] - 2026-10-01
+
+### Fixed
+
+- scrub 13 denylisted private/internal paths (skill candidates, private references, CODEOWNERS) from the public mirror per the export denylist
+- repair the dead public guard-term gate in public_readiness.py: the private-only publish_guard_terms.txt is absent publicly, which made the check silently pass; it now always applies a public-safe built-in vocabulary, extended by the private list when present
+- sanitize the hardcoded Windows username in meta_harness_policy.py and remove dead meta-harness rules (and their audit test) for the scrubbed private skill
+- fix 6 dead companion-doc links in skill-candidates/skill-creator-openclaw/SKILL.md
+- add regression tests for the guard-term fallback, private-file precedence, leak flagging, and definition-file exemption
+
 ## [0.2.28] - 2026-08-28
 
 ### Fixed
@@ -664,3 +674,4 @@ All notable changes to this project are documented in this file.
 - Initial public release of `skill-arbiter`.
 - Core arbitration loop:
   install candidate skill, sample `rg.exe` process churn, remove noisy skills, and persist blacklist decisions.
+

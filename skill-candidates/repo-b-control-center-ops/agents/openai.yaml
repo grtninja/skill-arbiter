@@ -1,4 +1,0 @@
-interface:
-  display_name: "REPO_B Control Center Ops"
-  short_description: "Operate and debug control center surfaces"
-  default_prompt: "Use $repo-b-control-center-ops to work on repo_b control-center UI/IPC surfaces, connector flows, and local diagnostics."

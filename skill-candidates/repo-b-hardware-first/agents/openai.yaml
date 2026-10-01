@@ -1,4 +1,0 @@
-interface:
-  display_name: "REPO_B Hardware First"
-  short_description: "Fix shim issues via real hardware path"
-  default_prompt: "Use $repo-b-hardware-first for <PRIVATE_REPO_B> tasks that require hardware-first diagnosis, strict preflight, and no stub shortcuts."

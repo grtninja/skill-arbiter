@@ -126,6 +126,8 @@ Keep SKILL.md body to the essentials and under 500 lines to minimize context blo
 
 **Pattern 1: High-level guide with references**
 
+*Illustrative example — the companion filenames below are hypothetical and do not exist in this skill.*
+
 ```markdown
 # PDF Processing
 

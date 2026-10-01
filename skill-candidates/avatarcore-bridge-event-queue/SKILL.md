@@ -33,7 +33,6 @@ Use this skill when AvatarCore's Unreal bridge session and queue behavior are th
 
 - `$repo-b-avatarcore-ops`
 - `$local-trace-evidence-correlation`
-- `$distributed-voice-plane-governance`
 - `$skill-common-sense-engineering`
 
 ## Scope Boundary

@@ -6,7 +6,7 @@ import re
 
 
 SCAN_SUFFIXES = {".md", ".yaml", ".yml", ".py", ".ps1", ".txt", ".env", ".json"}
-LEGACY_REPO_ROOT_RE = re.compile(r"(?i)(?:c:\\users\\eddie\\documents\\github|documents\\github)")
+LEGACY_REPO_ROOT_RE = re.compile(r"(?i)(?:c:\\users\\[^\\]+\\documents\\github|documents\\github)")
 LEGACY_REPO_ROOT_CONTEXT_ALLOW_RE = re.compile(
     r"normalize[^\n\r]{0,160}G:\\GitHub|"
     r"canonical[^\n\r]{0,160}G:\\GitHub|"
@@ -103,27 +103,6 @@ REQUIRED_PATTERNS: tuple[RequiredPattern, ...] = (
         code="lmstudio_authority_missing",
         pattern=r"127\.0\.0\.1:1234.*(?:direct|authoritative)|(?:direct|authoritative).*127\.0\.0\.1:1234",
         message="Heterogeneous Stack Validation must identify direct LM Studio :1234 as the authoritative model plane.",
-    ),
-    RequiredPattern(
-        relative_path="shim-pc-control-brain-routing/SKILL.md",
-        severity="high",
-        code="shim_hosted_lane_missing",
-        pattern=r"127\.0\.0\.1:2337",
-        message="Shim PC Control Brain Routing must include the hosted 27B lane at :2337 in its authority contract.",
-    ),
-    RequiredPattern(
-        relative_path="shim-pc-control-brain-routing/SKILL.md",
-        severity="high",
-        code="shim_pc_control_local_agent_missing",
-        pattern=r"PC Control local-agent|PC Control .*status surface",
-        message="Shim PC Control Brain Routing must require PC Control local-agent or status-surface evidence before sidecar research.",
-    ),
-    RequiredPattern(
-        relative_path="shim-pc-control-brain-routing/SKILL.md",
-        severity="medium",
-        code="shim_canonical_root_missing",
-        pattern=r"G:\\GitHub",
-        message="Shim PC Control Brain Routing must normalize repo roots to G:\\GitHub.",
     ),
     RequiredPattern(
         relative_path="repo-b-wsl-hybrid-ops/SKILL.md",
