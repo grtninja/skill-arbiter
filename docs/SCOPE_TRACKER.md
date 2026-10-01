@@ -45,6 +45,7 @@
 23. Added a first-class quest runtime and API so substantial work can be tracked as a human-readable request -> chain -> checkpoints -> usable outcome path.
 24. Wired quest completion into the skill game so per-skill quest XP contributes to explicit cumulative agent progression instead of leaving agent leveling implicit.
 25. Marked Meta-Harness implementation work as quest-grade by default so authority recovery, bridge validation, and end-state proof can be tracked end to end.
+26. Scrubbed 13 denylisted private/internal paths from the public mirror (8 private skill candidates, 3 private references, CODEOWNERS, root skill-catalog.md) per the export denylist; sanitized the hardcoded Windows username in `meta_harness_policy.py`; repaired the dead public guard-term gate in `public_readiness.py` with an always-on public-safe vocabulary; fixed 6 dead companion-doc links in `skill-creator-openclaw/SKILL.md`; added guard-term regression tests. Validation: 144/144 pytest, privacy gates pass, `check_public_release.py` 0 findings. **Repository scope added by this PR: 0% new scope — this is a pure privacy-remediation pass; it removes 2,749 lines of private/internal material and adds 88 lines of guards, tests, and fixes. No features, no new surface.**
 
 ## Remaining gaps
 
