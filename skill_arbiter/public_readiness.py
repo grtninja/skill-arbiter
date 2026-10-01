@@ -266,9 +266,16 @@ def _tracked_text_files(repo_root: Path) -> list[Path]:
         except OSError:
             continue
         if b"\x00" in chunk:
-            # Binary file (image, font, compiled artifact, ...) - not a
-            # textual publish surface.
-            continue
+            # Possible UTF-16 text (the platform norm for PowerShell in a
+            # Windows-first repo) or genuinely binary. Try UTF-16 decode
+            # before giving up so a leak in a UTF-16 file is still caught.
+            try:
+                raw = path.read_bytes()
+                raw.decode("utf-16")
+            except (OSError, UnicodeError):
+                # Binary file (image, font, compiled artifact, ...) - not a
+                # textual publish surface.
+                continue
         paths.append(path)
     return paths
 
@@ -278,6 +285,27 @@ def _read_optional(repo_root: Path, rel_path: Path | str) -> str:
     if not path.is_file():
         return ""
     return path.read_text(encoding="utf-8", errors="ignore")
+
+
+def _read_text_lenient(path: Path) -> str:
+    """Read a tracked text file, tolerating UTF-16 (PowerShell norm on Windows).
+
+    UTF-8 first; if the bytes are not valid UTF-8, try UTF-16 before falling
+    back to lossy UTF-8. Ensures a leak in a UTF-16 file is still scanned
+    as text rather than silently skipped or mis-decoded. (Muse)
+    """
+    try:
+        raw = path.read_bytes()
+    except OSError:
+        raise
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        pass
+    try:
+        return raw.decode("utf-16")
+    except UnicodeError:
+        return raw.decode("utf-8", errors="ignore")
 
 
 def _contract_text(repo_root: Path) -> str:
@@ -366,7 +394,7 @@ def _public_shape_guard_term_hits(repo_root: Path) -> list[str]:
         if rel.startswith(PRIVATE_SURFACE_PREFIXES):
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore").lower()
+            text = _read_text_lenient(path).lower()
         except OSError:
             continue
         text = _mask_guard_declarations(rel, text)
@@ -383,7 +411,7 @@ def _tracked_text_contains(repo_root: Path, pattern: re.Pattern[str]) -> list[st
         if rel.startswith(PRIVATE_SURFACE_PREFIXES):
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore")
+            text = _read_text_lenient(path)
         except OSError:
             continue
         if pattern.search(text):
@@ -401,7 +429,7 @@ def _tracked_policy_text_contains(repo_root: Path, pattern: re.Pattern[str]) -> 
         if not (rel in policy_roots or any(rel.startswith(root) for root in policy_roots if root.endswith("/"))):
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore")
+            text = _read_text_lenient(path)
         except OSError:
             continue
         if pattern.search(text):

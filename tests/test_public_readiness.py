@@ -251,6 +251,20 @@ class PublicReadinessTests(unittest.TestCase):
             hits = _public_shape_guard_term_hits(root)
             self.assertTrue(any(hit.startswith("skill_arbiter/public_readiness.py:") for hit in hits))
 
+    def test_guard_catches_leak_in_utf16_file(self) -> None:
+        # Windows-first repo: a UTF-16 PowerShell file must be scanned as
+        # text, not silently skipped as binary. (Muse)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._init_repo(root)
+            (root / "scripts").mkdir(parents=True, exist_ok=True)
+            (root / "scripts" / "probe.ps1").write_bytes(
+                ("# probe\r\n# contact: alice@hot" + "mail.com\r\n").encode("utf-16")
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
+            hits = _public_shape_guard_term_hits(root)
+            self.assertTrue(any(hit.startswith("scripts/probe.ps1:") for hit in hits))
+
 
 if __name__ == "__main__":
     unittest.main()

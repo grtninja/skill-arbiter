@@ -41,9 +41,6 @@ Use this skill when the documented voice-command surface and the live runtime be
 
 ## Best-Fit Companion Skills
 
-- `$distributed-voice-plane-governance`
-- `$shockwave-voice-command-governance`
-- `$endpoint-admission-voice-actions`
 - `$catalog-snapshot-consistency`
 
 ## Scope Boundary
