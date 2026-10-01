@@ -6,7 +6,7 @@ import re
 
 
 SCAN_SUFFIXES = {".md", ".yaml", ".yml", ".py", ".ps1", ".txt", ".env", ".json"}
-LEGACY_REPO_ROOT_RE = re.compile(r"(?i)(?:c:\\users\\eddie\\documents\\github|documents\\github)")
+LEGACY_REPO_ROOT_RE = re.compile(r"(?i)(?:c:\\users\\[^\\]+\\documents\\github|documents\\github)")
 LEGACY_REPO_ROOT_CONTEXT_ALLOW_RE = re.compile(
     r"normalize[^\n\r]{0,160}G:\\GitHub|"
     r"canonical[^\n\r]{0,160}G:\\GitHub|"

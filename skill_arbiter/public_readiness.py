@@ -277,9 +277,39 @@ def _contract_text(repo_root: Path) -> str:
     return "\n".join(_read_optional(repo_root, path) for path in CONTRACT_DOCS).lower()
 
 
+# Public-safe fallback guard vocabulary. The private repo extends this list from
+# skill_arbiter/private/publish_guard_terms.txt (private-only, never published).
+# These built-in terms are deliberately generic: they name shapes of private
+# data (Windows profile paths, personal-mail domains, credential markers),
+# never actual private skill names, hostnames, or personal identifiers, so the
+# list itself is safe to ship in the public mirror. (Muse)
+PUBLIC_SAFE_GUARD_TERMS = (
+    "c:\\users\\",
+    "c:/users/",
+    "hotmail.com",
+    "begin rsa private key",
+    "begin openssh private key",
+    "aws_secret_access_key",
+)
+
+
+# Files that define or test guard vocabulary are exempt from the guard-term
+# scan; they declare the guard, they are not leaks. (Muse)
+GUARD_DEFINITION_FILES = (
+    "skill_arbiter/public_readiness.py",
+    "skill_arbiter/privacy_policy.py",
+    "tests/test_public_readiness.py",
+)
+
+
 def _publish_guard_terms(repo_root: Path) -> list[str]:
+    # The public-safe built-in list always applies: these are generic shapes
+    # of private data, never actual private identifiers. (Muse)
+    terms = list(PUBLIC_SAFE_GUARD_TERMS)
+    # Private repo: the authoritative private-only term list extends it.
     text = _read_optional(repo_root, Path("skill_arbiter/private/publish_guard_terms.txt"))
-    return [line.strip().lower() for line in text.splitlines() if line.strip()]
+    terms.extend(line.strip().lower() for line in text.splitlines() if line.strip())
+    return sorted(set(terms))
 
 
 def _public_shape_guard_term_hits(repo_root: Path) -> list[str]:
@@ -290,6 +320,8 @@ def _public_shape_guard_term_hits(repo_root: Path) -> list[str]:
     for path in _tracked_text_files(repo_root):
         rel = path.relative_to(repo_root).as_posix()
         if rel.startswith(PRIVATE_SURFACE_PREFIXES):
+            continue
+        if rel in GUARD_DEFINITION_FILES:
             continue
         try:
             text = path.read_text(encoding="utf-8", errors="ignore").lower()

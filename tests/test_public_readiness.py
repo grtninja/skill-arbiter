@@ -5,7 +5,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from skill_arbiter.public_readiness import run_public_readiness_scan
+from skill_arbiter.public_readiness import (
+    _public_shape_guard_term_hits,
+    _publish_guard_terms,
+    run_public_readiness_scan,
+)
 
 
 def _write(path: Path, text: str) -> None:
@@ -191,6 +195,47 @@ class PublicReadinessTests(unittest.TestCase):
             self.assertFalse(payload["passed"])
             self.assertFalse(payload["checks"]["tracked_publish_surface"])
             self.assertIn("untracked_publish_surface", codes)
+
+    def test_guard_terms_fall_back_to_public_safe_list(self) -> None:
+        # Neither the private nor the public guard-term file exists; the gate
+        # must fall back to the public-safe built-in list instead of silently
+        # passing with zero terms. (Muse)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            terms = _publish_guard_terms(root)
+            self.assertTrue(terms)
+            self.assertIn("c:\\users\\", terms)
+            self.assertIn("hotmail.com", terms)
+
+    def test_guard_terms_prefer_private_file_when_present(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write(root / "skill_arbiter" / "private" / "publish_guard_terms.txt",
+                    "super-secret-internal-term\n")
+            terms = _publish_guard_terms(root)
+            self.assertIn("super-secret-internal-term", terms)
+            self.assertIn("c:\\users\\", terms)  # built-in list always applies
+
+    def test_guard_term_hit_flags_tracked_private_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._init_repo(root)
+            _write(root / "docs" / "notes.md",
+                    "installed under c:\\users\\someone\\documents\\github\\skill-arbiter\n")
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
+            hits = _public_shape_guard_term_hits(root)
+            self.assertTrue(any(hit.startswith("docs/notes.md:") for hit in hits))
+
+    def test_guard_definition_files_are_exempt(self) -> None:
+        # The vocabulary-definition files must not flag themselves. (Muse)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._init_repo(root)
+            _write(root / "skill_arbiter" / "public_readiness.py",
+                    'TERMS = ("hotmail.com",)\n')
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
+            hits = _public_shape_guard_term_hits(root)
+            self.assertFalse(any(hit.startswith("skill_arbiter/public_readiness.py:") for hit in hits))
 
 
 if __name__ == "__main__":
