@@ -20,7 +20,7 @@ Use this skill when recent changes touch a mix of:
 Route elsewhere when:
 
 - the task is purely a material/rendering problem: use the most specific VRM rendering skill
-- the task is only about public model-lane authority: use `$shim-pc-control-brain-routing`
+- the task is only about public model-lane authority: use `$heterogeneous-stack-validation`
 - the task is only about UI styling without runtime behavior changes: use the relevant frontend skill
 
 ## Workflow
@@ -62,5 +62,4 @@ Do not use it for packaging-only changes, Blender/asset work, or repo-agnostic U
 ## References
 
 - `$heterogeneous-stack-validation`
-- `$shim-pc-control-brain-routing`
 - `$desktop-startup-acceptance`

@@ -260,7 +260,14 @@ def _tracked_text_files(repo_root: Path) -> list[Path]:
         path = repo_root / rel
         if not path.is_file():
             continue
-        if path.suffix.lower() not in {".md", ".py", ".txt", ".yaml", ".yml", ".toml", ".json"}:
+        try:
+            with open(path, "rb") as handle:
+                chunk = handle.read(8192)
+        except OSError:
+            continue
+        if b"\x00" in chunk:
+            # Binary file (image, font, compiled artifact, ...) - not a
+            # textual publish surface.
             continue
         paths.append(path)
     return paths
@@ -293,13 +300,50 @@ PUBLIC_SAFE_GUARD_TERMS = (
 )
 
 
-# Files that define or test guard vocabulary are exempt from the guard-term
-# scan; they declare the guard, they are not leaks. (Muse)
+# Files that define guard vocabulary. Only their declaration lines are exempt
+# from the guard-term scan; the rest of each file is still scanned so a real
+# leak added elsewhere (for example in a test fixture) is caught. (Muse)
 GUARD_DEFINITION_FILES = (
     "skill_arbiter/public_readiness.py",
-    "skill_arbiter/privacy_policy.py",
     "tests/test_public_readiness.py",
 )
+
+# Assignment targets whose tuple bodies declare guard vocabulary. A line that
+# opens one of these assignments starts a declaration block; the block runs
+# through its closing paren. Everything else in a definition file is scanned.
+GUARD_DECLARATION_TARGETS = (
+    "PUBLIC_SAFE_GUARD_TERMS",
+    "GUARD_DEFINITION_FILES",
+    "GUARD_DECLARATION_TARGETS",
+)
+
+
+def _mask_guard_declarations(rel: str, text: str) -> str:
+    """Remove vocabulary-declaration lines so the guard never flags its own definitions."""
+    if rel not in GUARD_DEFINITION_FILES:
+        return text
+    kept: list[str] = []
+    skipping = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not skipping:
+            opened = any(
+                stripped.startswith(target.lower()) and "=" in stripped.split(")")[0]
+                for target in GUARD_DECLARATION_TARGETS
+            )
+            if opened:
+                skipping = True
+                continue
+        else:
+            if stripped in (")", "),"):
+                skipping = False
+            continue
+        if "guard-vocabulary-ok" in stripped:
+            # Explicitly marked vocabulary reference (e.g. a test asserting
+            # the built-in list contains a shape). Not a leak.
+            continue
+        kept.append(line)
+    return "\n".join(kept)
 
 
 def _publish_guard_terms(repo_root: Path) -> list[str]:
@@ -321,12 +365,11 @@ def _public_shape_guard_term_hits(repo_root: Path) -> list[str]:
         rel = path.relative_to(repo_root).as_posix()
         if rel.startswith(PRIVATE_SURFACE_PREFIXES):
             continue
-        if rel in GUARD_DEFINITION_FILES:
-            continue
         try:
             text = path.read_text(encoding="utf-8", errors="ignore").lower()
         except OSError:
             continue
+        text = _mask_guard_declarations(rel, text)
         for term in terms:
             if term and term in text:
                 hits.append(f"{rel}:{term}")

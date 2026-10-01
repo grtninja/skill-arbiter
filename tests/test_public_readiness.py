@@ -205,7 +205,7 @@ class PublicReadinessTests(unittest.TestCase):
             terms = _publish_guard_terms(root)
             self.assertTrue(terms)
             self.assertIn("c:\\users\\", terms)
-            self.assertIn("hotmail.com", terms)
+            self.assertIn("hotmail.com", terms)  # guard-vocabulary-ok
 
     def test_guard_terms_prefer_private_file_when_present(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -227,15 +227,29 @@ class PublicReadinessTests(unittest.TestCase):
             self.assertTrue(any(hit.startswith("docs/notes.md:") for hit in hits))
 
     def test_guard_definition_files_are_exempt(self) -> None:
-        # The vocabulary-definition files must not flag themselves. (Muse)
+        # The vocabulary-definition files must not flag their own
+        # declarations. (Muse)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             self._init_repo(root)
             _write(root / "skill_arbiter" / "public_readiness.py",
-                    'TERMS = ("hotmail.com",)\n')
+                    'TERMS = ("hotmail.com",)  # guard-vocabulary-ok\n')
             subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
             hits = _public_shape_guard_term_hits(root)
             self.assertFalse(any(hit.startswith("skill_arbiter/public_readiness.py:") for hit in hits))
+
+    def test_guard_definition_files_still_catch_real_leaks(self) -> None:
+        # Narrowed exemption: a real leak added elsewhere in a definition
+        # file must be caught, not skipped with the whole file. (Muse)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._init_repo(root)
+            _write(root / "skill_arbiter" / "public_readiness.py",  # guard-vocabulary-ok
+                    'PUBLIC_SAFE_GUARD_TERMS = (\n    "hotmail.com",\n)\n'  # guard-vocabulary-ok
+                    '# operator contact: alice@hotmail.com\n')  # guard-vocabulary-ok
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True, text=True)
+            hits = _public_shape_guard_term_hits(root)
+            self.assertTrue(any(hit.startswith("skill_arbiter/public_readiness.py:") for hit in hits))
 
 
 if __name__ == "__main__":
